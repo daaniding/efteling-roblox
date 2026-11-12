@@ -94,7 +94,7 @@ gesculpt, wijd open ogen, open grimas met dikke onderlip), cape met zware golven
 plooien in rok/mouwen/boven de riem. Figuur-asset **128729459556621** (lijf 138231693611234, hoofd 127597747578678, nek 96605081719069);
 in Studio alleen de delen met Groep body/head/neck/iris vervangen (export `--alleen BAKE_lijf,BAKE_hoofd,BAKE_nek,...`).
 
-## Assepoester (chat 5, 12 nov) — BEZIG: blokkering klaar, wacht op akkoord voor vormen
+## Assepoester (chat 5, 12 nov) — BEZIG: huis (vormen) staat in Studio, scène volgt
 Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`), BAG/OSM-footprint + omgeving (`ref/osm_lokaal.json`,
 `ref/osm_overzicht.png`, gemaakt met `build/01_osm_lokaal.py`), brief `asset-brief.md`. Primaire foto `ref/front.jpg` (= Assevoorgevel.jpg).
 - Gevel kijkt WEST (10.6 graden naar ZW gedraaid); main-ingang NW, uitgang ZW. Model: -Y = west, +X = zuid, y=0 = voorkant portiek.
@@ -103,7 +103,12 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
   (front.jpg is vrijwel zonder perspectief: vleugel en hoofdhuis hebben dezelfde px/m). Review: `review/02/sheet_02_blockout.jpg`.
 - Conflict: hoofdhuis/toren/portiek staan op de foto 0.6 m zuidelijker t.o.v. de entreevleugel dan BAG -> foto aangehouden.
   Hoofddak: dakrand op 6.5 m (foto) -> steile kraag met plat bovendak (inferred). Toren x 2.42..5.19, spits tot 7.65, makelaar 8.0.
-- Volgende stap: 03_forms (rondbogen, ramen met luiken en kuifjes, plankengordijn, pannen, kroonlijstprofielen), dan scène
+- Vormen `build/03_forms.py` (pannenrijen als zaagtand via tiled_roof(), rondboogramen met omlijsting/glas-in-lood/luiken, kuifjes,
+  kroonlijsten, dakkapellen met makelaar, plankengordijn op plint, portiek). Review `build/review.sh 03` -> `review/03/sheet.jpg`.
+- Export `build/09_export_roblox.py` (kopie Villa Volta): v1 **108022246144519** (11k tris, 13 delen). Plaatsen: `roblox/plaats_assepoester.luau`
+  (MaterialVariants VV_Pleister/VV_Steen hergebruikt; pannen = ClayRoofTiles (150,92,72)). Layout-label weg, spawn op de binnenplaats.
+- In de buurt staan VillaVoltaHorizon-bomen; 4 staan op de binnenplaats (den/beuk, model y -10..-4) -> weghalen bij de scène.
+- Volgende stap: scène
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
 ## Daarna (volgorde met Daan afgesproken)
