@@ -81,6 +81,22 @@ for mname, meshes in groups.items():
         if tris + t > LIMIT and tris > 0: flush()
         bm.from_mesh(me); tris += t; bpy.data.meshes.remove(me)
     flush()
+# botsblokken en lichtpunten als losse onderdelen meesturen (geen lange datalijsten meer plakken in Studio)
+if "--extra" in args:
+    import json, math
+    from mathutils import Matrix
+    d = json.load(open(args[args.index("--extra") + 1]))
+    em = bpy.data.materials.get("MAT_botsing") or bpy.data.materials.new("MAT_botsing")
+    lm = bpy.data.materials.get("MAT_lichtpunt") or bpy.data.materials.new("MAT_lichtpunt")
+    for k, c in enumerate(d["colliders"]):
+        b = bmesh.new(); bmesh.ops.create_cube(b, size=1.0); bmesh.ops.scale(b, vec=(c[3], c[4], c[5]), verts=b.verts)
+        bmesh.ops.transform(b, matrix=Matrix.Translation((c[0], c[1], c[2])) @ Matrix.Rotation(math.radians(c[6]), 4, "Z"), verts=b.verts)
+        me = bpy.data.meshes.new(f"COLL_{k}"); b.to_mesh(me); b.free(); me.materials.append(em)
+        ob = bpy.data.objects.new(f"COLL_{k}", me); exp.objects.link(ob); made.append((ob.name, 12))
+    for k, l in enumerate(d["lamps"]):
+        b = bmesh.new(); bmesh.ops.create_cube(b, size=0.06); bmesh.ops.translate(b, vec=(l[0], l[1], l[2]), verts=b.verts)
+        me = bpy.data.meshes.new(f"LAMP_{k}"); b.to_mesh(me); b.free(); me.materials.append(lm)
+        ob = bpy.data.objects.new(f"LAMP_{k}", me); exp.objects.link(ob); made.append((ob.name, 12))
 for o in list(bpy.data.objects):
     o.select_set(o.name in [m[0] for m in made])
 bpy.context.view_layer.objects.active = bpy.data.objects[made[0][0]]

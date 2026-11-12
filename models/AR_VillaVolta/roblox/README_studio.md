@@ -50,3 +50,9 @@
     `build/10_haagtextuur.py` (gerenderd uit 650 echte shrub_02-takjes, naadloos 2x2 m) -> kleur 107834399804087, normaal 80469356130057
     als SurfaceAppearance op MAT_beuk/buxus/haag. Export knipt nu grote meshes in stukken i.p.v. decimeren.
     Omgeving-asset **107244417789180**. Proef met losse haagtakjes (te sprieterig) staat in ServerStorage.VillaVoltaHaagschil_proef.
+15. Symmetrische tuin (Daan): superellips (n=2.6, midden (0,-15.3)) voor het lus-pad (a10 b8.8) en de beukenbogen (a12.9 b11.4)
+    tot pilaren op (+-2.5,-26.65); gespiegelde bladperken + binnenbogen, middengroep 0.8x naar het midden (0.7 m vrij van het pad);
+    zijpaden als Catmull-Rom-krommes. Omgeving-asset **75132263450665** (met COLL_/LAMP_-onderdelen: geen datalijsten meer plakken;
+    Studio: COLL_ -> map Botsing, onzichtbaar, CollisionFidelity Box; LAMP_ -> map Lampen met PointLight).
+    Planten in de tuin opnieuw verspreid (seed 2027/2028). Terrein: gazon = superellips a13.6 b12.1; gras buiten de tuin
+    (VV_Bosgrond, base Mud) nu Grass005 op 11 studs/tegel, kleur (232,244,212) = lichter parkgras. MAT_aarde DoubleSided.

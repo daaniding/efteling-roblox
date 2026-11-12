@@ -141,23 +141,46 @@ def build(master):
         coll(s*(HX+8.5)/2,-0.4,T+0.4,8.5-HX,0.35,0.8); coll(s*8.2,(WY-0.55)/2,T+0.4,0.35,WY+0.55,0.8)
         coll(s*COLX,COLY,T+BAL_Z0/2,0.6,0.6,BAL_Z0); coll(s*1.75,-0.1,T+1.5,0.55,0.4,3.0); coll(s*2.45,-1.0,T+0.9,0.45,0.45,1.8)
     # ---------------- tuin ----------------
-    # voorpad langs het terras + ovaal rond de tuin + as naar het plein (OSM 444834329)
-    loop=[(8.54,-6.58),(-8.83,-6.54),(-10.94,-12.95),(-8.92,-19.92),(-5.11,-22.18),(-0.07,-24.09),(5.68,-21.09),(9.13,-16.98),(8.54,-6.58)]
+    # Symmetrisch ontwerp (Daan): vormen en maten volgen de echte tuin (OSM), maar strak gespiegeld rond de as x=0 en
+    # met vloeiende rondingen (superellips n=2.6) in plaats van de handgetekende OSM-hoeken.
+    TCY,NSE=-15.3,2.6
+    def se(a_,b_,t):   # superellips-punt rond (0,TCY)
+        c,s_=math.cos(t),math.sin(t)
+        return (a_*math.copysign(abs(c)**(2/NSE),c), TCY+b_*math.copysign(abs(s_)**(2/NSE),s_))
+    def se_boog(a_,b_,t0,t1,n=48): return [se(a_,b_,t0+(t1-t0)*i/n) for i in range(n+1)]
+    def catmull(pts,n=10):
+        P=[pts[0]]+pts+[pts[-1]]; out=[]
+        for i in range(1,len(P)-2):
+            p0,p1,p2,p3=P[i-1],P[i],P[i+1],P[i+2]
+            for k in range(n):
+                t=k/n; t2,t3=t*t,t*t*t
+                out.append(tuple(0.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3) for j in (0,1)))
+        out.append(pts[-1]); return out
+    loop=se_boog(10.0,8.8,0,math.tau,96)                                   # ovaal pad: boven -6.5 (terras), onder -24.1
     path("grind",loop,2.6)
-    path("grind",[(-0.07,-24.09),(-0.64,-30.29),(1.23,-45.78)],4.0,0.075)
-    path("grind",[(-8.83,-6.54),(-9.39,2.07),(-7.19,9.44)],2.2,0.07)                 # uitgangspad west
-    path("klinker",[(8.54,-6.58),(11.29,-0.1),(13.1,1.3),(13.1,2.2)],2.4)   # naar de rij-ingang (OSM 1165997610)   # naar de rij-ingang
-    # grote hagen (beuk, oranje in front.jpg) in twee bogen naar de pilaren
-    strip("hagen","beuk",[(-2.91,-26.72),(-4.93,-26.58),(-7.02,-26.06),(-8.54,-25.0),(-9.89,-23.83),(-11.01,-22.68),(-11.92,-21.35),(-12.72,-18.26),(-13.04,-15.1),(-12.86,-11.94),(-12.86,-8.8)],0.7,1.1,ch=0.15)
-    strip("hagen","beuk",[(11.14,-6.94),(11.75,-10.6),(11.97,-12.96),(11.98,-15.05),(11.57,-17.8),(10.8,-20.34),(9.47,-22.12),(7.84,-23.7),(6.47,-24.73),(4.8,-25.56),(1.66,-26.21)],0.7,1.1,ch=0.15)
-    # bladvormige buxushagen met bloemen erin + binnenboog
-    for key in ("haag_tuin_o","haag_tuin_w"):
-        poly=[tuple(p) for p in OSM[key]]
-        strip("hagen","buxus",poly,0.35,0.5,ch=0.08); flowerbed(poly[:-1])
-    strip("hagen","buxus",[(-2.43,-12.39),(-1.51,-12.69),(-0.76,-12.77),(0.1,-12.71),(0.95,-12.6),(1.97,-12.37),(2.98,-11.9),(2.98,-12.91),(3.05,-14.02),(3.2,-15.19),(3.4,-16.59),(3.77,-17.97)],0.35,0.5,ch=0.08)
-    strip("hagen","buxus",[(-7.92,-15.91),(-7.45,-17.2),(-6.89,-18.39),(-5.84,-19.44),(-4.45,-20.33),(-3.01,-20.97),(-1.45,-21.28),(0.12,-21.37),(1.58,-21.22),(2.99,-20.84),(3.97,-20.27),(4.78,-19.65)],0.35,0.5,ch=0.08)
+    path("grind",[(0,-24.0),(0,-45.8)],4.0)                                # as naar het plein
+    path("grind",catmull([se(10.0,8.8,math.radians(152)),(-10.3,-3.2),(-9.6,3.0),(-7.2,9.4)]),2.2)   # uitgangspad west
+    path("grind",catmull([se(10.0,8.8,math.radians(28)),(11.2,-3.0),(12.7,0.6),(13.1,2.2)]),2.4)    # naar de rij-ingang
+    # beukenhagen: zelfde vorm 2.4 m buiten het pad, tot de pilaren
+    tb=math.atan2(-(abs((2.5/12.9))**(NSE/2)),1)      # hoek waar x=2.5 (onderkant)
+    BW=se_boog(12.9,11.4,math.radians(37.6),-math.acos(min(1,(2.5/12.9)**(NSE/2))),40)
+    strip("hagen","beuk",[(-x,y) for x,y in BW],0.7,1.1); strip("hagen","beuk",BW,0.7,1.1)
+    # twee gespiegelde bladperken (vorm van het westelijke OSM-perk) met buxusrand
+    BED=[tuple(p) for p in OSM["haag_tuin_w"]][:-1]
+    BED=catmull(BED+BED[:3],4)[: len(BED)*4+1]
+    KM=0.8   # middengroep 20% naar het midden: perken/bogen raakten het pad (Daan)
+    def km(x,y): return (x*KM, TCY+(y-TCY)*KM)
+    BED=[km(x,y) for x,y in BED]
+    for sx in (-1,1):
+        poly=[(sx*abs(x),y) for x,y in BED]+[(sx*abs(BED[0][0]),BED[0][1])]
+        strip("hagen","buxus",poly,0.35,0.5); flowerbed(poly[:-1])
+    # binnenbogen rond de zonnewijzer (symmetrisch)
+    strip("hagen","buxus",[km(4.3*math.cos(math.radians(t)),-16.5+4.3*math.sin(math.radians(t))) for t in range(35,146,5)],0.35,0.5)
+    strip("hagen","buxus",[km(7.2*math.cos(math.radians(t)),-14.0+7.0*math.sin(math.radians(t))) for t in range(205,336,5)],0.35,0.5)
+    TUIN={"loop":[[round(x,3),round(y,3)] for x,y in loop],"bedden":[[[round(sx*abs(x),3),round(y,3)] for x,y in BED] for sx in (-1,1)],
+          "hagen":[[[round(-x,3),round(y,3)] for x,y in BW],[[round(x,3),round(y,3)] for x,y in BW]]}
     # pilaren aan het plein met lantaarns (OSM street_lamp op 2.91,-26.72 en 1.66,-26.21)
-    for (x,y) in ((-2.91,-26.72),(1.66,-26.21)):
+    for (x,y) in ((-2.5,-26.65),(2.5,-26.65)):   # symmetrisch op de as
         put("pilaren","steen",bbox(1.1,1.1,0.4,x,y,0.2,0.02))
         put("pilaren","steen",bbox(0.9,0.9,2.6,x,y,1.7,0.02))
         z=0.6
@@ -166,23 +189,24 @@ def build(master):
         put("lantaarns","ijzer",blathe([(0,0),(0.1,0),(0.07,0.1),(0.05,0.5),(0.08,0.6),(0,0.62)],8),TR(x,y,3.42))
         lantern_head(x,y,4.0,1.3); LAMPS.append((x,y,4.4)); coll(x,y,1.8,1.15,1.15,3.6)
     # zonnewijzer (armillair) op balusterzuil op de tuinas, plantvazen aan het voorpad (inferred uit front.jpg)
-    put("tuinbeelden","wit",blathe([(r*1.6,h*1.6) for r,h in BALUSTER],12),TR(0,-17.0,0))
-    put("tuinbeelden","wit",bbox(0.45,0.45,0.08,0,-17.0,1.16))
+    put("tuinbeelden","wit",blathe([(r*1.6,h*1.6) for r,h in BALUSTER],12),TR(0,-16.66,0))
+    put("tuinbeelden","wit",bbox(0.45,0.45,0.08,0,-16.66,1.16))
     zc=1.62
     for M in (Matrix.Identity(4),Matrix.Rotation(math.radians(90),4,"X"),Matrix.Rotation(math.radians(52),4,"Y")):
-        pts=[tuple((M@Vector((0.36*math.cos(t*math.tau/24),0.36*math.sin(t*math.tau/24),0)))+Vector((0,-17.0,zc))) for t in range(25)]
+        pts=[tuple((M@Vector((0.36*math.cos(t*math.tau/24),0.36*math.sin(t*math.tau/24),0)))+Vector((0,-16.66,zc))) for t in range(25)]
         put("tuinbeelden","zink",btube(pts,0.018,6))
     ax=Matrix.Rotation(math.radians(38),4,"X")@Vector((0,0,0.5))
-    put("tuinbeelden","zink",btube([(-ax.x,-17.0-ax.y,zc-ax.z),(ax.x,-17.0+ax.y,zc+ax.z)],0.012,6))
-    put("tuinbeelden","zink",btube([(0,-17.0,1.2),(0,-17.0,zc-0.36)],0.03,6)); coll(0,-17.0,1.0,0.5,0.5,2.0)
+    put("tuinbeelden","zink",btube([(-ax.x,-16.66-ax.y,zc-ax.z),(ax.x,-16.66+ax.y,zc+ax.z)],0.012,6))
+    put("tuinbeelden","zink",btube([(0,-16.66,1.2),(0,-16.66,zc-0.36)],0.03,6)); coll(0,-16.66,1.0,0.5,0.5,2.0)
     for sx in (-1,1):
         put("tuinbeelden","steen",bbox(0.55,0.55,0.8,sx*2.6,-8.9,0.4,0.02)); urn("tuinbeelden",sx*2.6,-8.9,0.8,1.1)
         for k in range(6):
             bm=bmesh.new(); bmesh.ops.create_icosphere(bm,subdivisions=1,radius=0.2)
             put("bloemen","bloem_paars" if k%2 else "buxus",bm,TR(sx*2.6+0.18*math.cos(k),-8.9+0.18*math.sin(k),1.75+0.05*(k%3)))
         coll(sx*2.6,-8.9,0.9,0.6,0.6,1.8)
-    for (x,y) in json.load(open(os.path.join(HERE,"..","exports","lampposten.json"))):   # naast het pad, vrij van hagen (Daan: stonden in de weg)
-        lamppost(x,y)
+    for t in (10,-40):   # lantaarnpalen in paren tussen pad en beukenhaag
+        x,y=se(11.75,10.55,math.radians(t))
+        for sx in (-1,1): lamppost(sx*x,y)
     # wacht- en showtijdenbord op het plein (OSM 460832618)
     bx,by=18.6,-50.2
     put("bord","steen",bbox(2.3,3.9,0.4,bx,by,0.2,0.02))
@@ -321,7 +345,7 @@ def build(master):
         n+=1; tris+=sum(len(p.vertices)-2 for p in ob.data.polygons)
     out=os.path.join(HERE,"..","exports"); os.makedirs(out,exist_ok=True)
     json.dump({"colliders":COLL,"lamps":[[round(v,2) for v in l] for l in LAMPS],
-               "doors":[[7.33,26.03],[7.36,28.93]],"wachtbord":[bx,by],"ingangbord":[13.1,10.55,0.75],"logo":[9.3,8.55,2.35],"paden":PADEN,"huiden":[[round(GW+0.19,3),round(15.2+0.95*k,3),1.85] for k in range(4)]},open(os.path.join(out,"omgeving_data.json"),"w"))
+               "doors":[[7.33,26.03],[7.36,28.93]],"wachtbord":[bx,by],"ingangbord":[13.1,10.55,0.75],"logo":[9.3,8.55,2.35],"paden":PADEN,"tuin":TUIN,"huiden":[[round(GW+0.19,3),round(15.2+0.95*k,3),1.85] for k in range(4)]},open(os.path.join(out,"omgeving_data.json"),"w"))
     save_master(master); log("objects",n,"tris~",tris,"colliders",len(COLL),"lamps",len(LAMPS))
 if __name__=="__main__":
     a=argv_after_dashes(); m=a[a.index("--master")+1] if "--master" in a else None

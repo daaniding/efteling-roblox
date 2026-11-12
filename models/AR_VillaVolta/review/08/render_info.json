@@ -1,0 +1,41 @@
+{
+  "blend": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/AR_VillaVolta/AR_VillaVolta_master.blend",
+  "mode": "clay",
+  "engine": "workbench",
+  "bbox_min": [
+    -13.317680358886719,
+    -47.86000061035156,
+    -0.05000000074505806
+  ],
+  "bbox_max": [
+    18.289276123046875,
+    31.471853256225586,
+    4.909999847412109
+  ],
+  "size_xyz": [
+    31.606956481933594,
+    79.33185577392578,
+    4.960000038146973
+  ],
+  "objects": [
+    "VO_hagen__beuk",
+    "VO_hagen__buxus",
+    "VO_paden__aarde",
+    "VO_pilaren__steen",
+    "VO_lantaarns__ijzer",
+    "VO_lantaarns__lamp",
+    "VO_tuinbeelden__wit",
+    "VO_tuinbeelden__zink",
+    "VO_tuinbeelden__steen",
+    "VO_hagen__haag",
+    "VO_paden__grind",
+    "VO_paden__band"
+  ],
+  "renders": {
+    "top": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/AR_VillaVolta/review/08/clay_top.png",
+      "az_el_lens": "top",
+      "distance": 161.14372111196099
+    }
+  }
+}
