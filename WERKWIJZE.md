@@ -87,3 +87,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Bake (`build/04_bake.py`, ~2.5 min): EMIT-bake van Studio-kleur x AO x variatie per groep; daarna export (knippen, niet decimeren) en
   model + texturen opnieuw uploaden. Daan vindt de keten traag: bij kleine wijzigingen alleen de veranderde groep opnieuw bakken/uploaden.
 - Meer bomen achter een attractie: Daan wil een vol bos als achtergrond (Langnek: 57 planten in LangnekGroen).
+- Normal-map-bron (hoge versie) NIET zichtbaar laten tijdens de kleur/AO-bake: AO botst op de dubbele vorm -> camouflagevlekken (Langnek-rots).
+  Normal map van een ruisige rots is in Roblox te hard: blur + ~45% sterkte (`textures/Langnek_rots_normaal_zacht.png`).
+- Kleine textuurfix zonder nieuwe bake: plaatje met PIL aanpassen, alleen dat plaatje uploaden en de SurfaceAppearance in Studio vervangen (~30 s).
+- Pad bij een attractie zoals bij de Sprookjesboom: klinkerstrook 3 cm boven maaiveld, opsluitband alleen buiten; planten waarvan de voet
+  of kruinrand boven het pad komt automatisch weglaten (raycast op de padmesh).
+- Daan wil spawnen bij wat we net bouwden om het te bekijken; oude spawn bewaren in een attribuut.

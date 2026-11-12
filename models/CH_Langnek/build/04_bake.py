@@ -51,6 +51,9 @@ try:
 except Exception:
     pass
 low = bpy.data.collections["LOW"]
+_hoog = bpy.data.objects.get("GEO_rots_HIGH")
+if _hoog is not None:
+    _hoog.hide_render = True        # NIET zichtbaar tijdens de kleur/AO-bake: dubbele rots gaf camouflagevlekken in de AO
 bakecol = bpy.data.collections.new("BAKED"); low.children.link(bakecol)
 
 
@@ -193,6 +196,20 @@ for gname, filt, res in GROUPS:
         me.materials.append(bake_material(bpy.data.materials[mn], gname, img, extra_of(mn)))
     bpy.ops.object.bake(type="EMIT", margin=8, use_clear=True)
     img.filepath_raw = os.path.join(TEX, "Langnek_%s_kleur.png" % gname); img.file_format = "PNG"; img.save()
+    hoog = bpy.data.objects.get("GEO_rots_HIGH") if gname == "rots" else None
+    if hoog is not None:                                   # normal map: fijne vorm van de hoge rots op de lichte versie (geen facetten)
+        nimg = bpy.data.images.new("TEX_rots_normaal", res, res, alpha=False); nimg.colorspace_settings.name = "Non-Color"
+        for mt in me.materials:
+            tn = mt.node_tree.nodes.new("ShaderNodeTexImage"); tn.image = nimg; mt.node_tree.nodes.active = tn
+        for lc in bpy.context.view_layer.layer_collection.children:
+            lc.exclude = False
+        hoog.hide_viewport = False; hoog.hide_render = False; hoog.hide_set(False)
+        for o2 in bpy.context.view_layer.objects: o2.select_set(False)
+        hoog.select_set(True); ob.select_set(True); bpy.context.view_layer.objects.active = ob
+        bpy.ops.object.bake(type="NORMAL", use_selected_to_active=True, cage_extrusion=0.06, max_ray_distance=0.25, margin=8, use_clear=True)
+        nimg.filepath_raw = os.path.join(TEX, "Langnek_rots_normaal.png"); nimg.file_format = "PNG"; nimg.save()
+        hoog.hide_render = True
+        print("NORMAAL gebakken")
     # leveringsmateriaal: alleen de textuur (voor export/preview)
     me.materials.clear()
     dm = bpy.data.materials.new("TEX_" + gname); nt = dm.node_tree

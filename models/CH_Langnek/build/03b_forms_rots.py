@@ -124,6 +124,7 @@ def build(master):
     bm.to_mesh(me); bm.free()
     sm = rots.modifiers.new("Smooth", "SMOOTH"); sm.factor = 0.3; sm.iterations = 1
     apply_all_modifiers(rots)
+    hoog = duplicate(rots, "GEO_rots_HIGH", "HIGH"); hoog["anim"] = "high"; hoog.hide_render = False   # bron voor de normal map (04_bake)
     nt = sum(len(p.vertices) - 2 for p in rots.data.polygons)
     decimate(rots, min(1.0, 16000 / max(1, nt))); apply_all_modifiers(rots)
     shade_smooth(rots, math.radians(48)); assign(rots, m_rots); rots["anim"] = "static"
@@ -175,7 +176,7 @@ def build(master):
         b2.to_mesh(st); b2.free(); stones.append(st); s += w * 0.80
     keien = []
     s = 0.0
-    while s < cum[-1]:                                      # rij kleine keien in het plein, voor het hek
+    while False:                                            # keien weg (Daan, 12 nov): pad ligt daar nu
         w = random.uniform(0.15, 0.24); p, tan, out = at(s, 1.05 + random.uniform(-0.05, 0.05))
         st = bpy.data.meshes.new("_kei"); b2 = bmesh.new(); bmesh.ops.create_icosphere(b2, subdivisions=1, radius=0.5)
         for v in b2.verts:
@@ -183,11 +184,36 @@ def build(master):
         bmesh.ops.scale(b2, vec=(w, w * random.uniform(0.7, 1.0), w * 0.7), verts=b2.verts)
         bmesh.ops.translate(b2, vec=(p.x, p.y, 0.05), verts=b2.verts)
         b2.to_mesh(st); b2.free(); keien.append(st); s += w * 1.05
-    for name, meshes, mat in (("GEO_randstenen", stones, m_steen), ("GEO_keien", keien, m_kei)):
+    for name, meshes, mat in (("GEO_randstenen", stones, m_steen),):
         bm = bmesh.new()
         for me in meshes:
             bm.from_mesh(me); bpy.data.meshes.remove(me)
         o = new_mesh_object(name, bm, L); shade_smooth(o, math.radians(60)); assign(o, mat); o["anim"] = "static"
+    # pad: klinkers in een boog voor de vijver (zoals bij de Sprookjesboom: 3 cm boven maaiveld, opsluitband alleen buiten)
+    m_pad = material("MAT_klinker", (0.62, 0.57, 0.52, 1), 0.85); m_band = material("MAT_band", (0.46, 0.45, 0.43, 1), 0.9)
+    PAD_IN, PAD_UIT = 0.45, 5.4                             # vanaf de vijverrand, ~5 m breed (WERKWIJZE: paden ruim)
+    N = int(cum[-1] / 0.25)
+    def buiten(ss):                                         # buitenrand pad; uiteinden in een kwartcirkel terug naar de vijver
+        t = min(ss, cum[-1] - ss); w = PAD_UIT - PAD_IN
+        r = math.sqrt(max(0.0, 1 - ((w - t) / w) ** 2)) if t < w else 1.0
+        return PAD_IN + max(0.02, w * r)
+    def strook(f_in, f_uit, zt, zb, naam, mat):
+        bm = bmesh.new(); rings = []
+        for k in range(N + 1):
+            ss = k * cum[-1] / N
+            a, _, _ = at(ss, f_in(ss)); b, _, _ = at(ss, f_uit(ss))
+            rings.append([bm.verts.new((a.x, a.y, zt)), bm.verts.new((b.x, b.y, zt)), bm.verts.new((b.x, b.y, zb)), bm.verts.new((a.x, a.y, zb))])
+        for r0, r1 in zip(rings, rings[1:]):
+            for i in range(4):
+                bm.faces.new((r0[i], r0[(i + 1) % 4], r1[(i + 1) % 4], r1[i]))
+        bm.faces.new(rings[0]); bm.faces.new(list(reversed(rings[-1])))
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        uv = bm.loops.layers.uv.new("UVMap")
+        for f in bm.faces:
+            for l in f.loops: l[uv].uv = (l.vert.co.x / 2.0, l.vert.co.y / 2.0)   # UV 1 = 2 m
+        o = new_mesh_object(naam, bm, L); assign(o, mat); o["anim"] = "static"; return o
+    strook(lambda ss: PAD_IN, buiten, 0.03, -0.12, "GEO_pad", m_pad)
+    strook(lambda ss: max(PAD_IN, buiten(ss) - 0.14), lambda ss: buiten(ss) + 0.01, 0.06, -0.12, "GEO_opsluitband", m_band)
     # kronkelend hekje: palen + golvende bovenregel + onderregel, tussen randstenen en keien
     OFF = 0.62
     n_post = int(cum[-1] / 1.25)

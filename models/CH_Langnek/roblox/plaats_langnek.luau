@@ -1,8 +1,9 @@
 -- Langnek plaatsen (asset uit build/09_export_roblox.py). Blender-oorsprong = Langnek-punt op pleinhoogte; figuur kijkt naar Blender -Y.
 -- OSM-kalibratie: oorsprong OSM (145.91, -33.66) m -> studs (437.7, 101.0); kijkt ZZO (OSM (0.6,-0.8) -> Roblox (0.6,0,0.8)); grond Y=2.
 -- Daarna: water net boven het maaiveld, kroos + rimpels (klonen uit SprookjesboomWater), beplanting in LangnekGroen (wind doet mee).
-local ASSET = 116930509474793   -- v2: gebakken texturen (build/04_bake.py)
-local TEX = {lijf = 98796211691962, hoofd = 101183919857164, nek = 109436001826060, rots = 114370744521597, rand = 123245105248243}
+local ASSET = 90664955604649   -- v3: pad + normal map rots   -- v2: gebakken texturen (build/04_bake.py)
+local TEX = {lijf = 104740173738608, hoofd = 129806446727609, nek = 91441792849484, rots = 90579127698807, rand = 74303124237918}
+local NORMAAL = {rots = 109618118831941}   -- zachte versie (geblurd, 45% sterkte)
 local ORIGIN = CFrame.new(437.7, 2.0, 101.0) * CFrame.Angles(0, math.atan2(-0.6, -0.8), 0)
 local S = 3
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end   -- Blender (x,y,z) meters -> wereld
@@ -18,8 +19,9 @@ local M = {   -- getemperde kleuren (WERKWIJZE), naar ref/front.jpg
 	rots = {Color3.fromRGB(122, 126, 124), "Rock"}, randsteen = {Color3.fromRGB(170, 164, 150), "Limestone"},
 	kei = {Color3.fromRGB(150, 144, 134), "Slate"}, water = {Color3.fromRGB(34, 40, 26), "SmoothPlastic"},
 	hek = {Color3.fromRGB(28, 46, 32), "Metal"},
+	klinker = {Color3.fromRGB(164, 152, 138), "Pavement"}, band = {Color3.fromRGB(118, 116, 110), "Concrete"},   -- plein front.jpg: beige-grijze klinkers
 }
-local BOTSING = {rots = true, randsteen = true, hek = true, kei = true, rand = true}
+local BOTSING = {rots = true, randsteen = true, hek = true, kei = true, rand = true, klinker = true, band = true}
 
 for _, n in ipairs({"Langnek", "LangnekGroen", "LangnekWater"}) do local o = workspace:FindFirstChild(n); if o then o:Destroy() end end
 local m = Instance.new("Model"); m.Name = "Langnek"
@@ -42,7 +44,9 @@ for _, p in ipairs(m:GetChildren()) do
 	if tex and TEX[tex] then
 		groep = tgroep; key = tex
 		p.Color = Color3.new(1, 1, 1); p.Material = (tex == "rots" or tex == "rand") and Enum.Material.Rock or Enum.Material.SmoothPlastic
-		local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex]; sa.Parent = p
+		local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex]
+		if NORMAAL[tex] then sa.NormalMap = "rbxassetid://" .. NORMAAL[tex] end
+		sa.Parent = p
 	elseif s then p.Color = s[1]; p.Material = mat(s[2]) else table.insert(onbekend, p.Name) end
 	p.CanCollide = BOTSING[key] == true
 	p.CanQuery = BOTSING[key] == true
@@ -55,6 +59,7 @@ for _, p in ipairs(m:GetChildren()) do
 end
 do   -- nieuwe Images pas zichtbaar na preload (WERKWIJZE)
 	local decs = {}
+	for _, id in pairs(NORMAAL) do local d = Instance.new("Decal"); d.Texture = "rbxassetid://" .. id; table.insert(decs, d) end
 	for _, id in pairs(TEX) do local d = Instance.new("Decal"); d.Texture = "rbxassetid://" .. id; table.insert(decs, d) end
 	pcall(function() game:GetService("ContentProvider"):PreloadAsync(decs) end)
 end
@@ -119,6 +124,11 @@ local P = {   -- {bron, x, y, schaal}  (Blender-meters: +y = achter de figuur, +
 	{"den0", 15.5, 13.0, 3.2}, {"den1", -16.0, 12.0, 3.2}, {"den0", 2.5, 13.5, 3.0}, {"den1", -4.0, 11.0, 2.8},
 	{"eik1", -14.0, 17.0, 3.0}, {"beuk0", 13.5, 17.0, 3.0}, {"kastanje0", 3.0, 20.0, 3.0}, {"berk0", -5.0, 20.0, 3.0}, {"beuk1", -10.0, 21.0, 3.0},
 	{"taxus1", -8.5, 5.5, 3.0}, {"taxus0", 8.5, 6.0, 3.0}, {"rododendron1", -9.0, 3.0, 3.0}, {"rododendron0", 9.5, 3.5, 3.0},
+	-- bomen dichtbij (Daan): naast het pad en aan de zijkanten van het plein
+	{"beuk0", -12.5, -3.0, 3.0}, {"eik1", 13.0, -2.0, 3.0}, {"kastanje1", -11.5, 4.5, 3.0}, {"berk1", 12.5, 5.0, 3.0},
+	{"den1", -14.0, -8.0, 3.1}, {"den0", 14.5, -7.0, 3.0}, {"beuk1", -16.0, 1.0, 3.0}, {"eik0", 17.0, 2.0, 3.0},
+	{"taxus0", -11.5, -6.5, 3.0}, {"rododendron1", 12.0, -5.5, 3.0}, {"rododendron0", -13.5, -1.0, 2.8}, {"taxus1", 13.5, 1.0, 3.0},
+	{"den0", -7.5, 9.5, 3.0}, {"den1", 7.5, 10.5, 3.1},
 }
 for _, e in ipairs(P) do zet(V3 and V3:FindFirstChild(e[1]), e[2], e[3], e[4]) end
 local varens = {}
@@ -129,6 +139,13 @@ for i = 1, 34 do
 	local a = rng:NextNumber(math.rad(-25), math.rad(205)); local r = rng:NextNumber(3.9, 5.6)
 	local x, y = math.cos(a) * r, 0.4 + math.sin(a) * r
 	if y > 0.5 then zet(varens[rng:NextInteger(1, #varens)], x, y, 3.0 * rng:NextNumber(0.8, 1.3)) end
+end
+-- spawn midden op het pad, met het gezicht naar Langnek (oude plek bewaard in attribuut OudeCFrame)
+local sp = workspace:FindFirstChild("SpawnLocation")
+if sp then
+	if sp:GetAttribute("OudeCFrame") == nil then sp:SetAttribute("OudeCFrame", sp.CFrame) end
+	local pos = lokaal(0, -8.7, 0).Position
+	sp.CFrame = CFrame.lookAt(Vector3.new(pos.X, 2.1 + sp.Size.Y / 2, pos.Z), Vector3.new(ORIGIN.X, 2.1 + sp.Size.Y / 2, ORIGIN.Z))
 end
 -- wind laat ook deze map wiegen
 local wind = game:GetService("StarterPlayer").StarterPlayerScripts:FindFirstChild("Wind")

@@ -81,7 +81,10 @@ Plaatsen: `roblox/plaats_langnek.luau` (kleuren, water, kroos/rimpels, beplantin
 Oude Langnek uit losse Studio-parts is vervangen. Layout-label weg.
 NIET gedaan (Daan: nog niet animeren): `roblox/LangnekAnimatie.server.luau` ligt klaar (nek schuift als geheel, hoofd/ogen los), niet geplaatst.
 v2 (Daan: "veel mooier"): gezicht naar foto (bolle ogen met huidring, open grimas, rimpels, kijkt 25 graden omlaag), geschilderde bake (AO, blos, stof, betonscan + mos), extra bos erachter (57 planten).
-Kan nog beter: normal map voor de rots (facetten zichtbaar in fel licht), cape-plooien.
+v3 (Daan): keien weg, klinkerpad (~5 m breed) in een boog voor de vijver met opsluitband, spawn op het pad (oude plek in attribuut
+SpawnLocation.OudeCFrame), rots met normal map van de hoge rots (zacht gemaakt), bomen dichtbij naast het pad (61 planten totaal).
+Model v3 **90664955604649**; texturen lijf 104740173738608, hoofd 129806446727609, nek 91441792849484, rots 90579127698807 (+normaal 109618118831941), rand 74303124237918.
+Kan nog beter: cape-plooien, eventueel normal maps voor de figuur.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
