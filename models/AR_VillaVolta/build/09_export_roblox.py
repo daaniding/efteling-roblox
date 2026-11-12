@@ -51,12 +51,33 @@ for mname, meshes in groups.items():
         made.append((ob.name, len(me.polygons))); bm = bmesh.new(); tris = 0; idx += 1
     for me in meshes:
         t = sum(len(p.vertices) - 2 for p in me.polygons)
-        if t > LIMIT:   # te groot: decimeer dit deel apart
-            tmpo = bpy.data.objects.new("_dec", me); bpy.context.scene.collection.objects.link(tmpo)
-            d = tmpo.modifiers.new("Dec", "DECIMATE"); d.ratio = (LIMIT - 200) / t; d.use_collapse_triangulate = True
-            me2 = bpy.data.meshes.new_from_object(tmpo.evaluated_get(bpy.context.evaluated_depsgraph_get()))
-            bpy.data.objects.remove(tmpo, do_unlink=True); bpy.data.meshes.remove(me); me = me2
-            t = sum(len(p.vertices) - 2 for p in me.polygons)
+        if t > LIMIT:   # te groot: in stukken knippen (niet decimeren, dan gaat detail verloren)
+            src = bmesh.new(); src.from_mesh(me); src.faces.ensure_lookup_table(); uvl = src.loops.layers.uv.active
+            chunk = []; ct = 0
+            def emit(fs):
+                nb = bmesh.new(); vm = {}; nuv = nb.loops.layers.uv.new("UVMap") if uvl else None
+                for f in fs:
+                    vs = []
+                    for v in f.verts:
+                        if v not in vm: vm[v] = nb.verts.new(v.co)
+                        vs.append(vm[v])
+                    try: nf = nb.faces.new(vs)
+                    except ValueError: continue
+                    nf.smooth = f.smooth; nf.material_index = f.material_index
+                    if uvl:
+                        for l_new, l_old in zip(nf.loops, f.loops): l_new[nuv].uv = l_old[uvl].uv
+                m2 = bpy.data.meshes.new("_chunk"); nb.to_mesh(m2); nb.free(); return m2
+            parts = []
+            for f in src.faces:
+                chunk.append(f); ct += len(f.verts) - 2
+                if ct >= LIMIT - 200: parts.append(emit(chunk)); chunk = []; ct = 0
+            if chunk: parts.append(emit(chunk))
+            src.free(); bpy.data.meshes.remove(me)
+            for m2 in parts:
+                t2 = sum(len(p.vertices) - 2 for p in m2.polygons)
+                if tris + t2 > LIMIT and tris > 0: flush()
+                bm.from_mesh(m2); tris += t2; bpy.data.meshes.remove(m2)
+            continue
         if tris + t > LIMIT and tris > 0: flush()
         bm.from_mesh(me); tris += t; bpy.data.meshes.remove(me)
     flush()

@@ -21,8 +21,52 @@ COLL=[]
 def coll(cx,cy,cz,sx,sy,sz,a=0.0): COLL.append([round(v,3) for v in (cx,cy,cz,sx,sy,sz,a)])
 def seglen(p,q): return math.hypot(q[0]-p[0],q[1]-p[1])
 
+def haag(mat,pts,w,h):
+    """geschoren haag met diepte: doorlopende vorm langs de polylijn, ronde bovenkant, bobbelig oppervlak
+    (inhammen/uitstulpingen 5-10 cm via ruis), zodat silhouet en zijkanten niet vlak zijn (Daan: 'er moet diepte in zitten')"""
+    from mathutils import noise
+    closed=math.hypot(pts[0][0]-pts[-1][0],pts[0][1]-pts[-1][1])<0.05
+    P=[Vector((x,y,0)) for x,y in (pts[:-1] if closed else pts)]
+    # herbemonsteren op 0.12 m
+    seq=[]; segs=list(zip(P,P[1:]+([P[0]] if closed else [])))
+    for a_,b_ in segs:
+        L=(b_-a_).length; n=max(1,int(L/0.12))
+        for i in range(n): seq.append(a_+(b_-a_)*(i/n))
+    if not closed: seq.append(P[-1])
+    r=min(w/2*0.9,0.22)
+    zr=[0.0,0.12,0.25,0.38,0.5,0.62,0.75]; zr=[z_ for z_ in zr if z_*h<h-r-0.02]
+    prof=[(-w/2,z_*h) for z_ in zr]+[(-w/2,h-r)]+[(-w/2+r-r*math.cos(t),h-r+r*math.sin(t)) for t in (math.radians(30),math.radians(60))]
+    prof+=[(-w/2+r,h)]+[(u,h) for u in (-w/6,w/6)]+[(w/2-r,h)]
+    prof+=[(w/2-r+r*math.cos(t),h-r+r*math.sin(t)) for t in (math.radians(60),math.radians(30))]+[(w/2,h-r)]+[(w/2,z_*h) for z_ in reversed(zr)]
+    pn=[(-1,0)]*len(zr)+[(-1,0.2),(-0.8,0.6),(-0.5,0.85),(-0.2,1),(0,1),(0,1),(0.2,1),(0.5,0.85),(0.8,0.6),(1,0.2)]+[(1,0)]*len(zr)
+    bm=bmesh.new(); rings=[]
+    N=len(seq)
+    for i,c in enumerate(seq):
+        prv=seq[i-1] if (i>0 or closed) else seq[i]; nxt=seq[(i+1)%N] if (i<N-1 or closed) else seq[i]
+        t=(nxt-prv); t.z=0; t.normalize() if t.length>1e-6 else None
+        side=Vector((-t.y,t.x,0))
+        ring=[]
+        for (u,z),(nu,nz) in zip(prof,pn):
+            q=c+side*u+Vector((0,0,z))
+            d=0.05*noise.noise(q*2.4)+0.035*noise.noise(q*7.0+Vector((3.1,1.7,0.4)))+0.015*noise.noise(q*16.0)+0.035   # gemiddeld iets naar buiten (uitlopend blad)
+            d*=min(1.0,z/0.15) if z<0.15 else 1.0
+            nv=side*nu+Vector((0,0,nz)); nv.normalize()
+            ring.append(bm.verts.new(q+nv*d))
+        rings.append(ring)
+    M=len(prof)
+    for A,B in zip(rings,rings[1:]+([rings[0]] if closed else [])):
+        for k in range(M-1): bm.faces.new((A[k],B[k],B[k+1],A[k+1]))
+    if not closed:
+        for R_,flip in ((rings[0],True),(rings[-1],False)):
+            f=bm.faces.new(list(reversed(R_)) if flip else R_)
+    bmesh.ops.recalc_face_normals(bm,faces=bm.faces)
+    put("hagen",mat,bm)
+    for p_,q_ in zip(pts,pts[1:]):
+        L=seglen(p_,q_)
+        if L>0.05: coll((p_[0]+q_[0])/2,(p_[1]+q_[1])/2,h/2,L+w*0.5,w,h,math.degrees(math.atan2(q_[1]-p_[1],q_[0]-p_[0])))
 def strip(part,mat,pts,w,h,z0=0.0,ch=0.0,collide=True,extend=None):
-    """box per segment langs een polylijn (hagen, muren, paden)"""
+    """box per segment langs een polylijn (muren, paden); hagen gaan via haag()"""
+    if part=="hagen": return haag(mat,pts,w,h)
     ext=w*0.5 if extend is None else extend
     for i,(p,q) in enumerate(zip(pts,pts[1:])):
         L=seglen(p,q)
@@ -75,7 +119,7 @@ def flowerbed(poly,step=0.45,inset_poly=None):
             if inside(x,y,poly) and min(math.hypot(x-p[0],y-p[1]) for p in poly)>0.35:
                 col_=("bloem_rood","bloem_wit","bloem_paars")[(int(x/step)+int(y/step)*2)%3]
                 bm=bmesh.new(); bmesh.ops.create_icosphere(bm,subdivisions=1,radius=0.17); bmesh.ops.scale(bm,vec=(1,1,0.7),verts=bm.verts)
-                put("bloemen",col_,bm,TR(x+0.07*math.sin(k*1.7),y+0.07*math.cos(k*2.3),0.2)); k+=1
+                bm.free(); k+=1   # bloemen komen nu als echte plantscans in Studio (VillaVoltaPlantenEcht); geen blokjes meer
             x+=step
         y+=step
     # aarde: kleine plaat onder het bed

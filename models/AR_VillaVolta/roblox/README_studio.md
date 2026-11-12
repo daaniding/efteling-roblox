@@ -40,3 +40,13 @@
     Terreinkleuren: Grass (215,230,200), Mud (200,200,190), Ground (190,180,170). Nieuwe Images laden in Studio pas na enkele minuten.
     Bloemperken: oude icosphere-blokjes (MAT_bloem_*) verwijderd, 398 echte bloemen in kleurbanden met bodembedekkerrand (seed 5).
     Daan: "het is een pretpark, felle kleuren mogen" -> ColorCorrection saturation 0.18.
+13. Echte planten (Poly Haven CC0, `build/08_polyhaven_planten.py`, texturen `textures/polyhaven/`, ids in
+    `exports/polyhaven/asset_ids.txt`): 80 varianten als ServerStorage.VVEchtePlanten (MeshPart + SurfaceAppearance; kleurtexturen
+    ~60% helderder gemaakt `*_diffhelder`, scans waren te donker). workspace.VillaVoltaPlantenEcht vervangt de nepplanten
+    (oude in ServerStorage.VillaVoltaPlanten_oud): gras -> grass_bermuda, perken -> gazania/ursinia (dicht, 1.4-1.9x),
+    borders -> periwinkle/sorrel/shrub_03, bos -> fern/nettle/weed/dandelion + 97 grote struiken (shrub_02/04).
+    Nieuwe Images zichtbaar maken: eerst via Decal preloaden (ContentProvider) en ColorMap opnieuw zetten.
+14. Haag met diepte: `04_omgeving.py` haag() = doorlopende vorm met ronde bovenkant en ruis-bobbels; textuur
+    `build/10_haagtextuur.py` (gerenderd uit 650 echte shrub_02-takjes, naadloos 2x2 m) -> kleur 107834399804087, normaal 80469356130057
+    als SurfaceAppearance op MAT_beuk/buxus/haag. Export knipt nu grote meshes in stukken i.p.v. decimeren.
+    Omgeving-asset **107244417789180**. Proef met losse haagtakjes (te sprieterig) staat in ServerStorage.VillaVoltaHaagschil_proef.
