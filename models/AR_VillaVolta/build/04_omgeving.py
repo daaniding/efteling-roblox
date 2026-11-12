@@ -266,7 +266,7 @@ def build(master):
         bmesh.ops.translate(bm,vec=(0,0,-zt-0.05),verts=[g for g in r["geom"] if isinstance(g,bmesh.types.BMVert)])
         bmesh.ops.recalc_face_normals(bm,faces=bm.faces)
         put("paden",mat,bm)
-    for m_,zt in (("grind",0.05),("klinker",0.05),("klinkerrood",0.05),("plein",0.05),("band",0.075)):
+    for m_,zt in (("grind",0.05),("klinker",0.05),("klinkerrood",0.05),("plein",0.05),("band",0.06)):
         for poly in PP[m_]: slab(poly,zt,m_)
     # ---------------- objecten ----------------
     n=0; tris=0

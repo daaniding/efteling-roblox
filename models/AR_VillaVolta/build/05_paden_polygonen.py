@@ -21,7 +21,7 @@ for m in order:
     taken=taken.union(g); out[m]=g
 # opsluitbanden: alle randen van alle padvlakken, 14 cm breed
 alles=unary_union([out[m] for m in order])
-randen=unary_union([out[m].boundary for m in order]).buffer(0.07,quad_segs=4,cap_style="flat").difference(terras.buffer(-0.02)).difference(hal.buffer(-0.02))
+randen=alles.buffer(0).boundary.buffer(0.06,quad_segs=4,cap_style="flat")   # alleen buitenrand (pad->gras); paden lopen zonder band in elkaar over (Daan).difference(terras.buffer(-0.02)).difference(hal.buffer(-0.02))
 def polys(g):
     if g.is_empty: return []
     gs=list(g.geoms) if hasattr(g,"geoms") else [g]

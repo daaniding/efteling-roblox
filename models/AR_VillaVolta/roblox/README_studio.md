@@ -15,3 +15,12 @@
 6. Terrein rond de villa (lokaal x -40..40, y -85..55): gazon (Grass 84,118,54) alleen binnen de tuin (polygoon tussen beukenhagen en terras),
    daarbuiten bosgrond: LeafyGrass (66,92,44) en Ground (74,58,42) via math.noise. Daarna 172 heesters in groepjes + 24 bosrandbomen (seed 51),
    vrij van paden/plein/gebouw. Laatste assets: villa **99373517894794**, omgeving **134354426343629** (met UV's: export doet kubusprojectie 1 UV = 2 m).
+7. Sfeer (Daan: "voelt niet alsof ik in de game loop", "overbelicht"):
+   - Lighting: Brightness 2.2, ExposureCompensation -0.25, Ambient (52,54,62), OutdoorAmbient (98,102,114), EnvDiffuse 0.8, EnvSpecular 0.5,
+     ClockTime 15.3; Atmosphere density 0.33 haze 1.6 glare 0.08; Bloom 0.22/20/2.4; ColorCorrection contrast 0.14 sat 0.04 bright -0.03.
+   - Materiaalkleuren getemperd (stuc 205,188,150; steen 182,174,154; grind 148,134,112 Pebble; klinker/plein 122,94,78; band 118,116,110).
+   - Boomschaduw AAN in VillaVoltaGroen (BomenBronV3 had bladschaduw uit voor parkprestaties).
+   - StarterPlayer.CharacterWalkSpeed = 10 (16 = 5.3 m/s op 3 studs/m: draven).
+   - SoundService: VV_Vogels 9113444360 (vol 0.35), VV_Publiek 9112766533 (vol 0.08), ProSoundEffects.
+   - Opsluitband alleen nog op de buitenrand; paden lopen zonder band in elkaar over. Omgeving-asset **81904859328304**.
+   - Lighting.Technology = Future: door Daan zelf te zetten.
