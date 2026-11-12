@@ -1,0 +1,18 @@
+00:00.428  blend            | Read blend: "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/PR_Sprookjesboom/PR_Sprookjesboom_master.blend"
+BlenderMCP addon registered
+BAKE PR_Sprookjesboom_Stam_LOD0 geometry from ['GEO_stam', 'GEO_nose', 'GEO_nose_cut', 'GEO_lid_up.L', 'GEO_lid_lo.L', 'GEO_lid_up.R', 'GEO_lid_lo.R'] | surface from HIGH
+Info: Baking map saved to internal image, save it externally or pack it
+  saved /Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/PR_Sprookjesboom/textures/PR_Sprookjesboom_Stam_normal.png
+Info: Baking map saved to internal image, save it externally or pack it
+  saved /Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/PR_Sprookjesboom/textures/PR_Sprookjesboom_Stam_ao.png
+Info: Baking map saved to internal image, save it externally or pack it
+  saved /Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/PR_Sprookjesboom/textures/PR_Sprookjesboom_Stam_basecolor.png
+Info: Baking map saved to internal image, save it externally or pack it
+  saved /Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/PR_Sprookjesboom/textures/PR_Sprookjesboom_Stam_roughness.png
+  material rebuilt from baked maps
+Info: Saved as "PR_Sprookjesboom_baked.blend"
+saved /Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/PR_Sprookjesboom/PR_Sprookjesboom_baked.blend
+BlenderMCP addon unregistered
+Blender 5.1.1 (hash b70da489d7f4 built 2026-04-14 01:46:23)
+
+Blender quit

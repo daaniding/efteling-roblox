@@ -71,18 +71,27 @@ achterbouw x -9..6.85, y 18.5..31.2, 6.2 hoog. Hoogtes uit front.jpg (deur 3.0 m
 Villa Volta buitenkant KLAAR volgens Daan. Open bij Villa Volta: geluid (later), interieur (later), prestaties testen in Play.
 Volgende chat: de volgende attractie uit de lijst hieronder (Sprookjesboom + paddenstoelen of Langnek), met dezelfde werkwijze.
 
-## Sprookjesbos: reliëf + Sprookjesboom (gestart 12 nov, chat 3)
+## Sprookjesbos: reliëf + Sprookjesboom (12 nov, chat 3)
 Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog geen show/geluid/bewegende ogen.
-- Reliëf uit **AHN4 DTM 0,5 m** (PDOK, CC0): `park/relief/` (script, `hoogte_lokaal_mm.png` = mm NAP per 1 m, x -150..300, y -150..330; overzicht-jpg).
-- Bevindingen: Sprookjesbos loopt zacht af van ~9,3 m NAP (zuid) naar ~8,2 m (noord); p5-p95 8,25-10,0 m, mediane helling 3 graden.
-  Steile taluds (tot 30+ graden) alleen lokaal: wallen rond theater/kasteel, oevers. Rond de Sprookjesboom (x 40,5, y 198,2) is het vlak
-  (8,0-8,4 m) met een kuil van ~0,3 m ervoor (vijvertje met stenen op foto 4). AHN heeft gaten onder dicht groen/gebouwen (opgevuld).
-- 18 muzikale paddenstoelen (OSM-punten) liggen op 8,2-9,5 m NAP; hoogte per stuk via `ahn_lokaal.py`.
-- Foto's: `reference/fotos/Sprookjesboom/1-4.jpg` (3 = beste vooraanzicht, 2 = schaalmodel kruin), `Muzikale_paddenstoel/1-4.jpg`.
-- Volgende: Sprookjesboom met blender-image-to-3d (maatbrief -> blokkering naast foto 3 -> vormen -> schors), dan paddenstoelen, dan reliëf in Studio-terrein.
+- Reliëf uit **AHN4 DTM 0,5 m** (PDOK, CC0): `park/relief/` (script, `hoogte_lokaal_mm.png` = mm NAP per 1 m, x -150..300, y -150..330).
+  Sprookjesbos zacht aflopend 9,3 (zuid) -> 8,2 m NAP (noord), mediane helling 3 gr, lokaal steile wallen. Rond de boom vlak, beekje ervoor.
+  **Nog niet in Studio-terrein** (terrein is vlak Y=2).
+- **Sprookjesboom v1 staat in Studio** (`Workspace.Sprookjesboom`), map `models/PR_Sprookjesboom/` (asset-brief.md = alle maten).
+  Bronnen: Eftepedia 9 m hoog, 13 m breed; foto's ref/front.jpg (camera ~20 gr rechts van het gezicht!), front_wide.jpg (hele boom), front_high.jpg.
+  Kijkt naar het zuiden (+Z) naar het pleintje met bankjes; OSM-stamhart (40.48, 198.19) m = studs (121.44, -594.57).
+  Pijplijn: `build/02_blockout.py` -> `03_forms_stam.py` (stam als loft met wortellobben, gezicht gesculpt, schors = Voronoi-platen in rijen,
+  mond/gaten uitgesneden, ogen met ooglidschillen, neus = takstomp met jaarringen) -> `03_forms_kruin.py` (takken + bladkaarten)
+  -> `04_low.py` (26k tris) -> bake_maps (2048 normal/ao/kleur/ruwheid) -> `09_export_roblox.py` (UV's behouden) -> `roblox/maak_plaatsscript.py`.
+  Review: `build/cam_match.py` rendert door de fotocamera en legt de render over de foto (`review/03`, `review/05`).
+- Assets: boom **119271916330812** (stam 3 delen + takken + blad + ogen + holtes, 38k tris), stamtextures kleur **71879589522107**,
+  normaal **122522185781721**, ruwheid **90259338261512**; takken schors_eik 99288067092575; blad = goedgekeurde bladtros 136241132523803.
+  Paddenstoel klein **125821121621263** (12 rond de voet, x1.4), muzikale paddenstoel **76565275730007** (18 OSM-plekken, Y=2). Ids: `roblox/asset_ids.json`.
+- Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
+  renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
+  naar het pad, rododendrons erachter, bankjes en het pleintje nog niet gemaakt; reliëf in terrein.
 
 ## Daarna (volgorde met Daan afgesproken)
-1. Villa Volta afmaken. 2. Sprookjesboom + paddenstoelen, Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
+1. Villa Volta afmaken (KLAAR). 2. Sprookjesboom + paddenstoelen (v1 staat), Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
 Kaatsheuvel eromheen: later.
 
