@@ -32,4 +32,4 @@
     lavendel, bodem0-1; 3.3k tris). In Studio als ServerStorage.VVPlanten (Model per prototype, pivot op de grond).
     workspace.VillaVoltaPlanten: borders 0.4-1.1 m van hagen/terras in de tuin (lavendel, siergras, bloemen, bodem; seed 2026),
     5% losse plukjes in het gazon, bosgrond in groepjes van dezelfde soort (seed 2026, 420 groepen). Paden/gebouw/rij/plein vrij.
-    TODO: tweede, dichtere bosbodemlaag (varens 1.4-2.1x, 650 groepen, seed 77) - afgebroken omdat Play liep.
+    Tweede bosbodemlaag gedaan (varens 1.4-2.1x, 650 groepen, seed 77): totaal 5943 plantmodellen. Let op prestaties (LOD/streaming later).
