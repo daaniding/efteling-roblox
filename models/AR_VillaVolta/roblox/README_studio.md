@@ -69,3 +69,6 @@
       Omgeving-asset **76111214657159**.
 17. Afronding (Daan): bezoekers-script verwijderd; ovaal pad 3.4 m breed (alleen naar binnen: a9.6 b8.4), middengroep 0.72x,
     beukenbogen beginnen bij 25 graden (liepen door de zijpaden). Omgeving-asset **81406811361689**. Villa Volta buitenkant: KLAAR.
+18. Borders langs het pad (Daan: "waarom geen planten op de groene stukken"): buitenstrook (pad -> beukenhaag) helemaal beplant,
+    binnenstrook 0.15-1.0 m langs de gazonkant; gespiegeld, twee lagen (seed 3030 raster 0.36 m, seed 4040 raster 0.42 m groter),
+    vrij van lantaarnpalen, pilaren, zijpaden en trap. ~1100 extra planten in VillaVoltaPlantenEcht.
