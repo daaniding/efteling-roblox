@@ -1,5 +1,7 @@
 # Efteling in Roblox — status en overdracht (12 nov 2026)
 
+**Nieuwe chat: lees eerst WERKWIJZE.md (lessen + Daans wensen) en dan dit bestand. Werk na elke stap STATUS.md en het geheugen bij.**
+
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
 ## Doel en kwaliteitslat
@@ -64,6 +66,10 @@ achterbouw x -9..6.85, y 18.5..31.2, 6.2 hoog. Hoogtes uit front.jpg (deur 3.0 m
   zie `models/AR_VillaVolta/roblox/README_studio.md`.
 - Villa Volta buitenkant AF volgens Daan (12 nov): symmetrische tuin, echte plantscans, haag met diepte, CC0-texturen; zie roblox/README_studio.md.
 - Interieur komt pas als heel de Efteling staat (Daan). Plein (Ton van de Venplein) ook later. Nu: meer detail/realisme buiten.
+
+## Huidige stand (einde chat 12 nov)
+Villa Volta buitenkant KLAAR volgens Daan. Open bij Villa Volta: geluid (later), interieur (later), prestaties testen in Play.
+Volgende chat: de volgende attractie uit de lijst hieronder (Sprookjesboom + paddenstoelen of Langnek), met dezelfde werkwijze.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta afmaken. 2. Sprookjesboom + paddenstoelen, Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
