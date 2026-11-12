@@ -67,60 +67,14 @@ achterbouw x -9..6.85, y 18.5..31.2, 6.2 hoog. Hoogtes uit front.jpg (deur 3.0 m
 - Villa Volta buitenkant AF volgens Daan (12 nov): symmetrische tuin, echte plantscans, haag met diepte, CC0-texturen; zie roblox/README_studio.md.
 - Interieur komt pas als heel de Efteling staat (Daan). Plein (Ton van de Venplein) ook later. Nu: meer detail/realisme buiten.
 
-## Huidige stand (einde chat 12 nov)
-Villa Volta buitenkant KLAAR volgens Daan. Open bij Villa Volta: geluid (later), interieur (later), prestaties testen in Play.
-Volgende chat: de volgende attractie uit de lijst hieronder (Sprookjesboom + paddenstoelen of Langnek), met dezelfde werkwijze.
-
-## Sprookjesbos: reliëf + Sprookjesboom (12 nov, chat 3)
-Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog geen show/geluid/bewegende ogen.
-- Reliëf uit **AHN4 DTM 0,5 m** (PDOK, CC0): `park/relief/` (script, `hoogte_lokaal_mm.png` = mm NAP per 1 m, x -150..300, y -150..330).
-  Sprookjesbos zacht aflopend 9,3 (zuid) -> 8,2 m NAP (noord), mediane helling 3 gr, lokaal steile wallen. Rond de boom vlak, beekje ervoor.
-  **Nog niet in Studio-terrein** (terrein is vlak Y=2).
-- **Sprookjesboom v1 staat in Studio** (`Workspace.Sprookjesboom`), map `models/PR_Sprookjesboom/` (asset-brief.md = alle maten).
-  Bronnen: Eftepedia 9 m hoog, 13 m breed; foto's ref/front.jpg (camera ~20 gr rechts van het gezicht!), front_wide.jpg (hele boom), front_high.jpg.
-  Kijkt naar het zuiden (+Z) naar het pleintje met bankjes; OSM-stamhart (40.48, 198.19) m = studs (121.44, -594.57).
-  Pijplijn: `build/02_blockout.py` -> `03_forms_stam.py` (stam als loft met wortellobben, gezicht gesculpt, schors = Voronoi-platen in rijen,
-  mond/gaten uitgesneden, ogen met ooglidschillen, neus = takstomp met jaarringen) -> `03_forms_kruin.py` (takken + bladkaarten)
-  -> `04_low.py` (26k tris) -> bake_maps (2048 normal/ao/kleur/ruwheid) -> `09_export_roblox.py` (UV's behouden) -> `roblox/maak_plaatsscript.py`.
-  Review: `build/cam_match.py` rendert door de fotocamera en legt de render over de foto (`review/03`, `review/05`).
-- Assets: boom **119271916330812** (stam 3 delen + takken + blad + ogen + holtes, 38k tris), stamtextures kleur **71879589522107**,
-  normaal **122522185781721**, ruwheid **90259338261512**; takken schors_eik 99288067092575; blad = goedgekeurde bladtros 136241132523803.
-  Paddenstoel klein **125821121621263** (12 rond de voet, x1.4), muzikale paddenstoel **76565275730007** (18 OSM-plekken, Y=2). Ids: `roblox/asset_ids.json`.
-- **Omgeving staat** (Daan: "water tussen pad en boom, plantjes erachter, boompjes"): `build/06_omgeving_data.py` (shapely-venv) leest OSM ->
-  `exports/omgeving_data.json` -> `06_omgeving.py` (Blender: plein+paden 3.4 m met opsluitband, geul als hoogteveld + water op -0.32 m,
-  wortel de oever in + wortel met klauwen aan de pleinkant (front_wide.jpg), 7 lage bankjes (OSM, zonder rugleuning), rieten prullenbak)
-  -> asset **121627114001594**; keien 6 prototypes **83462996132840**; posities als data-PNG **101104526038282** (`07_data_png.py`).
-  Studio: `roblox/plaats_omgeving.luau` (terrein onder de geul leeg, 900 oeverstenen/keien, 2259 planten uit VVEchtePlanten + BomenBronV3
-  rododendrons/taxus, 8 OSM-horizonbomen in de weg -> ServerStorage.SprookjesboomWeggehaald). Beek uit OSM is een smalle waterloop (1.45 m)
-  die om het pleintje kronkelt en recht voor de boom langs loopt.
-- **Update omgeving (Daan: "niet overal het pad, alleen de scène bij de boom", "gedetailleerd, modderig water"):** paden weg (fixen we later),
-  scène = 15 m rond de boom. Naar Eftepedia-foto's (`ref/eftepedia/`): rood klinkerpleintje met laag zwart hekje langs het water, hoekige lichte
-  breuksteen dik opgestapeld (1627 stenen, 5 rijen), troebel olijfbruin water, wortel met vingers in het water + wortel met klauwen, roeptoeter
-  van tonderzwammen, 9 wortelboogjes, bodembedekker op de oever, 2 Efteling-lantaarns, roodere paddenstoelhoeden.
-  Assets: omgeving **108206624747832**, breuksteen **90280289121540**, data-PNG **91704590749799**. SpawnLocation staat op het pleintje
-  (oude positie in attribuut OudePositie).
-- **Afwerking (Daan: "voeg nog toe wat moet", "veel gedetailleerder die eekhoorn"):** dieren = Roblox AI-meshes met textuur (eekhoorn
-  138758101831485 op de linker tak, konijn 76196046627133 op de oever, specht 71184715344811 bij het uilengat); weerstation achter de boom en
-  188 paarse bloemtrossen op de rododendrons (extra 109536072791154); showlamp op het gezicht + licht in de lantaarns (`roblox/plaats_extra.luau`).
-  Stam opnieuw: LOW uit de gladde vorm (UV-eilanden waren piepklein -> facetten); boom **118901625021855**, kleur/normaal/ruw
-  127707585326769 / 111187609029513 / 137929812036171. Geul-rand tot 2.5 m (gaten naast de geul) -> omgeving **131889710342801**;
-  terrein binnen 16 m vlakgezet. Zwevende layout-labels weg bij alles wat gebouwd is (ook Gijs' "Papier hier!").
-- **Laatste ronde (Daan akkoord):** kruin met echte eikenbladeren (ambientCG LeafSet016, CC0 -> `build/10_eikentros.py`,
-  `textures/bomen/blad_eik_echt.png`, asset **82258445945378**); mond groter (0.66 breed, 0.23 open), boom **107268166721469**
-  (kleur/normaal/ruw 97601430192382 / 118677532818860 / 99526504446486). Prestatietest in Play: 32-34 fps met de boom in beeld; kleine stenen
-  en lage planten zonder schaduw -> 49/37 fps. Grootste kostenpost in de place: VillaVoltaPlantenEcht (~6000) + VillaVoltaHorizon (1548):
-  zonder die twee 60 fps. Aanrader: StreamingEnabled + LOD (nog niet gedaan, raakt scripts).
-- **Water (Daan: "nu water"):** troebel olijfbruin oppervlak met 3 stromende Texture-lagen (slib + 2x rimpels), 12 drijvende eikenblaadjes
-  over de middellijn (skelet van de OSM-beek, 45 m), rimpelringen bij de wortelvingers en in 3 bochten, 14 kroosplukjes, natte stenen bij de
-  waterlijn. `build/11_water.py` (textures + middellijn), `roblox/plaats_water.luau`, LocalScript `roblox/BeekStroming.client.luau`
-  (wacht op replicatie!). Getest in Play: blaadjes drijven ~0.1 m/s, lagen stromen. GijsAnimatie aangepast (wachtte op de weggehaalde tekst).
-- Later (Daan): geluid/show, paden in het park. Dieren zijn goed zo.
-- Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
-  renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
-  naar het pad, rododendrons erachter, (beek/plein/bankjes/planten staan nu); nog: tonderzwam-roeptoeter op de wortel, dieren (eekhoorn, specht), stoomtreinspoor achter de boom, reliëf van heel het Sprookjesbos in het terrein.
+## Huidige stand (einde chat 3, 12 nov)
+Villa Volta buitenkant KLAAR. **Sprookjesboom + scène KLAAR** (zie sectie hierboven en `models/PR_Sprookjesboom/`).
+Later (Daan): geluid/show, paden door het park, eventueel StreamingEnabled (prestaties).
+**Volgende chat: de Langnek** — alleen de Langnek + scène direct eromheen, eerst Eftepedia-foto's, zelfde pijplijn
+(asset-brief -> blokkering naast foto -> vormen -> LOW + bake -> export -> Studio -> scène -> close-ups + Play-test -> tips vastleggen).
 
 ## Daarna (volgorde met Daan afgesproken)
-1. Villa Volta afmaken (KLAAR). 2. Sprookjesboom + paddenstoelen (v1 staat), Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
+1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (volgende). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
 Kaatsheuvel eromheen: later.
 

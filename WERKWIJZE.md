@@ -2,6 +2,18 @@
 
 Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat technisch werkt. Na ELKE stap: STATUS.md + geheugen bijwerken.
 
+## Afspraken met Daan (Sprookjesboom, 12 nov) — gelden voor elke volgende attractie
+- **Alleen bouwen wat gevraagd is:** de attractie + de scène direct eromheen (~15 m). Geen paden door het park, geen andere gebieden
+  "alvast" meenemen ("niet overal het pad, dat vroeg ik niet"). Paden komen later, apart. Bij twijfel over de omvang: eerst vragen.
+- **Na elke build de tips vastleggen** (dit bestand + geheugen), niet alleen de status.
+- **Eerst kijken hoe de scène er echt uitziet:** alle Eftepedia-plaatjes van de attractie downloaden (lemma-pagina, `ref/eftepedia/`), op één
+  blad bekijken en elk zichtbaar element terug laten komen (stenen, water, hekjes, lantaarns, bankjes, planten, figuren).
+- **Dieren/figuren:** geen zelfgeboetseerde bolletjes; Roblox generate_mesh (AI, getextureerd) geeft het gevraagde detail.
+- **Water:** mag modderig/troebel en moet leven (stromende lagen, drijvende blaadjes, rimpelringen, kroos, natte stenen).
+- **Kleur/tint achteraf** via SurfaceAppearance.Color (stam "iets donkerder") zonder nieuwe bake.
+- **Geen zwevende tekst** (layout-labels, tekstballonnen) bij gebouwde dingen; scripts die op zo'n label wachten aanpassen.
+- **Altijd checken:** close-ups in Studio (facetten, gaten, zwevers) en een prestatietest in Play (fps met en zonder de nieuwe scène).
+
 ## Eerst bronnen, dan bouwen ("zoals in de Efteling", niet verzinnen)
 - OSM (`reference/data/efteling_osm.xml`): footprints, paden, hagen, muren, wachtrij-zigzag, poortjes, deuren, lantaarns, bomen.
   Omrekenen naar modelcoordinaten per attractie (zie `models/AR_VillaVolta/ref/osm_lokaal.json`).
