@@ -276,3 +276,15 @@ reference/fotos/Efteling_Theater/1.jpg | File:Efteling 21-7-2007 005.jpg | CC BY
 reference/fotos/Efteling_Theater/2.jpg | File:Efteling Event - Theater.jpg | CC BY-SA 4.0 | Eliedion
 reference/fotos/Efteling_Theater/3.jpg | File:Efteling Theater restaurant.jpg | CC BY-SA 4.0 | Eliedion
 reference/fotos/Efteling_Theater/4.jpg | File:Efteling Theater.JPG | CC BY-SA 3.0 | Eliedion
+reference/fotos/Huis_van_de_Vijf_Zintuigen/1.jpg | File:Efteling, Ingang Python - panoramio.jpg | CC BY 3.0 | E v Schoonhoven
+reference/fotos/Huis_van_de_Vijf_Zintuigen/2.jpg | File:EftelingEingang.jpg | CC BY-SA 2.0 | thecrypt
+reference/fotos/Huis_van_de_Vijf_Zintuigen/3.jpg | File:Efteling (39631375054).jpg | CC BY-SA 2.0 | deveron clarijs from Zwijndrecht
+reference/fotos/Huis_van_de_Vijf_Zintuigen/4.jpg | File:Efteling - Kaatsheuvel - 2013 - panoramio.jpg | CC BY-SA 3.0 | StevenL
+reference/fotos/Huis_van_de_Vijf_Zintuigen/5.jpg | File:Efteling Droomvlucht.jpg | CC BY 2.5 | Stefan Scheer
+reference/fotos/Huis_van_de_Vijf_Zintuigen/6.jpg | File:Efteling Entrance.jpg | CC BY 2.5 | Stefan Scheer
+reference/fotos/Huis_van_de_Vijf_Zintuigen/7.jpg | File:Efteling Huis van de Vijf Zintuigen.jpg | CC BY-SA 2.0 | Eric de Redelijkheid
+reference/fotos/Huis_van_de_Vijf_Zintuigen/8.jpg | File:Efteling Huis van de Vijf Zintuigen (31443089748).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
+reference/fotos/Huis_van_de_Vijf_Zintuigen/9.jpg | File:Efteling Huis van de Vijf Zintuigen (43502156450).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
+reference/fotos/Huis_van_de_Vijf_Zintuigen/10.jpg | File:Efteling Huis van de Vijf Zintuigen (45268565242).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
+reference/fotos/Huis_van_de_Vijf_Zintuigen/11.jpg | File:Efteling Huis van de Vijf Zintuigen (45268567142).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
+reference/fotos/Huis_van_de_Vijf_Zintuigen/12.jpg | File:Efteling Huis van de Vijf Zintuigen (45268569252).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
