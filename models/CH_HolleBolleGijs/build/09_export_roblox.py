@@ -24,7 +24,7 @@ for o in low.all_objects:
         bpy.data.meshes.remove(me); continue
     me.transform(o.matrix_world)
     mname = (o.data.materials[0].name if o.data.materials and o.data.materials[0] else "MAT_plaster")
-    groups[mname].append(me)
+    groups[(o.get("anim") or "static") + "__" + mname].append(me)
 exp = bpy.data.collections.new("EXPORT"); bpy.context.scene.collection.children.link(exp)
 made = []
 for mname, meshes in groups.items():
@@ -34,7 +34,7 @@ for mname, meshes in groups.items():
         if len(bm.verts) == 0: return
         bmesh.ops.triangulate(bm, faces=bm.faces)
         me = bpy.data.meshes.new(f"{mname}_{idx}"); bm.to_mesh(me); bm.free()
-        ob = bpy.data.objects.new(f"{mname}_{idx}", me); exp.objects.link(ob); me.materials.append(bpy.data.materials[mname])
+        ob = bpy.data.objects.new(f"{mname}_{idx}", me); exp.objects.link(ob); me.materials.append(bpy.data.materials[mname.split("__",1)[1]])
         for p in me.polygons: p.use_smooth = True
         made.append((ob.name, len(me.polygons))); bm = bmesh.new(); tris = 0; idx += 1
     for me in meshes:

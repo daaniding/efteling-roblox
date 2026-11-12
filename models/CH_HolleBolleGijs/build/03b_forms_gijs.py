@@ -47,27 +47,27 @@ def build(master):
     m_skin = M("skin", (0.95, 0.70, 0.58), 0.35); m_blush = M("skin_blush", (0.92, 0.50, 0.45), 0.35)
     m_hair = M("hair_blond", (0.80, 0.60, 0.28), 0.4); m_shirt = M("shirt_red", (0.78, 0.15, 0.10), 0.35)
     m_white = M("cuff_white", (0.93, 0.92, 0.88), 0.4); m_black = M("mouth_black", (0.02, 0.02, 0.02), 0.9)
-    m_lip = M("lip", (0.80, 0.40, 0.38), 0.3); m_eye_w = M("eye_white", (0.95, 0.95, 0.93), 0.1)
+    m_lip = M("lip", (0.86, 0.50, 0.44), 0.3); m_eye_w = M("eye_white", (0.95, 0.95, 0.93), 0.1)
     m_iris = M("iris", (0.30, 0.42, 0.55), 0.2); m_pupil = M("pupil", (0.02, 0.02, 0.02), 0.2); m_brow = M("brow", (0.60, 0.42, 0.18), 0.5)
 
     # ---------- hoofd: gefuseerd
     parts = [
         sphere("P_skull", HEAD_W / 2 * 0.88, L, (0, CY, HZ + 0.015), u=32, v=16, scale=(1.0, 0.98, 1.04)),
-        sphere("P_cheek.L", 0.135, L, (-0.145, CY - 0.10, MOUTH_Z - 0.01), u=24, v=12, scale=(1.0, 0.95, 0.9)),
-        sphere("P_cheek.R", 0.135, L, (0.145, CY - 0.10, MOUTH_Z - 0.01), u=24, v=12, scale=(1.0, 0.95, 0.9)),
-        sphere("P_jowl", 0.17, L, (0, CY - 0.05, CHIN_Z + 0.04), u=24, v=12, scale=(1.15, 0.85, 0.6)),
+        sphere("P_cheek.L", 0.14, L, (-0.125, CY - 0.09, MOUTH_Z - 0.0), u=24, v=12, scale=(1.0, 0.95, 0.9)),
+        sphere("P_cheek.R", 0.14, L, (0.125, CY - 0.09, MOUTH_Z - 0.0), u=24, v=12, scale=(1.0, 0.95, 0.9)),
+        sphere("P_jowl", 0.19, L, (0, CY - 0.05, CHIN_Z + 0.05), u=24, v=12, scale=(1.2, 0.9, 0.62)),
         sphere("P_chin", 0.07, L, (0, CY - 0.17, CHIN_Z + 0.05), u=16, v=8, scale=(1.3, 1.0, 0.8)),
         sphere("P_brow", 0.19, L, (0, CY - 0.07, EYE_Z + 0.07), u=24, v=12, scale=(1.05, 0.85, 0.5)),
         sphere("P_neck", 0.13, L, (0, CY + 0.02, CHIN_Z - 0.06), u=16, v=8, scale=(1.0, 1.0, 1.0)),
         sphere("P_mouth_mound", 0.085, L, (-0.01, CY - 0.19, MOUTH_Z), u=16, v=8, scale=(1.1, 0.8, 1.0)),
     ]
-    head = fused("GEO_head", parts, 0.011, 6)
+    head = fused("GEO_head", parts, 0.011, 14)
     # sculpt: oogkassen, mondholte, neusbrug, lachrimpels
     for s in (-1, 1):
         push(head, (s * 0.09, FACE_Y, EYE_Z), 0.075, -0.022)
         push(head, (s * 0.07, FACE_Y - 0.01, MOUTH_Z + 0.03), 0.05, -0.01)   # naso-labiale groef
-    push(head, (-0.015, FACE_Y - 0.02, MOUTH_Z), 0.085, -0.045)               # mondholte
-    push(head, (-0.015, FACE_Y - 0.02, MOUTH_Z), 0.05, -0.03)                 # dieper in het midden
+    push(head, (-0.015, FACE_Y - 0.02, MOUTH_Z), 0.10, -0.05)                # mondholte
+    push(head, (-0.015, FACE_Y - 0.02, MOUTH_Z), 0.06, -0.04)                 # dieper in het midden
     push(head, (0, FACE_Y, MOUTH_Z + 0.075), 0.035, 0.012)                    # neusbrug
     push(head, (0, FACE_Y - 0.01, MOUTH_Z - 0.09), 0.05, -0.012)              # kin-mondgroef
     sm = head.modifiers.new("Smooth2", "SMOOTH"); sm.factor = 0.5; sm.iterations = 2
@@ -75,11 +75,11 @@ def build(master):
     shade_smooth(head, math.radians(80)); assign(head, m_skin)
     # blos op de wangen: dunne schil
     for s in (-1, 1):
-        b = sphere("GEO_blush" + (".L" if s < 0 else ".R"), 0.075, L, (s * 0.16, FACE_Y + 0.085, MOUTH_Z + 0.01), u=16, v=8, scale=(1.0, 0.55, 0.8))
+        b = sphere("GEO_blush" + (".L" if s < 0 else ".R"), 0.09, L, (s * 0.165, FACE_Y + 0.075, MOUTH_Z + 0.015), u=16, v=8, scale=(1.0, 0.55, 0.8))
         assign(b, m_blush); shade_smooth(b, math.radians(80))
     # ---------- mond: lippenring + zwart gat (pivot voor animatie onder de onderlip)
     bm = bmesh.new()
-    R, r = 0.060, 0.030
+    R, r = 0.064, 0.021
     rings = []
     for i in range(24):
         t = i * 2 * math.pi / 24; c = Vector((R * math.cos(t) * 1.0, 0, R * math.sin(t) * 0.95))
@@ -88,19 +88,20 @@ def build(master):
         a_, b_ = rings[i], rings[(i + 1) % 24]
         for k in range(10): bm.faces.new((a_[k], a_[(k + 1) % 10], b_[(k + 1) % 10], b_[k]))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-    lips = new_mesh_object("GEO_lips", bm, L, (-0.015, FACE_Y - 0.03, MOUTH_Z)); assign(lips, m_lip); shade_smooth(lips, math.radians(80))
-    hole = cylinder("GEO_mouth_hole", 0.042, 0.24, L, segments=20, axis="Y", location=(-0.015, FACE_Y + 0.09, MOUTH_Z)); assign(hole, m_black)
+    lips = new_mesh_object("GEO_lips", bm, L, (-0.015, FACE_Y - 0.03, MOUTH_Z - 0.005)); assign(lips, m_lip); shade_smooth(lips, math.radians(80))
+    hole = cylinder("GEO_mouth_hole", 0.048, 0.24, L, segments=20, axis="Y", location=(-0.015, FACE_Y + 0.09, MOUTH_Z)); assign(hole, m_black)
     # ---------- neus
-    nose = sphere("GEO_nose", 0.034, L, (0, FACE_Y - 0.012, MOUTH_Z + 0.075), u=16, v=8, scale=(1.0, 0.9, 0.85)); assign(nose, m_skin); shade_smooth(nose, math.radians(80))
+    nose = sphere("GEO_nose", 0.036, L, (0, FACE_Y - 0.03, MOUTH_Z + 0.09), u=16, v=8, scale=(1.0, 0.95, 0.85)); assign(nose, m_skin); shade_smooth(nose, math.radians(80))
     for s in (-1, 1):
-        n = sphere("GEO_nostril" + (".L" if s < 0 else ".R"), 0.016, L, (s * 0.024, FACE_Y + 0.0, MOUTH_Z + 0.058), u=12, v=6); assign(n, m_skin); shade_smooth(n, math.radians(80))
+        n = sphere("GEO_nostril" + (".L" if s < 0 else ".R"), 0.017, L, (s * 0.026, FACE_Y - 0.016, MOUTH_Z + 0.072), u=12, v=6); assign(n, m_skin); shade_smooth(n, math.radians(80))
     # ---------- ogen, oogleden, wenkbrauwen
     for s, side in ((-1, ".L"), (1, ".R")):
-        ex, ey = s * 0.09, FACE_Y + 0.012
-        e = sphere("GEO_eye" + side, 0.036, L, (ex, ey, EYE_Z), u=20, v=10); assign(e, m_eye_w); shade_smooth(e, math.radians(80))
-        i_ = cylinder("GEO_iris" + side, 0.017, 0.004, L, segments=20, axis="Y", location=(ex + s * 0.004, ey - 0.0335, EYE_Z - 0.002)); assign(i_, m_iris)
-        p_ = cylinder("GEO_pupil" + side, 0.008, 0.004, L, segments=14, axis="Y", location=(ex + s * 0.004, ey - 0.036, EYE_Z - 0.002)); assign(p_, m_pupil)
-        lid = sphere("GEO_lid" + side, 0.040, L, (ex, ey + 0.004, EYE_Z + 0.012), u=20, v=10, scale=(1.05, 1.0, 0.7)); assign(lid, m_skin); shade_smooth(lid, math.radians(80))
+        ex, ey = s * 0.09, FACE_Y + 0.026
+        e = sphere("GEO_eye" + side, 0.032, L, (ex, ey, EYE_Z), u=20, v=10); assign(e, m_eye_w); shade_smooth(e, math.radians(80))
+        i_ = cylinder("GEO_iris" + side, 0.019, 0.004, L, segments=20, axis="Y", location=(ex + s * 0.003, ey - 0.0295, EYE_Z - 0.003)); assign(i_, m_iris)
+        p_ = cylinder("GEO_pupil" + side, 0.009, 0.004, L, segments=14, axis="Y", location=(ex + s * 0.003, ey - 0.032, EYE_Z - 0.003)); assign(p_, m_pupil)
+        hl = sphere("GEO_eyehl" + side, 0.004, L, (ex + s * 0.003 - 0.006, ey - 0.034, EYE_Z + 0.004), u=8, v=6); assign(hl, m_eye_w)
+        lid = sphere("GEO_lid" + side, 0.037, L, (ex, ey + 0.002, EYE_Z + 0.014), u=20, v=10, scale=(1.1, 1.0, 0.7)); assign(lid, m_skin); shade_smooth(lid, math.radians(80))
         brow = curve_tube("GEO_brow" + side, [(ex - s * 0.065, ey - 0.008, EYE_Z + 0.06), (ex, ey - 0.022, EYE_Z + 0.082), (ex + s * 0.06, ey - 0.006, EYE_Z + 0.066)], 0.016, L, resolution=8, taper_to=0.45)
         brow.data.materials.append(m_brow)
         # oor
@@ -111,24 +112,28 @@ def build(master):
     RC = HEAD_W / 2 * 0.88 + 0.022
     cap = sphere("GEO_hair_cap", RC, L, (0, CY + 0.01, HZ + 0.03), u=32, v=16, scale=(1.0, 0.98, 1.0))
     cutter = box("CUT_hair", (1.2, 1.2, 0.6), L, (0, CY, HZ + 0.03 - 0.30 + 0.06))           # alles onder z=HZ-0.21 weg
-    front_cut = box("CUT_hair_front", (0.5, 0.4, 0.5), L, (0, CY - 0.30, EYE_Z + 0.09 - 0.25 + 0.0))  # voorhoofd vrij
+    front_cut = box("CUT_hair_front", (0.5, 0.4, 0.5), L, (0, CY - 0.30, EYE_Z + 0.125 - 0.25))  # voorhoofd vrij
     boolean(cap, cutter); boolean(cap, front_cut); assign(cap, m_hair); shade_smooth(cap, math.radians(80))
     # pony-krullen langs de rand van de kap en losse krullen bovenop
     def curl(name, c, nrm, size):
         nrm = Vector(nrm).normalized(); up = Vector((0, 0, 1)) if abs(nrm.z) < 0.9 else Vector((0, 1, 0))
         u = up.cross(nrm).normalized(); v = nrm.cross(u)
-        pts = [tuple(Vector(c) + u * size * math.cos(a) + v * size * math.sin(a) + nrm * (0.6 * size + 0.15 * size * math.sin(2 * a))) for a in [k * 2 * math.pi / 7 for k in range(8)]]
-        o = curve_tube(name, pts, size * 0.85, L, resolution=6, taper_to=0.75); o.data.materials.append(m_hair); return o
+        rot = random.uniform(0, 2 * math.pi); N = 9
+        pts = []
+        for k in range(N):
+            a = rot + k * math.radians(300) / (N - 1); rr = size * (1.15 - 0.6 * k / (N - 1))   # spiraal naar binnen
+            pts.append(tuple(Vector(c) + u * rr * math.cos(a) + v * rr * math.sin(a) + nrm * (0.25 * size + 0.08 * size * k / N)))
+        o = curve_tube(name, pts, size * 0.55, L, resolution=6, taper_to=0.45); o.data.materials.append(m_hair); return o
     k = 0
-    for i in range(40):
-        t = i * 2 * math.pi / 40 + random.uniform(-0.05, 0.05)
+    for i in range(56):
+        t = i * 2 * math.pi / 56 + random.uniform(-0.05, 0.05)
         el = math.radians(random.uniform(-15, 65)) if math.sin(t) < -0.3 else math.radians(random.uniform(-5, 75))
-        if math.sin(t) < -0.3 and el < math.radians(10): el = math.radians(12)   # voorhoofd vrij
+        if math.sin(t) < -0.3 and el < math.radians(24): el = math.radians(26)   # voorhoofd vrij
         nrm = Vector((math.cos(t) * math.cos(el), math.sin(t) * math.cos(el) * 0.98, math.sin(el)))
         c = Vector((0, CY + 0.01, HZ + 0.03)) + nrm * RC * 0.97
-        curl("GEO_curl_%d" % k, c, nrm, random.uniform(0.016, 0.024)); k += 1
-    for i in range(12):
-        t = random.uniform(0, 2 * math.pi); el = math.radians(random.uniform(55, 88))
+        curl("GEO_curl_%d" % k, c, nrm, random.uniform(0.022, 0.03)); k += 1
+    for i in range(22):
+        t = random.uniform(0, 2 * math.pi); el = math.radians(random.uniform(40, 88))
         nrm = Vector((math.cos(t) * math.cos(el), math.sin(t) * math.cos(el), math.sin(el)))
         c = Vector((0, CY + 0.01, HZ + 0.03)) + nrm * RC * 0.97
         curl("GEO_curl_%d" % k, c, nrm, random.uniform(0.018, 0.026)); k += 1
@@ -166,6 +171,12 @@ def build(master):
             f = curve_tube("GEO_finger%s_%d" % (side, k), [(-s * 0.02 + s * 0.11, fy + 0.02, fz), (-s * 0.04 + s * 0.11, fy - 0.03, fz - 0.01), (-s * 0.10 + s * 0.11, fy - 0.04, fz - 0.02)], 0.014, L, resolution=6, taper_to=0.8)
             f.data.materials.append(m_skin)
         th = curve_tube("GEO_thumb" + side, [(s * 0.09, CY - 0.34, 1.21), (s * 0.05, CY - 0.37, 1.235), (s * 0.0, CY - 0.38, 1.24)], 0.015, L, resolution=6, taper_to=0.8); th.data.materials.append(m_skin)
+    for o in bpy.data.objects:
+        if o.get("owner") != OWNER_TAG: continue
+        n = o.name
+        if n.startswith(("GEO_lips", "GEO_mouth_hole")): o["anim"] = "mouth"
+        elif n.startswith(("GEO_head", "GEO_blush", "GEO_nose", "GEO_nostril", "GEO_eye", "GEO_iris", "GEO_pupil", "GEO_lid", "GEO_brow", "GEO_ear", "GEO_hair", "GEO_curl")): o["anim"] = "head"
+        else: o["anim"] = "body"
     save_master(master)
     log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "objects")
 
