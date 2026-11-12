@@ -28,3 +28,8 @@
    ServerScriptService.SpelerSchaal: speler 0.9x (char:ScaleTo bij CharacterAppearanceLoaded).
 9. Plein: MeshPart-materiaal Pavement (visgraatklinkers, schaal goed) kleur (178,162,140) i.p.v. Cobblestone+variant (te donker, te fijn).
 10. Plein weggehaald (later met heel het Ton van de Venplein). Rijvloer = grind. Lantaarnpalen verplaatst naar exports/lampposten.json (naast het pad, vrij van hagen; gezocht met shapely). Omgeving-asset **109033549155370**.
+11. Beplanting: `build/07_planten.py` -> asset **111885456628958** (15 prototypes: gras0-2, siergras0-1, varen0-1, bloem_rood/geel/paars/wit/roze,
+    lavendel, bodem0-1; 3.3k tris). In Studio als ServerStorage.VVPlanten (Model per prototype, pivot op de grond).
+    workspace.VillaVoltaPlanten: borders 0.4-1.1 m van hagen/terras in de tuin (lavendel, siergras, bloemen, bodem; seed 2026),
+    5% losse plukjes in het gazon, bosgrond in groepjes van dezelfde soort (seed 2026, 420 groepen). Paden/gebouw/rij/plein vrij.
+    TODO: tweede, dichtere bosbodemlaag (varens 1.4-2.1x, 650 groepen, seed 77) - afgebroken omdat Play liep.
