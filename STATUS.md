@@ -73,6 +73,14 @@ Later (Daan): geluid/show, paden door het park, eventueel StreamingEnabled (pres
 **Volgende chat: de Langnek** — alleen de Langnek + scène direct eromheen, eerst Eftepedia-foto's, zelfde pijplijn
 (asset-brief -> blokkering naast foto -> vormen -> LOW + bake -> export -> Studio -> scène -> close-ups + Play-test -> tips vastleggen).
 
+## Langnek (chat 4, 12 nov) — bezig
+Map `models/CH_Langnek/`. Bronnen: Eftepedia-lemma Langnek (`ref/eftepedia/`, 8 foto's + technisch ontwerp), OSM rots + vijver (`ref/osm_lokaal.json`).
+Feiten: reus zit wijdbeens op kunstrots, halve-maanvijver met natuurstenen rand + kronkelend hekje; nek NIET telescopisch maar schuift als geheel
+omhoog uit de kraag (geleidebuis); hoofd en ogen draaien apart. Kijkt ZZO over de vijver naar het plein/Kogeloog.
+Schaal via horizon-methode (ooghoogte 1.6 m = py 615/900 in front.jpg). Nek uit 5.9 m zichtbaar (foto; Eftepedia zegt 4.8 m -> foto aangehouden).
+- [x] asset-brief.md  - [x] 02_blockout (overlay `review/02_blockout/compare_clay.jpg` klopt)  - [ ] 03 vormen  - [ ] bake/export  - [ ] Studio + animatie
+Let op: de eerdere snelle Langnek uit losse Studio-parts (Workspace.Langnek) wordt vervangen.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (volgende). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
