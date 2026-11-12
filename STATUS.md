@@ -110,7 +110,11 @@ Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog 
   (kleur/normaal/ruw 97601430192382 / 118677532818860 / 99526504446486). Prestatietest in Play: 32-34 fps met de boom in beeld; kleine stenen
   en lage planten zonder schaduw -> 49/37 fps. Grootste kostenpost in de place: VillaVoltaPlantenEcht (~6000) + VillaVoltaHorizon (1548):
   zonder die twee 60 fps. Aanrader: StreamingEnabled + LOD (nog niet gedaan, raakt scripts).
-- Later (Daan): water levendiger, geluid/show, paden in het park. Dieren zijn goed zo.
+- **Water (Daan: "nu water"):** troebel olijfbruin oppervlak met 3 stromende Texture-lagen (slib + 2x rimpels), 12 drijvende eikenblaadjes
+  over de middellijn (skelet van de OSM-beek, 45 m), rimpelringen bij de wortelvingers en in 3 bochten, 14 kroosplukjes, natte stenen bij de
+  waterlijn. `build/11_water.py` (textures + middellijn), `roblox/plaats_water.luau`, LocalScript `roblox/BeekStroming.client.luau`
+  (wacht op replicatie!). Getest in Play: blaadjes drijven ~0.1 m/s, lagen stromen. GijsAnimatie aangepast (wachtte op de weggehaalde tekst).
+- Later (Daan): geluid/show, paden in het park. Dieren zijn goed zo.
 - Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
   renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
   naar het pad, rododendrons erachter, (beek/plein/bankjes/planten staan nu); nog: tonderzwam-roeptoeter op de wortel, dieren (eekhoorn, specht), stoomtreinspoor achter de boom, reliëf van heel het Sprookjesbos in het terrein.
