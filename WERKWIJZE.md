@@ -99,3 +99,11 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Gezicht realistischer: oogleden, wallen, neus en lippen als ellipsoiden MEE fuseren in de hoofdmassa en daarna openingen uitgraven
   (push met direction); losse buisjes/ringen ogen cartoon. Te zware bovenleden = boze blik: leden hoog genoeg, ruime oogopening.
 - Plooien: per ring van de loft duwen met kleine sterkte (doorlopend); om de ring duwen met grote sterkte geeft een kralenketting.
+
+## Lessen Assepoester (12 nov, chat 5)
+- Eftepedia-lemma in een keer binnenhalen: thumb-src uit de html halen en `/lemma/images/X/XY/naam.jpg` (zonder thumb/) downloaden; contactblad van 6 kolommen.
+- BAG-footprints zijn rechthoekig en betrouwbaar voor maten (+-0.5 m), maar onderlinge verspringingen kunnen afwijken van de foto: zichtbare gevel = foto.
+- Oriëntatie uit OSM-entrances halen (`entrance=main/exit`) voordat je de kijkrichting kiest.
+- Een frontale gevelfoto kan vrijwel orthografisch zijn (rechtgetrokken of telelens): test dat door de px/m van twee vlakken op verschillende diepte
+  te vergelijken. Gelijk -> camera ~300 m ver met lens ~1000 mm (cam_match: clip_end opgehoogd naar 2000).
+- Horizontale verschuiving van achterliggende vlakken in de overlay eerst als plattegrondfout zien, niet meteen als camerayaw: yaw maakt de zijgevel zichtbaar.
