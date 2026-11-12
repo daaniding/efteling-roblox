@@ -94,7 +94,7 @@ gesculpt, wijd open ogen, open grimas met dikke onderlip), cape met zware golven
 plooien in rok/mouwen/boven de riem. Figuur-asset **128729459556621** (lijf 138231693611234, hoofd 127597747578678, nek 96605081719069);
 in Studio alleen de delen met Groep body/head/neck/iris vervangen (export `--alleen BAKE_lijf,BAKE_hoofd,BAKE_nek,...`).
 
-## Assepoester (chat 5, 12 nov) — BEZIG: huis (vormen) staat in Studio, scène volgt
+## Assepoester (chat 5, 12 nov) — huis + tuin + route staan; interieur later
 Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`), BAG/OSM-footprint + omgeving (`ref/osm_lokaal.json`,
 `ref/osm_overzicht.png`, gemaakt met `build/01_osm_lokaal.py`), brief `asset-brief.md`. Primaire foto `ref/front.jpg` (= Assevoorgevel.jpg).
 - Gevel kijkt WEST (10.6 graden naar ZW gedraaid); main-ingang NW, uitgang ZW. Model: -Y = west, +X = zuid, y=0 = voorkant portiek.
@@ -120,7 +120,13 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
   * Beplanting `build/06_planten.py` -> workspace.AssepoesterGroen (277: rozen in het perk, paars bij het grafje, varens/heesters/rododendrons,
     16 bomen); toegevoegd aan Wind-MAPPEN. LantaarnsDagNacht doet nu ook Assepoester + AssepoesterOmgeving.
   * LET OP: haagtextuur 107834399804087 rendert wit (ook bij Villa Volta!). Opnieuw geupload: kleur 73997585762296, normaal 114509386598524.
-  * Nog te doen: wandeltest door de route en fps-test in Play (Play stopte; Studio meldt nieuwe Assistant-versie -> Studio herstarten).
+  * v3 (Daan): gat in de achterwand van het portiek dicht, portiekdak overlapt de gaanderij niet meer (flikkerde), haag rond het
+    dienstplaatsje doorgetrokken tot de vleugel, ondergrond = wit grind (Pebble + VV_Grind, 235,228,214). Huis **90187101137664**,
+    omgeving **107962207315554**. Hele keten: `build/bouw_alles.sh` (03 -> 04 -> 05 bake -> export -> upload) en dan
+    `python3 roblox/maak_plaatsscript.py` (vult ids in) en `roblox/plaats_assepoester.luau` in Studio.
+  * Wandeltest in Play (Humanoid:MoveTo): tuinpoort -> entree -> hal -> gang -> portiek -> buiten -> uitgangsboog -> parkpad: alles OK, 52 fps.
+  * EftelingLayout-labels (255) stonden AlwaysOnTop met bereik 600 -> door muren zichtbaar. Nu AlwaysOnTop uit, MaxDistance 150.
+  * Interieur (keukenscène, figuren, geschilderd doek) komt later (Daan).
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
 ## Daarna (volgorde met Daan afgesproken)

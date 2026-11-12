@@ -112,3 +112,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Bake van een gebouw: onzichtbare vlakken (onderkanten op maaiveld, muurtoppen onder daken, onderkant daken) eerst weghalen, anders
   gaat de helft van de 1024-textuur naar zwarte vlakken. Muren per gevelrichting splitsen = meer pixels per gevel.
 - Als een oude SurfaceAppearance-textuur ineens wit rendert: opnieuw uploaden en ids vervangen (haagtextuur, nov 2026).
+- Wandeltest zonder navigatietool: in de Client Humanoid:MoveTo per waypoint + MoveToFinished, afstand tot doel loggen (betrouwbaarder;
+  character_navigation kan in de wachtrij blijven hangen en later het personage wegsturen).
+- Layout-labels (EftelingLayout) nooit AlwaysOnTop: dan zie je namen van andere attracties door muren heen (Daan).
+- Daken die elkaar raken mogen niet overlappen (flikkeren): laat het ene dak beginnen waar het andere eindigt.

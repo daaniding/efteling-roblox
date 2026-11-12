@@ -268,7 +268,7 @@ def build(master):
     H = 2.6
     haag([(-3.77, -6.75), (10.49, -6.6)], 0.95, H)                                          # 1255787235
     haag([(10.49, -6.6), (11.2, -7.6)], 0.95, H)
-    haag([(-7.21, -6.99), (-12.62, -7.26), (-13.71, 1.11), (-7.2, 1.0)], 0.95, H)          # 1255787236 (dienstplaatsje)
+    haag([(-7.21, -6.99), (-12.62, -7.26), (-13.71, 1.11), (-6.3, 1.05)], 0.95, H)         # 1255787236, doorgetrokken tot de vleugel (Daan: sloot niet aan)
     haag([(-7.25, -6.99), (-7.25, -1.75)], 0.85, H)                                         # scheiding binnenplaats / dienstplaatsje (inferred)
     haag([(7.6, -0.4), (7.6, 3.6), (5.6, 4.9)], 0.85, 2.2)                                  # tegen de zuidkant van het huis (inferred, sluit de binnenplaats af)
     # ---------------- tuiningang: pijlers met vaas + smeedijzeren hek (open) ----------------

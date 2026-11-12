@@ -272,6 +272,7 @@ def build(master):
     put("achterbouw", "achter", bz(BACK[0] - 0.05, BACK[1] + 0.05, BACK[2] - 0.05, BACK[3] + 0.05, BACK_H, BACK_H + 0.15))
     # portiek: zijwand rechts (stuc) tot de toren
     addwall(bz(PORCH[1] - 0.15, PORCH[1], 0.35, MAIN[2], 0, PORCH_EAVE))
+    addwall(bz(TOWER[1] - 0.02, PORCH[1], TOWER[2], MAIN[2], 0, PORCH_EAVE))       # achterwand portiek rechts van de toren (gat, Daan)
 
     # ---------------- kroonlijsten (blauwgroen geverfd, front.jpg) ----------------
     CORN = [(0, 0), (0.03, 0.02), (0.03, 0.08), (0.08, 0.12), (0.12, 0.20), (0.15, 0.26), (0.15, 0.30)]
@@ -317,8 +318,8 @@ def build(master):
     put("makelaar", "zink", btube([(cx, cy, TOWER_TOP + 0.35), (cx, cy, TOWER_FIN + 0.05)], 0.012, 5))
     # portiek: lessenaar tegen de toren, houten goot
     px0, px1, py0, py1 = PORCH
-    tiled_roof("dak_portiek", (px0 - 0.15, px1 + 0.08, py0 - 0.25, TOWER[2]), (px0 - 0.15, px1 + 0.08, TOWER[2] - 0.01, TOWER[2]), PORCH_EAVE, PORCH_TOP + 0.45, hips=False)
-    put("portiek", "groen", bz(px0 - 0.15, px1 + 0.08, py0 - 0.30, py0 - 0.22, PORCH_EAVE - 0.18, PORCH_EAVE - 0.02))    # boeiboord
+    tiled_roof("dak_portiek", (gx1 + 0.02, px1 + 0.08, py0 - 0.25, TOWER[2]), (gx1 + 0.02, px1 + 0.08, TOWER[2] - 0.01, TOWER[2]), PORCH_EAVE, PORCH_TOP + 0.45, hips=False)
+    put("portiek", "groen", bz(gx1 + 0.02, px1 + 0.08, py0 - 0.30, py0 - 0.22, PORCH_EAVE - 0.18, PORCH_EAVE - 0.02))    # boeiboord
 
     # ---------------- gevelopeningen ----------------
     # entree: rondboog 1.08 x 2.14 met dikke omlijsting, gang erachter (donker)
@@ -506,6 +507,7 @@ def build(master):
     coll(2.42, TOWER[1], TOWER[2], MAIN[2], 0, 5.0)                    # toren voor het hoofdhuis
     coll(BACK[0], BACK[1], BACK[2], BACK[3], 0, BACK_H)
     coll(px1 - 0.25, px1, 0.25, TOWER[2], 0, 2.6)                      # portiek rechterwand + deur
+    coll(TOWER[1] - 0.05, px1, TOWER[2], MAIN[2] + 0.1, 0, 2.6)          # achterwand portiek
     coll(px0, 3.95, 0.0, 0.2, 0, 2.6)                                  # plankwand links voor
     coll(px0, px0 + 0.12, 0.0, GAL_Y + 0.15, 0, 2.6)
 

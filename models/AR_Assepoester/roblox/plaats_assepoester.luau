@@ -2,9 +2,9 @@
 -- Blender: gevel kijkt naar -Y (west), +X = zuid, oorsprong = voorkant uitgangsportiek, midden gevel, z=0 = maaiveld.
 -- OSM-kalibratie: modeloorsprong = OSM (-3.18, 95.15) m = studs (-9.54, -285.44); kijkrichting Roblox (-0.983, 0, 0.185); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing), de meshes zelf botsen niet (deuropeningen blijven open). Lampen: LAMP_-punten.
-local HUIS = 118744140638270   -- v2: gebakken texturen (05_bake), binnenroute, botsblokken + lampen
-local OMG = 112815934285553
-local TEX = {groen = {89471626381349}, omlijsting = {88304138285847}, pannen_hoofd = {127031771200020, 84390329684841}, pannen_laag = {71400587044598, 109993156007338}, plint = {124900325095155}, stuc_achter = {139225958082011, 95175919618301}, stuc_binnen = {75794276308097, 93436522235921}, stuc_noord = {106031541617331, 131608388854298}, stuc_voor = {85747353712625, 73926981970321}, stuc_zuid = {108498846758002, 112059559613699}}   -- groep -> {kleur, normaal}, textures/asset_ids.txt
+local HUIS = 90187101137664   -- v2: gebakken texturen (05_bake), binnenroute, botsblokken + lampen
+local OMG = 107962207315554
+local TEX = {groen = {81834719569516}, omlijsting = {87948221887360}, pannen_hoofd = {77636042874488, 106283833457150}, pannen_laag = {122713295976618, 96717225369930}, plint = {119922222348627}, stuc_achter = {133546970680659, 92636686440629}, stuc_binnen = {74215830399290, 88768649560193}, stuc_noord = {91966066380851, 115711031846310}, stuc_voor = {136554997230084, 109895420988954}, stuc_zuid = {73175908141281, 118117389474333}}   -- groep -> {kleur, normaal}, textures/asset_ids.txt
 local F = Vector3.new(-0.9828, 0, 0.1846)
 local ORIGIN = CFrame.new(-9.54, 2.0, -285.44) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -22,7 +22,7 @@ local M = {   -- {kleur, materiaal, variant}; getemperd (WERKWIJZE)
 	doek = {Color3.fromRGB(150, 180, 210), "SmoothPlastic"}, pompoen = {Color3.fromRGB(214, 112, 30), "SmoothPlastic"},
 	ketel = {Color3.fromRGB(32, 32, 32), "Metal"},
 	haag = {Color3.fromRGB(255, 255, 255), "Plastic"}, buxus = {Color3.fromRGB(255, 255, 255), "Plastic"},   -- als Villa Volta: SA op Plastic
-	klinker = {Color3.fromRGB(116, 100, 94), "Cobblestone", "EftelingKlinkers"}, band = {Color3.fromRGB(128, 126, 120), "Concrete"},
+	klinker = {Color3.fromRGB(235, 228, 214), "Pebble", "VV_Grind"}   -- Daan: wit grind zoals Villa Volta, band = {Color3.fromRGB(128, 126, 120), "Concrete"},
 	ijzer = {Color3.fromRGB(24, 26, 26), "Metal"}, aarde = {Color3.fromRGB(70, 52, 38), "Ground"},
 	lamp = {Color3.fromRGB(226, 222, 206), "Glass"}, rots = {Color3.fromRGB(150, 140, 126), "Rock"},
 	kist = {Color3.fromRGB(92, 58, 36), "Wood"}, papier = {Color3.fromRGB(232, 218, 176), "SmoothPlastic"},
