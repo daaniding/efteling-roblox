@@ -44,18 +44,22 @@ Het park is in 1 minuut terug: `park/park_raster.py` → ServerStorage.ParkBuild
 Mond groter/natuurlijker, blos minder als schijfjes, den-achtige krullen oké; figuur op het dak + lantaarn + gotisch bord ontbreken;
 geluid "Papier hier!" ontbreekt (Sound-objecten SndRoep/SndEet staan klaar in MouthHole).
 
-## Villa Volta (v2 + tuin + wachtrij in Studio)
-- Ligging uit OSM (ways rond 279668015): gevel kijkt ZZW naar het Ton van de Venplein (niet naar het noorden), gebouw 10,5 graden gedraaid.
-  Modeloorsprong (midden gevel) = OSM (121.97, 335.09) m = studs (365.9, 1.95, -1005.3), draaiing 169.5 graden; grond is Y=2.
-  Alle OSM-punten in modelcoordinaten: `models/AR_VillaVolta/ref/osm_lokaal.json` (voordeur valt precies op x=0: kalibratie klopt).
-- Villa v2 (zonder hal, terraszijmuren tot y=2.8 volgens OSM): **asset 86289024691601**.
-- Tuin + wachtrij `build/04_omgeving.py` -> **asset 139508708004938**: ovaal grindpad, beukenhagen in twee bogen, bladvormige buxusbedden met bloemen,
-  twee pilaren met lantaarns aan het plein, zonnewijzer, plantvazen, lantaarnpalen, Wacht- en Showtijdenbord op het plein;
-  wachtrij: ingangsgang tussen muren met poort + bord, overdekte rijhal (OSM-dak 6x22 m) met de echte zigzag (16 banen), bypass met poortjes,
-  tourniquets, Entree-deuren, afvalbakken op OSM-posities, buitenpad met hoge haag, wandlantaarns.
-- In Studio: `roblox/plaats_villavolta.luau` (laadt beide assets, zet ze via een anker-blokje op z=-2 op de juiste plek, MeshParts zonder botsing
-  + 145 onzichtbare botsblokken uit `exports/omgeving_data.json`, 24 PointLights, SurfaceGui-teksten). Spawn staat op het plein.
-- Nog te doen: deur/Entree -> teleport naar interieur (voorshows + kantelende kamer), wachttijd dynamisch, texturen, park eromheen.
+## Villa Volta (v4: maten uit OSM + DRDB-plattegrond, zijgevel en rij naar foto's)
+Bronnen in `models/AR_VillaVolta/ref/`: `drdb_plattegrond.jpg` (Dark Ride Database 2022: hele gebouw van boven: terras, uitgang,
+rij, voorshows, tourniquet), `drdb_tekening_buiten.jpg` (vroege tekening Ton van de Ven), `eftepedia_wachtrij_2022.jpg`, zijfoto
+`Villa_Volta_DSCF5860_JPG.jpg` (oostkant), `osm_lokaal.json` (alle OSM-punten in modelcoordinaten).
+DRDB-maten: hoofdgebouw ~20 m diep, 14 m breed, ~14 m hoog; achterbouw ~10x16 m, half zo hoog; trommel zeskant 10.8 m, schommel 4x20.
+Gekozen (meters, oorsprong midden gevel risaliet): risaliet 7.8 breed, 5.5 diep, 3.15 voor de vleugels; hoofdgebouw x +-6.75 tot y=18.5;
+achterbouw x -9..6.85, y 18.5..31.2, 6.2 hoog. Hoogtes uit front.jpg (deur 3.0 m): kroonlijst 8.6, nok 10.75, beeld tot 12.7 boven maaiveld
+(DRDB zegt ~14 m: verschil niet opgelost, foto aangehouden).
+- Gevel kijkt ZZW naar het Ton van de Venplein. Oorsprong = studs (365.9, 1.95, -1005.3), draaiing 169.5 graden, grond Y=2.
+- Villa v4 **136382357585295**, tuin + wachtrij v4 **111180154136708**. Plaatsen: `roblox/maak_plaatsscript.py VILLA OMG` maakt
+  `roblox/plaats_villavolta.luau` (template `plaats_template.luau`), plakken in Studio (HTTP naar GitHub is geblokkeerd).
+- Wachtrij zoals Eftepedia-foto 2022: overdekte galerij tegen de oostgevel, dichte stucmuur met 4 bokkenhuiden in houten lijst,
+  open zuilengang op lage borstwering met vaasjes op de dakrand, wit plafond met ronde lampjes, rode klinkers, grijsgroene hekken met bol,
+  groene afvalbakken met gouden bies, RVS-tourniquets voor de dubbele deur, perkament met dolk; ingangsgang met lage witte muurtjes (plattegrond).
+- Z-fighting: paden elk eigen hoogte, haag/muurstukken verspringen 12 mm, hoekblokken/postamenten/pilasters niet meer samenvallend.
+- Nog te doen: interieur (voorshows + kantelende kamer, via de dubbele deur), texturen, park eromheen.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta afmaken. 2. Sprookjesboom + paddenstoelen, Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
