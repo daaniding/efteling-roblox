@@ -24,3 +24,5 @@
    - SoundService: VV_Vogels 9113444360 (vol 0.35), VV_Publiek 9112766533 (vol 0.08), ProSoundEffects.
    - Opsluitband alleen nog op de buitenrand; paden lopen zonder band in elkaar over. Omgeving-asset **81904859328304**.
    - Lighting.Technology = Future: door Daan zelf te zetten.
+8. Alle paden hetzelfde lichte grind (ook naar de rij); plein blijft kasseien, rijvloer rode klinkers. Omgeving-asset **76728015894633**.
+   ServerScriptService.SpelerSchaal: speler 0.9x (char:ScaleTo bij CharacterAppearanceLoaded).
