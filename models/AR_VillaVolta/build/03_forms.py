@@ -12,8 +12,11 @@ exec(_src,_ns); globals().update({k:v for k,v in _ns.items() if callable(v)})
 
 # ---- maten (front.jpg, 37 px/m, terrasvloer y507) ----
 T=0.8                 # terras
-MW,MD=8.0,10.0        # hoofdblok breed (205-500 px) / diep (inferred)
-WW,WD,WY=2.6,6.0,0.4  # vleugel breed (115-205 px), diep (inferred), terugsprong t.o.v. hoofdblok (inferred)
+MW,MD=7.8,5.5         # hoofdblok/middenrisaliet: 7.8 breed (front.jpg 8.0, OSM 7.55), diep tot 5.5 (OSM: voorkamers tot de hoofdzaal)
+WW,WY=2.85,3.15       # vleugel breed (OSM 2.82/2.89), gevel 3.15 achter het middenrisaliet (OSM 279668015)
+BACK=18.5             # achterkant hoofdgebouw (OSM Hoofdshow tot 17.6-18, DRDB: hoofdgebouw ~20 m diep incl. risaliet)
+WD=BACK-WY
+AX0,AX1,AY1,AH=-9.0,6.85,31.2,6.2   # achterbouw met voorshows (OSM 1491274946; DRDB ~half zo hoog als hoofdgebouw)
 CM,CW=7.8,6.9         # bovenkant kroonlijst hoofdblok / vleugel boven terrasvloer
 ENT_M,ENT_W=0.7,0.6   # hoogte hoofdgestel
 COLX,COLY=3.65,-1.4   # zuilen hart-op-hart 7.3 (225/493 px)
@@ -117,8 +120,8 @@ def balustrade(part,x0,x1,y,z0,height,mat="wit",pedestals=(),depthwise=False):
     for p in pedestals:
         cx,cy=(p,y) if not depthwise else (y,p)
         put(part,mat,bbox(0.42,0.42,height-0.1,cx,cy,z0+(height-0.1)/2,0.01))
-        put(part,mat,bbox(0.5,0.5,0.1,cx,cy,z0+height-0.05,0.01))
-        put(part,mat,bbox(0.48,0.48,0.12,cx,cy,z0+0.06,0.01))
+        put(part,mat,bbox(0.5,0.5,0.13,cx,cy,z0+height-0.035,0.01))   # dekplaat 3 cm boven de leuning
+        put(part,mat,bbox(0.48,0.48,0.15,cx,cy,z0+0.075,0.01))
 
 def window(face_M,x,z0,w,h,kind,cutters):
     """raam in een wand; lokaal: wandvlak y=0, buiten = -Y. kind: 'fronton','oor','gewoon'"""
@@ -156,18 +159,18 @@ def build(master):
     cutters=[]
     FRONT=Matrix.Identity(4)
     # ---------------- terras, trappen, borstweringen ----------------
-    put("terras","steen",bzbox(0,0,-8.6,8.6,-5.0,6.4,0,T-0.12))
-    put("terras","steen",bsweep([(0.0,0),(0.08,0.02),(0.08,0.12),(0,0.12)],-8.6,8.6,-5.0,6.4,T-0.12))
-    put("terras","steen",bzbox(0,0,-8.55,8.55,-4.95,6.35,T-0.12,T))
+    put("terras","steen",bzbox(0,0,-8.6,8.6,-5.0,WY,0,T-0.12))
+    put("terras","steen",bsweep([(0.0,0),(0.08,0.02),(0.08,0.12),(0,0.12)],-8.6,8.6,-5.0,WY,T-0.12))
+    put("terras","steen",bzbox(0,0,-8.55,8.55,-4.95,WY-0.05,T-0.12,T))
     for i in range(4):   # treden: onderste het breedst (front.jpg 50-695 px)
         w=9.5+2.4*(3-i); y0=-5.0-0.35*(4-i); zt=T*(i+1)/4
         put("trap","steen",bzbox(0,0,-w/2,w/2,y0,-5.0,0,zt-0.04))
         put("trap","steen",bzbox(0,0,-w/2-0.03,w/2+0.03,y0-0.04,-5.0,zt-0.05,zt,0.01))   # neus
     for s in (-1,1):
         # borstwering langs de vleugel (front.jpg 20-205 px, 0.8 hoog) + zijkant terras
-        put("borstwering","steen",bzbox(0,0,min(s*4.6,s*8.5),max(s*4.6,s*8.5),-0.55,-0.25,T,T+0.68))
-        put("borstwering","steen",bzbox(0,0,min(s*4.55,s*8.55),max(s*4.55,s*8.55),-0.62,-0.18,T+0.68,T+0.8,0.01))
-        put("borstwering","steen",bzbox(0,0,min(s*8.05,s*8.35),max(s*8.05,s*8.35),-0.55,2.8,T,T+0.8,0.01))   # OSM terrasmuren: zijkant tot y=2.8
+        put("borstwering","steen",bzbox(0,0,min(s*(HX+0.1),s*8.5),max(s*(HX+0.1),s*8.5),-0.55,-0.25,T,T+0.68))
+        put("borstwering","steen",bzbox(0,0,min(s*(HX+0.05),s*8.55),max(s*(HX+0.05),s*8.55),-0.62,-0.18,T+0.68,T+0.8,0.01))
+        put("borstwering","steen",bzbox(0,0,min(s*8.05,s*8.35),max(s*8.05,s*8.35),-0.55,WY-0.05,T,T+0.8,0.01))   # OSM terrasmuren: zijkant tot de vleugelgevel
         for px in (4.6,6.4,8.2):
             put("borstwering","steen",bbox(0.5,0.5,0.95,s*px,-0.4,T+0.475,0.015))
             urn("vazen",s*px,-0.4,T+0.95,1.05)
@@ -178,15 +181,16 @@ def build(master):
     wall=bmesh.new()
     def addwall(bm):
         me=bpy.data.meshes.new("_w"); bm.to_mesh(me); bm.free(); wall.from_mesh(me); bpy.data.meshes.remove(me)
-    addwall(bzbox(0,0,-HX,HX,0,MD,T,T+CM-ENT_M+0.02))
-    for s in (-1,1):
-        addwall(bzbox(0,0,min(s*HX,s*WX),max(s*HX,s*WX),WY,WY+WD,T,T+CW-ENT_W+0.02))
-    # sokkel + waterlijst
-    put("sokkel","steen",bsweep([(0.06,0),(0.06,0.45),(0.03,0.5),(0,0.5)],-HX,HX,0,MD,T))
-    for s in (-1,1):
-        put("sokkel","steen",bsweep([(0.06,0),(0.06,0.45),(0.03,0.5),(0,0.5)],min(s*HX,s*WX),max(s*HX,s*WX),WY,WY+WD,T))
+    addwall(bzbox(0,0,-HX,HX,0,MD,T,T+CM-ENT_M+0.02))                       # middenrisaliet op het terras
+    addwall(bzbox(0,0,-WX,WX,WY,BACK,0,T+CW-ENT_W+0.02))                     # hoofdgebouw (zijkanten staan op maaiveld)
+    addwall(bzbox(0,0,AX0,AX1,BACK-0.02,AY1,0,AH-0.5+0.02))                  # achterbouw
+    # sokkel + waterlijst (risaliet op terras, hoofdgebouw en achterbouw vanaf maaiveld)
+    put("sokkel","steen",bsweep([(0.06,0),(0.06,0.45),(0.03,0.5),(0,0.5)],-HX,HX,0,MD,T,back=False))
+    SOK=[(0.07,0),(0.07,T+0.45),(0.03,T+0.5),(0,T+0.5)]
+    put("sokkel","steen",bsweep(SOK,-WX,WX,WY,BACK,0))
+    put("sokkel","steen",bsweep([(0.07,0),(0.07,0.6),(0.03,0.66),(0,0.66)],AX0,AX1,BACK,AY1,0))
     # cordonlijst eerste verdieping (balkonhoogte)
-    for x0,x1,y0,y1 in ((-HX,HX,0,MD),(-WX,-HX,WY,WY+WD),(HX,WX,WY,WY+WD)):
+    for x0,x1,y0,y1 in ((-HX,HX,0,MD),(-WX,WX,WY,BACK)):
         put("lijsten","steen",bsweep([(0,0),(0.07,0.02),(0.07,0.16),(0.04,0.2),(0,0.2)],x0,x1,y0,y1,T+BAL_Z0))
     # hoekblokken (rustica), om en om lang/kort, 0.45 hoog
     def quoins(x,y,sx,z_top,face_y_dir=-1):
@@ -194,11 +198,18 @@ def build(master):
         while z+0.42<=z_top:
             lw=0.62 if i%2==0 else 0.42
             put("hoekblokken","steen",bzbox(0,0,min(x,x-sx*lw),max(x,x-sx*lw),y-0.06,y+0.3,z,z+0.41,0.025))
-            put("hoekblokken","steen",bzbox(0,0,min(x,x+sx*0.06),max(x,x+sx*0.06),y-0.06,y+(0.42 if i%2==0 else 0.62),z,z+0.41,0.025))
+            put("hoekblokken","steen",bzbox(0,0,min(x,x+sx*0.06),max(x,x+sx*0.06),y-0.055,y+(0.42 if i%2==0 else 0.62),z+0.006,z+0.404,0.025))   # iets kleiner: geen samenvallende vlakken
             z+=0.45; i+=1
+    def lisene(x,y,sx,z_top):   # rustica-strook op een zijgevel (x vlak), om en om breed/smal langs y
+        z=0.5+T; i=0
+        while z+0.42<=z_top:
+            lw=0.62 if i%2==0 else 0.42
+            put("hoekblokken","steen",bzbox(0,0,min(x,x+sx*0.06),max(x,x+sx*0.06),y-lw/2,y+lw/2,z,z+0.41,0.025)); z+=0.45; i+=1
     for s in (-1,1):
         quoins(s*HX,0,s,T+CM-ENT_M)
         quoins(s*WX,WY,s,T+CW-ENT_W)
+        for yy in (WY+2.75,WY+5.2):     # zijfoto: lisenen na de twee vleugeltraveeen
+            lisene(s*WX,yy,s,T+CW-ENT_W)
         # pilasters achter de zuilen
         put("pilasters","steen",bzbox(0,0,s*COLX-0.28,s*COLX+0.28,-0.08,0.02,T+0.5,T+BAL_Z0,0.01))
     # ramen vleugels (front.jpg: bg 0.6x1.0 op 1.1 met fronton, 1e 0.6x1.0 op 4.7 met oren)
@@ -208,14 +219,23 @@ def build(master):
         window(Mf,x,T+1.1,0.62,1.05,"fronton",cutters)
         window(Mf,x,T+4.75,0.62,1.05,"oor",cutters)
         # zijgevels (inferred): vleugel buitenzijde, hoofdblok achter de vleugel
+        # zijgevel (zijfoto DSCF5860): twee traveeen met ramen op beide verdiepingen, dan lange gevel met drie bovenramen
         Ms=TR(s*WX,0,0,90 if s>0 else -90)
-        for yy in (2.4,4.6):
+        for yy in (WY+1.35,WY+3.95):
             u=yy if s>0 else -yy   # R(+90) zet lokaal x op wereld +y
             window(Ms,u,T+1.1,0.62,1.05,"fronton",cutters); window(Ms,u,T+4.75,0.62,1.05,"oor",cutters)
-        Mh=TR(s*HX,0,0,90 if s>0 else -90)
-        for yy in (7.6,):
+        for yy in (10.4,13.2,16.0):
             u=yy if s>0 else -yy
-            window(Mh,u,T+1.1,0.9,1.6,"fronton",cutters); window(Mh,u,T+4.75,0.9,1.5,"oor",cutters)
+            window(Ms,u,T+4.75,0.62,1.05,"oor",cutters)
+        # regenpijp achter de tweede lisene
+        put("dak_lood","zink",btube([(s*(WX+0.1),WY+5.55,0.1),(s*(WX+0.1),WY+5.55,T+CW-0.3),(s*(WX+0.25),WY+5.55,T+CW-0.1)],0.05,6))
+    # achterbouw: ramen in zij- en achtergevel (inferred, zelfde stijl), nooddeur achter (OSM 31.08), uitgang west (OSM -6.9,18.1)
+    Mw=TR(AX0,0,0,-90)
+    for yy in (21.5,24.5,27.5): window(Mw,-yy,2.2,0.7,1.3,"oor",cutters)
+    Mb=TR(0,AY1,0,180)
+    for xx in (-6.0,-3.5,1.5,4.5): window(Mb,-xx,2.2,0.7,1.3,"oor",cutters)
+    for (cx,cy,rot) in ((-2.39,AY1,180),):
+        put("deur","groen",bbox(1.8,0.1,2.5,cx,cy+0.04,1.25,0.01)); put("omlijsting","steen",bbox(2.2,0.16,0.25,cx,cy+0.05,2.62,0.02))
     # balkondeur (front.jpg 315-385 px, 4.9-6.4)
     window(FRONT,0,T+BAL_Z1+0.05,1.7,1.55,"gewoon",cutters)
     # voordeur: rondboog, 2.4 x 3.05
@@ -304,9 +324,8 @@ def build(master):
     # ---------------- hoofdgestellen ----------------
     ENT=[(0,0),(0.05,0),(0.05,0.10),(0.02,0.12),(0.02,0.38),(0.07,0.40),(0.10,0.44),(0.12,0.46),(0.26,0.53),(0.32,0.58),(0.32,0.66),(0.36,0.68),(0.36,0.7),(0,0.7)]
     put("hoofdgestel","steen",bsweep(ENT,-HX,HX,0,MD,T+CM-ENT_M))
-    for s in (-1,1):
-        x0,x1=min(s*HX,s*WX),max(s*HX,s*WX)
-        put("hoofdgestel","steen",bsweep([(o*0.86,z*ENT_W/ENT_M) for o,z in ENT],x0,x1,WY,WY+WD,T+CW-ENT_W))
+    put("hoofdgestel","steen",bsweep([(o*0.86,z*ENT_W/ENT_M) for o,z in ENT],-WX,WX,WY,BACK,T+CW-ENT_W))
+    put("hoofdgestel","steen",bsweep([(0,0),(0.05,0),(0.05,0.1),(0.2,0.3),(0.26,0.4),(0.26,0.5),(0,0.5)],AX0,AX1,BACK,AY1,AH-0.5))
     # tandlijst (consoles) onder de kroonlijst hoofdblok, voorgevel
     for i in range(23):
         x=-HX+0.2+i*(MW-0.4)/22
@@ -334,13 +353,21 @@ def build(master):
         urn("dak_vazen",p[0],p[1],p[2],0.75,"steen")
     for p in r2:       # pinakels op de nok
         put("dak_lood","zink",blathe([(0,0),(0.08,0),(0.08,0.08),(0.03,0.12),(0.05,0.2),(0.012,0.5),(0,0.55)],8),TR(*p))
+    # hoofdgebouw: lagere mansarde over de volle breedte en diepte (zijfoto: lang dak achter het hoge voordak)
+    q0,q1,q2=mansard("daken",-WX,WX,WY,BACK,T+CW,T+8.1,T+8.4,0.6,1.0,0.2)
+    for a,b in zip(q0,q1): put("dak_lood","zink",btube([a,b],0.05,6))
+    put("dak_lood","zink",btube(q1+[q1[0]],0.04,6))
+    for p in q2:
+        put("dak_lood","zink",blathe([(0,0),(0.06,0),(0.06,0.06),(0.02,0.1),(0.04,0.16),(0.01,0.38),(0,0.42)],8),TR(*p))
+    # achterbouw: laag schilddak met leien
+    a0,a1,a2=mansard("daken",AX0,AX1,BACK,AY1,AH,AH+1.5,AH+1.6,1.9,2.4,0.3)
+    for a,b in zip(a0,a1): put("dak_lood","zink",btube([a,b],0.045,6))
     for s in (-1,1):
-        x0,x1=min(s*HX,s*WX),max(s*HX,s*WX)
-        q0,q1,q2=mansard("daken",x0,x1,WY,WY+WD,T+CW,T+8.1,T+8.4,0.5,0.95,0.2)
-        for a,b in zip(q0,q1): put("dak_lood","zink",btube([a,b],0.05,6))
-        put("dak_lood","zink",btube(q1+[q1[0]],0.04,6))
-        for p in (q2[0],q2[1]) if s<0 else (q2[0],q2[1]):
-            put("dak_lood","zink",blathe([(0,0),(0.06,0),(0.06,0.06),(0.02,0.1),(0.04,0.16),(0.01,0.38),(0,0.42)],8),TR(*p))
+        # dakkapel op de zijkant (zijfoto: boven de tweede travee)
+        Md=TR(s*WX,0,0,90 if s>0 else -90); u=(WY+3.95) if s>0 else -(WY+3.95); zb=T+CW+0.05
+        put("dakkapel_v","stuc",bzbox(0,0,u-0.45,u+0.45,-0.05,0.9,zb,zb+0.8),Md)
+        put("dakkapel_v","steen",boutline([(u-0.5,zb+0.8)]+[(x,z) for x,z in arc(u,zb+0.8,0.5,180,0,10)],-0.12,1.05),Md)
+        put("ramen_glas","glas",bzbox(0,0,u-0.25,u+0.25,-0.08,-0.06,zb+0.12,zb+0.95),Md)
         # dakraam vleugel met rondboog (front.jpg 165-185 px, 7.5-8.1)
         xc=s*(HX+WW/2); zb=T+CW+0.05
         put("dakkapel_v","stuc",bzbox(0,0,xc-0.45,xc+0.45,WY-0.05,WY+0.9,zb,zb+0.8))
@@ -352,8 +379,8 @@ def build(master):
     DZ0=T+CM; DZ1=T+9.8; DW=1.45
     put("dakkapel","stuc",bzbox(0,0,-DW,DW,-0.05,1.9,DZ0,DZ1))
     for s in (-1,1):   # pilasters met rustica
-        put("dakkapel","steen",bzbox(0,0,s*DW-0.18,s*DW+0.18,-0.15,0.1,DZ0,DZ1,0.01))
-        put("dakkapel","steen",bzbox(0,0,s*(DW-0.55)-0.14,s*(DW-0.55)+0.14,-0.12,0.1,DZ0+0.1,DZ1,0.01))
+        put("dakkapel","steen",bzbox(0,0,s*DW-0.18,s*DW+0.18,-0.15,0.1,DZ0,DZ1-0.12,0.01))
+        put("dakkapel","steen",bzbox(0,0,s*(DW-0.55)-0.14,s*(DW-0.55)+0.14,-0.12,0.1,DZ0+0.1,DZ1-0.12,0.01))
         put("ornament","steen",btube(spiral(s*(DW+0.32),-0.05,DZ0+0.35,0.28,1.2,18,"XZ",-s),0.05,6))   # voluut opzij
         put("ornament","steen",btube([(s*(DW+0.18),-0.05,DZ0+0.6),(s*(DW+0.55),-0.05,DZ0+0.25),(s*(DW+0.62),-0.05,DZ0)],0.06,6))
     window(TR(0,-0.05,0),0,DZ0+0.35,0.82,1.2,"gewoon",[])

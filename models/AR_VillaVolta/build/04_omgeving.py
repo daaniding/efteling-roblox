@@ -24,13 +24,14 @@ def seglen(p,q): return math.hypot(q[0]-p[0],q[1]-p[1])
 def strip(part,mat,pts,w,h,z0=0.0,ch=0.0,collide=True,extend=None):
     """box per segment langs een polylijn (hagen, muren, paden)"""
     ext=w*0.5 if extend is None else extend
-    for p,q in zip(pts,pts[1:]):
+    for i,(p,q) in enumerate(zip(pts,pts[1:])):
         L=seglen(p,q)
         if L<0.05: continue
         a=math.degrees(math.atan2(q[1]-p[1],q[0]-p[0])); mx,my=(p[0]+q[0])/2,(p[1]+q[1])/2
-        put(part,mat,bbox(L+ext,w,h,0,0,z0+h/2,ch),TR(mx,my,0,a))
+        dz=0.012*(i%2)   # om en om iets hoger/breder: overlappende stukken hebben geen samenvallende vlakken
+        put(part,mat,bbox(L+ext,w+dz,h+dz,0,0,z0+(h+dz)/2,ch),TR(mx,my,0,a))
         if collide: coll(mx,my,z0+h/2,L+ext,w,h,a)
-def path(mat,pts,w,z=0.06):
+def path(mat,pts,w,z=0.06):   # elk pad een eigen hoogte geven waar paden overlappen
     strip("paden",mat,pts,w,z,0.0,collide=False,extend=0.0)
     for p in pts: put("paden",mat,blathe([(0,0),(w/2,0),(w/2,z-0.006),(0,z-0.006)],14),TR(p[0],p[1],0))   # iets lager: geen samenvallende vlakken
 def rail(p,q,h=1.0,posts=True):
@@ -80,21 +81,22 @@ def build(master):
     open_master(master); clear_owned()
     for n,(c,r) in MATS.items(): material("MAT_"+n,c,r)
     # ---------------- villa-colliders (maten uit 03_forms) ----------------
-    coll(0,0.7,T/2,17.2,11.4,T)                                   # terras
+    coll(0,(-5.0+WY)/2,T/2,17.2,5.0+WY,T)                         # terras
     for i in range(4):
         w=9.5+2.4*(3-i); y0=-5.0-0.35*(4-i); zt=T*(i+1)/4; coll(0,(y0-5.0)/2,zt/2,w,-5.0-y0,zt)
-    coll(0,MD/2,T+CM/2,MW,MD,CM);
+    coll(0,MD/2,(T+T+CM)/2,MW,MD,CM)                                # middenrisaliet
+    coll(0,(WY+BACK)/2,(T+CW)/2,2*WX,BACK-WY,T+CW)                   # hoofdgebouw
+    coll((AX0+AX1)/2,(BACK+AY1)/2,AH/2,AX1-AX0,AY1-BACK,AH)          # achterbouw
     for s in (-1,1):
-        coll(s*(HX+WW/2),WY+WD/2,T+CW/2,WW,WD,CW)
-        coll(s*6.55,-0.4,T+0.4,3.9,0.35,0.8); coll(s*8.2,1.1,T+0.4,0.35,3.4,0.8)
+        coll(s*(HX+8.5)/2,-0.4,T+0.4,8.5-HX,0.35,0.8); coll(s*8.2,(WY-0.55)/2,T+0.4,0.35,WY+0.55,0.8)
         coll(s*COLX,COLY,T+BAL_Z0/2,0.6,0.6,BAL_Z0); coll(s*1.75,-0.1,T+1.5,0.55,0.4,3.0); coll(s*2.45,-1.0,T+0.9,0.45,0.45,1.8)
     # ---------------- tuin ----------------
     # voorpad langs het terras + ovaal rond de tuin + as naar het plein (OSM 444834329)
     loop=[(8.54,-6.58),(-8.83,-6.54),(-10.94,-12.95),(-8.92,-19.92),(-5.11,-22.18),(-0.07,-24.09),(5.68,-21.09),(9.13,-16.98),(8.54,-6.58)]
     path("grind",loop,2.6)
-    path("grind",[(-0.07,-24.09),(-0.64,-30.29),(1.23,-45.78)],4.0)
-    path("grind",[(-8.83,-6.54),(-9.39,2.07),(-7.19,9.44)],2.2)                 # uitgangspad west
-    path("klinker",[(8.54,-6.58),(11.29,-0.1),(12.52,0.62),(13.76,1.34),(16.88,3.16),(18.35,4.7),(19.73,10.04)],2.4)   # naar de rij-ingang
+    path("grind",[(-0.07,-24.09),(-0.64,-30.29),(1.23,-45.78)],4.0,0.075)
+    path("grind",[(-8.83,-6.54),(-9.39,2.07),(-7.19,9.44)],2.2,0.07)                 # uitgangspad west
+    path("klinker",[(8.54,-6.58),(11.29,-0.1),(12.52,0.62),(13.76,1.34),(16.88,3.16),(18.35,4.7),(19.73,10.04)],2.4,0.085)   # naar de rij-ingang
     # grote hagen (beuk, oranje in front.jpg) in twee bogen naar de pilaren
     strip("hagen","beuk",[(-2.91,-26.72),(-4.93,-26.58),(-7.02,-26.06),(-8.54,-25.0),(-9.89,-23.83),(-11.01,-22.68),(-11.92,-21.35),(-12.72,-18.26),(-13.04,-15.1),(-12.86,-11.94),(-12.86,-8.8)],0.7,1.1,ch=0.15)
     strip("hagen","beuk",[(11.14,-6.94),(11.75,-10.6),(11.97,-12.96),(11.98,-15.05),(11.57,-17.8),(10.8,-20.34),(9.47,-22.12),(7.84,-23.7),(6.47,-24.73),(4.8,-25.56),(1.66,-26.21)],0.7,1.1,ch=0.15)
@@ -140,69 +142,112 @@ def build(master):
     seg=[(x,z) for x,z in arc(0,2.4,1.6,25,155,12)]
     put("bord","goud",boutline([(1.45,3.3)]+[(x,z+0.9) for x,z in seg][1:-1]+[(-1.45,3.3)],-0.1,0.2),TR(bx,by,0,90))
     coll(bx,by,1.75,2.3,3.9,3.5)
-    # ---------------- wachtrij ----------------
-    # ingangsgang tussen muur_a en muur_b (x 10.9-12.5, y 2.7-8.85)
-    for key in ("muur_a","muur_b"):
-        pts=OSM[key]; strip("rij_muren","stuc",pts,0.3,2.4,ch=0.02)
-        strip("rij_muren","steen",pts,0.42,0.12,2.4,ch=0.02,collide=False)
-        strip("rij_muren","steen",pts,0.38,0.35,0.0,collide=False)
-    for x in (10.9,12.3):   # poortpijlers met vazen aan de ingang
-        put("rij_muren","steen",bbox(0.6,0.6,2.9,x,2.55,1.45,0.02)); put("rij_muren","steen",bbox(0.72,0.72,0.15,x,2.55,2.95,0.02))
-        urn("vazen",x,2.55,3.02,0.8,"steen"); coll(x,2.55,1.5,0.6,0.6,3.0)
-    # poortboog met naambord + 'INGANG'
-    put("rij_bord","goud",btube([(10.9,2.55,2.9)]+[(11.6+0.7*math.cos(math.radians(a)),2.55,2.9+0.55*math.sin(math.radians(a))) for a in range(170,9,-20)]+[(12.3,2.55,2.9)],0.04,6))
-    put("rij_bord","bord",bbox(1.15,0.08,0.38,11.6,2.5,3.2,0.02))
-    path("klinker",[(11.6,1.2),(11.6,2.6),(11.7,8.9)],1.4)
-    # overdekte rijhal (OSM dak 7.1-13.1 x 8.85-30.7)
-    H=3.3
-    walls=[[(7.14,9.02),(11.07,8.85)],[(12.52,8.82),(13.06,28.9),(13.11,30.61)],[(13.11,30.61),(7.38,30.74)],[(7.38,30.74),(7.14,9.02)]]
-    for w in walls:
-        strip("rijhal","stuc",w,0.3,H,ch=0.01)
-        strip("rijhal","steen",w,0.42,0.45,0.0,collide=False); strip("rijhal","steen",w,0.5,0.25,H-0.15,collide=False)
-    for (y0,y1) in ((12,13),(16,17),(20,21),(24,25)):   # pilasters + blinde nissen aan de oostgevel
-        for x in (13.2,):
-            put("rijhal","steen",bbox(0.12,0.55,H-0.6,x+0.05*(y0-12)/18+0.02,y0+0.5,0.45+(H-0.6)/2,0.01))
-    # dak (leien, schilddak)
-    rb=bmesh.new()
-    ring=lambda o,z:[rb.verts.new(p) for p in ((7.1-o,8.8-o,z),(13.15+o,8.8-o,z),(13.15+o,30.75+o,z),(7.1-o,30.75+o,z))]
-    r0=ring(0.45,H); r1=ring(-2.4,H+1.7)
-    for i in range(4): rb.faces.new((r0[i],r0[(i+1)%4],r1[(i+1)%4],r1[i]))
-    rb.faces.new(r1); rb.faces.new(list(reversed(r0))); bmesh.ops.recalc_face_normals(rb,faces=rb.faces); put("rijhal","lei",rb)
-    put("rijhal","zink",btube([(9.55,11.2,H+1.72),(10.7,11.2,H+1.72)] if False else [(9.55,11.25,H+1.72),(9.55,28.3,H+1.72)],0.06,6))
-    path("klinker",[(10.1,9.2),(10.1,30.4)],5.6)
-    # zigzag (OSM 1427152769): hekken tussen de banen, open aan de keerkant
+    # ---------------- wachtrij (Eftepedia-foto 'De wachtrij' 2022 + OSM) ----------------
+    # overdekte meandering: west dichte stucmuur met bokkenhuiden, oost open zuilengang op lage borstwering,
+    # wit vlak plafond met ronde lampjes, roodbruine klinkervloer, grijsgroene hekpaaltjes met bol, groene afvalbakken,
+    # RVS-tourniquets voor de dubbele deur, perkament met dolk. Ingangsgang tussen twee muren (OSM muur_a/b).
+    MATS.update({"plafond":((0.93,0.92,0.88,1),0.8),"rvs":((0.72,0.73,0.74,1),0.3),"hout":((0.28,0.18,0.11,1),0.9),
+                 "huid":((0.86,0.80,0.66,1),0.9),"perkament":((0.88,0.80,0.60,1),0.9),"rijhek":((0.24,0.28,0.25,1),0.45),"klinkerrood":((0.45,0.24,0.18,1),0.9),"oranje":((0.85,0.42,0.10,1),0.5)})
+    for n_,(c_,r_) in MATS.items(): material("MAT_"+n_,c_,r_)
+    for key in ("muur_a","muur_b"):   # DRDB-plattegrond: lage witte muurtjes met pijlertjes
+        pts=OSM[key]; strip("rij_muren","wit",pts,0.25,0.9,ch=0.02)
+        strip("rij_muren","wit",pts,0.36,0.08,0.9,ch=0.02,collide=False)
+        (x0,y0),(x1,y1)=pts[0],pts[-1]; n=4
+        for i in range(n+1):
+            x=x0+(x1-x0)*i/n; y=y0+(y1-y0)*i/n
+            put("rij_muren","wit",bbox(0.36,0.36,1.15,x,y,0.575,0.02)); put("rij_muren","wit",blathe([(0,0),(0.12,0),(0.06,0.08),(0.09,0.16),(0,0.24)],8),TR(x,y,1.15))
+    path("klinkerrood",[(11.6,1.2),(11.6,2.6),(11.7,8.9)],1.4,0.09)
+    def wx(y): return WX+0.18                            # westmuur van de galerij = tegen de zijgevel van het gebouw
+    def ex(y): return 12.52+(y-8.82)*(0.54/20.08)       # oostlijn zuilengang (OSM muur_e)
+    H=3.2
+    # vloer
+    put("rijhal_vloer","klinkerrood",bzbox(0,0,WX+0.1,13.2,8.85,30.75,0.0,0.095))
+    # westmuur + noordmuur dicht, met plint
+    for w in ([(wx(30.74),30.74),(wx(9.02),9.02)],[(13.11,30.61),(wx(30.74),30.74)]):
+        strip("rijhal","stuc",w,0.3,H,ch=0.01); strip("rijhal","steen",w,0.38,0.3,0.0,collide=False)
+    # zuidkant: lage borstwering tot de ingang (11.07)
+    strip("rijhal","stuc",[(wx(9),9.02),(11.07,8.85)],0.3,1.0,ch=0.01); strip("rijhal","steen",[(wx(9),9.02),(11.07,8.85)],0.45,0.1,1.0,ch=0.01,collide=False)
+    # oostkant: lage borstwering met dekplaat, slanke witte zuilen erop
+    oost=[(12.52,8.82),(13.06,28.9),(13.11,30.61)]
+    strip("rijhal","stuc",oost,0.3,1.0,ch=0.01); strip("rijhal","steen",oost,0.45,0.1,1.0,ch=0.01,collide=False)
+    COL=[(0,0),(0.13,0),(0.13,0.08),(0.1,0.12),(0.09,0.2),(0.075,1.9),(0.1,1.98),(0.13,2.04),(0.13,2.1),(0,2.1)]
+    zuilen=[(wx(9)+(11.07-wx(9))*t,9.02+(8.85-9.02)*t) for t in (0.0,0.5,1.0)]+[(ex(y),y) for y in [8.82+i*2.6 for i in range(9)]]+[(13.11,30.61)]
+    for (x,y) in zuilen:
+        put("zuilen_rij","wit",blathe(COL,10),TR(x,y,1.1)); coll(x,y,1.6,0.3,0.3,3.2)
+    # architraaf + kroonlijst op de zuilen (zuid en oost), plafond en plat dak
+    for w in ([(wx(9),9.02),(11.07,8.85),(12.52,8.82)],oost):
+        strip("rijhal","wit",w,0.32,0.32,H-0.12,collide=False); strip("rijhal","wit",w,0.62,0.16,H+0.2,collide=False)
+    for (x,y) in zuilen: urn("vazen",x,y,H+0.36,0.42,"wit")       # zijfoto: vaasjes op de dakrand boven de zuilen
+    cb=bmesh.new(); vs=[cb.verts.new(p) for p in ((WX+0.05,8.7,H-0.1),(13.3,8.7,H-0.1),(13.4,30.9,H-0.1),(WX+0.05,30.9,H-0.1))]
+    cb.faces.new(vs); bmesh.ops.reverse_faces(cb,faces=cb.faces); put("rijhal","plafond",cb)    # plafond, normaal omlaag
+    put("rijhal","zink",bzbox(0,0,WX+0.05,13.45,8.65,30.95,H+0.21,H+0.33))                          # plat dak
+    for y in [10.2+i*2.6 for i in range(8)]:                      # ronde plafondlampjes + luidsprekers
+        xm=(wx(y)+ex(y))/2
+        put("plafondlampen","lamp",blathe([(0,0),(0.14,0),(0.12,0.04),(0,0.05)],10),TR(xm,y,H-0.16)); LAMPS.append((xm,y,H-0.35))
+    for y in (12.0,19.8,27.0):
+        put("speakers","groen",bbox(0.18,0.25,0.2,wx(y)+0.25,y,H-0.35,0.02))
+    put("logo","oranje",blathe([(0,0),(0.6,0),(0.6,0.06),(0,0.06)],20),TR(9.3,8.62,2.35)@Matrix.Rotation(math.radians(90),4,"X"))
+    put("logo","goud",btube([(9.3,8.6,2.95),(9.3,8.6,H-0.12)],0.02,5))
+    # meandering: hekken tussen de banen (OSM-zigzag), paaltjes met bol, twee leuningen
+    def hek(p,q,h=1.0):
+        L=seglen(p,q); n=max(1,math.ceil(L/1.5)); a=math.degrees(math.atan2(q[1]-p[1],q[0]-p[0]))
+        for zz,r in ((h*0.5,0.02),(h-0.04,0.022)):
+            put("hekken","rijhek",btube([(p[0],p[1],zz),(q[0],q[1],zz)],r,6))
+        for i in range(n+1):
+            t=i/n; x=p[0]+(q[0]-p[0])*t; y=p[1]+(q[1]-p[1])*t
+            put("hekken","rijhek",blathe([(0,0),(0.07,0),(0.07,0.03),(0.03,0.05),(0.028,h),(0.045,h+0.02),(0.05,h+0.06),(0.04,h+0.1),(0,h+0.11)],8),TR(x,y,0.1))
+        coll((p[0]+q[0])/2,(p[1]+q[1])/2,h/2+0.1,L,0.12,h,a)
     zz=[tuple(p) for p in OSM["zigzag"]]
-    WEST,EAST=7.45,11.55
     for p,q in zip(zz,zz[1:]):
-        if abs(q[0]-p[0])<0.2 and abs(q[1]-p[1])>0.5:      # keerstuk
+        if abs(q[0]-p[0])<0.2 and abs(q[1]-p[1])>0.5:      # keerstuk -> hek ertussen, open aan de keerkant
             ym=(p[1]+q[1])/2; xt=p[0]
-            if xt<9.5: rail((xt+0.85,ym),(EAST,ym))
-            else: rail((WEST,ym),(xt-0.85,ym))
-    rail((EAST,9.95),(EAST,16.75)); rail((EAST,17.55),(EAST,23.85))          # bypass-scheiding met poortjes op 17.15 en 24.22 (OSM)
-    rail((WEST,24.8),(11.9,24.8)); rail((7.9,26.85),(12.0,26.85))
-    for (x,y) in ((12.02,17.15),(12.22,24.22),(12.32,27.44),(8.85,27.44),(11.79,9.39)):   # poortjes
-        put("hekken","ijzer",bbox(0.04,0.04,1.0,x,y-0.38,0.5)); put("hekken","ijzer",bbox(0.04,0.04,1.0,x,y+0.38,0.5))
-    for (x,y) in ((9.21,26.3),(9.22,25.73)):   # tourniquets
-        put("tourniquets","zink",blathe([(0,0),(0.18,0),(0.18,0.85),(0.12,0.95),(0,0.95)],10),TR(x,y,0))
+            if xt<9.5: hek((xt+0.85,ym),(11.55,ym))
+            else: hek((wx(ym)+0.2,ym),(xt-0.85,ym))
+    hek((11.55,9.95),(11.55,16.75)); hek((11.55,17.55),(11.55,23.85))   # scheiding met de rechte doorloop, poortjes op 17.15/24.22
+    hek((wx(24.8)+0.2,24.8),(11.9,24.8)); hek((wx(26.85)+0.2+1.0,26.85),(12.0,26.85))
+    # afvalbakken: groen met gouden biezen (foto)
+    for (x,y) in ((10.97,22.82),(10.84,14.45),(11.13,27.64)):
+        put("afvalbakken","groen",bbox(0.55,0.55,1.0,x,y,0.6,0.02)); put("afvalbakken","groen",bbox(0.62,0.62,0.08,x,y,1.14,0.02))
+        for (dx,dy) in ((1,0),(-1,0),(0,1),(0,-1)):          # dunne gouden lijst op elke zijde (foto)
+            fx,fy=x+dx*0.283,y+dy*0.283
+            for (u,zl,zh) in ((-0.19,0.3,0.95),(0.19,0.3,0.95)):
+                put("afvalbakken","goud",bzbox(0,0,fx+(u if dy else 0)-0.015-(0.006 if dx else 0),fx+(u if dy else 0)+0.015+(0.006 if dx else 0),fy+(u if dx else 0)-0.015-(0.006 if dy else 0),fy+(u if dx else 0)+0.015+(0.006 if dy else 0),zl,zh))
+            for zl in (0.3,0.92):
+                put("afvalbakken","goud",bzbox(0,0,fx-(0.006 if dx else 0.205),fx+(0.006 if dx else 0.205),fy-(0.006 if dy else 0.205),fy+(0.006 if dy else 0.205),zl,zl+0.03))
+        coll(x,y,0.6,0.6,0.6,1.1)
+    # dubbel tourniquet (RVS-kasten) voor de dubbele deur, perkament met dolk
+    for y in (25.45,26.0,26.55):
+        put("tourniquets","rvs",bbox(0.9,0.22,1.0,9.2,y,0.6,0.03)); put("tourniquets","rvs",bbox(0.95,0.26,0.04,9.2,y,1.12,0.01))
+        coll(9.2,y,0.6,0.9,0.22,1.0)
+    for y in (25.72,26.28):
         for a in (0,120,240):
-            d=Vector((math.cos(math.radians(a)),0,math.sin(math.radians(a))))*0.45
-            put("tourniquets","zink",btube([(x,y,0.85),(x+d.x,y,0.85+d.z*0.3)],0.025,6))
-    # entree-deuren in de westwand (OSM main 7.33,26.03 en 7.36,28.93)
+            d=Vector((0,math.cos(math.radians(a)),math.sin(math.radians(a))))*0.22
+            put("tourniquets","rvs",btube([(9.3,y-0.1,0.95),(9.3,y-0.1+d.y,0.95+d.z)],0.02,6))
     for y in (26.03,28.93):
-        put("deuren","groen",bbox(0.1,1.8,2.5,7.33,y,1.25,0.01))
-        put("deuren","steen",bbox(0.2,2.3,0.3,7.32,y,2.65,0.02))
-        for dy in (-1.05,1.05): put("deuren","steen",bbox(0.2,0.3,2.5,7.32,y+dy,1.25,0.01))
-        put("deuren","zink",bbox(0.06,0.04,0.4,7.25,y-0.15,1.1)); put("deuren","zink",bbox(0.06,0.04,0.4,7.25,y+0.15,1.1))
-    for (x,y) in ((10.97,22.82),(10.84,14.45),(11.13,27.64)):   # afvalbakken (OSM)
-        put("afvalbakken","groen",blathe([(0,0),(0.22,0),(0.24,0.75),(0.26,0.8),(0.2,0.86),(0.05,0.95),(0,0.95)],10),TR(x,y,0)); coll(x,y,0.45,0.45,0.45,0.9)
-    # wandlantaarns in de hal
-    for y in (11,15,19,23,27):
-        for x,dx in ((7.32,0.25),(12.75+0.03*(y-9)/20,-0.25)):
-            put("lantaarns","ijzer",btube([(x,y,2.6),(x+dx,y,2.65)],0.025,6)); lantern_head(x+dx,y,2.2,0.7); LAMPS.append((x+dx,y,2.4))
-    # buitenpad (rolstoel/single rider) en hoge haag erlangs
-    path("klinker",[(13.15,2.59),(13.61,19.45),(13.86,28.87),(13.06,28.9)],1.0)
+        X=wx(y)+0.16
+        put("deuren","groen",bbox(0.08,1.8,2.4,X,y,1.3,0.01))
+        put("deuren","steen",bbox(0.12,2.3,0.3,X,y,2.65,0.02))
+        for dy in (-1.05,1.05): put("deuren","steen",bbox(0.12,0.3,2.5,X,y+dy,1.35,0.01))
+        put("deuren","rvs",bbox(0.06,0.04,0.4,X+0.06,y-0.12,1.2)); put("deuren","rvs",bbox(0.06,0.04,0.4,X+0.06,y+0.12,1.2))
+    put("perkament","perkament",bbox(0.02,0.45,0.6,wx(27.4)+0.17,27.4,1.75,0.0))
+    put("perkament","rvs",btube([(wx(27.4)+0.15,27.4,2.05),(wx(27.4)+0.35,27.4,2.0)],0.012,5)); put("perkament","hout",btube([(wx(27.4)+0.35,27.4,2.0),(wx(27.4)+0.5,27.4,1.98)],0.022,6))
+    # vier bokkenhuiden in een ruw houten lijst op de westmuur
+    HUID=[(-0.3,-0.45),(-0.1,-0.5),(0.12,-0.46),(0.3,-0.5),(0.36,-0.3),(0.3,0.0),(0.38,0.32),(0.28,0.45),(0.08,0.4),(-0.12,0.46),(-0.3,0.42),(-0.36,0.25),(-0.3,0.0),(-0.4,-0.3)]
+    y0,zc=15.2,1.85
+    for k in range(4):
+        yc=y0+0.95*k; X=wx(yc)+0.17
+        hb=bmesh.new(); vs=[hb.verts.new((0,u*1.0,v*1.1)) for u,v in HUID]; f=hb.faces.new(vs)
+        r=bmesh.ops.extrude_face_region(hb,geom=[f]); bmesh.ops.translate(hb,vec=(0.015,0,0),verts=[g for g in r["geom"] if isinstance(g,bmesh.types.BMVert)])
+        bmesh.ops.recalc_face_normals(hb,faces=hb.faces); put("bokkenhuiden","huid",hb,TR(X,yc,zc))
+    X=wx(16.6)+0.2
+    for zz_ in (zc-0.68,zc+0.68):
+        put("bokkenhuiden","hout",btube([(X,y0-0.62,zz_+0.03),(X,y0+0.6,zz_-0.02),(X,y0+1.9,zz_+0.02),(X,y0+3.47,zz_-0.03)],0.04,6))
+    for yy in (y0-0.55,y0+0.47,y0+1.42,y0+2.37,y0+3.4):
+        put("bokkenhuiden","hout",btube([(X,yy,zc-0.8),(X,yy+0.03,zc),(X,yy-0.02,zc+0.8)],0.035,6))
+    # buitenpad (rolstoel/single rider) met hoge haag; noordmuur (OSM muur_c)
+    path("klinkerrood",[(13.55,2.59),(13.95,19.45),(14.0,28.87)],0.8,0.08)
     strip("hagen","haag",[tuple(p) for p in OSM["haag_oost"]],0.6,2.2,ch=0.15)
-    strip("rij_muren","stuc",[tuple(p) for p in OSM["muur_c"]],0.3,2.4,ch=0.02)
+    strip("rij_muren","stuc",[tuple(p) for p in OSM["muur_c"]],0.3,1.0,ch=0.02)   # laag: op de rijfoto zie je groen buiten de zuilengang
     # ---------------- objecten ----------------
     n=0; tris=0
     for (part,mat),bm in PARTS.items():
@@ -212,7 +257,7 @@ def build(master):
         n+=1; tris+=sum(len(p.vertices)-2 for p in ob.data.polygons)
     out=os.path.join(HERE,"..","exports"); os.makedirs(out,exist_ok=True)
     json.dump({"colliders":COLL,"lamps":[[round(v,2) for v in l] for l in LAMPS],
-               "doors":[[7.33,26.03],[7.36,28.93]],"wachtbord":[bx,by],"rijbord":[11.6,2.45,3.2]},open(os.path.join(out,"omgeving_data.json"),"w"))
+               "doors":[[7.33,26.03],[7.36,28.93]],"wachtbord":[bx,by],"ingangbord":[11.0,9.86,0.75],"logo":[9.3,8.55,2.35],"huiden":[[round(wx(15.2+0.95*k)+0.19,3),round(15.2+0.95*k,3),1.85] for k in range(4)]},open(os.path.join(out,"omgeving_data.json"),"w"))
     save_master(master); log("objects",n,"tris~",tris,"colliders",len(COLL),"lamps",len(LAMPS))
 if __name__=="__main__":
     a=argv_after_dashes(); m=a[a.index("--master")+1] if "--master" in a else None
