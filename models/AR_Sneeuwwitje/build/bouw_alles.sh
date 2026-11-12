@@ -1,0 +1,20 @@
+#!/bin/zsh
+# bouw_alles.sh: 03 vormen -> 04 tuin -> 05 bake -> export huis + tuin -> upload model(len) + texturen -> textures/asset_ids.txt + exports/omgeving_id.txt
+set -e
+B=/Applications/Blender.app/Contents/MacOS/Blender; D=${0:A:h:h}; R=${D:h:h}; M=$D/AR_Sneeuwwitje_master.blend
+$B --background --python $D/build/03_forms.py -- --master $M 2>&1 | grep -E "built|Error|Traceback"
+$B --background --python $D/build/03b_grot.py -- --master $M 2>&1 | grep -E "rots tris|Error|Traceback"
+$B --background --python $D/build/04_omgeving.py -- --master $M 2>&1 | grep -E "objects|Error|Traceback"
+$B --background --python $D/build/05_bake.py -- --master $M --samples 16 2>&1 | grep -E "KLAAR|Error|Traceback"
+python3 -c "import json;a=json.load(open('$D/exports/kasteel_extra.json'));b=json.load(open('$D/exports/grot_extra.json'));json.dump({'colliders':a['colliders']+b['colliders'],'lamps':a['lamps']+b['lamps']},open('$D/exports/huis_extra.json','w'))"
+$B --background --python $D/build/09_export_roblox.py -- --master $D/AR_Sneeuwwitje_baked.blend --out $D/exports/AR_Sneeuwwitje_kasteel.fbx --extra $D/exports/huis_extra.json 2>&1 | grep -E "EXPORT|Error"
+$B --background --python $D/build/09_export_roblox.py -- --master $M --col OMGEVING --out $D/exports/AR_Sneeuwwitje_omgeving.fbx --extra $D/exports/omgeving_extra.json 2>&1 | grep -E "EXPORT|Error"
+cd $R
+zsh -ic "
+rm -f $D/textures/hashes.nieuw; id=\$(tools/upload_asset.sh $D/exports/AR_Sneeuwwitje_kasteel.fbx 'Sneeuwwitje kasteel' 'Efteling Sneeuwwitje kasteel en grot' Model); echo \"MODEL \$id\" > $D/textures/asset_ids.txt
+for f in $D/textures/Sneeuwwitje_*.png; do n=\$(basename \$f .png); h=\$(md5 -q \$f); oud=\$(grep \"^\$n \" $D/textures/hashes.txt 2>/dev/null | grep \" \$h\$\" | cut -d' ' -f2)
+  if [ -n \"\$oud\" ]; then id=\$oud; else id=\$(tools/upload_asset.sh \$f \"\$n\" 'Efteling Sneeuwwitje textuur' Image); fi
+  echo \"\$n \$id\" >> $D/textures/asset_ids.txt; echo \"\$n \$id \$h\" >> $D/textures/hashes.nieuw; done
+mv $D/textures/hashes.nieuw $D/textures/hashes.txt
+tools/upload_asset.sh $D/exports/AR_Sneeuwwitje_omgeving.fbx 'Sneeuwwitje omgeving' 'Efteling Sneeuwwitje plein' Model > $D/exports/omgeving_id.txt"
+cat $D/textures/asset_ids.txt $D/exports/omgeving_id.txt

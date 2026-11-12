@@ -134,11 +134,21 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
   * Interieur (keukenscène, figuren, geschilderd doek) komt later (Daan).
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
-## Sneeuwwitje (chat 5, 12 nov) — BEZIG: blokkering klaar
+## Sneeuwwitje (chat 5, 12 nov) — in Studio gezet (kasteel + grot + plein + beplanting); nog: wandeltest + close-ups
 Map `models/AR_Sneeuwwitje/`. Bronnen: 74 Eftepedia-plaatjes, OSM (Kasteel Sneeuwwitje 60095998 + grot 60095997, rotsen, entrances), brief `asset-brief.md`.
 Model: gevel kijkt OOST (-Y, 13.3 graden naar ZO), +X = noord; omrekening in `ref/model_frame.json`. front.jpg = Sneeuwwitjekasteelzomer.jpg,
 overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665`. Route: kasteelingang (zuid) -> spiegelzaal -> uitgang ronde toren
 -> grotingang (ruinemuur) -> tunnel langs de glazen kist -> grotuitgang. Straatmeubilair: later (Daan), refs in models/PR_Straatmeubilair/ref.
+- Vormen: `build/03_forms.py` (kasteel; spitsbogen, kegeldaken met pannenrijen, uitgekraagde torentjes, kantelen, boogfries, schilden),
+  `build/03b_grot.py` (kunstrots = blokken + voxel remesh + naden, boogtunnel langs de buitenbocht, ruinemuren + ruinetoren met klimop;
+  eigen owner-tag phase:03b_grot), lage ruinemuur verbindt de ronde toren met de grotingang (Daan: "zitten de stenen en het kasteel niet aan elkaar").
+  `build/04_omgeving.py` (wit grind plein + OSM-paden als strook, perken 505382907/908, bloembak, potten, boekstandaard).
+  `build/05_bake.py` (baksteen per gevel met metselverband, steen, pannen, rots a/b, ruine). Keten: `build/bouw_alles.sh` + `roblox/maak_plaatsscript.py`.
+- Assets: kasteel+grot **110658384004768** (46k tris, 100+ COLL_), omgeving **120339991780257**. Plaatsen: `roblox/plaats_sneeuwwitje.luau`
+  (oorsprong studs (-75.65, 2, -167.32), kijkrichting (0.9731, 0, 0.2306)); beplanting `build/06_planten.py` -> workspace.SneeuwwitjeGroen (344).
+  Wind + LantaarnsDagNacht doen ook Sneeuwwitje. Label 'Sneeuwwitje'/'Kasteel Sneeuwwitje' weg, spawn op het voorplein.
+- LET OP: Studio herstartte tijdens het plaatsen (Assistant-plugin bijgewerkt). Als Sneeuwwitje/SneeuwwitjeGroen ontbreken: plaats_sneeuwwitje.luau
+  + de plantentabel opnieuw draaien.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
