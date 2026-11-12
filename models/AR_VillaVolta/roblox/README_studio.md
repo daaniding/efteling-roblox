@@ -67,3 +67,5 @@
     - bezoekers: ServerScriptService.Bezoekers (10 R15-figuren, wandelen over het ovale pad, 2 kijkers bij de zonnewijzer)
     - galerij: lambrisering, pilasters, kroonlijst, plafondbalken, panelen in de borstwering, paneeldeuren met glas/bovenlicht/klinken.
       Omgeving-asset **76111214657159**.
+17. Afronding (Daan): bezoekers-script verwijderd; ovaal pad 3.4 m breed (alleen naar binnen: a9.6 b8.4), middengroep 0.72x,
+    beukenbogen beginnen bij 25 graden (liepen door de zijpaden). Omgeving-asset **81406811361689**. Villa Volta buitenkant: KLAAR.

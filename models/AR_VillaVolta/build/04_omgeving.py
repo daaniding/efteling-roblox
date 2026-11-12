@@ -156,19 +156,19 @@ def build(master):
                 t=k/n; t2,t3=t*t,t*t*t
                 out.append(tuple(0.5*((2*p1[j])+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3) for j in (0,1)))
         out.append(pts[-1]); return out
-    loop=se_boog(10.0,8.8,0,math.tau,96)                                   # ovaal pad: boven -6.5 (terras), onder -24.1
-    path("grind",loop,2.6)
+    loop=se_boog(9.6,8.4,0,math.tau,96)                                    # ovaal pad 3.4 m breed (Daan: breder), buitenrand blijft gelijk
+    path("grind",loop,3.4)
     path("grind",[(0,-24.0),(0,-45.8)],4.0)                                # as naar het plein
-    path("grind",catmull([se(10.0,8.8,math.radians(152)),(-10.3,-3.2),(-9.6,3.0),(-7.2,9.4)]),2.2)   # uitgangspad west
-    path("grind",catmull([se(10.0,8.8,math.radians(28)),(11.2,-3.0),(12.7,0.6),(13.1,2.2)]),2.4)    # naar de rij-ingang
+    path("grind",catmull([se(9.6,8.4,math.radians(152)),(-10.3,-3.2),(-9.6,3.0),(-7.2,9.4)]),2.2)   # uitgangspad west
+    path("grind",catmull([se(9.6,8.4,math.radians(28)),(11.2,-3.0),(12.7,0.6),(13.1,2.2)]),2.4)    # naar de rij-ingang
     # beukenhagen: zelfde vorm 2.4 m buiten het pad, tot de pilaren
     tb=math.atan2(-(abs((2.5/12.9))**(NSE/2)),1)      # hoek waar x=2.5 (onderkant)
-    BW=se_boog(12.9,11.4,math.radians(37.6),-math.acos(min(1,(2.5/12.9)**(NSE/2))),40)
+    BW=se_boog(12.9,11.4,math.radians(25),-math.acos(min(1,(2.5/12.9)**(NSE/2))),40)
     strip("hagen","beuk",[(-x,y) for x,y in BW],0.7,1.1); strip("hagen","beuk",BW,0.7,1.1)
     # twee gespiegelde bladperken (vorm van het westelijke OSM-perk) met buxusrand
     BED=[tuple(p) for p in OSM["haag_tuin_w"]][:-1]
     BED=catmull(BED+BED[:3],4)[: len(BED)*4+1]
-    KM=0.8   # middengroep 20% naar het midden: perken/bogen raakten het pad (Daan)
+    KM=0.72   # middengroep 20% naar het midden: perken/bogen raakten het pad (Daan)
     def km(x,y): return (x*KM, TCY+(y-TCY)*KM)
     BED=[km(x,y) for x,y in BED]
     for sx in (-1,1):
