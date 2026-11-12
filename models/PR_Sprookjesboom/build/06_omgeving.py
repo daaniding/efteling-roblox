@@ -119,7 +119,7 @@ def beek():
             inside = cross.sum(1) % 2 == 1
             out[s:s + 4000] = np.where(inside, -dmin, dmin)
         return out
-    G = 0.15; R = 1.6
+    G = 0.15; R = 2.5            # rand moet over de uitgegraven terreinvoxels vallen (kolom < 1.15 m + halve voxel 0.67 m)
     xs = np.arange(poly[:, 0].min() - R - G, poly[:, 0].max() + R + G, G); ys = np.arange(poly[:, 1].min() - R - G, poly[:, 1].max() + R + G, G)
     X, Y = np.meshgrid(xs, ys); P = np.stack([X.ravel(), Y.ravel()], 1)
     d = sdist(P).reshape(X.shape)
@@ -127,7 +127,7 @@ def beek():
         z = np.where(dd < 0.0, -0.55, -0.55 + 0.23 * np.clip(dd / 0.25, 0, 1))                 # bodem -> waterlijn
         bank = np.clip((dd - 0.25) / 0.70, 0, 1); bank = bank * bank * (3 - 2 * bank)
         z = np.where(dd >= 0.25, -0.32 + 0.34 * bank, z)                                       # oever tot +0.02
-        z = np.where(dd > 1.30, 0.02 - 0.04 * np.clip((dd - 1.30) / 0.30, 0, 1), z)            # rand duikt onder het terrein
+        z = np.where(dd > 2.15, 0.02 - 0.04 * np.clip((dd - 2.15) / 0.35, 0, 1), z)            # rand duikt pas na 2.15 m onder het terrein
         return z
     Z = zf(d) + 0.015 * np.sin(X * 7.1) * np.cos(Y * 6.3) * (d > 0.3) * (d < 1.0)
     keep = d < R

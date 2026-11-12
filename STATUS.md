@@ -99,6 +99,12 @@ Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog 
   van tonderzwammen, 9 wortelboogjes, bodembedekker op de oever, 2 Efteling-lantaarns, roodere paddenstoelhoeden.
   Assets: omgeving **108206624747832**, breuksteen **90280289121540**, data-PNG **91704590749799**. SpawnLocation staat op het pleintje
   (oude positie in attribuut OudePositie).
+- **Afwerking (Daan: "voeg nog toe wat moet", "veel gedetailleerder die eekhoorn"):** dieren = Roblox AI-meshes met textuur (eekhoorn
+  138758101831485 op de linker tak, konijn 76196046627133 op de oever, specht 71184715344811 bij het uilengat); weerstation achter de boom en
+  188 paarse bloemtrossen op de rododendrons (extra 109536072791154); showlamp op het gezicht + licht in de lantaarns (`roblox/plaats_extra.luau`).
+  Stam opnieuw: LOW uit de gladde vorm (UV-eilanden waren piepklein -> facetten); boom **118901625021855**, kleur/normaal/ruw
+  127707585326769 / 111187609029513 / 137929812036171. Geul-rand tot 2.5 m (gaten naast de geul) -> omgeving **131889710342801**;
+  terrein binnen 16 m vlakgezet. Zwevende layout-labels weg bij alles wat gebouwd is (ook Gijs' "Papier hier!").
 - Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
   renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
   naar het pad, rododendrons erachter, (beek/plein/bankjes/planten staan nu); nog: tonderzwam-roeptoeter op de wortel, dieren (eekhoorn, specht), stoomtreinspoor achter de boom, reliëf van heel het Sprookjesbos in het terrein.

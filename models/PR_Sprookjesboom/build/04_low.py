@@ -17,7 +17,8 @@ exec(_src, _ns)
 globals().update({k: v for k, v in _ns.items() if callable(v)})
 
 NAME = "PR_Sprookjesboom"
-BARK_PARTS = ("GEO_stam", "GEO_nose", "GEO_nose_cut", "GEO_lid_up.L", "GEO_lid_up.R", "GEO_lid_lo.L", "GEO_lid_lo.R")
+BARK_PARTS = ("GEO_stam_glad", "GEO_nose",   # gladde stam: decimeren + uitvouwen geeft grote eilanden (schors wordt gebakken)
+              "GEO_nose_cut", "GEO_lid_up.L", "GEO_lid_up.R", "GEO_lid_lo.L", "GEO_lid_lo.R")
 FLAT_PARTS = {"GEO_eye": "Oogwit", "GEO_iris": "Iris", "GEO_pupil": "Pupil", "GEO_mouth_inside": "Holte", "GEO_Hole": "Holte"}
 
 
@@ -41,7 +42,7 @@ def build(master, tris):
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.to_mesh(low.data); bm.free()
     shade_smooth(low, math.radians(180))
-    smart_uv(low, angle=60.0, margin=0.004, seams_from_sharp=False)
+    smart_uv(low, angle=72.0, margin=0.006, seams_from_sharp=False)
     assign(low, material("MAT_stam_baked", (0.5, 0.47, 0.42, 1), 0.85))
     log("stam LOD0 tris", tri_count(low), "van", t0)
     # effen delen: vereenvoudigde kopieën

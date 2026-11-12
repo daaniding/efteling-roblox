@@ -47,3 +47,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Terrein: vlak maaiveld = voxels vol tot Y=0 en leeg erboven, rendert op Y=2. Smalle dingen (beek 1.5 m) niet in voxels (1.33 m) maken maar als mesh,
   terrein eronder leeg (vol tot Y=-4). Terreinbotsing wordt na WriteVoxels pas later bijgewerkt: task.wait() voor raycasts.
 - Data-PNG: alpha-kanaal nooit 0 laten (groep = 200 + n).
+- Geen zwevende tekst bij gebouwde dingen: na plaatsen het EftelingLayout-label (BillboardGui) met dezelfde naam verwijderen (Daan).
+- UV van gebakken LOW-meshes: uitvouwen op de GLADDE vorm (vóór schors/ruis), anders duizenden piepkleine eilanden -> facetten in Roblox.
+- Dieren/figuren: Roblox generate_mesh (AI, getextureerd) is veel gedetailleerder dan zelf geboetseerde bollen; Daan wil detail.
+- Geul-mesh moet verder reiken dan de uitgegraven terreinvoxels (kolom + halve voxel 0.67 m), anders kuilen naast de geul.

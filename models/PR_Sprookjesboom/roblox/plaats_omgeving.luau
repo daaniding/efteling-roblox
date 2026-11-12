@@ -2,7 +2,7 @@
 -- Data: exports/omgeving_data.png (asset DATA) = 06_omgeving_data.py via 07_data_png.py; meshes: OMG (plein, paden, band, geul,
 -- water, wortels, bankjes, prullenbak), STEEN (6 keien). Planten uit ServerStorage.VVEchtePlanten en BomenBronV3 (Villa Volta).
 -- Terrein: origineel vlak = voxels vol tot Y=0 (rendert op Y=2). Onder de geul (< 1.15 m van de beek) alleen vol tot Y=-4.
-local DATA, OMG, STEEN = 91704590749799, 108206624747832, 90280289121540
+local DATA, OMG, STEEN = 91704590749799, 131889710342801, 90280289121540
 local S = 3
 local O = Vector3.new(121.44, 1.95, -594.57)                    -- stamhart (OSM 40.48, 198.19 m)
 local ORIGIN = CFrame.new(O) * CFrame.Angles(0, math.pi, 0)

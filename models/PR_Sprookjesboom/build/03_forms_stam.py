@@ -317,6 +317,8 @@ def build(master, voxel):
     remesh_voxel(t, voxel)
     sm = t.modifiers.new("Smooth", "SMOOTH"); sm.factor = 0.5; sm.iterations = 2
     apply_all_modifiers(t)
+    glad = duplicate(t, "GEO_stam_glad", "HIGH")     # gladde vorm zonder schors: basis voor LOW (grote UV-eilanden), geen bake-bron
+    glad.hide_render = True
     bark(t)
     mb = bark_material(); assign(t, mb); shade_smooth(t, math.radians(180))
     bvh = bvh_of(t); S = lambda x, z: surf_y(bvh, x, z)
