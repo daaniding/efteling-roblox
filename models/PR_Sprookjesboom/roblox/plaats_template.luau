@@ -50,9 +50,9 @@ for _, p in ipairs(boom:GetChildren()) do
   local n = string.lower(p.Name)
   p.CanCollide = false; p.CastShadow = true
   if string.find(n, "stam_baked") then
-    p.CanCollide = true; sa(p, ID.stam_kleur, ID.stam_normaal, ID.stam_ruw)
+    p.CanCollide = true; sa(p, ID.stam_kleur, ID.stam_normaal, ID.stam_ruw); p:FindFirstChildOfClass("SurfaceAppearance").Color = Color3.fromRGB(196, 184, 166)   -- iets donkerder (Daan)
   elseif string.find(n, "branch") then
-    sa(p, ID.schors, nil, nil); p.Color = Color3.fromRGB(150, 140, 125)
+    sa(p, ID.schors, nil, nil); p.Color = Color3.fromRGB(118, 110, 98)
   elseif string.find(n, "leaf") then
     sa(p, ID.blad, nil, nil, true); p.CastShadow = true
   elseif string.find(n, "eye_white") then p.Color = kleuren.Oogwit; p.Material = Enum.Material.SmoothPlastic

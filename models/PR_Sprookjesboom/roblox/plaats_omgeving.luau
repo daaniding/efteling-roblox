@@ -64,7 +64,7 @@ for _, n in ipairs({"SprookjesboomOmgeving", "SprookjesboomStenen", "Sprookjesbo
 local om = laad(OMG, "SprookjesboomOmgeving")
 -- klinker: rode klinkers (Sprookjesboomopening.jpg); water: troebel olijfbruin (Boom_wortels.jpg)
 local ST = {klinker = {Color3.fromRGB(150, 88, 68), Enum.Material.Pavement, true}, band = {Color3.fromRGB(118, 116, 110), Enum.Material.Concrete, true},
-  branch = {Color3.fromRGB(150, 140, 125), Enum.Material.Wood, true}, hout = {Color3.fromRGB(92, 64, 42), Enum.Material.Wood, true},
+  branch = {Color3.fromRGB(118, 110, 98), Enum.Material.Wood, true}, hout = {Color3.fromRGB(92, 64, 42), Enum.Material.Wood, true},
   hout_kops = {Color3.fromRGB(128, 98, 68), Enum.Material.Wood, true}, riet = {Color3.fromRGB(160, 124, 74), Enum.Material.Wood, true},
   ijzer = {Color3.fromRGB(26, 28, 27), Enum.Material.Metal, true}, hollow_dark = {Color3.fromRGB(12, 10, 8), Enum.Material.SmoothPlastic, false},
   beekbodem = {Color3.fromRGB(58, 48, 38), Enum.Material.Mud, true}, oever = {Color3.fromRGB(96, 112, 64), Enum.Material.Grass, true},

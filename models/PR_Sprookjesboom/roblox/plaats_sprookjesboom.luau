@@ -1,7 +1,7 @@
 -- Sprookjesboom + paddenstoelen plaatsen (gegenereerd door maak_plaatsscript.py uit plaats_template.luau).
 -- Blender-oorsprong = stamhart op maaiveld; gezicht kijkt naar het zuiden (+Z). OSM (40.48, 198.19) m -> studs (121.44, -594.57).
 -- Import geeft Blender (x,y,z) als (-x,z,y)*S; 180 graden draaien zet het gezicht op het zuiden. Grond Y = 2 (vlak terrein; AHN-reliëf later).
-local ID = {boom = 107268166721469, klein = 125821121621263, muziek = 76565275730007, stam_kleur = 97601430192382, stam_normaal = 118677532818860, stam_ruw = 99526504446486, schors = 99288067092575, blad = 82258445945378}
+local ID = {boom = 107268166721469, klein = 125821121621263, muziek = 76565275730007, stam_kleur = 97601430192382, stam_normaal = 118677532818860, stam_ruw = 99526504446486, schors = 99288067092575, blad = 82258445945378, omgeving = 131889710342801, stenen = 90280289121540, omgeving_data = 91704590749799, extra = 109536072791154, eekhoorn_ai = 138758101831485, konijn_ai = 76196046627133, specht_ai = 71184715344811, water_rimpel = 140312724930432, water_slib = 88421652502854, water_ring = 77074338755113, water_kroos = 140434402386473, blad_los = 90885613744350}
 local S = 3
 local GROUND = 1.95
 local ORIGIN = CFrame.new(121.44, GROUND, -594.57) * CFrame.Angles(0, math.pi, 0)
@@ -50,9 +50,9 @@ for _, p in ipairs(boom:GetChildren()) do
   local n = string.lower(p.Name)
   p.CanCollide = false; p.CastShadow = true
   if string.find(n, "stam_baked") then
-    p.CanCollide = true; sa(p, ID.stam_kleur, ID.stam_normaal, ID.stam_ruw)
+    p.CanCollide = true; sa(p, ID.stam_kleur, ID.stam_normaal, ID.stam_ruw); p:FindFirstChildOfClass("SurfaceAppearance").Color = Color3.fromRGB(196, 184, 166)   -- iets donkerder (Daan)
   elseif string.find(n, "branch") then
-    sa(p, ID.schors, nil, nil); p.Color = Color3.fromRGB(150, 140, 125)
+    sa(p, ID.schors, nil, nil); p.Color = Color3.fromRGB(118, 110, 98)
   elseif string.find(n, "leaf") then
     sa(p, ID.blad, nil, nil, true); p.CastShadow = true
   elseif string.find(n, "eye_white") then p.Color = kleuren.Oogwit; p.Material = Enum.Material.SmoothPlastic
