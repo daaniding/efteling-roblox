@@ -7,6 +7,7 @@ from collections import defaultdict
 
 args = sys.argv[sys.argv.index("--") + 1:]
 master = args[args.index("--master") + 1]; out = args[args.index("--out") + 1]
+ALLEEN = tuple(args[args.index("--alleen") + 1].split(",")) if "--alleen" in args else None   # alleen objecten met deze naam-begin (snelle deel-export)
 LIMIT = 9000
 CAPS = {"GEO_hoofd": 9000, "GEO_broek": 6000, "GEO_tuniek": 5000, "GEO_rok": 4000, "GEO_rots": 12000, "GEO_oor": 1400,
         "GEO_neus": 1200, "GEO_hekregel": 1500, "GEO_touw_ring": 1200, "GEO_hand": 1800, "GEO_cape": 4000}
@@ -34,6 +35,7 @@ groups = defaultdict(list)
 for o in list(low.all_objects):   # vaste lijst: het decimeren voegt tijdelijk objecten toe
     if o.name.startswith(("CUT_", "BLK_", "P_")) or o.get("owner") == "phase:02_blockout" or o.hide_render: continue
     if o.type not in ("MESH", "CURVE", "FONT"): continue
+    if ALLEEN and not o.name.startswith(ALLEEN): continue
     dg = bpy.context.evaluated_depsgraph_get()      # opnieuw per object: decimeren hieronder maakt de oude depsgraph ongeldig
     ev = o.evaluated_get(dg)
     try:

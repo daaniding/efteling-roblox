@@ -84,6 +84,9 @@ v2 (Daan: "veel mooier"): gezicht naar foto (bolle ogen met huidring, open grima
 v3 (Daan): keien weg, klinkerpad (~5 m breed) in een boog voor de vijver met opsluitband, spawn op het pad (oude plek in attribuut
 SpawnLocation.OudeCFrame), rots met normal map van de hoge rots (zacht gemaakt), bomen dichtbij naast het pad (61 planten totaal).
 Model v3 **90664955604649**; texturen lijf 104740173738608, hoofd 129806446727609, nek 91441792849484, rots 90579127698807 (+normaal 109618118831941), rand 74303124237918.
+v4 (Daan, naar de foto's): vijver loopt ~50 graden verder om de rots, pad alleen recht voor Langnek (~3.5 m), veel dichter bos
+(26 dennen, 12 loofbomen, ~20 struiken, ~120 varens/ondergroei; kleine planten zonder schaduw: 49 fps met / 54 zonder).
+Omgevingsasset **80458281867517**; draai `roblox/plaats_langnek_v4_omgeving.luau` na `plaats_langnek.luau`.
 Kan nog beter: cape-plooien, eventueel normal maps voor de figuur.
 
 ## Daarna (volgorde met Daan afgesproken)

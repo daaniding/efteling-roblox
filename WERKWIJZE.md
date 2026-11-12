@@ -93,3 +93,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Pad bij een attractie zoals bij de Sprookjesboom: klinkerstrook 3 cm boven maaiveld, opsluitband alleen buiten; planten waarvan de voet
   of kruinrand boven het pad komt automatisch weglaten (raycast op de padmesh).
 - Daan wil spawnen bij wat we net bouwden om het te bekijken; oude spawn bewaren in een attribuut.
+- Langnek v4: echte attracties in het Sprookjesbos staan in DICHT bos (struiken + ondergroei tot aan het water), paden zijn er kort.
+  Bos procedureel in ringen met tussenafstanden per soort (struiken mogen onder bomen); kleine planten CastShadow uit = +6 fps.
+- Snelle deel-export: `09_export_roblox.py --alleen <naam-begin,...>` + losse asset, in Studio alleen die delen vervangen (geen bake nodig).

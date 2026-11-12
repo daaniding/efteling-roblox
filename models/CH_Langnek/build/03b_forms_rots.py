@@ -131,10 +131,22 @@ def build(master):
 
     # ================= vijver: buitenboog uit OSM, water als vlak (onder de rots door)
     water = [osm_to_model(p) for p in OSM["water"][:-1]]
-    WS = 0.88                                               # vijver aan de voorkant smaller dan OSM (front.jpg: rand op 0.79 van de hoogte)
+    WS = 0.96                                               # bijna OSM-maat
     arc = [(cx + (x - cx) * WS, cy + (y - cy) * WS) for x, y in water[:11]]   # buitenboog (pleinzijde), van west naar oost
+    # water loopt verder om de rots heen (Daan + Langnek_overview2014.jpg): beide uiteinden ~50 graden doortrekken naar achteren
+    def ang(p): return math.atan2(p[1] - cy, p[0] - cx)
+    def rad(p): return math.hypot(p[0] - cx, p[1] - cy)
+    richting = 1 if (ang(arc[1]) - ang(arc[0]) + math.pi) % (2 * math.pi) - math.pi > 0 else -1
+    voor, na = [], []
+    for k in range(1, 5):
+        a0 = ang(arc[0]) - richting * math.radians(12 * k); r0 = rad(arc[0]) * (1 - 0.03 * k)
+        voor.insert(0, (cx + r0 * math.cos(a0), cy + r0 * math.sin(a0)))
+        a1 = ang(arc[-1]) + richting * math.radians(12 * k); r1 = rad(arc[-1]) * (1 - 0.03 * k)
+        na.append((cx + r1 * math.cos(a1), cy + r1 * math.sin(a1)))
+    arc = voor + arc + na
+    binnen = [(cx + (x - cx) * 0.55, cy + (y - cy) * 0.55) for x, y in arc]   # binnenrand ligt onder de rots
     bm = bmesh.new()
-    vs = [bm.verts.new((x, y, WATER_Z)) for x, y in arc]
+    vs = [bm.verts.new((x, y, WATER_Z)) for x, y in arc + list(reversed(binnen))]
     f = bm.faces.new(vs)
     if f.normal.z < 0: f.normal_flip()
     r = bmesh.ops.extrude_face_region(bm, geom=[f])                         # 8 cm dik: van boven en onder zichtbaar (Roblox toont alleen voorkanten)
@@ -191,16 +203,18 @@ def build(master):
         o = new_mesh_object(name, bm, L); shade_smooth(o, math.radians(60)); assign(o, mat); o["anim"] = "static"
     # pad: klinkers in een boog voor de vijver (zoals bij de Sprookjesboom: 3 cm boven maaiveld, opsluitband alleen buiten)
     m_pad = material("MAT_klinker", (0.62, 0.57, 0.52, 1), 0.85); m_band = material("MAT_band", (0.46, 0.45, 0.43, 1), 0.9)
-    PAD_IN, PAD_UIT = 0.45, 5.4                             # vanaf de vijverrand, ~5 m breed (WERKWIJZE: paden ruim)
-    N = int(cum[-1] / 0.25)
+    PAD_IN, PAD_UIT = 0.45, 3.9                             # ~3.5 m breed, alleen recht voor Langnek (Daan: pad loopt niet zo ver)
+    s_voor = min(range(len(dense)), key=lambda i: dense[i].y); s_mid = cum[s_voor]
+    S0, S1 = max(0.0, s_mid - 6.5), min(cum[-1], s_mid + 6.5)
+    N = int((S1 - S0) / 0.25)
     def buiten(ss):                                         # buitenrand pad; uiteinden in een kwartcirkel terug naar de vijver
-        t = min(ss, cum[-1] - ss); w = PAD_UIT - PAD_IN
+        t = min(ss - S0, S1 - ss); w = PAD_UIT - PAD_IN
         r = math.sqrt(max(0.0, 1 - ((w - t) / w) ** 2)) if t < w else 1.0
         return PAD_IN + max(0.02, w * r)
     def strook(f_in, f_uit, zt, zb, naam, mat):
         bm = bmesh.new(); rings = []
         for k in range(N + 1):
-            ss = k * cum[-1] / N
+            ss = S0 + k * (S1 - S0) / N
             a, _, _ = at(ss, f_in(ss)); b, _, _ = at(ss, f_uit(ss))
             rings.append([bm.verts.new((a.x, a.y, zt)), bm.verts.new((b.x, b.y, zt)), bm.verts.new((b.x, b.y, zb)), bm.verts.new((a.x, a.y, zb))])
         for r0, r1 in zip(rings, rings[1:]):
