@@ -33,3 +33,10 @@
     workspace.VillaVoltaPlanten: borders 0.4-1.1 m van hagen/terras in de tuin (lavendel, siergras, bloemen, bodem; seed 2026),
     5% losse plukjes in het gazon, bosgrond in groepjes van dezelfde soort (seed 2026, 420 groepen). Paden/gebouw/rij/plein vrij.
     Tweede bosbodemlaag gedaan (varens 1.4-2.1x, 650 groepen, seed 77): totaal 5943 plantmodellen. Let op prestaties (LOD/streaming later).
+12. Echte texturen (ambientCG CC0, `textures/ambientcg/`, ids in asset_ids.txt) als MaterialVariants in MaterialService:
+    VV_Gazon (Grass, Grass005, 7 studs/tegel) = override terreingras; VV_Bosgrond (Mud, Ground037, 10) = override, bosgrond-voxels
+    LeafyGrass -> Mud omgezet (zodat hagen LeafyGrass houden); VV_Bosbodem (Ground, Ground076, 10) = override;
+    VV_Grind (Pebble, Ground091 aangestampt grind; Gravel023 was te wit/vlak) expliciet op MAT_grind-MeshParts, kleur (235,228,214).
+    Terreinkleuren: Grass (215,230,200), Mud (200,200,190), Ground (190,180,170). Nieuwe Images laden in Studio pas na enkele minuten.
+    Bloemperken: oude icosphere-blokjes (MAT_bloem_*) verwijderd, 398 echte bloemen in kleurbanden met bodembedekkerrand (seed 5).
+    Daan: "het is een pretpark, felle kleuren mogen" -> ColorCorrection saturation 0.18.
