@@ -1,0 +1,82 @@
+{
+  "blend": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/AR_VillaVolta/AR_VillaVolta_master.blend",
+  "mode": "clay",
+  "engine": "workbench",
+  "bbox_min": [
+    -9.25,
+    -6.400000095367432,
+    0.0
+  ],
+  "bbox_max": [
+    9.25,
+    33.0,
+    13.050000190734863
+  ],
+  "size_xyz": [
+    18.5,
+    39.400001525878906,
+    13.050000190734863
+  ],
+  "objects": [
+    "BLK_terras",
+    "BLK_trede_0",
+    "BLK_trede_1",
+    "BLK_trede_2",
+    "BLK_trede_3",
+    "BLK_hoofdblok",
+    "BLK_vleugel-1",
+    "BLK_vleugel+1",
+    "BLK_hal",
+    "BLK_dak_hoofd",
+    "BLK_dak_vleugel-1",
+    "BLK_dak_vleugel+1",
+    "BLK_dakkapel",
+    "BLK_fronton",
+    "BLK_beeld",
+    "BLK_zuil-1",
+    "BLK_zuil+1",
+    "BLK_balkon",
+    "BLK_balustrade",
+    "BLK_opschrift",
+    "BLK_deur",
+    "BLK_deur_ornament",
+    "BLK_raam_bg-1",
+    "BLK_raam_1e-1",
+    "BLK_raam_dak-1",
+    "BLK_raam_bg+1",
+    "BLK_raam_1e+1",
+    "BLK_raam_dak+1",
+    "BLK_terrasbal-1",
+    "BLK_vaas-1_0",
+    "BLK_vaas-1_1",
+    "BLK_vaas-1_2",
+    "BLK_terrasbal+1",
+    "BLK_vaas+1_0",
+    "BLK_vaas+1_1",
+    "BLK_vaas+1_2"
+  ],
+  "renders": {
+    "front": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/AR_VillaVolta/review/02/clay_front.png",
+      "az_el_lens": [
+        0,
+        0,
+        0
+      ],
+      "distance": 56.70000076293945
+    },
+    "ref": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/AR_VillaVolta/review/02/clay_ref.png",
+      "az_el_lens": [
+        0.0,
+        3.0,
+        35.0
+      ],
+      "distance": 40.698522137271034
+    },
+    "gameplay": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/AR_VillaVolta/review/02/clay_gameplay_200px.png",
+      "subject_px": 200
+    }
+  }
+}

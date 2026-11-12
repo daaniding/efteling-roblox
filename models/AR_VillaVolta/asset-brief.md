@@ -1,0 +1,11 @@
+ASSET      AR_VillaVolta (voorgevel + romp, Marerijk). Primaire referentie ref/front.jpg (Commons "Villa Volta 2016", frontaal, 700 px breed geschat op 37 px/m via deurhoogte 3,0 m)
+CATEGORY   architecture, vrijstaande villa (facade-gebouw voor de madhouse-hal erachter)
+VIEWS      front.jpg frontaal, azimuth 0, elevatie ~2, lens ~35 mm; grondlijn = terrasvloer. Overige foto's: detail en context.
+SCALE      deur 3,0 m hoog -> 37 px/m. Hoofdblok 8,4 m breed (hoekblok tot hoekblok), zijvleugels 3,1 m elk, totale gevel 14,6 m. OSM-footprint 18,5 x 33,5 m = incl. hal; hal achter de gevel 18,5 breed, tot 33,5 m diep (inferred).
+PROPORTIONS hoofdblok kroonlijst 7,2 m; nok 10,0 m; beeld tot 11,9 m; balkonvloer 4,3 m; zuilen 6,6 m hart-op-hart, d 0,5 m, hoogte 4,0 m; balkon 7,2 m breed, 1,6 m diep, balustrade 1,0 m; opschriftband 4,3 m breed op 5,2-5,8 m; dakkapel 4,0 m breed, 2,4 m hoog + fronton 0,8 m; zijvleugel kroonlijst 6,2 m, nok 8,2 m; deur 2,4 x 3,0 m, dubbele deur met boogvormig ornament tot 3,8 m; ramen zijvleugel 0,9 x 1,4 m (begane grond: 0,9 x 1,0 met fronton); terras 15 m breed, 5 m diep, 0,75 m hoog, 4 treden; hoekblokken (rustica) 0,6 m breed, blokken 0,45 m hoog
+PARTS      1 terras + trappen 2 balustrade terras met siervazen 3 hoofdblok romp 4 zijvleugels L/R 5 hal achter (eenvoudig) 6 mansardedak hoofdblok + zijvleugels (leien) 7 dakkapel met fronton 8 beeld 9 hoekblokken rustica 10 kroonlijst + fries 11 middenrisaliet: 2 zuilen + pilasters, balkonplaat, balustrade 12 opschrift VILLA VOLTA 13 deur + omlijsting + ornament 14 ramen + luiken 15 siervazen op dak en pilasters 16 lantaarns
+SILHOUETTE mansardedak met dakkapel en beeld; balkon op twee zuilen; brede trap met balustrade; lagere zijvleugels
+MATERIALS  stuc oker-creme (0.82,0.72,0.52) ruw 0.85 met vlekken; natuursteen details grijsbeige (0.70,0.68,0.60); leien dak donkergrijs (0.25,0.26,0.28); deuren en luiken donkergroen (0.10,0.22,0.16) glans 0.5; balustrade wit-grijs; beeld brons-groen
+ARTICULATION geen (deuren statisch; binnen later de kantelende kamer)
+INFERRED   diepte hoofdblok 10 m, zijvleugels 6 m, hal 18,5 x 23 m x 8 m hoog, dakhelling mansarde 70/30 graden, achterzijde, alle ornamentdetails benaderd
+TARGET     Roblox FBX, <= 40k tris, 3 studs/m
