@@ -1,0 +1,5 @@
+Hoogtedata: AHN4 (Actueel Hoogtebestand Nederland), DTM 0,5 m (kale grond), via PDOK WCS. Licentie CC0.
+Download (RD-box 131100..131750 x 406650..407250):
+curl -o dtm.tif "https://service.pdok.nl/rws/ahn/wcs/v1_0?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=dtm_05m&SUBSET=x(131100,131750)&SUBSET=y(406650,407250)&FORMAT=image/tiff"
+Omrekenen naar parkmeters: ahn_lokaal.py (zelfde vlakke projectie als reference/data/build_maps.py; RD via benaderingsformule, < 1 m fout).
+Let op: ahn_lokaal.py verwacht <scratch>/ahn/dtm.npy (float32 uit dtm.tif, nodata -> NaN).

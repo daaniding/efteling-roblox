@@ -71,6 +71,16 @@ achterbouw x -9..6.85, y 18.5..31.2, 6.2 hoog. Hoogtes uit front.jpg (deur 3.0 m
 Villa Volta buitenkant KLAAR volgens Daan. Open bij Villa Volta: geluid (later), interieur (later), prestaties testen in Play.
 Volgende chat: de volgende attractie uit de lijst hieronder (Sprookjesboom + paddenstoelen of Langnek), met dezelfde werkwijze.
 
+## Sprookjesbos: reliëf + Sprookjesboom (gestart 12 nov, chat 3)
+Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog geen show/geluid/bewegende ogen.
+- Reliëf uit **AHN4 DTM 0,5 m** (PDOK, CC0): `park/relief/` (script, `hoogte_lokaal_mm.png` = mm NAP per 1 m, x -150..300, y -150..330; overzicht-jpg).
+- Bevindingen: Sprookjesbos loopt zacht af van ~9,3 m NAP (zuid) naar ~8,2 m (noord); p5-p95 8,25-10,0 m, mediane helling 3 graden.
+  Steile taluds (tot 30+ graden) alleen lokaal: wallen rond theater/kasteel, oevers. Rond de Sprookjesboom (x 40,5, y 198,2) is het vlak
+  (8,0-8,4 m) met een kuil van ~0,3 m ervoor (vijvertje met stenen op foto 4). AHN heeft gaten onder dicht groen/gebouwen (opgevuld).
+- 18 muzikale paddenstoelen (OSM-punten) liggen op 8,2-9,5 m NAP; hoogte per stuk via `ahn_lokaal.py`.
+- Foto's: `reference/fotos/Sprookjesboom/1-4.jpg` (3 = beste vooraanzicht, 2 = schaalmodel kruin), `Muzikale_paddenstoel/1-4.jpg`.
+- Volgende: Sprookjesboom met blender-image-to-3d (maatbrief -> blokkering naast foto 3 -> vormen -> schors), dan paddenstoelen, dan reliëf in Studio-terrein.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta afmaken. 2. Sprookjesboom + paddenstoelen, Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

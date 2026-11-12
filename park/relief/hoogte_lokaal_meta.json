@@ -1,0 +1,13 @@
+{
+ "X0": -150,
+ "X1": 300,
+ "Y0": -150,
+ "Y1": 330,
+ "res": 1.0,
+ "bestand": "hoogte_lokaal_mm.png",
+ "waarde": "mm boven NAP (uint16)",
+ "rij0": "noord (y=Y1)",
+ "kolom0": "west (x=X0)",
+ "pixel": "1 m",
+ "bron": "AHN4 DTM 0.5 m via PDOK WCS, gaten (gebouwen/water) opgevuld"
+}
