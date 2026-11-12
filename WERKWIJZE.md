@@ -63,3 +63,21 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - UV van gebakken LOW-meshes: uitvouwen op de GLADDE vorm (vóór schors/ruis), anders duizenden piepkleine eilanden -> facetten in Roblox.
 - Dieren/figuren: Roblox generate_mesh (AI, getextureerd) is veel gedetailleerder dan zelf geboetseerde bollen; Daan wil detail.
 - Geul-mesh moet verder reiken dan de uitgegraven terreinvoxels (kolom + halve voxel 0.67 m), anders kuilen naast de geul.
+
+## Lessen Langnek (12 nov, chat 4)
+- **Nog niet animeren** (Daan): alleen het object + scène bouwen, geen show/beweging tot hij erom vraagt. Animatiescript ligt klaar in
+  `models/CH_Langnek/roblox/LangnekAnimatie.server.luau` (NIET in de game).
+- Altijd via de Blender-pijplijn (blender-image-to-3d), nooit losse Studio-parts; de eerste snelle parts-versie werd terecht afgekeurd.
+- Schaal uit een straatfoto zonder maatstok: **horizon-methode** (horizon = ooghoogte ~1.6 m; px/m op een vlak = (grondlijn - horizon) / 1.6).
+  Fotocamera namaken in `build/cam_match.py` met `--pitch` en staande foto (sensor verticaal 36 mm, telefoon ~28 mm).
+- OSM -> Blender: figuur kijkt naar -Y, dus zijn RECHTERhand is -X. Fout gemapt = gespiegelde rots/vijver; controleer met de overlay.
+- Bronnen kunnen botsen (Eftepedia nek 4.8 m, foto 5.9 m; OSM-rots 20% breder dan de foto): foto aangehouden, conflict in de brief noteren.
+- Kunstrots: hoogteveld binnen de contour met een DICHTE onderkant (holes_fill) -> voxel remesh -> grote Voronoi-blokken + plaatselijke richels
+  (overal gelijke richels ogen als een volantrok). Voetrichels/zitplateau in het hoogteveld zetten waar de figuur zit.
+- Export (`09_export_roblox.py`): loop over `list(low.all_objects)` en depsgraph per object opnieuw ophalen (decimeren maakt hem ongeldig);
+  driehoekenplafond per object (hoofd 9k, broek 6k, rots 12k). Anker-blokje op z=-2 voor de oorsprong in Studio.
+- Water als vlak heeft dikte nodig (Roblox toont alleen voorkanten). Water net boven het maaiveld (Y 2.12) = geen terrein uitgraven.
+- Levend water hergebruiken: Kroos-decals (140434402386473) en Rimpelbron-emitters klonen uit `SprookjesboomWater`.
+- Beplanting: `ServerStorage.BomenBronV3` (den, taxus, rododendron, eik, beuk; ScaleTo x3) + `VVEchtePlanten` (varens); nieuwe map toevoegen
+  aan `MAPPEN` in StarterPlayerScripts.Wind zodat hij meewiegt.
+- Let op bij tekstvervanging in scripts: een commentaar midden in een regel zette `smooth_obj(...)` uit (oogleden zonder materiaal).

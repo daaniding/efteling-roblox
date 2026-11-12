@@ -22,7 +22,7 @@ RIGHT = Vector((FACING.y, -FACING.x))               # rechterhand van de figuur
 
 def osm_to_model(p):
     v = Vector(p)
-    return (v.dot(RIGHT), -v.dot(FACING))
+    return (-v.dot(RIGHT), -v.dot(FACING))      # figuur kijkt naar -Y: zijn rechterhand is -X
 
 
 # ---- gemeten constanten (front.jpg, horizon-methode) -------------------------------------------
