@@ -7,7 +7,7 @@ from shapely.ops import unary_union
 HERE=os.path.dirname(os.path.abspath(__file__)); EXP=os.path.join(HERE,"..","exports")
 d=json.load(open(os.path.join(EXP,"omgeving_data.json")))
 PLEIN=[(-20.1,-51.71),(-18.61,-56.71),(-17.79,-59.05),(-15.78,-61.1),(-14.11,-63.08),(-10.49,-65.34),(-3.24,-67.5),(3.75,-66.81),(10.62,-63.1),(14.4,-59.43),(18.38,-61.1),(19.68,-59.14),(20.72,-56.43),(21.72,-51.24),(21.48,-46.45),(20.88,-41.49),(19.12,-35.31),(14.85,-35.31),(14.11,-36.85),(10.13,-34.23),(10.42,-32.2),(4.54,-29.55),(2.7,-30.22),(-0.64,-30.29),(-2.0,-30.44),(-6.4,-30.92),(-12.26,-33.65),(-15.97,-37.04),(-17.22,-39.06),(-18.73,-41.47),(-20.14,-46.51),(-20.12,-49.46)]
-geo={"grind":[],"klinker":[],"klinkerrood":[],"plein":[Polygon(PLEIN)]}
+geo={"grind":[],"klinker":[],"klinkerrood":[],"plein":[]}   # plein (OSM 55344641, PLEIN hierboven) later bouwen samen met de rest van het Ton van de Venplein (Daan)
 for p in d["paden"]:
     geo["grind"].append(   # alle paden hetzelfde lichte grind (Daan); plein blijft kasseien
         LineString(p["pts"]).buffer(p["w"]/2,quad_segs=10,join_style="round",cap_style="round"))

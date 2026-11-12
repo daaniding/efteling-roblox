@@ -27,3 +27,4 @@
 8. Alle paden hetzelfde lichte grind (ook naar de rij); plein blijft kasseien, rijvloer rode klinkers. Omgeving-asset **76728015894633**.
    ServerScriptService.SpelerSchaal: speler 0.9x (char:ScaleTo bij CharacterAppearanceLoaded).
 9. Plein: MeshPart-materiaal Pavement (visgraatklinkers, schaal goed) kleur (178,162,140) i.p.v. Cobblestone+variant (te donker, te fijn).
+10. Plein weggehaald (later met heel het Ton van de Venplein). Rijvloer = grind. Lantaarnpalen verplaatst naar exports/lampposten.json (naast het pad, vrij van hagen; gezocht met shapely). Omgeving-asset **109033549155370**.

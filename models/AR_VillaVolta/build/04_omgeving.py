@@ -137,7 +137,7 @@ def build(master):
             bm=bmesh.new(); bmesh.ops.create_icosphere(bm,subdivisions=1,radius=0.2)
             put("bloemen","bloem_paars" if k%2 else "buxus",bm,TR(sx*2.6+0.18*math.cos(k),-8.9+0.18*math.sin(k),1.75+0.05*(k%3)))
         coll(sx*2.6,-8.9,0.9,0.6,0.6,1.8)
-    for (x,y) in ((-9.9,-6.2),(9.6,-6.2),(-11.9,-13.0),(10.6,-14.0)):
+    for (x,y) in json.load(open(os.path.join(HERE,"..","exports","lampposten.json"))):   # naast het pad, vrij van hagen (Daan: stonden in de weg)
         lamppost(x,y)
     # wacht- en showtijdenbord op het plein (OSM 460832618)
     bx,by=18.6,-50.2
@@ -168,7 +168,7 @@ def build(master):
             y=2.7+(GY0-2.7)*i/4
             put("rij_muren","wit",bbox(0.36,0.36,1.15,xg,y,0.575,0.02)); put("rij_muren","wit",blathe([(0,0),(0.12,0),(0.06,0.08),(0.09,0.16),(0,0.24)],8),TR(xg,y,1.15))
     path("klinkerrood",[((CX0+CX1)/2,1.6),((CX0+CX1)/2,GY0+0.3)],CX1-CX0-0.2)
-    put("rijhal_vloer","klinkerrood",bzbox(0,0,GW-0.1,GE+0.2,GY0,GY1,0.0,0.095))
+    put("rijhal_vloer","grind",bzbox(0,0,GW-0.1,GE+0.2,GY0,GY1,0.0,0.095))
     for w in ([(GW,GY1),(GW,GY0)],[(GE,GY1),(GW,GY1)]):            # westmuur + noordmuur dicht
         strip("rijhal","stuc",w,0.3,H,ch=0.01); strip("rijhal","steen",w,0.38,0.3,0.0,collide=False)
     for w in ([(GW,GY0),(CX0,GY0)],[(CX1,GY0),(GE,GY0)],[(GE,GY0),(GE,28.2)]):   # lage borstwering zuid (met gang-opening) en oost
