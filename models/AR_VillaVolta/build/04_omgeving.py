@@ -200,9 +200,6 @@ def build(master):
     put("tuinbeelden","zink",btube([(0,-16.66,1.2),(0,-16.66,zc-0.36)],0.03,6)); coll(0,-16.66,1.0,0.5,0.5,2.0)
     for sx in (-1,1):
         put("tuinbeelden","steen",bbox(0.55,0.55,0.8,sx*2.6,-8.9,0.4,0.02)); urn("tuinbeelden",sx*2.6,-8.9,0.8,1.1)
-        for k in range(6):
-            bm=bmesh.new(); bmesh.ops.create_icosphere(bm,subdivisions=1,radius=0.2)
-            put("bloemen","bloem_paars" if k%2 else "buxus",bm,TR(sx*2.6+0.18*math.cos(k),-8.9+0.18*math.sin(k),1.75+0.05*(k%3)))
         coll(sx*2.6,-8.9,0.9,0.6,0.6,1.8)
     for t in (10,-40):   # lantaarnpalen in paren tussen pad en beukenhaag
         x,y=se(11.75,10.55,math.radians(t))
@@ -298,9 +295,63 @@ def build(master):
             put("tourniquets","rvs",btube([(TX+0.1,y-0.1,0.95),(TX+0.1,y-0.1+d.y,0.95+d.z)],0.02,6))
     for y in (TY,GY1-1.6):
         X=GW+0.16
-        put("deuren","groen",bbox(0.08,1.8,2.4,X,y,1.3,0.01)); put("deuren","steen",bbox(0.12,2.3,0.3,X,y,2.65,0.02))
-        for dy in (-1.05,1.05): put("deuren","steen",bbox(0.12,0.3,2.5,X,y+dy,1.35,0.01))
-        put("deuren","rvs",bbox(0.06,0.04,0.4,X+0.06,y-0.12,1.2)); put("deuren","rvs",bbox(0.06,0.04,0.4,X+0.06,y+0.12,1.2))
+        pass   # deuren: zie 'paneeldeuren' hieronder
+    # ---- detail galerij (Daan: muren en deuren detailleren) ----
+    WI=GW+0.15                                   # binnenvlak westmuur
+    DEUR_Y=[TY,GY1-1.6]
+    def vrij(y,marge): return all(abs(y-d)>1.3+marge for d in DEUR_Y) and not (14.4-marge<y<18.8+marge)
+    # lambrisering: sokkel, verdiepte panelen, lijst op 1.0 m
+    y=GY0+0.35
+    while y<GY1-0.5:
+        if vrij(y,0.0) and vrij(y+1.2,0.0):
+            put("galerij","steen",bzbox(0,0,WI,WI+0.03,y+0.08,y+1.12,0.42,0.86))          # paneelveld
+            for (y0,y1,z0,z1) in ((y+0.08,y+1.12,0.42,0.47),(y+0.08,y+1.12,0.81,0.86),(y+0.08,y+0.13,0.42,0.86),(y+1.07,y+1.12,0.42,0.86)):
+                put("galerij","wit",bzbox(0,0,WI,WI+0.05,y0,y1,z0,z1))                  # profiellijst rond het paneel
+        y+=1.25
+    put("galerij","wit",bzbox(0,0,WI,WI+0.07,GY0+0.2,GY1-0.2,0.97,1.04,0.01))            # lambriseringslijst
+    put("galerij","wit",bzbox(0,0,WI,WI+0.05,GY0+0.2,GY1-0.2,0.30,0.36))                  # plintlijst
+    # pilasters in lijn met de zuilen + kapiteel
+    for i in range(1,8):
+        yy=GY0+i*2.75
+        if vrij(yy,0.3):
+            put("galerij","steen",bzbox(0,0,WI,WI+0.07,yy-0.22,yy+0.22,0.36,H-0.42,0.01))
+            put("galerij","wit",bzbox(0,0,WI,WI+0.11,yy-0.28,yy+0.28,H-0.42,H-0.3,0.01))
+            put("galerij","wit",bzbox(0,0,WI,WI+0.09,yy-0.26,yy+0.26,0.30,0.42,0.01))
+    # kroonlijst langs west- en noordmuur
+    for (z0,z1,d) in ((H-0.3,H-0.22,0.06),(H-0.22,H-0.16,0.12),(H-0.16,H-0.1,0.18)):
+        put("galerij","wit",bzbox(0,0,WI,WI+d,GY0+0.1,GY1-0.15,z0,z1))
+        put("galerij","wit",bzbox(0,0,WI,GE-0.2,GY1-0.15-d,GY1-0.15,z0,z1))
+    # plafondbalken boven de zuilen
+    for i in range(1,8):
+        yy=GY0+i*2.75
+        put("galerij","wit",bzbox(0,0,WI,GE,yy-0.13,yy+0.13,H-0.32,H-0.1,0.01))
+    # borstwering oost/zuid: verdiepte panelen aan de buitenkant
+    for i in range(7):
+        y0=GY0+0.35+i*2.75
+        for (a_,b_,z0,z1) in ((y0,y0+2.05,0.32,0.36),(y0,y0+2.05,0.78,0.82),(y0,y0+0.04,0.32,0.82),(y0+2.01,y0+2.05,0.32,0.82)):
+            put("galerij","steen",bzbox(0,0,GE+0.15,GE+0.19,a_,b_,z0,z1))
+    # paneeldeuren (vervangen de vlakke groene deuren)
+    for yc in DEUR_Y:
+        X=GW+0.16
+        for (a_,b_,z0,z1,d) in ((yc-1.2,yc-0.95,0,2.75,0.12),(yc+0.95,yc+1.2,0,2.75,0.12),(yc-1.2,yc+1.2,2.55,2.75,0.12),(yc-1.3,yc+1.3,2.75,2.9,0.16)):
+            put("deuren","steen",bzbox(0,0,X,X+d,a_,b_,z0,z1,0.01))                       # omlijsting + kroonlijstje
+        put("deuren","steen",bzbox(0,0,X,X+0.2,yc-0.12,yc+0.12,2.5,2.95,0.02))             # sluitsteen
+        put("ramen_glas","glas",bzbox(0,0,X,X+0.02,yc-0.9,yc+0.9,2.12,2.5))                 # bovenlicht
+        for k in range(1,4): put("deuren","kozijn",bzbox(0,0,X+0.02,X+0.04,yc-0.9+k*0.45-0.015,yc-0.9+k*0.45+0.015,2.12,2.5))
+        put("deuren","kozijn",bzbox(0,0,X+0.02,X+0.05,yc-0.95,yc+0.95,2.08,2.12))
+        for sgn in (-1,1):
+            y0,y1=(yc-0.93,yc-0.02) if sgn<0 else (yc+0.02,yc+0.93)
+            put("deuren","groen",bzbox(0,0,X,X+0.07,y0,y1,0.02,2.06,0.005))               # deurblad
+            put("deuren","groen",bzbox(0,0,X+0.07,X+0.1,y0+0.12,y1-0.12,0.2,0.95,0.01))    # verhoogd onderpaneel
+            put("deuren","zink",bzbox(0,0,X+0.07,X+0.085,y0+0.04,y1-0.04,0.02,0.18))      # schopplaat
+            put("ramen_glas","glas",bzbox(0,0,X+0.07,X+0.08,y0+0.12,y1-0.12,1.1,1.9))      # glas boven
+            for (a_,b_,z0,z1) in ((y0+0.1,y1-0.1,1.08,1.12),(y0+0.1,y1-0.1,1.88,1.92),((y0+y1)/2-0.015,(y0+y1)/2+0.015,1.1,1.9),(y0+0.1,y1-0.1,1.49,1.51)):
+                put("deuren","kozijn",bzbox(0,0,X+0.075,X+0.1,a_,b_,z0,z1))                # roeden
+            yk=y1-0.08 if sgn<0 else y0+0.08
+            put("deuren","goud",bzbox(0,0,X+0.07,X+0.1,yk-0.03,yk+0.03,0.95,1.2,0.01))     # langschild
+            put("deuren","goud",blathe([(0,0),(0.025,0),(0.03,0.05),(0,0.06)],8),TR(X+0.1,yk,1.05)@Matrix.Rotation(math.radians(90),4,"Y"))
+            yh=y0+0.05 if sgn<0 else y1-0.05
+            for zh in (0.35,1.7): put("deuren","zink",bzbox(0,0,X+0.06,X+0.09,yh-0.03,yh+0.03,zh,zh+0.14))  # scharnieren
     put("perkament","perkament",bbox(0.02,0.45,0.6,GW+0.17,TY+1.4,1.75,0.0))
     put("perkament","rvs",btube([(GW+0.15,TY+1.4,2.05),(GW+0.35,TY+1.4,2.0)],0.012,5)); put("perkament","hout",btube([(GW+0.35,TY+1.4,2.0),(GW+0.5,TY+1.4,1.98)],0.022,6))
     # vier bokkenhuiden in een ruw houten lijst op de westmuur

@@ -56,3 +56,14 @@
     Studio: COLL_ -> map Botsing, onzichtbaar, CollisionFidelity Box; LAMP_ -> map Lampen met PointLight).
     Planten in de tuin opnieuw verspreid (seed 2027/2028). Terrein: gazon = superellips a13.6 b12.1; gras buiten de tuin
     (VV_Bosgrond, base Mud) nu Grass005 op 11 studs/tegel, kleur (232,244,212) = lichter parkgras. MAT_aarde DoubleSided.
+16. Realisme-ronde (Daan: "fix alles behalve first person en geluid"):
+    - grasbosjes -> plantgroepjes (seed 606); lantaarns dag/nacht: ServerScriptService.LantaarnsDagNacht (rij-lampen attribuut Binnen = altijd aan)
+    - lucht: Terrain.Clouds (cover 0.62, density 0.72) + nevelige Atmosphere
+    - villa PBR (ambientCG CC0): VV_Pleister (Plaster002) op stuc, VV_Steen (pleisterkleur + Concrete012-relief) op steen,
+      VV_Lei (RoofingTiles001) op lei, VV_Wit (PaintedPlaster017) op wit; glas = donker SmoothPlastic, reflectance 0.12
+    - bomen: bladkaarten vervangen door echte bladtrossen (`build/11_bladkaarten.py`, `textures/bomen/asset_ids.txt`)
+    - horizon: 1548 echte OSM-bomen/struiken tot 300 m (data-PNG asset 76283368076918, map VillaVoltaHorizon)
+    - beweging: StarterPlayerScripts.Wind (BulkMoveTo, 45 m rond camera) + bladval-ParticleEmitters onder 24 bomen
+    - bezoekers: ServerScriptService.Bezoekers (10 R15-figuren, wandelen over het ovale pad, 2 kijkers bij de zonnewijzer)
+    - galerij: lambrisering, pilasters, kroonlijst, plafondbalken, panelen in de borstwering, paneeldeuren met glas/bovenlicht/klinken.
+      Omgeving-asset **76111214657159**.
