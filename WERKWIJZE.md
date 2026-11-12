@@ -36,3 +36,14 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   (ContentProvider) en ColorMap opnieuw zetten. execute_luau time-out = vaak toch klaar: daarna controleren. In Play-modus kan niets in Edit.
 - Een anker-blokje op z=-2 in elke export geeft de modeloorsprong terug in Studio (Blender (x,y,z) -> Roblox (-x,z,y)*3).
 - Shapely staat in een venv in de scratchpad; opnieuw maken met `python3 -m venv ... && pip install shapely`.
+
+## Lessen Sprookjesboom (12 nov, chat 3)
+- Foto's eerst op kijkhoek controleren: front.jpg bleek ~20 graden van rechts genomen (gezicht 0.33 m links van het stamhart). `build/cam_match.py`
+  rendert door de fotocamera (positie, yaw, lens) en legt de render over de foto; close-up van het gezicht is de eerlijkste check.
+- Schors van de Sprookjesboom = blokplaten in golvende rijen (krokodillenhuid), geen ribbels/kasseien: Voronoi alleen langs de rij, rijgrenzen doorlopend.
+- Mond/gaten: uitsnijden vóór de laatste remesh (strakke, gladde randen) + donker binnenvlak in de vorm van de opening.
+- Bake: AO met de kruin in de scène wordt veel te donker; alleen het fijne AO-detail gebruiken (AO / vervaagde AO). Roblox: kleur 1024 px, AO in kleur.
+- Export met gebakken textures: UV's behouden (`models/PR_Sprookjesboom/build/09_export_roblox.py`), niet de kubusprojectie van Villa Volta.
+- Terrein: vlak maaiveld = voxels vol tot Y=0 en leeg erboven, rendert op Y=2. Smalle dingen (beek 1.5 m) niet in voxels (1.33 m) maken maar als mesh,
+  terrein eronder leeg (vol tot Y=-4). Terreinbotsing wordt na WriteVoxels pas later bijgewerkt: task.wait() voor raycasts.
+- Data-PNG: alpha-kanaal nooit 0 laten (groep = 200 + n).

@@ -86,9 +86,16 @@ Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog 
 - Assets: boom **119271916330812** (stam 3 delen + takken + blad + ogen + holtes, 38k tris), stamtextures kleur **71879589522107**,
   normaal **122522185781721**, ruwheid **90259338261512**; takken schors_eik 99288067092575; blad = goedgekeurde bladtros 136241132523803.
   Paddenstoel klein **125821121621263** (12 rond de voet, x1.4), muzikale paddenstoel **76565275730007** (18 OSM-plekken, Y=2). Ids: `roblox/asset_ids.json`.
+- **Omgeving staat** (Daan: "water tussen pad en boom, plantjes erachter, boompjes"): `build/06_omgeving_data.py` (shapely-venv) leest OSM ->
+  `exports/omgeving_data.json` -> `06_omgeving.py` (Blender: plein+paden 3.4 m met opsluitband, geul als hoogteveld + water op -0.32 m,
+  wortel de oever in + wortel met klauwen aan de pleinkant (front_wide.jpg), 7 lage bankjes (OSM, zonder rugleuning), rieten prullenbak)
+  -> asset **121627114001594**; keien 6 prototypes **83462996132840**; posities als data-PNG **101104526038282** (`07_data_png.py`).
+  Studio: `roblox/plaats_omgeving.luau` (terrein onder de geul leeg, 900 oeverstenen/keien, 2259 planten uit VVEchtePlanten + BomenBronV3
+  rododendrons/taxus, 8 OSM-horizonbomen in de weg -> ServerStorage.SprookjesboomWeggehaald). Beek uit OSM is een smalle waterloop (1.45 m)
+  die om het pleintje kronkelt en recht voor de boom langs loopt.
 - Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
   renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
-  naar het pad, rododendrons erachter, bankjes en het pleintje nog niet gemaakt; reliëf in terrein.
+  naar het pad, rododendrons erachter, (beek/plein/bankjes/planten staan nu); nog: tonderzwam-roeptoeter op de wortel, dieren (eekhoorn, specht), stoomtreinspoor achter de boom, reliëf van heel het Sprookjesbos in het terrein.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta afmaken (KLAAR). 2. Sprookjesboom + paddenstoelen (v1 staat), Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
