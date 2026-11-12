@@ -44,16 +44,18 @@ Het park is in 1 minuut terug: `park/park_raster.py` → ServerStorage.ParkBuild
 Mond groter/natuurlijker, blos minder als schijfjes, den-achtige krullen oké; figuur op het dak + lantaarn + gotisch bord ontbreken;
 geluid "Papier hier!" ontbreekt (Sound-objecten SndRoep/SndEet staan klaar in MouthHole).
 
-## Villa Volta (v1 in Studio)
-`models/AR_VillaVolta/`: blokkering gecorrigeerd op front.jpg (`review/02b/overlay_edges.png`: randen van de render op de foto,
-37 px/m, terrasvloer y507). Vormen in `build/03_forms.py` (collectie FORMS, 33 onderdelen, ~33k driehoeken): rustica-hoekblokken,
-sokkel, cordonlijst, hoofdgestel met tandlijst, ionische zuilen met voluten, balkon op consoles met balusters en vazen,
-opschrift VILLA VOLTA als 3D-tekst, rondboogdeur met glas/roeden, pijlers met vazen, schelp-cartouche, ramen met omlijsting/fronton/oren
-(zijgevels inferred), mansardedaken met loodslabben en pinakels, dakkapel met gebogen fronton en cartouche, beeld, terras met trappen,
-borstwering en vazen, hal erachter (eenvoudig, inferred).
-Export `build/09_export_roblox.py` -> `exports/AR_VillaVolta.fbx` -> **asset 100590688288228**. In Studio als `Workspace.VillaVolta`
-(ScaleTo 3, gevel naar noord/−Z, achterkant op OSM y=334 → Z=−1002, midden X=376.8). Materialen per naam MAT_*.
-Nog te doen: texturen (stuc met vlekken, leien), lantaarns, hal mooier, interieur (kantelende kamer) later.
+## Villa Volta (v2 + tuin + wachtrij in Studio)
+- Ligging uit OSM (ways rond 279668015): gevel kijkt ZZW naar het Ton van de Venplein (niet naar het noorden), gebouw 10,5 graden gedraaid.
+  Modeloorsprong (midden gevel) = OSM (121.97, 335.09) m = studs (365.9, 1.95, -1005.3), draaiing 169.5 graden; grond is Y=2.
+  Alle OSM-punten in modelcoordinaten: `models/AR_VillaVolta/ref/osm_lokaal.json` (voordeur valt precies op x=0: kalibratie klopt).
+- Villa v2 (zonder hal, terraszijmuren tot y=2.8 volgens OSM): **asset 86289024691601**.
+- Tuin + wachtrij `build/04_omgeving.py` -> **asset 139508708004938**: ovaal grindpad, beukenhagen in twee bogen, bladvormige buxusbedden met bloemen,
+  twee pilaren met lantaarns aan het plein, zonnewijzer, plantvazen, lantaarnpalen, Wacht- en Showtijdenbord op het plein;
+  wachtrij: ingangsgang tussen muren met poort + bord, overdekte rijhal (OSM-dak 6x22 m) met de echte zigzag (16 banen), bypass met poortjes,
+  tourniquets, Entree-deuren, afvalbakken op OSM-posities, buitenpad met hoge haag, wandlantaarns.
+- In Studio: `roblox/plaats_villavolta.luau` (laadt beide assets, zet ze via een anker-blokje op z=-2 op de juiste plek, MeshParts zonder botsing
+  + 145 onzichtbare botsblokken uit `exports/omgeving_data.json`, 24 PointLights, SurfaceGui-teksten). Spawn staat op het plein.
+- Nog te doen: deur/Entree -> teleport naar interieur (voorshows + kantelende kamer), wachttijd dynamisch, texturen, park eromheen.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta afmaken. 2. Sprookjesboom + paddenstoelen, Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.

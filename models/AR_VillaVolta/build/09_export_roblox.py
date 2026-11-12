@@ -10,7 +10,8 @@ master = args[args.index("--master") + 1]; out = args[args.index("--out") + 1]
 LIMIT = 9000
 bpy.ops.wm.open_mainfile(filepath=master)
 dg = bpy.context.evaluated_depsgraph_get()
-low = bpy.data.collections["FORMS"]
+COLN = args[args.index("--col") + 1] if "--col" in args else "FORMS"
+low = bpy.data.collections[COLN]
 groups = defaultdict(list)
 for o in low.all_objects:
     if o.name.startswith(("CUT_", "BLK_", "P_")) or o.get("owner") == "phase:02_blockout" or o.hide_render: continue
@@ -25,6 +26,10 @@ for o in low.all_objects:
     me.transform(o.matrix_world)
     mname = (o.data.materials[0].name if o.data.materials and o.data.materials[0] else "MAT_plaster")
     groups[(o.get("anim") or "static") + "__" + mname].append(me)
+am = bpy.data.materials.get("MAT_anker") or bpy.data.materials.new("MAT_anker")
+abm = bmesh.new(); bmesh.ops.create_cube(abm, size=0.2); bmesh.ops.translate(abm, vec=(0, 0, -2), verts=abm.verts)
+ame = bpy.data.meshes.new("anker"); abm.to_mesh(ame); abm.free(); ame.materials.append(am)
+groups["static__MAT_anker"].append(ame)
 exp = bpy.data.collections.new("EXPORT"); bpy.context.scene.collection.children.link(exp)
 made = []
 for mname, meshes in groups.items():

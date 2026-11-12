@@ -167,8 +167,8 @@ def build(master):
         # borstwering langs de vleugel (front.jpg 20-205 px, 0.8 hoog) + zijkant terras
         put("borstwering","steen",bzbox(0,0,min(s*4.6,s*8.5),max(s*4.6,s*8.5),-0.55,-0.25,T,T+0.68))
         put("borstwering","steen",bzbox(0,0,min(s*4.55,s*8.55),max(s*4.55,s*8.55),-0.62,-0.18,T+0.68,T+0.8,0.01))
-        put("borstwering","steen",bzbox(0,0,min(s*8.25,s*8.55),max(s*8.25,s*8.55),-0.55,6.4,T,T+0.8,0.01))
-        for px in (4.6,6.7,8.4):
+        put("borstwering","steen",bzbox(0,0,min(s*8.05,s*8.35),max(s*8.05,s*8.35),-0.55,2.8,T,T+0.8,0.01))   # OSM terrasmuren: zijkant tot y=2.8
+        for px in (4.6,6.4,8.2):
             put("borstwering","steen",bbox(0.5,0.5,0.95,s*px,-0.4,T+0.475,0.015))
             urn("vazen",s*px,-0.4,T+0.95,1.05)
         # plantvazen voor de deurpijlers (front.jpg 262/445 px)
@@ -381,8 +381,7 @@ def build(master):
     put("beeld","wit",fbm)
     hb=bmesh.new(); bmesh.ops.create_uvsphere(hb,u_segments=10,v_segments=8,radius=0.085); bmesh.ops.translate(hb,vec=(0,0,zb+1.2),verts=hb.verts); put("beeld","wit",hb)
     # ---------------- hal achter (inferred, laag gehouden: niet zichtbaar in front.jpg) ----------------
-    put("hal","hal",bzbox(0,0,-9.25,9.25,MD,MD+23,0,6.5))
-    put("hal","hal",bzbox(0,0,-9.35,9.35,MD-0.1,MD+23.1,6.5,6.7))
+    # hal weggelaten (12 nov, Daan): naar binnen gaan wordt een teleport naar een aparte interieurscene
     # ---------------- objecten maken ----------------
     n=0; tris=0
     for (part,mat),bm in PARTS.items():
