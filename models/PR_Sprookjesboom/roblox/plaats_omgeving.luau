@@ -2,7 +2,7 @@
 -- Data: exports/omgeving_data.png (asset DATA) = 06_omgeving_data.py via 07_data_png.py; meshes: OMG (plein, paden, band, geul,
 -- water, wortels, bankjes, prullenbak), STEEN (6 keien). Planten uit ServerStorage.VVEchtePlanten en BomenBronV3 (Villa Volta).
 -- Terrein: origineel vlak = voxels vol tot Y=0 (rendert op Y=2). Onder de geul (< 1.15 m van de beek) alleen vol tot Y=-4.
-local DATA, OMG, STEEN = 101104526038282, 121627114001594, 83462996132840
+local DATA, OMG, STEEN = 91704590749799, 108206624747832, 90280289121540
 local S = 3
 local O = Vector3.new(121.44, 1.95, -594.57)                    -- stamhart (OSM 40.48, 198.19 m)
 local ORIGIN = CFrame.new(O) * CFrame.Angles(0, math.pi, 0)
@@ -62,18 +62,21 @@ local function laad(id, naam)
 end
 for _, n in ipairs({"SprookjesboomOmgeving", "SprookjesboomStenen", "SprookjesboomPlanten"}) do local o = workspace:FindFirstChild(n); if o then o:Destroy() end end
 local om = laad(OMG, "SprookjesboomOmgeving")
-local ST = {klinker = {Color3.fromRGB(178, 162, 140), Enum.Material.Pavement, true}, band = {Color3.fromRGB(118, 116, 110), Enum.Material.Concrete, true},
+-- klinker: rode klinkers (Sprookjesboomopening.jpg); water: troebel olijfbruin (Boom_wortels.jpg)
+local ST = {klinker = {Color3.fromRGB(150, 88, 68), Enum.Material.Pavement, true}, band = {Color3.fromRGB(118, 116, 110), Enum.Material.Concrete, true},
   branch = {Color3.fromRGB(150, 140, 125), Enum.Material.Wood, true}, hout = {Color3.fromRGB(92, 64, 42), Enum.Material.Wood, true},
   hout_kops = {Color3.fromRGB(128, 98, 68), Enum.Material.Wood, true}, riet = {Color3.fromRGB(160, 124, 74), Enum.Material.Wood, true},
-  ijzer = {Color3.fromRGB(46, 50, 46), Enum.Material.Metal, false}, hollow_dark = {Color3.fromRGB(12, 10, 8), Enum.Material.SmoothPlastic, false},
+  ijzer = {Color3.fromRGB(26, 28, 27), Enum.Material.Metal, true}, hollow_dark = {Color3.fromRGB(12, 10, 8), Enum.Material.SmoothPlastic, false},
   beekbodem = {Color3.fromRGB(58, 48, 38), Enum.Material.Mud, true}, oever = {Color3.fromRGB(96, 112, 64), Enum.Material.Grass, true},
-  gras = {T:GetMaterialColor(Enum.Material.Grass), Enum.Material.Grass, true}, water = {Color3.fromRGB(38, 54, 44), Enum.Material.Glass, false}}
+  gras = {T:GetMaterialColor(Enum.Material.Grass), Enum.Material.Grass, true}, water = {Color3.fromRGB(66, 60, 38), Enum.Material.SmoothPlastic, false},
+  zwam = {Color3.fromRGB(150, 118, 84), Enum.Material.Sand, true}, zwam_rand = {Color3.fromRGB(222, 206, 176), Enum.Material.Sand, false},
+  lampglas = {Color3.fromRGB(240, 226, 176), Enum.Material.SmoothPlastic, false}}
 for _, p in ipairs(om:GetChildren()) do
   local key = string.match(p.Name, "^(.-)_%d+$"); local s = key and ST[key]
   if s then p.Color = s[1]; p.Material = s[2]; p.CanCollide = s[3] end
   if key == "branch" then local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://99288067092575"; sa.Parent = p end
   if key == "klinker" or key == "band" or key == "gras" or key == "beekbodem" or key == "oever" then p.CastShadow = false end
-  if key == "water" then p.Transparency = 0.25; p.Reflectance = 0.15; p.CastShadow = false end
+  if key == "water" then p.Transparency = 0.06; p.Reflectance = 0.10; p.CastShadow = false end   -- Glass spiegelde blauw
 end
 om:PivotTo(ORIGIN); om.Parent = workspace
 local hit = {T}
@@ -91,8 +94,9 @@ for _, r in ipairs(recs) do
     c.Size = c.Size * (diam / 3)
     local v = W(r[2], r[3]); local gy = grond(v)
     c.CFrame = CFrame.new(v.X, gy - diam * 0.15, v.Z) * CFrame.Angles(math.rad(math.random(-12, 12)), math.rad(r[5]), math.rad(math.random(-12, 12))) * CFrame.new(0, c.Size.Y / 2, 0)
-    local base = Color3.fromRGB(112, 112, 108):Lerp(Color3.fromRGB(128, 116, 98), math.random()); c.Color = base:Lerp(Color3.fromRGB(70, 74, 72), math.random() * 0.5)
-    c.Material = Enum.Material.Slate; c.CanCollide = (r[6] == 2); c.CanTouch = false; c.Parent = fs
+    local PC = {[0] = Color3.fromRGB(178, 181, 186), Color3.fromRGB(158, 163, 173), Color3.fromRGB(189, 186, 181), Color3.fromRGB(143, 148, 158), Color3.fromRGB(199, 199, 201), Color3.fromRGB(168, 168, 168)}
+    c.Color = (PC[r[1]] or PC[0]):Lerp(Color3.fromRGB(96, 100, 106), math.random() * 0.35):Lerp(Color3.fromRGB(110, 112, 114), 0.25)     -- lichte blauwgrijze breuksteen, wisselend
+    c.Material = Enum.Material.Rock; c.CanCollide = (r[6] == 2); c.CanTouch = false; c.Parent = fs
   end
 end
 fs.Parent = workspace; proto:Destroy(); task.wait()
@@ -128,6 +132,7 @@ batch.Parent = fp
 local vrij = {}
 for _, r in ipairs(recs) do if r[6] == 3 then table.insert(vrij, Vector2.new(r[2], r[3])) end end
 local bak = SS:FindFirstChild("SprookjesboomWeggehaald") or Instance.new("Folder", SS); bak.Name = "SprookjesboomWeggehaald"
+for _, m in ipairs(bak:GetChildren()) do m.Parent = workspace.VillaVoltaHorizon end   -- eerst alles terug, dan opnieuw beoordelen
 for _, m in ipairs(workspace.VillaVoltaHorizon:GetChildren()) do
   local p = m:GetPivot().Position; local q = Vector2.new((p.X - O.X) / S, -(p.Z - O.Z) / S)
   if q.Magnitude < 45 then
@@ -137,8 +142,9 @@ for _, m in ipairs(workspace.VillaVoltaHorizon:GetChildren()) do
     if bad then m.Parent = bak end
   end
 end
--- 6. paddenstoeltjes op de grond
+-- 6. paddenstoeltjes op de grond, hoed roder (Sprookjesboomoverview.jpg)
 for _, c in ipairs(workspace.SprookjesboomPaddenstoelen:GetChildren()) do
   local p = c:GetPivot(); local gy = grond(p.Position); c:PivotTo(p - Vector3.new(0, p.Y - gy + 0.05, 0))
+  for _, d in ipairs(c:GetChildren()) do if string.match(d.Name, "^hoed_") then d.Color = Color3.fromRGB(204, 82, 70) end end
 end
 return ("omgeving %d delen, %d stenen, %d planten"):format(#om:GetChildren(), #fs:GetChildren(), np)

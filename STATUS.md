@@ -93,6 +93,12 @@ Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog 
   Studio: `roblox/plaats_omgeving.luau` (terrein onder de geul leeg, 900 oeverstenen/keien, 2259 planten uit VVEchtePlanten + BomenBronV3
   rododendrons/taxus, 8 OSM-horizonbomen in de weg -> ServerStorage.SprookjesboomWeggehaald). Beek uit OSM is een smalle waterloop (1.45 m)
   die om het pleintje kronkelt en recht voor de boom langs loopt.
+- **Update omgeving (Daan: "niet overal het pad, alleen de scène bij de boom", "gedetailleerd, modderig water"):** paden weg (fixen we later),
+  scène = 15 m rond de boom. Naar Eftepedia-foto's (`ref/eftepedia/`): rood klinkerpleintje met laag zwart hekje langs het water, hoekige lichte
+  breuksteen dik opgestapeld (1627 stenen, 5 rijen), troebel olijfbruin water, wortel met vingers in het water + wortel met klauwen, roeptoeter
+  van tonderzwammen, 9 wortelboogjes, bodembedekker op de oever, 2 Efteling-lantaarns, roodere paddenstoelhoeden.
+  Assets: omgeving **108206624747832**, breuksteen **90280289121540**, data-PNG **91704590749799**. SpawnLocation staat op het pleintje
+  (oude positie in attribuut OudePositie).
 - Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
   renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
   naar het pad, rododendrons erachter, (beek/plein/bankjes/planten staan nu); nog: tonderzwam-roeptoeter op de wortel, dieren (eekhoorn, specht), stoomtreinspoor achter de boom, reliëf van heel het Sprookjesbos in het terrein.

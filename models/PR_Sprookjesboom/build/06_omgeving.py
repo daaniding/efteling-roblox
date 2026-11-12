@@ -177,6 +177,15 @@ def omgeving(outdir):
     r2 = smooth_path([(sx - 0.15, sy + 0.35, -0.45), (sx, sy, 0.10), (sx + 0.15, sy - 0.55, 0.30), (sx + 0.25, sy - 1.05, 0.22)])
     rad2 = [0.22 - 0.05 * i / (len(r2) - 1) for i in range(len(r2))]
     tube_mesh("GEO_wortel_uit", r2, rad2, m_bark, 12, seed=2)
+    # tweede wortel die over het beekje boogt en met de vingers in het water hangt (Boom_wortels.jpg)
+    wx, wy = min(((s[0], s[1]) for s in D["stenen"]), key=lambda q: math.hypot(q[0] + 2.2, q[1] + 3.6))
+    r3 = smooth_path([(-1.5, -2.0, 0.40), (wx * 0.8, wy * 0.85, 0.55), (wx, wy - 0.5, 0.30)])
+    tube_mesh("GEO_wortel_poel", r3, [0.20 - 0.07 * i / (len(r3) - 1) for i in range(len(r3))], m_bark, 12, seed=11)
+    hand = Vector(r3[-1])
+    for k in range(5):
+        a = math.radians(rnd.uniform(0, 360)); dd = Vector((math.cos(a) * 0.25, math.sin(a) * 0.25, 0))
+        f = smooth_path([hand, hand + dd * 0.5 + Vector((0, 0, -0.15)), hand + dd + Vector((0, 0, -0.55)), hand + dd * 1.1 + Vector((0, 0, -0.75))], 6)
+        tube_mesh(f"GEO_poelvinger{k}", f, [0.07 - 0.045 * i / (len(f) - 1) for i in range(len(f))], m_bark, 7, seed=30 + k)
     palm = Vector(r2[-1])
     for k, ang in enumerate((-60, -30, 0, 30, 60)):     # klauwvingers die op de grond rusten (front_wide.jpg)
         a = math.radians(-90 + ang + rnd.uniform(-6, 6)); L = rnd.uniform(0.55, 0.85)
@@ -202,23 +211,72 @@ def omgeving(outdir):
         assign(b, m_riet)
         r = cylinder(f"GEO_bakrand{i}", 0.29, 0.04, "LOW", segments=28, location=(x, y, 0.78)); assign(r, m_rand)
         z = cylinder(f"GEO_bakbinnen{i}", 0.245, 0.01, "LOW", segments=20, location=(x, y, 0.55)); assign(z, m_zwart)
+    extra(m_bark, m_rand)
     os.makedirs(outdir, exist_ok=True)
     save_master(os.path.join(outdir, "PR_SprookjesboomOmgeving.blend"))
 
 
+def extra(m_bark, m_ijzer):
+    """hekje, wortelboogjes, roeptoeter, lantaarns (Eftepedia-foto's in ref/eftepedia)."""
+    # laag zwart kniehekje: ronde paaltjes 0.55 m om de 1.2 m, twee buisleuningen (Sprookjesboomopening.jpg)
+    for k, run in enumerate(D.get("hek", [])):
+        for i, (x, y) in enumerate(run):
+            po = cylinder(f"GEO_hekpaal{k}_{i}", 0.025, 0.58, "LOW", segments=8, location=(x, y, 0.29)); assign(po, m_ijzer)
+            kn = sphere(f"GEO_hekknop{k}_{i}", 0.035, "LOW", (x, y, 0.59), u=8, v=4); assign(kn, m_ijzer)
+        for h in (0.25, 0.50):
+            pts = [(x, y, h) for x, y in run]
+            tube_mesh(f"GEO_hekbuis{k}_{h}", pts, [0.014] * len(pts), m_ijzer, 6, rough=0.0)
+    # wortelboogjes: kromme wortels die uit de grond komen en er weer in duiken
+    for i, (x, y, ang, L) in enumerate(D.get("stubs", [])):
+        a = math.radians(ang); d = Vector((math.cos(a), math.sin(a), 0)); c = Vector((x, y, 0))
+        h = rnd.uniform(0.18, 0.32)
+        pts = smooth_path([c - d * L * 0.55 + Vector((0, 0, -0.10)), c - d * L * 0.25 + Vector((0, 0, h * 0.8)),
+                           c + d * L * 0.15 + Vector((0, 0, h)), c + d * L * 0.55 + Vector((0, 0, -0.08))], 6)
+        r0 = rnd.uniform(0.07, 0.12)
+        tube_mesh(f"GEO_wortelboog{i}", pts, [r0 * (1 - 0.35 * j / (len(pts) - 1)) for j in range(len(pts))], m_bark, 9, seed=20 + i)
+    # roeptoeter: stompje met tonderzwam-plankjes en een trechter van zwammen (KindbijSprookjesboom.JPG)
+    tt = D.get("toeter")
+    if tt:
+        x, y, ang = tt; m_zwam = M("zwam", (0.62, 0.50, 0.36), 0.85); m_zwam2 = M("zwam_rand", (0.86, 0.80, 0.68), 0.8)
+        st = tube_mesh("GEO_toeterstomp", smooth_path([(x, y, -0.05), (x + 0.02, y, 0.45), (x + 0.04, y + 0.02, 0.80)], 6),
+                       [0.17, 0.16, 0.15, 0.14, 0.14, 0.13, 0.13, 0.12, 0.12, 0.12, 0.11, 0.11, 0.11], m_bark, 12, seed=40)
+        for j, (zz, aa, rr) in enumerate(((0.30, 20, 0.16), (0.48, 150, 0.14), (0.62, 260, 0.12))):   # plankjes
+            sh = sphere(f"GEO_zwamplank{j}", rr, "LOW", (x + math.cos(math.radians(aa)) * 0.15, y + math.sin(math.radians(aa)) * 0.15, zz), u=16, v=8, scale=(1, 1, 0.28))
+            assign(sh, m_zwam); rim = cylinder(f"GEO_zwamrand{j}", rr * 0.98, 0.015, "LOW", segments=16, location=sh.location - Vector((0, 0, 0.005))); assign(rim, m_zwam2)
+        a = math.radians(ang)
+        hoorn = profile_spin("GEO_toeterhoorn", [(0.0, 0.0), (0.06, 0.0), (0.07, 0.12), (0.10, 0.22), (0.17, 0.30), (0.24, 0.34), (0.22, 0.35), (0.15, 0.31), (0.08, 0.23), (0.0, 0.20)], "LOW", steps=20)
+        hoorn.data.transform(Matrix.Rotation(math.radians(70), 4, "Y")); hoorn.data.transform(Matrix.Rotation(a, 4, "Z"))
+        hoorn.location = (x + 0.02, y + 0.02, 0.80); apply_transform(hoorn); assign(hoorn, m_zwam)
+    # klassieke zwarte lantaarn: voet, taps paaltje, kap met 4 ruiten, dakje met knop (Sprookjesboomopening.jpg)
+    m_glas = M("lampglas", (0.95, 0.88, 0.62), 0.2)
+    for i, (x, y) in enumerate(D.get("lantaarns", [])):
+        v = profile_spin(f"GEO_lantaarnpaal{i}", [(0, 0), (0.16, 0), (0.16, 0.10), (0.10, 0.18), (0.075, 0.30), (0.055, 2.40), (0.085, 2.46), (0.085, 2.52), (0, 2.52)], "LOW", steps=12, location=(x, y, 0))
+        assign(v, m_ijzer)
+        g = box(f"GEO_lantaarnglas{i}", (0.26, 0.26, 0.40), "LOW", (x, y, 2.74)); assign(g, m_glas)
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                s_ = box(f"GEO_lantaarnstijl{i}{sx}{sy}", (0.03, 0.03, 0.44), "LOW", (x + sx * 0.14, y + sy * 0.14, 2.74)); assign(s_, m_ijzer)
+        dk = profile_spin(f"GEO_lantaarndak{i}", [(0, 2.94), (0.24, 2.94), (0.20, 2.99), (0.06, 3.14), (0.03, 3.20), (0.05, 3.25), (0, 3.30)], "LOW", steps=4, location=(x, y, 0))
+        dk.rotation_euler.z = math.radians(45); apply_transform(dk); assign(dk, m_ijzer)
+        bd = box(f"GEO_lantaarnbodem{i}", (0.32, 0.32, 0.05), "LOW", (x, y, 2.53)); assign(bd, m_ijzer)
+
+
 def stenen(outdir):
-    """6 ronde riviersteen-prototypes (1 m doorsnede, oorsprong onderin), elk eigen materiaal."""
+    """6 hoekige breuksteen-prototypes (lichtgrijs/blauwig, Boom_wortels.jpg/Rodosb.jpg), 1 m doorsnede, oorsprong onderin."""
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    cols = [(0.50, 0.51, 0.52), (0.46, 0.47, 0.50), (0.56, 0.54, 0.50), (0.42, 0.44, 0.46), (0.58, 0.57, 0.55), (0.50, 0.47, 0.43)]
+    cols = [(0.70, 0.71, 0.73), (0.62, 0.64, 0.68), (0.74, 0.73, 0.71), (0.56, 0.58, 0.62), (0.78, 0.78, 0.79), (0.66, 0.66, 0.66)]
     for k in range(6):
-        bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2, radius=0.5)
-        sx, sy, sz = rnd.uniform(0.85, 1.15), rnd.uniform(0.7, 1.0), rnd.uniform(0.45, 0.7)   # afgerond en plat (front_wide.jpg)
-        for v in bm.verts:
-            v.co.x *= sx; v.co.y *= sy; v.co.z *= sz
-            v.co += v.co.normalized() * 0.05 * noise.noise(v.co * 3 + Vector((k * 10, 0, 0)))
-            v.co.z = max(v.co.z, -0.12)
-            v.co.z += 0.12
-        ob = new_mesh_object(f"steen{k}", bm, "LOW"); assign(ob, M(f"steen{k}", cols[k], 0.75)); shade_smooth(ob, math.radians(80))
+        bm = bmesh.new()
+        pts = []
+        for i in range(26):    # willekeurige punten op een afgeplatte ellipsoide -> convex omhulsel = gebroken steen met facetten
+            u = rnd.uniform(-1, 1); a = rnd.uniform(0, 2 * math.pi); s = math.sqrt(1 - u * u)
+            pts.append(Vector((s * math.cos(a) * rnd.uniform(0.85, 1.15), s * math.sin(a) * rnd.uniform(0.6, 0.95), u * rnd.uniform(0.45, 0.75))) * 0.5)
+        for q in pts: bm.verts.new(q)
+        bmesh.ops.convex_hull(bm, input=bm.verts)
+        bmesh.ops.bevel(bm, geom=bm.edges[:], offset=0.025, segments=1, affect="EDGES")
+        mn = min(v.co.z for v in bm.verts)
+        for v in bm.verts: v.co.z -= mn
+        ob = new_mesh_object(f"steen{k}", bm, "LOW"); assign(ob, M(f"steen{k}", cols[k], 0.85)); shade_smooth(ob, math.radians(35))
     save_master(os.path.join(outdir, "PR_SprookjesboomStenen.blend"))
 
 
