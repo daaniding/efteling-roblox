@@ -107,3 +107,8 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Een frontale gevelfoto kan vrijwel orthografisch zijn (rechtgetrokken of telelens): test dat door de px/m van twee vlakken op verschillende diepte
   te vergelijken. Gelijk -> camera ~300 m ver met lens ~1000 mm (cam_match: clip_end opgehoogd naar 2000).
 - Horizontale verschuiving van achterliggende vlakken in de overlay eerst als plattegrondfout zien, niet meteen als camerayaw: yaw maakt de zijgevel zichtbaar.
+- Beloopbaar gebouw: binnenruimtes als snijvolumes in dezelfde boolean als de ramen, met use_self + use_hole_tolerant (overlappende muurblokken),
+  anders blijven openingen dicht. Botsing via onzichtbare COLL_-blokken, niet via mesh-botsing (Default-hull sluit deuropeningen).
+- Bake van een gebouw: onzichtbare vlakken (onderkanten op maaiveld, muurtoppen onder daken, onderkant daken) eerst weghalen, anders
+  gaat de helft van de 1024-textuur naar zwarte vlakken. Muren per gevelrichting splitsen = meer pixels per gevel.
+- Als een oude SurfaceAppearance-textuur ineens wit rendert: opnieuw uploaden en ids vervangen (haagtextuur, nov 2026).

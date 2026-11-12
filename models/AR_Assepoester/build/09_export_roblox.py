@@ -24,6 +24,10 @@ for o in low.all_objects:
     if len(me.polygons) == 0:
         bpy.data.meshes.remove(me); continue
     me.transform(o.matrix_world)
+    if o.name.startswith("BAKE_"):   # gebakken textuur: eigen UV's houden, groep = TEX_<naam>
+        tn = "TEX_" + o.name[5:]
+        if tn not in bpy.data.materials: bpy.data.materials.new(tn)
+        groups["static__" + tn].append(me); continue
     # UV's: kubusprojectie in wereldmeters (1 UV = 2 m), zodat Roblox-materialen op MeshParts goed tegelen
     _b = bmesh.new(); _b.from_mesh(me); _uv = _b.loops.layers.uv.verify()
     for _f in _b.faces:

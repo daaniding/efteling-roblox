@@ -29,8 +29,13 @@ MATS = {
     "groen": ((0.17, 0.33, 0.33, 1), 0.7), "pannen": ((0.40, 0.22, 0.16, 1), 0.85), "baksteen": ((0.55, 0.26, 0.18, 1), 0.9),
     "hout": ((0.40, 0.20, 0.12, 1), 0.7), "glas": ((0.09, 0.11, 0.11, 1), 0.2), "lood": ((0.20, 0.21, 0.22, 1), 0.5),
     "zink": ((0.36, 0.43, 0.46, 1), 0.45), "kozijn": ((0.86, 0.83, 0.74, 1), 0.6), "donker": ((0.025, 0.025, 0.025, 1), 1.0),
-    "achter": ((0.55, 0.55, 0.52, 1), 0.95),
+    "achter": ((0.55, 0.55, 0.52, 1), 0.95), "venster": ((0.70, 0.78, 0.80, 1), 0.05), "vloer": ((0.48, 0.30, 0.22, 1), 0.9),
+    "plavuis": ((0.46, 0.44, 0.40, 1), 0.9), "balk": ((0.30, 0.19, 0.11, 1), 0.8), "vuur": ((1.0, 0.55, 0.18, 1), 0.5),
+    "doek": ((0.55, 0.68, 0.82, 1), 0.9), "pompoen": ((0.86, 0.45, 0.10, 1), 0.6), "ketel": ((0.12, 0.12, 0.12, 1), 0.45),
 }
+COLL = []; LAMPS = []
+def coll(x0, x1, y0, y1, z0, z1):   # onzichtbaar botsblok (Roblox): [cx, cy, cz, sx, sy, sz, hoek]
+    COLL.append([round(v, 3) for v in ((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2, x1 - x0, y1 - y0, z1 - z0, 0.0)])
 PARTS = {}
 
 
@@ -131,7 +136,7 @@ def band(pts, s, y0, depth, rnd=None):
 
 
 # ---- daken: pannenrijen als zaagtand (een functie voor schild, lessenaar, mansarde, spits, dakkapel) ----
-def tiled_roof(part, eave, top, z0, z1, course=0.20, lip=0.035, under=0.06, cap_top=True, hips=True, mat="pannen"):
+def tiled_roof(part, eave, top, z0, z1, course=0.20, lip=0.035, under=0.06, cap_top=True, hips=True, mat="pannen", bottom=True):
     """eave = (x0,x1,y0,y1) op z0, top = (x0,x1,y0,y1) op z1 (mag ontaard zijn: nok of punt).
     Elke pannenrij is een schuin vlak met onderaan een lip naar buiten (lip) -> schaduwlijn per rij."""
     def rect(t, grow=0.0):
@@ -151,7 +156,7 @@ def tiled_roof(part, eave, top, z0, z1, course=0.20, lip=0.035, under=0.06, cap_
     for a, b in zip(rings, rings[1:]):
         for k in range(4):
             bm.faces.new((a[k], a[(k + 1) % 4], b[(k + 1) % 4], b[k]))
-    bm.faces.new(list(reversed(rings[0])))
+    if bottom: bm.faces.new(list(reversed(rings[0])))
     if cap_top: bm.faces.new(rings[-1])
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-4)
     bmesh.ops.dissolve_degenerate(bm, dist=1e-4, edges=bm.edges)
@@ -285,7 +290,7 @@ def build(master):
     # gaanderij: lessenaarsdak van het hoofdhuis naar de goot voor de planken
     gx0, gx1 = WING[1], PORCH[0]
     tiled_roof("dak_gaanderij", (gx0 - 0.02, gx1 + 0.02, GAL_Y - 0.35, MAIN[2] + 0.05), (gx0 - 0.02, gx1 + 0.02, MAIN[2] + 0.0, MAIN[2] + 0.05),
-               GAL_LOW, GAL_HIGH, hips=False)
+               GAL_LOW, GAL_HIGH, hips=False, bottom=False)
     # bakstenen rand tegen het hoofdhuis (front.jpg: rode stenen met gaten)
     x = gx0 - 0.15
     while x < gx1 + 0.15:
@@ -318,13 +323,13 @@ def build(master):
     # ---------------- gevelopeningen ----------------
     # entree: rondboog 1.08 x 2.14 met dikke omlijsting, gang erachter (donker)
     ex = -4.35
-    pts = arch_pts(ex, 0, 1.08, 2.14, 16)
+    EW, EH = 1.45, 2.38     # front.jpg 1.08 x 2.14; verbreed voor spelers (looproutes ~1.5x, WERKWIJZE)
+    pts = arch_pts(ex, 0, EW, EH, 16)
     cutters.append((boutline(pts, y0 - 0.3, 2.9), F))
     put("entree", "omlijsting", band(pts, 0.16, y0 - 0.06, 0.08), F)
-    put("entree", "omlijsting", band([(px, pz) for px, pz in arch_pts(ex, 0, 1.08 + 0.32, 2.14 + 0.16, 16)], 0.05, y0 - 0.09, 0.05), F)
-    put("entree", "donker", bz(ex - 0.6, ex + 0.6, y0 + 2.55, y0 + 2.6, 0, 2.3))
-    put("entree", "plint", bz(ex - 0.54, ex + 0.54, y0 - 0.25, y0 + 2.6, 0, 0.03))
-    for xw in (-5.72, -3.04):   # smalle boogramen front.jpg 205 / 485 px
+    put("entree", "omlijsting", band([(px, pz) for px, pz in arch_pts(ex, 0, EW + 0.32, EH + 0.16, 16)], 0.05, y0 - 0.09, 0.05), F)
+    put("entree", "plint", bz(ex - EW / 2, ex + EW / 2, y0 - 0.25, y0 + 0.31, 0, 0.04))   # drempel
+    for xw in (-5.80, -2.92):   # smalle boogramen front.jpg 205 / 485 px
         window_arched(TR(0, y0, 0), xw, 1.2, 0.50, 1.15, cutters, "lancet", s=0.09)
     window_arched(TR(x0, 0, 0, -90), -(y0 + 1.7), 1.2, 0.50, 1.15, cutters, "lancet", s=0.09)   # noordzijde vleugel (tuin_nieuw.jpg)
     # hoofdhuis verdieping (front.jpg overlay 492/625/785/940 px)
@@ -340,9 +345,28 @@ def build(master):
     # toren: smal boograam + boogdeur van de uitgang
     window_arched(TR(0, TOWER[2], 0), 3.95, 3.65, 0.34, 0.95, cutters, "lancet", s=0.08)
     dpts = arch_pts(4.55, 0, 0.92, 2.05, 12)
-    cutters.append((boutline(dpts, TOWER[2] - 0.3, 1.3), F))
+    cutters.append((boutline(dpts, TOWER[2] - 0.3, 0.42), F))
     put("uitgang", "omlijsting", band(dpts, 0.10, TOWER[2] - 0.04, 0.06), F)
-    put("uitgang", "donker", bz(4.0, 5.1, TOWER[2] + 0.95, TOWER[2] + 1.0, 0, 2.1))
+    put("uitgang", "groen", boutline(dpts, TOWER[2] + 0.06, 0.06), F)                     # dichte deur (planken)
+    for k in range(1, 6):
+        xx = 4.55 - 0.46 + k * 0.92 / 6
+        put("uitgang", "lood", bz(xx - 0.006, xx + 0.006, TOWER[2] + 0.05, TOWER[2] + 0.06, 0.02, 1.95), F)
+    for zz in (0.4, 1.5):
+        put("uitgang", "lood", bz(4.12, 4.95, TOWER[2] + 0.035, TOWER[2] + 0.055, zz - 0.035, zz + 0.035), F)
+
+    # ---------------- binnen: looproute entree -> hal -> gaanderijgang -> portiek (OSM-voetpad 1255787234) ----------------
+    HALL = (-6.04, -2.63, 1.20, 4.42, 2.45)       # hal in de vleugel (x0, x1, y0, y1, plafond)
+    GANG = (-2.70, 3.45, 1.80, 4.80, 2.25)        # gaanderijgang tot in het portiek; plankenplafond eronder
+    ROOM = (-3.50, 4.90, 5.02, 11.37, 3.40)       # keuken (show), alleen te zien door de kijkramen
+    cutters.append((bz(HALL[0], HALL[1], HALL[2], HALL[3], 0.0, HALL[4]), F))
+    cutters.append((bz(HALL[1] - 0.1, -2.30, GANG[2], HALL[3], 0.0, 2.25), F))     # doorgang hal -> gang
+    cutters.append((bz(GANG[0], 2.42, GANG[2], GANG[3], 0.0, GANG[4]), F))
+    cutters.append((bz(2.42, GANG[1], GANG[2], TOWER[2] - 0.02, 0.0, GANG[4]), F))
+    cutters.append((bz(ROOM[0], ROOM[1], ROOM[2], ROOM[3], 0.0, ROOM[4]), F))
+    VIEW = (-1.55, 0.45, 2.30)                     # drie kijkramen gang -> keuken (Assepoesterdoorhetraam.jpg)
+    for xv in VIEW:
+        cutters.append((bz(xv - 0.55, xv + 0.55, MAIN[2] - 0.2, ROOM[2] + 0.1, 0.85, 1.95), F))
+    cutters.append((bz(-0.6, 2.6, ROOM[3] - 0.1, MAIN[3] + 0.1, 0.9, 2.9), F))   # groot raam achterwand keuken -> doek
 
     # ---------------- muren afmaken: gaten snijden ----------------
     me = bpy.data.meshes.new("AP_muren__stuc"); wall.to_mesh(me); wall.free()
@@ -353,6 +377,7 @@ def build(master):
     cme = bpy.data.meshes.new("_cutter"); cut.to_mesh(cme); cut.free()
     cob = bpy.data.objects.new("_cutter", cme); col("FORMS").objects.link(cob)
     b = wob.modifiers.new("cut", "BOOLEAN"); b.object = cob; b.operation = "DIFFERENCE"; b.solver = "EXACT"
+    b.use_self = True; b.use_hole_tolerant = True     # overlappende muurblokken en snijvolumes
     apply_all_modifiers(wob); bpy.data.objects.remove(cob, do_unlink=True); bpy.data.meshes.remove(cme)
 
     # ---------------- gaanderij: plankengordijn op een stenen plint ----------------
@@ -376,18 +401,121 @@ def build(master):
     for k in range(4):    # plankwand links (front.jpg 1080-1130 px)
         xa = 3.40 + k * 0.135
         put("portiek", "groen", bz(xa, xa + 0.13, py0 + 0.05, py0 + 0.09, 0.03, PORCH_EAVE - 0.3))
-    put("portiek", "groen", bz(px0, px0 + 0.12, py0 + 0.05, TOWER[2], 0.0, PORCH_EAVE - 0.3))       # zijwand achter de plankwand
-    for k in range(5):    # opengezette deur rechts (front.jpg 1250-1315 px)
-        xa = 5.17 + k * 0.13
-        put("portiek", "groen", bz(xa, xa + 0.125, py0 + 0.20, py0 + 0.24, 0.02, 2.15))
+    put("portiek", "groen", bz(px0, px0 + 0.12, py0 + 0.05, GAL_Y + 0.15, 0.0, PORCH_EAVE - 0.3))   # zijwand tot de gang
+    for k in range(5):    # opengezette deur, tegen de rechterwand gedraaid (front.jpg 1250-1315 px: deurblad rechts)
+        ya = 0.30 + k * 0.13
+        put("portiek", "groen", bz(px1 - 0.21, px1 - 0.17, ya, ya + 0.125, 0.02, 2.15))
     for zz in (0.35, 1.8):
-        put("portiek", "lood", bz(5.2, 5.8, py0 + 0.17, py0 + 0.2, zz - 0.03, zz + 0.03))
-    put("portiek", "plint", bz(px0, px1, py0, TOWER[2], 0, 0.03))
+        put("portiek", "lood", bz(px1 - 0.23, px1 - 0.21, 0.33, 0.93, zz - 0.03, zz + 0.03))
+    put("portiek", "vloer", bz(px0, px1 - 0.15, py0 + 0.1, TOWER[2], 0, 0.04))
+
+    # ---------------- interieur ----------------
+    hx0, hx1, hy0, hy1, hz = HALL
+    put("interieur", "vloer", bz(hx0, -2.30, hy0, hy1, 0, 0.04))
+    put("interieur", "vloer", bz(GANG[0], px0 + 0.1, GANG[2], GANG[3] - 0.08, 0, 0.04))
+    for yy in (hy0 + 0.9, hy0 + 2.0, hy0 + 3.0):          # balken in de hal
+        put("interieur", "balk", bz(hx0, hx1, yy - 0.09, yy + 0.09, hz - 0.2, hz))
+    # gang: planken aan de binnenkant van het gordijn, schuin plankenplafond met balken, wandlampjes (Assepoestergaanderij.jpg)
+    for k in range(int((gx1 - gx0) / 0.19)):
+        xa = gx0 + k * 0.19
+        put("interieur", "groen", bz(xa, xa + 0.18, GANG[2] - 0.02, GANG[2] + 0.01 + 0.01 * (k % 2), 0.04, 2.05))
+    def zc(y): return 2.08 + (y - GANG[2]) * 0.27       # plafondhoogte (onder het lessenaarsdak)
+    bm = bmesh.new()
+    vs = [bm.verts.new(v) for v in ((gx0 - 0.4, GANG[2], zc(GANG[2])), (px0, GANG[2], zc(GANG[2])), (px0, MAIN[2], zc(MAIN[2])), (gx0 - 0.4, MAIN[2], zc(MAIN[2])))]
+    f = bm.faces.new(vs); r = bmesh.ops.extrude_face_region(bm, geom=[f])
+    bmesh.ops.translate(bm, vec=(0, 0, 0.04), verts=[g for g in r["geom"] if isinstance(g, bmesh.types.BMVert)])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces); put("interieur", "groen", bm)
+    xb = gx0 - 0.2
+    while xb < px0:
+        bm = bmesh.new()
+        vs = [bm.verts.new(v) for v in ((xb - 0.07, GANG[2], zc(GANG[2]) - 0.14), (xb + 0.07, GANG[2], zc(GANG[2]) - 0.14), (xb + 0.07, MAIN[2], zc(MAIN[2]) - 0.14), (xb - 0.07, MAIN[2], zc(MAIN[2]) - 0.14))]
+        f = bm.faces.new(vs); r = bmesh.ops.extrude_face_region(bm, geom=[f])
+        bmesh.ops.translate(bm, vec=(0, 0, 0.15), verts=[g for g in r["geom"] if isinstance(g, bmesh.types.BMVert)])
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces); put("interieur", "balk", bm)
+        xb += 1.1
+    for xl in (-2.15, -0.55, 1.37):     # wandlampjes tussen de kijkramen
+        put("interieur", "lood", bz(xl - 0.05, xl + 0.05, MAIN[2] - 0.13, MAIN[2] - 0.0, 1.55, 1.75))
+        put("interieur", "lood", btube([(xl, MAIN[2] - 0.05, 1.62), (xl, MAIN[2] - 0.28, 1.72)], 0.015, 5))
+        put("interieur", "vuur", blathe([(0, 0), (0.05, 0), (0.06, 0.08), (0.045, 0.16), (0, 0.18)], 8), TR(xl, MAIN[2] - 0.28, 1.73))
+        LAMPS.append((xl, MAIN[2] - 0.30, 1.85))
+    # kijkramen: kozijn met 3x3 ruitjes, glas doorzichtig
+    for xv in VIEW:
+        yv = MAIN[2] + 0.06
+        put("kijkramen", "venster", bz(xv - 0.55, xv + 0.55, yv - 0.01, yv + 0.01, 0.85, 1.95))
+        for k in range(4):
+            xx = xv - 0.55 + k * 1.1 / 3; zz = 0.85 + k * 1.1 / 3
+            put("kijkramen", "balk", bz(xx - 0.025, xx + 0.025, yv - 0.04, yv + 0.04, 0.85, 1.95))
+            put("kijkramen", "balk", bz(xv - 0.55, xv + 0.55, yv - 0.04, yv + 0.04, zz - 0.025, zz + 0.025))
+        put("kijkramen", "balk", bz(xv - 0.62, xv + 0.62, MAIN[2] - 0.12, MAIN[2] + 0.0, 0.78, 0.86))     # vensterbank
+    # keuken (Assepoes_passen_totaal / concept): plavuizen, stookplaats met ketel, tafel, krukjes, pompoenen, tonnen, plank met potten
+    rx0, rx1, ry0, ry1, rz = ROOM
+    put("keuken", "plavuis", bz(rx0, rx1, ry0, ry1, 0, 0.04))
+    for k in range(int((rx1 - rx0) / 0.6) + 1):
+        put("keuken", "lood", bz(rx0 + k * 0.6 - 0.008, rx0 + k * 0.6 + 0.008, ry0, ry1, 0.04, 0.045))
+    for k in range(int((ry1 - ry0) / 0.6) + 1):
+        put("keuken", "lood", bz(rx0, rx1, ry0 + k * 0.6 - 0.008, ry0 + k * 0.6 + 0.008, 0.04, 0.045))
+    for xx in (rx0 + 1.4, rx0 + 3.2, rx0 + 5.0, rx0 + 6.8):
+        put("keuken", "balk", bz(xx - 0.12, xx + 0.12, ry0, ry1, rz - 0.25, rz))
+    hy = 8.4    # stookplaats tegen de noordwand
+    for (a0, a1, b0, b1, c0, c1) in ((rx0, rx0 + 0.6, hy - 1.25, hy - 0.85, 0, 1.55), (rx0, rx0 + 0.6, hy + 0.85, hy + 1.25, 0, 1.55),
+                                       (rx0, rx0 + 0.7, hy - 1.35, hy + 1.35, 1.55, 1.85), (rx0, rx0 + 0.45, hy - 1.15, hy + 1.15, 1.85, rz)):
+        put("keuken", "plint", bz(a0, a1, b0, b1, c0, c1, 0.02))
+    put("keuken", "donker", bz(rx0, rx0 + 0.05, hy - 0.85, hy + 0.85, 0, 1.55))
+    put("keuken", "plint", bz(rx0, rx0 + 0.75, hy - 1.0, hy + 1.0, 0.0, 0.12))
+    for k in range(5):
+        put("keuken", "balk", btube([(rx0 + 0.25, hy - 0.4 + k * 0.2, 0.15), (rx0 + 0.45, hy - 0.3 + k * 0.17, 0.2)], 0.04, 5))
+    put("keuken", "vuur", blathe([(0, 0), (0.35, 0), (0.2, 0.25), (0.06, 0.45), (0, 0.5)], 8), TR(rx0 + 0.35, hy, 0.12))
+    put("keuken", "ketel", blathe([(0, 0), (0.18, 0.02), (0.3, 0.15), (0.32, 0.3), (0.28, 0.45), (0.3, 0.5), (0.26, 0.5), (0.24, 0.46), (0, 0.46)], 14), TR(rx0 + 0.45, hy, 0.55))
+    put("keuken", "ketel", btube([(rx0 + 0.05, hy, 1.5), (rx0 + 0.45, hy, 1.5), (rx0 + 0.45, hy, 1.08)], 0.02, 5))
+    LAMPS.append((rx0 + 0.6, hy, 0.5))
+    put("keuken", "balk", bz(1.0, 2.8, 8.6, 9.5, 0.72, 0.8, 0.01))          # tafel
+    for (lx, ly) in ((1.1, 8.7), (2.7, 8.7), (1.1, 9.4), (2.7, 9.4)):
+        put("keuken", "balk", bz(lx - 0.04, lx + 0.04, ly - 0.04, ly + 0.04, 0, 0.72))
+    for (sx_, sy_) in ((0.4, 7.4), (2.0, 7.6)):                               # krukjes
+        put("keuken", "balk", blathe([(0, 0.42), (0.18, 0.42), (0.18, 0.47), (0, 0.47)], 10), TR(sx_, sy_, 0))
+        for k in range(3):
+            a = k * math.tau / 3
+            put("keuken", "balk", btube([(sx_ + 0.12 * math.cos(a), sy_ + 0.12 * math.sin(a), 0.42), (sx_ + 0.17 * math.cos(a), sy_ + 0.17 * math.sin(a), 0.0)], 0.02, 4))
+    PUMP = [(0, 0), (0.12, 0.01), (0.2, 0.06), (0.23, 0.13), (0.2, 0.21), (0.12, 0.25), (0.03, 0.26), (0, 0.26)]
+    for k, (qx, qy, sc) in enumerate(((-2.4, 6.4, 1.0), (-2.0, 6.0, 0.8), (-2.6, 5.9, 0.7), (-1.5, 6.6, 0.9), (2.0, 9.05, 0.6), (3.9, 6.2, 1.1), (4.3, 6.6, 0.75))):
+        bm = blathe([(r * sc, h * sc) for r, h in PUMP], 12)
+        for v in bm.verts:     # ribbels
+            a = math.atan2(v.co.y, v.co.x); v.co.x *= 1 + 0.06 * math.cos(6 * a); v.co.y *= 1 + 0.06 * math.cos(6 * a)
+        put("keuken", "pompoen", bm, TR(qx, qy, 0.04 + (0.8 if k == 4 else 0)))
+        put("keuken", "balk", btube([(qx, qy, 0.04 + 0.25 * sc + (0.8 if k == 4 else 0)), (qx + 0.02, qy, 0.1 + 0.3 * sc + (0.8 if k == 4 else 0))], 0.02, 4))
+    for (tx, ty) in ((4.3, 10.6), (3.6, 10.8)):                                # tonnen
+        put("keuken", "balk", blathe([(0, 0), (0.26, 0), (0.31, 0.25), (0.33, 0.45), (0.31, 0.65), (0.26, 0.9), (0, 0.9)], 12), TR(tx, ty, 0.04))
+        for zz in (0.12, 0.78):
+            put("keuken", "lood", blathe([(0.285, zz), (0.31, zz), (0.31, zz + 0.04), (0.285, zz + 0.04)], 12), TR(tx, ty, 0.04))
+    put("keuken", "balk", bz(-0.5, 2.5, ry1 - 0.3, ry1, 1.6, 1.66))         # plank met potten
+    for k in range(6):
+        put("keuken", "ketel" if k % 2 else "pompoen", blathe([(0, 0), (0.07, 0), (0.09, 0.08), (0.06, 0.16), (0.07, 0.2), (0, 0.2)], 8), TR(-0.3 + k * 0.5, ry1 - 0.15, 1.66))
+    # groot raam in de achterwand met geschilderd landschap + kasteel (Assepoes_kasteeldetail.jpg), doek erachter
+    put("keuken", "doek", bz(-1.2, 3.2, MAIN[3] + 0.6, MAIN[3] + 0.65, 0.0, 3.6))
+    for (a0, a1, b0, b1, c0, c1) in ((-0.6, 2.6, ry1 - 0.12, ry1, 0.82, 0.9), (-0.66, -0.6, ry1 - 0.12, ry1, 0.82, 2.9), (2.6, 2.66, ry1 - 0.12, ry1, 0.82, 2.9)):
+        put("keuken", "balk", bz(a0, a1, b0, b1, c0, c1))
+    LAMPS.append((1.0, ry1 - 0.5, 3.0))
+
+    # ---------------- botsblokken (onzichtbaar in Roblox; muren zelf botsen niet) ----------------
+    coll(WING[0], HALL[0], WING[2], WING[3], 0, 2.7)                   # vleugel noord
+    coll(HALL[0], ex - EW / 2, WING[2], HALL[2], 0, 2.7); coll(ex + EW / 2, WING[1], WING[2], HALL[2], 0, 2.7)   # gevel naast de entree
+    coll(HALL[0], -2.30, HALL[3], WING[3], 0, 2.7)                     # achterwand hal
+    coll(HALL[1], WING[1], HALL[2], GANG[2], 0, 2.7)                   # hal: oostwand voor de gang
+    coll(gx0, px0 + 0.12, GAL_Y - 0.1, GANG[2], 0, 2.2)                 # plankengordijn
+    coll(MAIN[0], MAIN[1], GANG[3], MAIN[3], 0, 5.6)                   # hoofdhuis (keuken alleen te zien)
+    coll(2.42, TOWER[1], TOWER[2], MAIN[2], 0, 5.0)                    # toren voor het hoofdhuis
+    coll(BACK[0], BACK[1], BACK[2], BACK[3], 0, BACK_H)
+    coll(px1 - 0.25, px1, 0.25, TOWER[2], 0, 2.6)                      # portiek rechterwand + deur
+    coll(px0, 3.95, 0.0, 0.2, 0, 2.6)                                  # plankwand links voor
+    coll(px0, px0 + 0.12, 0.0, GAL_Y + 0.15, 0, 2.6)
 
     # ---------------- objecten wegschrijven ----------------
     for (part, mat), bm in PARTS.items():
         ob = new_mesh_object(f"AP_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])
-    save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]))
+    import json
+    out = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "exports"); os.makedirs(out, exist_ok=True)
+    json.dump({"colliders": COLL, "lamps": [[round(v, 2) for v in l] for l in LAMPS]}, open(os.path.join(out, "huis_extra.json"), "w"))
+    save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "colliders", len(COLL), "lamps", len(LAMPS))
 
 
 if __name__ == "__main__":

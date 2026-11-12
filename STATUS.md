@@ -108,7 +108,19 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
 - Export `build/09_export_roblox.py` (kopie Villa Volta): v1 **108022246144519** (11k tris, 13 delen). Plaatsen: `roblox/plaats_assepoester.luau`
   (MaterialVariants VV_Pleister/VV_Steen hergebruikt; pannen = ClayRoofTiles (150,92,72)). Layout-label weg, spawn op de binnenplaats.
 - In de buurt staan VillaVoltaHorizon-bomen; 4 staan op de binnenplaats (den/beuk, model y -10..-4) -> weghalen bij de scène.
-- Volgende stap: scène
+- v2 (Daan: "ziet er niet echt uit", tuin erbij, je moet naar binnen kunnen):
+  * Binnenroute volgens OSM-voetpad 1255787234: entree (rondboog verbreed naar 1.45 x 2.38 voor spelers) -> hal in de vleugel ->
+    gaanderijgang (plankenwand, schuin plankenplafond, balken, wandlampjes, 3 kijkramen) -> portiek -> buiten. Keuken alleen door de ramen.
+    Botsing = onzichtbare COLL_-blokken (huis_extra.json / omgeving_extra.json), meshes botsen niet. INTERIEUR KOMT LATER (Daan): keuken is basis.
+  * Tuin `build/04_omgeving.py`: klinkerbinnenplaats, middenperk met buxusrand + lantaarns, taxushagen langs OSM, tuiningang met
+    vaaspijlers + smeedijzeren hek, dienstpoort, grafje met vleugels, kisten, boekstandaard, pompoenen, uitgangspad met galgje-lantaarn,
+    rotsjes en stucboog in het parkhek. Omgeving-asset **112815934285553**.
+  * Verwering `build/05_bake.py`: 10 texturen (stuc per gevel, pannen, groen, omlijsting, plint) + normal maps, ids in textures/asset_ids.txt.
+    Huis v2 **118744140638270**. Tint achteraf via SurfaceAppearance.Color (TINT in plaats_assepoester.luau).
+  * Beplanting `build/06_planten.py` -> workspace.AssepoesterGroen (277: rozen in het perk, paars bij het grafje, varens/heesters/rododendrons,
+    16 bomen); toegevoegd aan Wind-MAPPEN. LantaarnsDagNacht doet nu ook Assepoester + AssepoesterOmgeving.
+  * LET OP: haagtextuur 107834399804087 rendert wit (ook bij Villa Volta!). Opnieuw geupload: kleur 73997585762296, normaal 114509386598524.
+  * Nog te doen: wandeltest door de route en fps-test in Play (Play stopte; Studio meldt nieuwe Assistant-versie -> Studio herstarten).
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
 ## Daarna (volgorde met Daan afgesproken)

@@ -1,2 +1,4 @@
 haag_kleur_groen 107834399804087
 haag_normaal 80469356130057
+haag_kleur_groen_v2 73997585762296
+haag_normaal_v2 114509386598524
