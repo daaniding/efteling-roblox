@@ -76,11 +76,12 @@ Later (Daan): geluid/show, paden door het park, eventueel StreamingEnabled (pres
 ## Langnek (chat 4, 12 nov) — KLAAR (statisch, nek uit zoals de foto)
 Map `models/CH_Langnek/`. Bronnen: Eftepedia-lemma Langnek (`ref/eftepedia/`), OSM rots + vijver (`ref/osm_lokaal.json`), brief `asset-brief.md`.
 Bouw: `build/02_blockout.py`, `03a_forms_figuur.py` (figuur), `03b_forms_rots.py` (rots, vijver, randstenen, keien, hekje), `09_export_roblox.py`.
-Roblox-asset **106939403351913** (88.8k tris, 28 meshdelen, anim-groepen body/neck/head/irisL/irisR/static in de namen).
+Roblox-asset v2 **116930509474793** (gebakken texturen via `build/04_bake.py`: lijf 98796211691962, hoofd 101183919857164, nek 109436001826060, rots 114370744521597, rand 123245105248243; v1 106939403351913 (88.8k tris, 28 meshdelen, anim-groepen body/neck/head/irisL/irisR/static in de namen).
 Plaatsen: `roblox/plaats_langnek.luau` (kleuren, water, kroos/rimpels, beplanting in `LangnekGroen`, wind). Play-test: 43 fps met / 46 zonder.
 Oude Langnek uit losse Studio-parts is vervangen. Layout-label weg.
 NIET gedaan (Daan: nog niet animeren): `roblox/LangnekAnimatie.server.luau` ligt klaar (nek schuift als geheel, hoofd/ogen los), niet geplaatst.
-Kan nog beter: rots-/huidtexturen (nu Roblox Rock/SmoothPlastic, geen bake), gezicht detail (mond/kaak), cape-plooien.
+v2 (Daan: "veel mooier"): gezicht naar foto (bolle ogen met huidring, open grimas, rimpels, kijkt 25 graden omlaag), geschilderde bake (AO, blos, stof, betonscan + mos), extra bos erachter (57 planten).
+Kan nog beter: normal map voor de rots (facetten zichtbaar in fel licht), cape-plooien.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.

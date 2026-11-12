@@ -1,7 +1,8 @@
 -- Langnek plaatsen (asset uit build/09_export_roblox.py). Blender-oorsprong = Langnek-punt op pleinhoogte; figuur kijkt naar Blender -Y.
 -- OSM-kalibratie: oorsprong OSM (145.91, -33.66) m -> studs (437.7, 101.0); kijkt ZZO (OSM (0.6,-0.8) -> Roblox (0.6,0,0.8)); grond Y=2.
 -- Daarna: water net boven het maaiveld, kroos + rimpels (klonen uit SprookjesboomWater), beplanting in LangnekGroen (wind doet mee).
-local ASSET = 106939403351913
+local ASSET = 116930509474793   -- v2: gebakken texturen (build/04_bake.py)
+local TEX = {lijf = 98796211691962, hoofd = 101183919857164, nek = 109436001826060, rots = 114370744521597, rand = 123245105248243}
 local ORIGIN = CFrame.new(437.7, 2.0, 101.0) * CFrame.Angles(0, math.atan2(-0.6, -0.8), 0)
 local S = 3
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end   -- Blender (x,y,z) meters -> wereld
@@ -18,7 +19,7 @@ local M = {   -- getemperde kleuren (WERKWIJZE), naar ref/front.jpg
 	kei = {Color3.fromRGB(150, 144, 134), "Slate"}, water = {Color3.fromRGB(34, 40, 26), "SmoothPlastic"},
 	hek = {Color3.fromRGB(28, 46, 32), "Metal"},
 }
-local BOTSING = {rots = true, randsteen = true, hek = true, kei = true}
+local BOTSING = {rots = true, randsteen = true, hek = true, kei = true, rand = true}
 
 for _, n in ipairs({"Langnek", "LangnekGroen", "LangnekWater"}) do local o = workspace:FindFirstChild(n); if o then o:Destroy() end end
 local m = Instance.new("Model"); m.Name = "Langnek"
@@ -36,8 +37,13 @@ local onbekend, water = {}, nil
 for _, p in ipairs(m:GetChildren()) do
 	p.Anchored = true; p.CanTouch = false
 	local groep, key = string.match(p.Name, "^(%w+)__MAT_([%a_]+)_%d+$")
+	local tgroep, tex = string.match(p.Name, "^(%w+)__TEX_(%a+)_%d+$")
 	local s = key and M[key]
-	if s then p.Color = s[1]; p.Material = mat(s[2]) else table.insert(onbekend, p.Name) end
+	if tex and TEX[tex] then
+		groep = tgroep; key = tex
+		p.Color = Color3.new(1, 1, 1); p.Material = (tex == "rots" or tex == "rand") and Enum.Material.Rock or Enum.Material.SmoothPlastic
+		local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex]; sa.Parent = p
+	elseif s then p.Color = s[1]; p.Material = mat(s[2]) else table.insert(onbekend, p.Name) end
 	p.CanCollide = BOTSING[key] == true
 	p.CanQuery = BOTSING[key] == true
 	if key == "water" then
@@ -46,6 +52,11 @@ for _, p in ipairs(m:GetChildren()) do
 		p.CFrame = p.CFrame + Vector3.new(0, 2.12 - p.Size.Y / 2 - p.Position.Y, 0)   -- spiegel net boven het maaiveld
 	end
 	p:SetAttribute("Groep", groep)
+end
+do   -- nieuwe Images pas zichtbaar na preload (WERKWIJZE)
+	local decs = {}
+	for _, id in pairs(TEX) do local d = Instance.new("Decal"); d.Texture = "rbxassetid://" .. id; table.insert(decs, d) end
+	pcall(function() game:GetService("ContentProvider"):PreloadAsync(decs) end)
 end
 m:SetAttribute("NekOmlaag", 5.55 * S)          -- slag: zichtbare nek 5.90 m uit -> 0.35 m in
 m:SetAttribute("OogStraal", 0.163 * S)         -- iris ligt 0.163 m voor het oogcentrum
@@ -103,6 +114,11 @@ local P = {   -- {bron, x, y, schaal}  (Blender-meters: +y = achter de figuur, +
 	{"taxus0", -5.6, 4.0, 3.0}, {"taxus1", 5.6, 4.6, 3.0}, {"taxus0", -1.6, 6.2, 3.2}, {"taxus1", 2.6, 6.0, 3.0},
 	{"rododendron0", -6.9, 1.2, 3.0}, {"rododendron1", 7.0, 1.8, 3.2}, {"rododendron1", -4.9, 6.4, 3.0}, {"rododendron0", 4.7, 6.8, 2.8},
 	{"eik0", -9.5, 11.5, 3.0}, {"beuk1", 9.0, 12.5, 3.0},
+	-- extra bos erachter (Daan: "meer bomen achter"; front.jpg: dicht naaldbos achter de rots)
+	{"den1", -7.0, 14.0, 3.3}, {"den0", 6.5, 15.0, 3.1}, {"den1", -1.5, 16.0, 3.5}, {"den0", 11.0, 9.0, 3.0}, {"den1", -11.5, 8.0, 3.2},
+	{"den0", 15.5, 13.0, 3.2}, {"den1", -16.0, 12.0, 3.2}, {"den0", 2.5, 13.5, 3.0}, {"den1", -4.0, 11.0, 2.8},
+	{"eik1", -14.0, 17.0, 3.0}, {"beuk0", 13.5, 17.0, 3.0}, {"kastanje0", 3.0, 20.0, 3.0}, {"berk0", -5.0, 20.0, 3.0}, {"beuk1", -10.0, 21.0, 3.0},
+	{"taxus1", -8.5, 5.5, 3.0}, {"taxus0", 8.5, 6.0, 3.0}, {"rododendron1", -9.0, 3.0, 3.0}, {"rododendron0", 9.5, 3.5, 3.0},
 }
 for _, e in ipairs(P) do zet(V3 and V3:FindFirstChild(e[1]), e[2], e[3], e[4]) end
 local varens = {}
@@ -119,4 +135,5 @@ local wind = game:GetService("StarterPlayer").StarterPlayerScripts:FindFirstChil
 if wind and not wind.Source:find("LangnekGroen") then
 	wind.Source = wind.Source:gsub('"VillaVoltaHorizon" }', '"VillaVoltaHorizon", "LangnekGroen" }', 1)
 end
-print("Langnek geplaatst:", #m:GetChildren(), "delen, kroos", kroosN, "rimpels", rimpelN, "groen", #groen:GetChildren(), "onbekend:", table.concat(onbekend, ", "))
+return string.format("%s %s", "Langnek geplaatst:", "") .. tostring(#m:GetChildren()) .. " delen, kroos " .. kroosN .. ", groen " .. #groen:GetChildren() .. ", onbekend: " .. table.concat(onbekend, ", ")
+--print("Langnek geplaatst:", #m:GetChildren(), "delen, kroos", kroosN, "rimpels", rimpelN, "groen", #groen:GetChildren(), "onbekend:", table.concat(onbekend, ", "))

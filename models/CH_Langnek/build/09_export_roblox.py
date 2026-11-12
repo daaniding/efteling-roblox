@@ -11,7 +11,22 @@ LIMIT = 9000
 CAPS = {"GEO_hoofd": 9000, "GEO_broek": 6000, "GEO_tuniek": 5000, "GEO_rok": 4000, "GEO_rots": 12000, "GEO_oor": 1400,
         "GEO_neus": 1200, "GEO_hekregel": 1500, "GEO_touw_ring": 1200, "GEO_hand": 1800, "GEO_cape": 4000}
 def cap_for(name):
+    if name.startswith("BAKE_"): return 10 ** 9      # gebakken meshes: al op budget in 04_bake, niet decimeren (UV/textuur)
     return next((v for k, v in CAPS.items() if name.startswith(k)), 3000)
+
+
+def knip(me, limit):
+    """te grote (gebakken) mesh in stukken <= limit driehoeken knippen; UV's blijven."""
+    bm = bmesh.new(); bm.from_mesh(me); bmesh.ops.triangulate(bm, faces=bm.faces); bm.faces.ensure_lookup_table()
+    n = len(bm.faces); stukken = []
+    for a in range(0, n, limit):
+        b2 = bm.copy(); b2.faces.ensure_lookup_table()
+        weg = [f for i, f in enumerate(b2.faces) if not (a <= i < a + limit)]
+        bmesh.ops.delete(b2, geom=weg, context="FACES")
+        m2 = bpy.data.meshes.new(me.name + "_k"); b2.to_mesh(m2); b2.free()
+        for mt in me.materials: m2.materials.append(mt)
+        stukken.append(m2)
+    bm.free(); return stukken
 bpy.ops.wm.open_mainfile(filepath=master)
 dg = bpy.context.evaluated_depsgraph_get()
 low = bpy.data.collections["LOW"]
@@ -51,9 +66,16 @@ for mname, meshes in groups.items():
         me = bpy.data.meshes.new(f"{mname}_{idx}"); bm.to_mesh(me); bm.free()
         ob = bpy.data.objects.new(f"{mname}_{idx}", me); exp.objects.link(ob); me.materials.append(bpy.data.materials[mname.split("__",1)[1]])
         for p in me.polygons: p.use_smooth = True
+        for e in me.edges: e.use_edge_sharp = False          # geen harde randen uit shade_smooth: gaven facetten in Roblox
+        if "sharp_edge" in me.attributes: me.attributes.remove(me.attributes["sharp_edge"])
         made.append((ob.name, len(me.polygons))); bm = bmesh.new(); tris = 0; idx += 1
     for me in meshes:
         t = sum(len(p.vertices) - 2 for p in me.polygons)
+        if t > LIMIT and me.uv_layers:   # gebakken mesh: knippen i.p.v. decimeren
+            for st in knip(me, LIMIT - 200):
+                if tris > 0: flush()
+                bm.from_mesh(st); tris = sum(len(p.vertices) - 2 for p in st.polygons); bpy.data.meshes.remove(st); flush()
+            bpy.data.meshes.remove(me); continue
         if t > LIMIT:   # te groot: decimeer dit deel apart
             tmpo = bpy.data.objects.new("_dec", me); bpy.context.scene.collection.objects.link(tmpo)
             d = tmpo.modifiers.new("Dec", "DECIMATE"); d.ratio = (LIMIT - 200) / t; d.use_collapse_triangulate = True

@@ -81,3 +81,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Beplanting: `ServerStorage.BomenBronV3` (den, taxus, rododendron, eik, beuk; ScaleTo x3) + `VVEchtePlanten` (varens); nieuwe map toevoegen
   aan `MAPPEN` in StarterPlayerScripts.Wind zodat hij meewiegt.
 - Let op bij tekstvervanging in scripts: een commentaar midden in een regel zette `smooth_obj(...)` uit (oogleden zonder materiaal).
+- Objecten draaien om hun EIGEN middelpunt: gefuseerde objecten hebben de oorsprong op (0,0,0); `rotation_euler` draait dan om de wereld
+  en het deel zweeft los (Langnek-oren). Gebruik `matrix_world = T(c) @ R @ T(-c) @ matrix_world`.
+- Gezicht beoordelen onder de fotohoek (`build/gezicht_review.sh`): een figuur hoog boven de bezoekers kijkt vaak omlaag (Langnek 25 graden).
+- Bake (`build/04_bake.py`, ~2.5 min): EMIT-bake van Studio-kleur x AO x variatie per groep; daarna export (knippen, niet decimeren) en
+  model + texturen opnieuw uploaden. Daan vindt de keten traag: bij kleine wijzigingen alleen de veranderde groep opnieuw bakken/uploaden.
+- Meer bomen achter een attractie: Daan wil een vol bos als achtergrond (Langnek: 57 planten in LangnekGroen).
