@@ -10,7 +10,7 @@ local M = {
  stuc={Color3.fromRGB(226,210,172),"Plaster"}, steen={Color3.fromRGB(204,196,173),"Limestone"}, wit={Color3.fromRGB(226,222,210),"Marble"},
  lei={Color3.fromRGB(62,64,72),"Slate"}, zink={Color3.fromRGB(120,127,133),"Metal"}, groen={Color3.fromRGB(20,51,38),"SmoothPlastic"},
  glas={Color3.fromRGB(16,20,26),"Glass"}, kozijn={Color3.fromRGB(237,237,230),"SmoothPlastic"}, letter={Color3.fromRGB(26,41,33),"Metal"},
- haag={Color3.fromRGB(34,64,28),"LeafyGrass"}, beuk={Color3.fromRGB(122,66,36),"LeafyGrass"}, buxus={Color3.fromRGB(42,86,34),"LeafyGrass"},
+ haag={Color3.fromRGB(34,64,28),"LeafyGrass"}, beuk={Color3.fromRGB(40,78,32),"LeafyGrass"}, buxus={Color3.fromRGB(42,86,34),"LeafyGrass"},
  grind={Color3.fromRGB(196,182,152),"Pebble"}, klinker={Color3.fromRGB(150,124,104),"Cobblestone"}, ijzer={Color3.fromRGB(18,36,26),"Metal"},
  bloem_rood={Color3.fromRGB(190,25,30),"SmoothPlastic"}, bloem_wit={Color3.fromRGB(235,232,220),"SmoothPlastic"}, bloem_paars={Color3.fromRGB(110,45,150),"SmoothPlastic"},
  aarde={Color3.fromRGB(70,48,32),"Ground"}, lamp={Color3.fromRGB(255,214,140),"Neon"}, bord={Color3.fromRGB(14,48,32),"SmoothPlastic"}, goud={Color3.fromRGB(200,160,72),"Metal"},
