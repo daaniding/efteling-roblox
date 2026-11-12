@@ -67,7 +67,9 @@ achterbouw x -9..6.85, y 18.5..31.2, 6.2 hoog. Hoogtes uit front.jpg (deur 3.0 m
 - Villa Volta buitenkant AF volgens Daan (12 nov): symmetrische tuin, echte plantscans, haag met diepte, CC0-texturen; zie roblox/README_studio.md.
 - Interieur komt pas als heel de Efteling staat (Daan). Plein (Ton van de Venplein) ook later. Nu: meer detail/realisme buiten.
 
-## Huidige stand (chat 5: Assepoester in aanbouw)
+## Huidige stand (einde chat 5)
+Villa Volta, Sprookjesboom, Langnek (statisch) en Assepoester (buitenkant + route) KLAAR. Aansluitingen (paden, hek naar de Kleyne Klaroen) komen
+met de paden van het Sprookjesbos. Volgende: zie 'Daarna'.
 
 ## Stand einde chat 3, 12 nov
 Villa Volta buitenkant KLAAR. **Sprookjesboom + scène KLAAR** (zie sectie hierboven en `models/PR_Sprookjesboom/`).
@@ -94,7 +96,7 @@ gesculpt, wijd open ogen, open grimas met dikke onderlip), cape met zware golven
 plooien in rok/mouwen/boven de riem. Figuur-asset **128729459556621** (lijf 138231693611234, hoofd 127597747578678, nek 96605081719069);
 in Studio alleen de delen met Groep body/head/neck/iris vervangen (export `--alleen BAKE_lijf,BAKE_hoofd,BAKE_nek,...`).
 
-## Assepoester (chat 5, 12 nov) — huis + tuin + route staan; interieur later
+## Assepoester (chat 5, 12 nov) — KLAAR (buitenkant, tuin, beloopbare route); interieur later
 Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`), BAG/OSM-footprint + omgeving (`ref/osm_lokaal.json`,
 `ref/osm_overzicht.png`, gemaakt met `build/01_osm_lokaal.py`), brief `asset-brief.md`. Primaire foto `ref/front.jpg` (= Assevoorgevel.jpg).
 - Gevel kijkt WEST (10.6 graden naar ZW gedraaid); main-ingang NW, uitgang ZW. Model: -Y = west, +X = zuid, y=0 = voorkant portiek.
@@ -133,7 +135,7 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
 ## Daarna (volgorde met Daan afgesproken)
-1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
+1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
 Kaatsheuvel eromheen: later.
 
