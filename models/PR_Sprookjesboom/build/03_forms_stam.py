@@ -154,8 +154,8 @@ def sculpt_face(ob):
         z = MOUTH_Z + 0.05 * q - 0.03 * (1 - q)            # bovenrand vlak, onderrand rond (D op zijn kant)
         npush(ob, (x, S(x, z), z), (0.08, 0.45, 0.10 - 0.05 * q), -0.36)
     npush(ob, (0, S(0, MOUTH_Z), MOUTH_Z), (0.22, 0.45, 0.08), -0.15)
-    npush(ob, (0, S(0, MOUTH_Z + 0.10), MOUTH_Z + 0.10), (0.30, 0.2, 0.045), 0.05)        # bovenlip-rol
-    npush(ob, (0, S(0, MOUTH_Z - 0.16), MOUTH_Z - 0.16), (0.32, 0.2, 0.08), 0.11)         # dikke onderlip-rol (front.jpg)
+    npush(ob, (0, S(0, MOUTH_Z + 0.12), MOUTH_Z + 0.12), (0.34, 0.2, 0.045), 0.05)        # bovenlip-rol
+    npush(ob, (0, S(0, MOUTH_Z - 0.21), MOUTH_Z - 0.21), (0.36, 0.2, 0.08), 0.11)         # dikke onderlip-rol (front.jpg)
     npush(ob, (0, S(0, MOUTH_Z - 0.38), MOUTH_Z - 0.38), (0.30, 0.2, 0.14), 0.06)         # kin
     npush(ob, (0, S(0, 1.10), 1.10), (0.22, 0.2, 0.05), -0.04)                              # kinplooi
     for n, phi, z, rin, rim in HOLES:
@@ -215,7 +215,7 @@ def bark(ob):
     plate_v = sm(edge / 0.06)                                                 # korte verticale scheurtjes
     plate = np.minimum(plate_h, plate_v)
     dome = 4 * fr * (1 - fr) * np.clip(edge / 0.4, 0, 1)
-    lipmask = np.exp(-((x / 0.34) ** 2 + ((z - MOUTH_Z) / 0.17) ** 2)) * face   # lippen en mondholte glad
+    lipmask = np.exp(-((x / 0.38) ** 2 + ((z - MOUTH_Z) / 0.21) ** 2)) * face   # lippen en mondholte glad
     depth = 0.022 * (1 - 0.35 * face) * (0.45 + 0.55 * w_trunk) * (1 - 0.85 * lipmask)
     d = depth * (plate * (0.55 + 0.25 * dome + 0.20 * hgt) - (1 - plate) * 1.0)
     d += 0.010 * n2 + 0.004 * n4                                              # bobbels
@@ -239,11 +239,12 @@ def carve(ob, bvh):
     sm = lambda a: (lambda c: c * c * (3 - 2 * c))(np.clip(a, 0, 1))
     # mond
     my = surf_y(bvh, 0, MOUTH_Z)
-    q = np.clip((x / 0.29) ** 2, 0, 1)
-    zt = MOUTH_Z + 0.05 + 0.035 * q
-    zb = MOUTH_Z + 0.05 - 0.17 * (1 - q) ** 0.8
-    inside_d = np.minimum.reduce([zt - z, z - zb, (1 - q) * 0.29])          # >0 binnen de D (meter, benadering)
-    front = (nr[:, 1] < -0.2) & (y < my + 0.12) & (np.abs(x) < 0.33)
+    MW = 0.33                                                              # halve mondbreedte (was 0.29)
+    q = np.clip((x / MW) ** 2, 0, 1)
+    zt = MOUTH_Z + 0.06 + 0.04 * q
+    zb = MOUTH_Z + 0.06 - 0.23 * (1 - q) ** 0.8                            # 0.23 open (was 0.17)
+    inside_d = np.minimum.reduce([zt - z, z - zb, (1 - q) * MW])          # >0 binnen de D (meter, benadering)
+    front = (nr[:, 1] < -0.2) & (y < my + 0.12) & (np.abs(x) < 0.37)
     w = sm(inside_d / 0.025) * front
     co[:, 1] += w * 0.26                                                      # naar achteren de stam in
     # gaten
@@ -355,8 +356,8 @@ def build(master, voxel):
     m_dark = material("MAT_hollow_dark", (0.04, 0.03, 0.025, 1), 0.95)
     # mond: donker D-vlak in de opening (zelfde D als carve), net achter de lippen
     lip_y = min(S(0, MOUTH_Z + 0.12), S(0, MOUTH_Z - 0.14))
-    D = [(x * 0.29, MOUTH_Z + 0.05 + 0.035 * x * x) for x in [i / 10 for i in range(-10, 11)]]
-    D += [(x * 0.29, MOUTH_Z + 0.05 - 0.17 * (1 - x * x) ** 0.8) for x in [i / 10 for i in range(9, -10, -1)]]
+    D = [(x * 0.33, MOUTH_Z + 0.06 + 0.04 * x * x) for x in [i / 10 for i in range(-10, 11)]]
+    D += [(x * 0.33, MOUTH_Z + 0.06 - 0.23 * (1 - x * x) ** 0.8) for x in [i / 10 for i in range(9, -10, -1)]]
     mo = profile_extrude("GEO_mouth_inside", [(px * 1.04, pz) for px, pz in D], 0.03, "HIGH", location=(0, lip_y + 0.13, 0),
                          rotation=(math.radians(90), 0, 0))
     assign(mo, m_dark)

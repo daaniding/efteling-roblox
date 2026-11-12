@@ -2,3 +2,10 @@ reference/data/tiles/
 .DS_Store
 node_modules/
 *.blend1
+textures/ambientcg/LeafSet016/*.blend
+textures/ambientcg/LeafSet016/*.usdc
+textures/ambientcg/LeafSet016/*.tres
+textures/ambientcg/LeafSet016/*.mtlx
+textures/ambientcg/LeafSet016/*Displacement.png
+textures/ambientcg/LeafSet016/*NormalDX.png
+textures/ambientcg/LeafSet016/LeafSet016.png

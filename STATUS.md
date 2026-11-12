@@ -105,6 +105,12 @@ Daan koos de Sprookjesboom. Alleen het object (boom, paddenstoelen, grond), nog 
   Stam opnieuw: LOW uit de gladde vorm (UV-eilanden waren piepklein -> facetten); boom **118901625021855**, kleur/normaal/ruw
   127707585326769 / 111187609029513 / 137929812036171. Geul-rand tot 2.5 m (gaten naast de geul) -> omgeving **131889710342801**;
   terrein binnen 16 m vlakgezet. Zwevende layout-labels weg bij alles wat gebouwd is (ook Gijs' "Papier hier!").
+- **Laatste ronde (Daan akkoord):** kruin met echte eikenbladeren (ambientCG LeafSet016, CC0 -> `build/10_eikentros.py`,
+  `textures/bomen/blad_eik_echt.png`, asset **82258445945378**); mond groter (0.66 breed, 0.23 open), boom **107268166721469**
+  (kleur/normaal/ruw 97601430192382 / 118677532818860 / 99526504446486). Prestatietest in Play: 32-34 fps met de boom in beeld; kleine stenen
+  en lage planten zonder schaduw -> 49/37 fps. Grootste kostenpost in de place: VillaVoltaPlantenEcht (~6000) + VillaVoltaHorizon (1548):
+  zonder die twee 60 fps. Aanrader: StreamingEnabled + LOD (nog niet gedaan, raakt scripts).
+- Later (Daan): water levendiger, geluid/show, paden in het park. Dieren zijn goed zo.
 - Open punten Sprookjesboom: mond iets kleiner dan foto; gat rechts leest als gleuf i.p.v. ronde ring; blad = netelvormige tros (echte eikentros
   renderen = Poly Haven-download, eerst vragen); gezicht staat in de kruinschaduw (zonnestand/licht); beekje met rotsige geul + wortels erover
   naar het pad, rododendrons erachter, (beek/plein/bankjes/planten staan nu); nog: tonderzwam-roeptoeter op de wortel, dieren (eekhoorn, specht), stoomtreinspoor achter de boom, reliëf van heel het Sprookjesbos in het terrein.

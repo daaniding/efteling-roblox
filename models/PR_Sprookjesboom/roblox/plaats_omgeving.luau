@@ -96,7 +96,7 @@ for _, r in ipairs(recs) do
     c.CFrame = CFrame.new(v.X, gy - diam * 0.15, v.Z) * CFrame.Angles(math.rad(math.random(-12, 12)), math.rad(r[5]), math.rad(math.random(-12, 12))) * CFrame.new(0, c.Size.Y / 2, 0)
     local PC = {[0] = Color3.fromRGB(178, 181, 186), Color3.fromRGB(158, 163, 173), Color3.fromRGB(189, 186, 181), Color3.fromRGB(143, 148, 158), Color3.fromRGB(199, 199, 201), Color3.fromRGB(168, 168, 168)}
     c.Color = (PC[r[1]] or PC[0]):Lerp(Color3.fromRGB(96, 100, 106), math.random() * 0.35):Lerp(Color3.fromRGB(110, 112, 114), 0.25)     -- lichte blauwgrijze breuksteen, wisselend
-    c.Material = Enum.Material.Rock; c.CanCollide = (r[6] == 2); c.CanTouch = false; c.Parent = fs
+    c.Material = Enum.Material.Rock; c.CanCollide = (r[6] == 2); c.CanTouch = false; c.CastShadow = c.Size.Magnitude >= 3; c.Parent = fs   -- kleine stenen geen schaduw (prestaties: +17 fps)
   end
 end
 fs.Parent = workspace; proto:Destroy(); task.wait()
@@ -117,9 +117,10 @@ for _, r in ipairs(recs) do
       c:ScaleTo(c:GetScale() * r[4])
       local cf, size = c:GetBoundingBox(); local off = c:GetPivot().Y - (cf.Y - size.Y / 2)
       c:PivotTo(CFrame.new(v.X, gy + off - 0.1, v.Z) * CFrame.Angles(0, math.rad(r[5]), 0))
-      for _, d in ipairs(c:GetDescendants()) do if d:IsA("BasePart") then d.Anchored = true; d.CanCollide = false; d.CanTouch = false end end
+      local laag = not (r[1] == 0 or r[1] == 1)          -- alleen rododendron/taxus werpen schaduw
+      for _, d in ipairs(c:GetDescendants()) do if d:IsA("BasePart") then d.Anchored = true; d.CanCollide = false; d.CanTouch = false; if laag then d.CastShadow = false end end end
     else
-      c.Size = c.Size * r[4]; c.Anchored = true; c.CanCollide = false; c.CanTouch = false
+      c.Size = c.Size * r[4]; c.Anchored = true; c.CanCollide = false; c.CanTouch = false; c.CastShadow = false
       c.CFrame = CFrame.new(v.X, gy + c.Size.Y / 2 - 0.08, v.Z) * CFrame.Angles(0, math.rad(r[5]), 0)
     end
     c.Parent = batch; np += 1

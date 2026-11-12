@@ -1,7 +1,7 @@
 -- Sprookjesboom + paddenstoelen plaatsen (gegenereerd door maak_plaatsscript.py uit plaats_template.luau).
 -- Blender-oorsprong = stamhart op maaiveld; gezicht kijkt naar het zuiden (+Z). OSM (40.48, 198.19) m -> studs (121.44, -594.57).
 -- Import geeft Blender (x,y,z) als (-x,z,y)*S; 180 graden draaien zet het gezicht op het zuiden. Grond Y = 2 (vlak terrein; AHN-reliëf later).
-local ID = {boom = 118901625021855, klein = 125821121621263, muziek = 76565275730007, stam_kleur = 127707585326769, stam_normaal = 111187609029513, stam_ruw = 137929812036171, schors = 99288067092575, blad = 136241132523803}
+local ID = {boom = 107268166721469, klein = 125821121621263, muziek = 76565275730007, stam_kleur = 97601430192382, stam_normaal = 118677532818860, stam_ruw = 99526504446486, schors = 99288067092575, blad = 82258445945378}
 local S = 3
 local GROUND = 1.95
 local ORIGIN = CFrame.new(121.44, GROUND, -594.57) * CFrame.Angles(0, math.pi, 0)
