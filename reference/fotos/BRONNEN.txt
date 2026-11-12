@@ -288,3 +288,17 @@ reference/fotos/Huis_van_de_Vijf_Zintuigen/9.jpg | File:Efteling Huis van de Vij
 reference/fotos/Huis_van_de_Vijf_Zintuigen/10.jpg | File:Efteling Huis van de Vijf Zintuigen (45268565242).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
 reference/fotos/Huis_van_de_Vijf_Zintuigen/11.jpg | File:Efteling Huis van de Vijf Zintuigen (45268567142).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
 reference/fotos/Huis_van_de_Vijf_Zintuigen/12.jpg | File:Efteling Huis van de Vijf Zintuigen (45268569252).jpg | CC BY-SA 2.0 | Martin Lewison from Forest Hills, NY, U.S.A.
+reference/fotos/Holle_Bolle_Gijs/1.jpg | File:Boekanier Gijs Ruigrijk.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/2.jpg | File:Broeder Gijs (2024).jpg | CC BY-SA 4.0 | S. Perquin
+reference/fotos/Holle_Bolle_Gijs/3.jpg | File:Broeder Gijs (2025).jpg | CC BY-SA 4.0 | S. Perquin
+reference/fotos/Holle_Bolle_Gijs/4.jpg | File:Eft HolleBolleGijs 01.jpg | Public domain | No machine-readable author provided. Olivier Bost assumed (based on copyright claims).
+reference/fotos/Holle_Bolle_Gijs/5.jpg | File:Efteling - Holle Bolle Gijs.jpg | CC BY 2.5 | No machine-readable author provided. Hullie assumed (based on copyright claims).
+reference/fotos/Holle_Bolle_Gijs/6.jpg | File:Efteling - Holle Bolle Gijs - Baby Gijsje.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/7.jpg | File:Efteling - Holle Bolle Gijs - Inca Gijs.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/8.jpg | File:Efteling - Holle Bolle Gijs - Kapitein Gijs.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/9.jpg | File:Efteling - Holle Bolle Gijs - Moeder Gijs.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/10.jpg | File:Efteling - Holle Bolle Gijs - Nijltje in het Teiltje.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/11.jpg | File:Efteling - Holle Bolle Gijs - Opa Gijs.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/12.jpg | File:Efteling - Holle Bolle Gijs - Tiroler Gijs.jpg | CC BY-SA 4.0 | Eliedion
+reference/fotos/Holle_Bolle_Gijs/13.jpg | File:Efteling - Holle Bolle Gijs - Versje.jpg | CC BY 2.5 | No machine-readable author provided. Hullie assumed (based on copyright claims).
+reference/fotos/Holle_Bolle_Gijs/14.jpg | File:Efteling De Tentoonstelling 10.jpg | CC BY-SA 4.0 | Mw007

@@ -1,0 +1,92 @@
+{
+  "blend": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/CH_HolleBolleGijs_master.blend",
+  "mode": "clay",
+  "engine": "workbench",
+  "bbox_min": [
+    -1.7799999713897705,
+    -0.9800273776054382,
+    -0.1899999976158142
+  ],
+  "bbox_max": [
+    1.7799999713897705,
+    0.800000011920929,
+    3.619999885559082
+  ],
+  "size_xyz": [
+    3.559999942779541,
+    1.7800273895263672,
+    3.809999942779541
+  ],
+  "objects": [
+    "BLK_plateau",
+    "BLK_pillar.L",
+    "BLK_cap.L",
+    "BLK_wall.L",
+    "BLK_pillar.R",
+    "BLK_cap.R",
+    "BLK_wall.R",
+    "BLK_house",
+    "BLK_roof.L",
+    "BLK_roof.R",
+    "BLK_door",
+    "BLK_counter",
+    "BLK_sign",
+    "BLK_skull",
+    "BLK_cheek.L",
+    "BLK_cheek.R",
+    "BLK_jowl",
+    "BLK_hair",
+    "BLK_mouth_ring",
+    "BLK_mouth_hole",
+    "BLK_nose",
+    "BLK_eye.L",
+    "BLK_eye.R",
+    "BLK_ear.L",
+    "BLK_ear.R",
+    "BLK_torso",
+    "BLK_arm.L",
+    "BLK_hand.L",
+    "BLK_arm.R",
+    "BLK_hand.R",
+    "REF_ruler_3.62m",
+    "REF_tick_1m",
+    "REF_tick_2m",
+    "REF_tick_3m",
+    "REF_cell_1.0m",
+    "REF_door_1.0x2.2",
+    "REF_capsule_r0.35_h1.80"
+  ],
+  "renders": {
+    "front": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/02_blockout/clay_front.png",
+      "az_el_lens": [
+        0,
+        0,
+        0
+      ],
+      "distance": 8.510013225340586
+    },
+    "threequarter": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/02_blockout/clay_threequarter.png",
+      "az_el_lens": [
+        35,
+        15,
+        50
+      ],
+      "distance": 8.522291131731535
+    },
+    "ref": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/02_blockout/clay_ref.png",
+      "az_el_lens": [
+        0.0,
+        5.0,
+        35.0
+      ],
+      "distance": 5.13763174528463
+    },
+    "gameplay": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/02_blockout/clay_gameplay_200px.png",
+      "subject_px": 200
+    }
+  }
+}

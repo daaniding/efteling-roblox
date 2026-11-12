@@ -1,0 +1,86 @@
+{
+  "blend": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/CH_HolleBolleGijs_master.blend",
+  "mode": "material",
+  "engine": "cycles",
+  "bbox_min": [
+    -1.7799999713897705,
+    -0.982724666595459,
+    -0.1899999976158142
+  ],
+  "bbox_max": [
+    1.7799999713897705,
+    1.095273733139038,
+    3.2090022563934326
+  ],
+  "size_xyz": [
+    3.559999942779541,
+    2.077998399734497,
+    3.3990023136138916
+  ],
+  "objects": [
+    "GEO_plateau_core",
+    "GEO_tiles_white",
+    "GEO_tiles_black",
+    "GEO_pillar_core.L",
+    "GEO_cap.L",
+    "GEO_wall_core.L",
+    "GEO_pillar_core.R",
+    "GEO_cap.R",
+    "GEO_wall_core.R",
+    "GEO_bricks_brick_a",
+    "GEO_bricks_brick_b",
+    "GEO_bricks_brick_c",
+    "GEO_house",
+    "GEO_niche_back",
+    "GEO_roof_deck.L",
+    "GEO_fascia.L",
+    "GEO_roof_deck.R",
+    "GEO_fascia.R",
+    "GEO_tiles_red",
+    "GEO_tiles_grey",
+    "GEO_ridge",
+    "GEO_door_planks",
+    "GEO_door_strap",
+    "GEO_bolt_0",
+    "GEO_bolt_1",
+    "GEO_bolt_2",
+    "GEO_bolt_3",
+    "GEO_bolt_4",
+    "GEO_counter",
+    "GEO_sign",
+    "GEO_sign_text"
+  ],
+  "renders": {
+    "front": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/03a_building/material_front.png",
+      "az_el_lens": [
+        0,
+        0,
+        0
+      ],
+      "distance": 8.15899908542633
+    },
+    "threequarter": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/03a_building/material_threequarter.png",
+      "az_el_lens": [
+        35,
+        15,
+        50
+      ],
+      "distance": 8.160176942745842
+    },
+    "ref": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/03a_building/material_ref.png",
+      "az_el_lens": [
+        0.0,
+        5.0,
+        35.0
+      ],
+      "distance": 5.163444500830439
+    },
+    "gameplay": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-bb3e02/models/CH_HolleBolleGijs/review/03a_building/material_gameplay_200px.png",
+      "subject_px": 200
+    }
+  }
+}
