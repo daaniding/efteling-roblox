@@ -24,6 +24,14 @@ for o in low.all_objects:
     if len(me.polygons) == 0:
         bpy.data.meshes.remove(me); continue
     me.transform(o.matrix_world)
+    # UV's: kubusprojectie in wereldmeters (1 UV = 2 m), zodat Roblox-materialen op MeshParts goed tegelen
+    _b = bmesh.new(); _b.from_mesh(me); _uv = _b.loops.layers.uv.verify()
+    for _f in _b.faces:
+        _n = _f.normal; _ax = max(range(3), key=lambda i: abs(_n[i]))
+        for _l in _f.loops:
+            _c = _l.vert.co; _u, _v = [(_c.y, _c.z), (_c.x, _c.z), (_c.x, _c.y)][_ax]
+            _l[_uv].uv = (_u / 2.0, _v / 2.0)
+    _b.to_mesh(me); _b.free()
     mname = (o.data.materials[0].name if o.data.materials and o.data.materials[0] else "MAT_plaster")
     groups[(o.get("anim") or "static") + "__" + mname].append(me)
 am = bpy.data.materials.get("MAT_anker") or bpy.data.materials.new("MAT_anker")

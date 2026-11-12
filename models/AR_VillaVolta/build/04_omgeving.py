@@ -45,8 +45,13 @@ def rail(p,q,h=1.0,posts=True):
             put("hekken","ijzer",blathe([(0,0),(0.06,0),(0.06,0.05),(0.035,0.08),(0.035,h-0.02),(0.05,h),(0.04,h+0.06),(0.015,h+0.1),(0,h+0.12)],8),TR(x,y,0))
     mx,my=(p[0]+q[0])/2,(p[1]+q[1])/2; coll(mx,my,h/2,L,0.12,h,a)
 def lantern_head(x,y,z,s=1.0):
-    put("lantaarns","ijzer",blathe([(0,0),(0.09*s,0),(0.13*s,0.06*s),(0.15*s,0.36*s),(0.2*s,0.4*s),(0.12*s,0.5*s),(0.03*s,0.58*s),(0.02*s,0.66*s),(0,0.68*s)],6),TR(x,y,z))
-    put("lantaarns","lamp",blathe([(0,0.07*s),(0.12*s,0.08*s),(0.135*s,0.36*s),(0,0.37*s)],6),TR(x,y,z))
+    """open lantaarn: glas zichtbaar tussen vier stijltjes (eerder zat het glas binnen een dichte kap)"""
+    put("lantaarns","ijzer",blathe([(0,0),(0.06*s,0),(0.1*s,0.04*s),(0.13*s,0.06*s),(0.13*s,0.08*s),(0,0.08*s)],8),TR(x,y,z))
+    for k in range(4):
+        a=math.radians(45+90*k); r=0.13*s
+        put("lantaarns","ijzer",btube([(x+r*math.cos(a),y+r*math.sin(a),z+0.07*s),(x+r*1.15*math.cos(a),y+r*1.15*math.sin(a),z+0.37*s)],0.012*s,4))
+    put("lantaarns","lamp",blathe([(0,0.08*s),(0.1*s,0.08*s),(0.125*s,0.36*s),(0,0.36*s)],8),TR(x,y,z))
+    put("lantaarns","ijzer",blathe([(0,0.36*s),(0.19*s,0.36*s),(0.19*s,0.39*s),(0.11*s,0.48*s),(0.04*s,0.55*s),(0.03*s,0.6*s),(0.05*s,0.64*s),(0,0.7*s)],8),TR(x,y,z))
 LAMPS=[]
 def lamppost(x,y):
     put("lantaarns","ijzer",blathe([(0,0),(0.2,0),(0.2,0.12),(0.14,0.2),(0.12,0.45),(0.07,0.6),(0.06,2.2),(0.08,2.3),(0.05,2.4),(0,2.4)],10),TR(x,y,0))
@@ -246,6 +251,23 @@ def build(master):
     # buitenpad (rolstoel/single rider) langs de oostkant met haag, komt aan de noordkant de galerij in
     path("klinkerrood",[(CX1+0.5,1.6),(GE+1.0,2.4),(GE+1.0,29.3),(GE-0.5,29.3)],1.2)
     strip("hagen","haag",[(CX1+1.4,1.4),(GE+2.1,2.6),(GE+2.1,GY1+0.4),(GE+0.3,GY1+0.4)],0.6,1.4,ch=0.15)
+    # ---------------- paden: samengevoegde vlakken + opsluitbanden (exports/paden_poly.json) ----------------
+    MATS.update({"plein":((0.62,0.50,0.42,1),0.9),"band":((0.70,0.69,0.66,1),0.85)})
+    for n_,(c_,r_) in MATS.items(): material("MAT_"+n_,c_,r_)
+    PP=json.load(open(os.path.join(HERE,"..","exports","paden_poly.json")))
+    def slab(poly,zt,mat):
+        bm=bmesh.new(); edges=[]
+        for ring in [poly["ext"]]+poly["holes"]:
+            vs=[bm.verts.new((x,y,zt)) for x,y in ring]
+            edges+=[bm.edges.new((vs[i],vs[(i+1)%len(vs)])) for i in range(len(vs))]
+        bmesh.ops.triangle_fill(bm,use_beauty=True,use_dissolve=False,edges=edges)
+        bnd=[e for e in bm.edges if e.is_boundary]
+        r=bmesh.ops.extrude_edge_only(bm,edges=bnd)
+        bmesh.ops.translate(bm,vec=(0,0,-zt-0.05),verts=[g for g in r["geom"] if isinstance(g,bmesh.types.BMVert)])
+        bmesh.ops.recalc_face_normals(bm,faces=bm.faces)
+        put("paden",mat,bm)
+    for m_,zt in (("grind",0.05),("klinker",0.05),("klinkerrood",0.05),("plein",0.05),("band",0.075)):
+        for poly in PP[m_]: slab(poly,zt,m_)
     # ---------------- objecten ----------------
     n=0; tris=0
     for (part,mat),bm in PARTS.items():
