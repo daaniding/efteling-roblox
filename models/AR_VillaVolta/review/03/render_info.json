@@ -1,0 +1,65 @@
+{
+  "blend": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/AR_VillaVolta/AR_VillaVolta_master.blend",
+  "mode": "material",
+  "engine": "cycles",
+  "bbox_min": [
+    -8.680000305175781,
+    -6.439999580383301,
+    0.0
+  ],
+  "bbox_max": [
+    8.680000305175781,
+    10.359999656677246,
+    12.81662654876709
+  ],
+  "size_xyz": [
+    17.360000610351562,
+    16.799999237060547,
+    12.81662654876709
+  ],
+  "objects": [
+    "VV_muren__stuc",
+    "VV_terras__steen",
+    "VV_trap__steen",
+    "VV_borstwering__steen",
+    "VV_vazen__wit",
+    "VV_sokkel__steen",
+    "VV_lijsten__steen",
+    "VV_hoekblokken__steen",
+    "VV_pilasters__steen",
+    "VV_ramen_glas__glas",
+    "VV_ramen_kozijn__kozijn",
+    "VV_omlijsting__steen",
+    "VV_deur__groen",
+    "VV_deur_glas__glas",
+    "VV_deur_roeden__kozijn",
+    "VV_deur_omlijsting__steen",
+    "VV_vazen__steen",
+    "VV_ornament__steen",
+    "VV_zuilen__steen",
+    "VV_balkon__steen",
+    "VV_balkon_balustrade__wit",
+    "VV_opschrift__steen",
+    "VV_letters__letter",
+    "VV_hoofdgestel__steen",
+    "VV_daken__lei",
+    "VV_dak_lood__zink",
+    "VV_dak_vazen__steen",
+    "VV_dakkapel_v__stuc",
+    "VV_dakkapel_v__steen",
+    "VV_dakkapel__stuc",
+    "VV_dakkapel__steen",
+    "VV_beeld__wit"
+  ],
+  "renders": {
+    "threequarter": {
+      "file": "/Users/daaniding/Library/Application Support/Claude/scratch-workspaces/98e8cb74-bf53-425f-9872-a1db9a0405d6/9a0b2699-93ed-49f2-9a07-364d6466ae8d/scratch-2026-11-12-2c1f2f/efteling-roblox/models/AR_VillaVolta/review/03/material_threequarter.png",
+      "az_el_lens": [
+        35,
+        15,
+        50
+      ],
+      "distance": 41.60023868542377
+    }
+  }
+}

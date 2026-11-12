@@ -44,12 +44,16 @@ Het park is in 1 minuut terug: `park/park_raster.py` → ServerStorage.ParkBuild
 Mond groter/natuurlijker, blos minder als schijfjes, den-achtige krullen oké; figuur op het dak + lantaarn + gotisch bord ontbreken;
 geluid "Papier hier!" ontbreekt (Sound-objecten SndRoep/SndEet staan klaar in MouthHole).
 
-## Villa Volta (bezig)
-`models/AR_VillaVolta/`: brief geschreven, master gekalibreerd op `ref/front.jpg` (37 px/m via deurhoogte 3,0 m),
-blokkering `build/02_blockout.py` gebouwd (36 objecten), vergelijkingsblad `review/02/compare.png` NOG NIET BEKEKEN.
-Volgende stap: compare bekijken (verkleind), verhoudingen corrigeren, dan `03_forms.py`: rustica-hoekblokken, kroonlijst,
-zuilen met kapitelen, balustrades met balusters, mansardedak met leien, dakkapel met fronton, beeld, deurornament, ramen met luiken,
-siervazen, opschrift als 3D-tekst. Daarna export (per materiaal) → upload → Studio op OSM-positie Villa Volta (125.6, 350.8 m) → studs (377, 0, −1052).
+## Villa Volta (v1 in Studio)
+`models/AR_VillaVolta/`: blokkering gecorrigeerd op front.jpg (`review/02b/overlay_edges.png`: randen van de render op de foto,
+37 px/m, terrasvloer y507). Vormen in `build/03_forms.py` (collectie FORMS, 33 onderdelen, ~33k driehoeken): rustica-hoekblokken,
+sokkel, cordonlijst, hoofdgestel met tandlijst, ionische zuilen met voluten, balkon op consoles met balusters en vazen,
+opschrift VILLA VOLTA als 3D-tekst, rondboogdeur met glas/roeden, pijlers met vazen, schelp-cartouche, ramen met omlijsting/fronton/oren
+(zijgevels inferred), mansardedaken met loodslabben en pinakels, dakkapel met gebogen fronton en cartouche, beeld, terras met trappen,
+borstwering en vazen, hal erachter (eenvoudig, inferred).
+Export `build/09_export_roblox.py` -> `exports/AR_VillaVolta.fbx` -> **asset 100590688288228**. In Studio als `Workspace.VillaVolta`
+(ScaleTo 3, gevel naar noord/−Z, achterkant op OSM y=334 → Z=−1002, midden X=376.8). Materialen per naam MAT_*.
+Nog te doen: texturen (stuc met vlekken, leien), lantaarns, hal mooier, interieur (kantelende kamer) later.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta afmaken. 2. Sprookjesboom + paddenstoelen, Langnek. 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
