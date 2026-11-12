@@ -178,7 +178,8 @@ for gname, filt, res in GROUPS:
         for v in bm.verts: hc += v.co; cnt += 1
         hc /= max(1, cnt)
         nose = min(bm.verts, key=lambda v: v.co.y).co.copy()       # verste punt naar voren = neuspunt
-        blush_weights(bm, [(nose, 0.28, 0.75), (nose + Vector((-0.36, 0.25, 0.0)), 0.26, 0.45), (nose + Vector((0.36, 0.25, 0.0)), 0.26, 0.45)])
+        blush_weights(bm, [(nose, 0.26, 0.7), (nose + Vector((-0.36, 0.25, 0.0)), 0.26, 0.45), (nose + Vector((0.36, 0.25, 0.0)), 0.26, 0.45),
+                           (nose + Vector((0, 0.13, -0.27)), 0.17, 0.6)])     # lippen (nu mee in de huid gesculpt)
     me = bpy.data.meshes.new("BAKE_" + gname); bm.to_mesh(me); bm.free()
     ob = bpy.data.objects.new("BAKE_" + gname, me); bakecol.objects.link(ob)
     ob["anim"] = {"lijf": "body", "hoofd": "head", "nek": "neck"}.get(gname, "static")

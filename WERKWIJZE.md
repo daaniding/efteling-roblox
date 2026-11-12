@@ -96,3 +96,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Langnek v4: echte attracties in het Sprookjesbos staan in DICHT bos (struiken + ondergroei tot aan het water), paden zijn er kort.
   Bos procedureel in ringen met tussenafstanden per soort (struiken mogen onder bomen); kleine planten CastShadow uit = +6 fps.
 - Snelle deel-export: `09_export_roblox.py --alleen <naam-begin,...>` + losse asset, in Studio alleen die delen vervangen (geen bake nodig).
+- Gezicht realistischer: oogleden, wallen, neus en lippen als ellipsoiden MEE fuseren in de hoofdmassa en daarna openingen uitgraven
+  (push met direction); losse buisjes/ringen ogen cartoon. Te zware bovenleden = boze blik: leden hoog genoeg, ruime oogopening.
+- Plooien: per ring van de loft duwen met kleine sterkte (doorlopend); om de ring duwen met grote sterkte geeft een kralenketting.

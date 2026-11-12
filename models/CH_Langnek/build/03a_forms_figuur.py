@@ -19,7 +19,7 @@ random.seed(52)
 
 # ---- constanten (zelfde als 02_blockout, overlay front.jpg) --------------------------------------
 SEAT_Z = 2.85; FOOT_Z = 2.05; BELT_Z = 4.05; CAPE_LOW_Z = 4.70; SHOULDER_Z = 5.55; COLLAR_TOP = 5.85
-NECK_D = 0.38; NECK_OUT = 5.90
+NECK_D = 0.38; NECK_OUT = 4.80   # Eftepedia: nek 4.8 m (Daan: zoals in het echt)
 HEAD_H = 1.60; HEAD_W = 1.30
 KNEE_X = 2.30; KNEE_Z = 3.40; FOOT_X = 1.60
 HAND_X = 2.25; HAND_Z = 2.95
@@ -151,15 +151,19 @@ def build(master):
     rok = loft("GEO_rok", secs, L, cap_ends=False)
     sol = rok.modifiers.new("Dik", "SOLIDIFY"); sol.thickness = 0.04; sol.offset = 1
     sub = rok.modifiers.new("Sub", "SUBSURF"); sub.levels = 1; apply_all_modifiers(rok)
-    for i in range(18):                                     # plooien vanaf de zoom
-        t = i * 2 * math.pi / 18
-        hp = secs[K][int(i * NT / 18)]
-        push(rok, hp, 0.22, 0.03 if i % 2 else -0.03)
+    for i in range(16):                                     # diepe plooien van riem tot zoom (front.jpg)
+        idx = int(i * NT / 16)
+        for k in range(2, K + 1):                           # elke ring: doorlopende plooi i.p.v. losse bobbels
+            push(rok, secs[k][idx], 0.12 + 0.006 * k, 0.022 if i % 2 else -0.022)
     smooth_obj(rok, m_tun, 60)
     bt = bvh_of(tun)
     band("GEO_riem", bt, (0, Y - 0.05, BELT_Z), 0.17, 0.045, 48, m_riem)
     hit = bt.ray_cast(Vector((0, -3, BELT_Z)), Vector((0, 1, 0)), 6)[0]
     g = box("GEO_gesp", (0.22, 0.06, 0.22), L, hit + Vector((0, -0.05, 0))); assign(g, m_gesp)
+    for k in range(9):                                       # stof plooit boven de strakke riem
+        for z in (BELT_Z + 0.16, BELT_Z + 0.26):
+            hp = bt.ray_cast(Vector((-0.64 + k * 0.16, -3, z + 0.03 * math.sin(k * 1.9))), Vector((0, 1, 0)), 6)[0]
+            if hp is not None: push(tun, hp, 0.09, -0.010 if (k + int(z * 10)) % 2 else 0.008)
     g2 = box("GEO_gesp_gat", (0.13, 0.07, 0.11), L, hit + Vector((0, -0.065, 0))); assign(g2, m_riem)
     for k, z in enumerate((4.25, 4.43, 4.60)):              # knopen tussen riem en cape
         hp = bt.ray_cast(Vector((0, -3, z)), Vector((0, 1, 0)), 6)[0]
@@ -171,6 +175,10 @@ def build(master):
         sh = (s * 0.92, Y + 0.10, 5.22, 0.31); el = (s * 1.30, Y + 0.32, 4.15, 0.25); wr = (s * 2.02, Y + 0.12, HAND_Z + 0.20, 0.19)
         mouw = skin_chain("GEO_mouw" + side, [sh, el, wr], collection=L, subdiv=2); apply_all_modifiers(mouw)
         push(mouw, el[:3], 0.25, 0.03)
+        e_, w_ = Vector(el[:3]), Vector(wr[:3])
+        for k in (-1, 0, 1):                                 # plooien in de elleboogholte en boven de pols
+            push(mouw, e_ + Vector((0, -0.20, 0.13 * k)), 0.08, -0.035)
+            push(mouw, e_.lerp(w_, 0.78) + Vector((0.07 * k, -0.12, 0.06 * k)), 0.07, -0.03)
         smooth_obj(mouw, m_tun)
         cuff = cylinder("GEO_manchet" + side, 0.22, 0.12, L, segments=24, location=Vector(wr[:3]))
         cuff.rotation_mode = "QUATERNION"; cuff.rotation_quaternion = Vector((0, 0, 1)).rotation_difference(Vector(wr[:3]) - Vector(el[:3]))
@@ -222,18 +230,19 @@ def build(master):
         ring = []
         for i in range(48):
             t = i * 2 * math.pi / 48
-            zz = z + (0.05 * math.sin(7 * t) if zi == len(prof) - 1 else 0)
+            zz = z + (0.09 * math.sin(8 * t) if zi == len(prof) - 1 else 0)
             front_dip = -0.06 * max(0, -math.sin(t)) ** 4 if zi == len(prof) - 1 else 0
             ring.append(Vector((a * math.cos(t), CY + b * math.sin(t), zz + front_dip)))
         secs.append(ring)
     cape = loft("GEO_cape", secs, L, cap_ends=False)
     sol = cape.modifiers.new("Dik", "SOLIDIFY"); sol.thickness = 0.05; sol.offset = 1
     sub = cape.modifiers.new("Sub", "SUBSURF"); sub.levels = 1; apply_all_modifiers(cape)
-    for i in range(14):                                      # plooien in de cape
-        t = i * 2 * math.pi / 14
-        push(cape, (1.35 * math.cos(t), CY + 0.88 * math.sin(t), 4.85), 0.16, 0.035 if i % 2 else -0.03)
+    for i in range(16):                                      # lange, diepe plooien van schouder naar zoom (front.jpg)
+        t = i * 2 * math.pi / 16 + 0.1 * math.sin(i * 1.7)
+        for zz, a, b in ((5.28, 1.18, 0.77), (5.12, 1.30, 0.84), (4.96, 1.36, 0.87), (4.80, 1.39, 0.89)):
+            push(cape, (a * math.cos(t), CY + b * math.sin(t), zz), 0.14, 0.05 if i % 2 else -0.05)
     smooth_obj(cape, m_cape, 60)
-    kraag = profile_spin("GEO_kraag", [(0.38, 5.50), (0.42, 5.62), (0.44, 5.80), (0.47, 5.93), (0.50, 5.97), (0.48, 6.00), (0.43, 5.96), (0.40, 5.85), (0.36, 5.55)], L, steps=40, location=(0, CY, 0))
+    kraag = profile_spin("GEO_kraag", [(0.38, 5.50), (0.44, 5.62), (0.47, 5.82), (0.54, 5.95), (0.59, 5.99), (0.57, 6.05), (0.49, 6.02), (0.43, 5.90), (0.37, 5.55)], L, steps=40, location=(0, CY, 0))   # dikke omgeslagen kraag
     smooth_obj(kraag, m_cape, 50)
     binnen = cylinder("GEO_kraag_binnen", 0.40, 0.04, L, segments=32, location=(0, CY, 5.80)); assign(binnen, m_dark)
     # touw: om de kraagvoet, knoop voor, twee hangende einden met knoopjes
@@ -253,8 +262,12 @@ def build(master):
     nek = cylinder("GEO_nek", NECK_D / 2, neck_len, L, segments=28, location=(0, CY, (COLLAR_TOP - 0.75) + neck_len / 2), radius_top=NECK_D / 2 * 0.95)
     smooth_obj(nek, m_skin, 40); nek["anim"] = "neck"
 
-    # ================= hoofd (v2: naar de foto-uitsnede van front.jpg en Winterlangnek.jpg)
+    # ================= hoofd (v3: minder cartoon; oogleden, wallen, neus en lippen mee in de huid gesculpt, front.jpg)
     FY = CY - 0.50                                           # voorkant gezicht
+    ER_ = 0.18                                               # oogbol (v2 0.20 te cartoon, 0.165 te klein)
+    EC = {-1: Vector((-0.26, FY + 0.0, HC + 0.12)), 1: Vector((0.26, FY + 0.0, HC + 0.12))}
+    MZ = HC - 0.43
+    def mz(x): return MZ - 1.7 * x * x                      # sterk hangende mondhoeken
     parts = [
         ell("P_schedel", (0, CY + 0.05, HC + 0.18), (0.62, 0.58, 0.62), 32, 16),
         ell("P_gezicht", (0, CY - 0.08, HC - 0.20), (0.56, 0.45, 0.48), 32, 16),
@@ -265,60 +278,48 @@ def build(master):
         ell("P_kaakhoek.L", (-0.38, CY - 0.05, HC - 0.52), (0.14, 0.22, 0.14)),
         ell("P_kaakhoek.R", (0.38, CY - 0.05, HC - 0.52), (0.14, 0.22, 0.14)),
         ell("P_kin", (0, CY - 0.30, HC - 0.68), (0.20, 0.14, 0.12)),
-        ell("P_bovenlip", (0, CY - 0.43, HC - 0.36), (0.30, 0.10, 0.09)),
+        ell("P_bovenlip", (0, CY - 0.44, MZ + 0.06), (0.30, 0.10, 0.08)),
+        ell("P_onderlip", (0, CY - 0.48, MZ - 0.23), (0.28, 0.12, 0.09)),     # dikke, vooruitstekende onderlip (grimas)
+        ell("P_neusrug", (0, FY - 0.04, HC + 0.03), (0.085, 0.10, 0.19)),
+        ell("P_neuspunt", (0, FY - 0.15, HC - 0.12), (0.125, 0.13, 0.115)),
+        ell("P_neusvleugel.L", (-0.11, FY - 0.06, HC - 0.17), (0.075, 0.075, 0.065)),
+        ell("P_neusvleugel.R", (0.11, FY - 0.06, HC - 0.17), (0.075, 0.075, 0.065)),
     ]
-    head = fused("GEO_hoofd", parts, 0.014, 14)
+    for s_ in (-1, 1):                                       # zware oogleden en wallen rond de ogen (de "bril" op front.jpg)
+        parts.append(ell("P_bovenlid%d" % s_, EC[s_] + Vector((0, -0.01, 0.16)), (0.22, 0.15, 0.09)))
+        parts.append(ell("P_onderlid%d" % s_, EC[s_] + Vector((0, -0.01, -0.17)), (0.21, 0.13, 0.08)))
+    head = fused("GEO_hoofd", parts, 0.012, 10)
     def lijn(a, b, n, r, st):                                 # doorlopende groef/rug langs een lijn (geen losse putjes)
         a, b = Vector(a), Vector(b)
         for k in range(n + 1):
             push(head, a.lerp(b, k / n), r, st / max(1, n * 0.35))
     for s in (-1, 1):
-        push(head, (s * 0.27, FY + 0.08, HC + 0.10), 0.24, -0.06)              # oogkassen (ruimte voor de bolle ogen)
-        push(head, (s * 0.27, FY + 0.02, HC + 0.36), 0.16, 0.035)              # bolling boven de ogen (geen wenkbrauwhaar, front.jpg)
+        push(head, EC[s] + Vector((0, -0.16, 0)), 0.19, -0.22, direction=(0, -1, 0))   # ruime, ronde oogopening: wijd open, staart
+        push(head, (s * 0.27, FY + 0.02, HC + 0.40), 0.16, 0.02)               # bolling boven de ogen (opgetrokken, niet boos)
         push(head, (s * 0.33, FY + 0.12, HC - 0.06), 0.12, 0.03)               # jukbeenderen
         push(head, (s * 0.30, FY + 0.16, HC - 0.30), 0.12, -0.025)             # holle wangen onder het jukbeen
-        lijn((s * 0.16, FY - 0.03, HC - 0.18), (s * 0.36, FY + 0.10, HC - 0.62), 10, 0.05, -0.06)   # diepe naso-labiale plooi (front.jpg)
+        lijn((s * 0.15, FY - 0.03, HC - 0.17), (s * 0.35, FY + 0.10, HC - 0.62), 10, 0.05, -0.05)   # naso-labiale plooi
         push(head, (s * 0.31, FY + 0.16, HC - 0.62), 0.11, 0.025)              # hangwangen
         push(head, (s * 0.42, FY + 0.22, HC + 0.12), 0.12, -0.02)              # slapen
-    for z in (0.47, 0.56, 0.64):                                               # diepe voorhoofdsrimpels, licht gebogen
+        push(head, (s * 0.07, FY - 0.13, HC - 0.24), 0.035, -0.03)             # neusgaten
+    for z in (0.47, 0.56, 0.64):                                               # voorhoofdsrimpels (zachter)
         for s in (-1, 1):
-            lijn((s * 0.02, FY + 0.12 - (z - 0.47) * 0.35, HC + z + 0.03), (s * 0.34, FY + 0.17 - (z - 0.47) * 0.35, HC + z - 0.03), 14, 0.03, -0.06)
+            lijn((s * 0.02, FY + 0.12 - (z - 0.47) * 0.35, HC + z + 0.03), (s * 0.34, FY + 0.17 - (z - 0.47) * 0.35, HC + z - 0.03), 14, 0.03, -0.035)
+    for k in range(15):                                                        # open mond: U-vormige opening tussen de lippen
+        x = -0.27 + k * 0.0386; diep = 1 - (x / 0.29) ** 2
+        for t in (0.0, 0.33, 0.66, 1.0):
+            push(head, (x, FY - 0.12, mz(x) - 0.01 - t * 0.17 * diep), 0.05, -0.11 * (0.5 + 0.5 * diep), direction=(0, -1, 0))
     sm = head.modifiers.new("Smooth2", "SMOOTH"); sm.factor = 0.4; sm.iterations = 2
     apply_all_modifiers(head); smooth_obj(head, m_skin)
-    bh = bvh_of(head)
-    def op_gezicht(x, z, uit=0.0):                            # punt op het gezicht (raycast van voren)
-        hit = bh.ray_cast(Vector((x, CY - 3, z)), Vector((0, 1, 0)), 6)[0]
-        return (hit if hit is not None else Vector((x, FY, z))) + Vector((0, -uit, 0))
-    # mond: brede lippen, hoeken omlaag, donkere spleet ertussen
-    MZ = HC - 0.43
-    def mz(x): return MZ - 1.5 * x * x                      # sterk hangende hoeken (grimas)
-    W = 0.33
-    xs = [-W + k * (2 * W / 14) for k in range(15)]
-    holte = [op_gezicht(x * 0.8, mz(x * 0.8) - 0.06 * (1 - (x / W) ** 2), -0.035) for x in xs]
-    tube("GEO_mondholte", holte, 0.06, m_dark, res=12)
-    tube("GEO_bovenlip", [op_gezicht(x, mz(x) + 0.03 - 0.02 * (x / W) ** 2, 0.025) for x in xs], 0.045, m_lip, res=12)
-    tube("GEO_onderlip", [op_gezicht(x * 0.92, mz(x * 0.92) - 0.13 * (1 - (x / W) ** 2) - 0.035, 0.06) for x in xs], 0.07, m_lip, res=12)
-    # neus: lang, de knol hangt tot vlak boven de lip
-    np_ = [ell("P_neusrug", (0, FY - 0.04, HC + 0.02), (0.10, 0.10, 0.18)), ell("P_neuspunt", (0, FY - 0.17, HC - 0.13), (0.15, 0.15, 0.14)),
-           ell("P_neusvleugel.L", (-0.13, FY - 0.06, HC - 0.18), (0.08, 0.08, 0.07)), ell("P_neusvleugel.R", (0.13, FY - 0.06, HC - 0.18), (0.08, 0.08, 0.07))]
-    neus = fused("GEO_neus", np_, 0.012, 4)
-    for s in (-1, 1): push(neus, (s * 0.07, FY - 0.10, HC - 0.25), 0.04, -0.02)   # neusgaten
-    smooth_obj(neus, m_skin)
-    # ogen: groot, bol, wijd open (wit rondom de iris zichtbaar)
-    ER_ = 0.20
+    holte = ell("GEO_mondholte", (0, FY + 0.06, MZ - 0.10), (0.26, 0.07, 0.12)); assign(holte, m_dark)
+    # ogen: oogbol in de uitgegraven leden
     for s, side in ((-1, ".L"), (1, ".R")):
-        ec = Vector((s * 0.27, FY - 0.03, HC + 0.12))
+        ec = EC[s]
         wit = sphere("GEO_oogwit" + side, ER_, L, ec, u=32, v=16); smooth_obj(wit, m_wit)
-        iris = cylinder("GEO_iris" + side, 0.088, 0.012, L, segments=32, axis="Y", location=ec + Vector((0, -(ER_ - 0.004), 0))); assign(iris, m_iris)
-        pup = cylinder("GEO_pupil" + side, 0.048, 0.012, L, segments=20, axis="Y", location=ec + Vector((0, -(ER_ + 0.004), 0))); assign(pup, m_pupil)
-        hl = sphere("GEO_glans" + side, 0.016, L, ec + Vector((-0.035, -(ER_ + 0.008), 0.04)), u=10, v=6); assign(hl, m_wit)
+        iris = cylinder("GEO_iris" + side, 0.078, 0.012, L, segments=32, axis="Y", location=ec + Vector((0, -(ER_ - 0.004), 0))); assign(iris, m_iris)
+        pup = cylinder("GEO_pupil" + side, 0.042, 0.012, L, segments=20, axis="Y", location=ec + Vector((0, -(ER_ + 0.004), 0))); assign(pup, m_pupil)
+        hl = sphere("GEO_glans" + side, 0.013, L, ec + Vector((-0.03, -(ER_ + 0.008), 0.035)), u=10, v=6); assign(hl, m_wit)
         for o in (iris, pup, hl): o["anim"] = "iris" + ("L" if s < 0 else "R")
-        rim = []                                            # dikke huidring rondom de oogbol (front.jpg: ogen als in een bril)
-        for k in range(33):
-            ph = k * 2 * math.pi / 32
-            rim.append(ec + Vector((math.cos(ph) * 0.205, 0.06 + 0.015 * math.sin(ph), math.sin(ph) * 0.215)))
-        tube("GEO_lidrand" + side, rim, 0.05, m_skin, res=10)
-        wal = sphere("GEO_traanzak" + side, 0.17, L, ec + Vector((0, 0.0, -0.22)), u=24, v=12, scale=(1.15, 0.6, 0.35)); smooth_obj(wal, m_skin)
         # oor: groot, plat, iets naar voren gedraaid (front.jpg)
         oc = Vector((s * 0.66, CY + 0.06, HC - 0.02))
         oor = ell("P_oor" + side, oc, (0.11, 0.22, 0.33)); oorl = ell("P_oorlel" + side, oc + Vector((0, -0.03, -0.27)), (0.07, 0.10, 0.10))

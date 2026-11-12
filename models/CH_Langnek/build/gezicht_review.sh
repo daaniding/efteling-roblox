@@ -1,8 +1,8 @@
 #!/bin/zsh
 # gezicht_review.sh <map>: hoofd onder de fotohoek + van voren (Cycles) naast de foto-uitsneden -> /private/tmp/claude-501/ln/gezicht_<map>.jpg
 B=/Applications/Blender.app/Contents/MacOS/Blender; D=${0:A:h:h}; M="$D/CH_Langnek_master.blend"; R="$D/review/$1"; mkdir -p "$R"
-$B --background --python $D/build/cam_match.py -- --master "$M" --out "$R" --cols LOW --cam 0,-12.4,1.6,190 --pitch 40.6 --tag _foto --res 600x600 --mode mat 2>&1 | grep -E "Error|Traceback"
-$B --background --python $D/build/cam_match.py -- --master "$M" --out "$R" --cols LOW --cam 0,-4.2,12.55,50 --pitch 0 --tag _voor --res 600x600 --mode mat 2>&1 | grep -E "Error|Traceback"
+$B --background --python $D/build/cam_match.py -- --master "$M" --out "$R" --cols LOW --cam 0,-12.4,1.6,190 --pitch 37.0 --tag _foto --res 600x600 --mode mat 2>&1 | grep -E "Error|Traceback"
+$B --background --python $D/build/cam_match.py -- --master "$M" --out "$R" --cols LOW --cam 0,-4.2,11.45,50 --pitch 0 --tag _voor --res 600x600 --mode mat 2>&1 | grep -E "Error|Traceback"
 python3 - "$R" "$D" "$1" <<'PY'
 import sys; from PIL import Image
 R,D,tag=sys.argv[1:4]

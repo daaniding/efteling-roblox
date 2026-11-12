@@ -87,7 +87,10 @@ Model v3 **90664955604649**; texturen lijf 104740173738608, hoofd 12980644672760
 v4 (Daan, naar de foto's): vijver loopt ~50 graden verder om de rots, pad alleen recht voor Langnek (~3.5 m), veel dichter bos
 (26 dennen, 12 loofbomen, ~20 struiken, ~120 varens/ondergroei; kleine planten zonder schaduw: 49 fps met / 54 zonder).
 Omgevingsasset **80458281867517**; draai `roblox/plaats_langnek_v4_omgeving.luau` na `plaats_langnek.luau`.
-Kan nog beter: cape-plooien, eventueel normal maps voor de figuur.
+v5 (Daan: cape, gezicht, nek): nek 4.8 m (Eftepedia), gezicht minder cartoon (oogleden/wallen, neus en lippen mee in de huid
+gesculpt, wijd open ogen, open grimas met dikke onderlip), cape met zware golvende zoom + lange plooien + dikke omgeslagen kraag,
+plooien in rok/mouwen/boven de riem. Figuur-asset **128729459556621** (lijf 138231693611234, hoofd 127597747578678, nek 96605081719069);
+in Studio alleen de delen met Groep body/head/neck/iris vervangen (export `--alleen BAKE_lijf,BAKE_hoofd,BAKE_nek,...`).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
