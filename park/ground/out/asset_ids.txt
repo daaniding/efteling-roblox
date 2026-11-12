@@ -1,0 +1,3 @@
+klinkers_color 127799853003036
+klinkers_normal 90400093022626
+klinkers_rough 111212196344944
