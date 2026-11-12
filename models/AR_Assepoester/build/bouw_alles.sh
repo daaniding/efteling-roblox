@@ -9,7 +9,10 @@ $B --background --python $D/build/09_export_roblox.py -- --master $D/AR_Assepoes
 $B --background --python $D/build/09_export_roblox.py -- --master $M --col OMGEVING --out $D/exports/AR_Assepoester_omgeving.fbx --extra $D/exports/omgeving_extra.json 2>&1 | grep -E "EXPORT|Error"
 cd $R
 zsh -ic "
-id=\$(tools/upload_asset.sh $D/exports/AR_Assepoester_huis.fbx 'Assepoester huis' 'Efteling Assepoester huis' Model); echo \"MODEL \$id\" > $D/textures/asset_ids.txt
-for f in $D/textures/Assepoester_*.png; do n=\$(basename \$f .png); id=\$(tools/upload_asset.sh \$f \"\$n\" 'Efteling Assepoester textuur' Image); echo \"\$n \$id\" >> $D/textures/asset_ids.txt; done
+rm -f $D/textures/hashes.nieuw; id=\$(tools/upload_asset.sh $D/exports/AR_Assepoester_huis.fbx 'Assepoester huis' 'Efteling Assepoester huis' Model); echo \"MODEL \$id\" > $D/textures/asset_ids.txt
+for f in $D/textures/Assepoester_*.png; do n=\$(basename \$f .png); h=\$(md5 -q \$f); oud=\$(grep \"^\$n \" $D/textures/hashes.txt 2>/dev/null | grep \" \$h\$\" | cut -d' ' -f2)
+  if [ -n \"\$oud\" ]; then id=\$oud; else id=\$(tools/upload_asset.sh \$f \"\$n\" 'Efteling Assepoester textuur' Image); fi
+  echo \"\$n \$id\" >> $D/textures/asset_ids.txt; echo \"\$n \$id \$h\" >> $D/textures/hashes.nieuw; done
+mv $D/textures/hashes.nieuw $D/textures/hashes.txt
 tools/upload_asset.sh $D/exports/AR_Assepoester_omgeving.fbx 'Assepoester omgeving' 'Efteling Assepoester tuin' Model > $D/exports/omgeving_id.txt"
 cat $D/textures/asset_ids.txt $D/exports/omgeving_id.txt

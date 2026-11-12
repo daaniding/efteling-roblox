@@ -126,6 +126,9 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
     `python3 roblox/maak_plaatsscript.py` (vult ids in) en `roblox/plaats_assepoester.luau` in Studio.
   * Wandeltest in Play (Humanoid:MoveTo): tuinpoort -> entree -> hal -> gang -> portiek -> buiten -> uitgangsboog -> parkpad: alles OK, 52 fps.
   * EftelingLayout-labels (255) stonden AlwaysOnTop met bereik 600 -> door muren zichtbaar. Nu AlwaysOnTop uit, MaxDistance 150.
+  * v4 (Daan): de muur aan het eind van de gang (laatste 1 m tot het portiek) was nooit uitgesneden -> nu open; je loopt rechtdoor het
+    portiek in en naar buiten. Een per ongeluk gemaakte deur in de zuidmuur van het portiek is teruggedraaid. Huis **79510654585922**,
+    omgeving **125652696529990**. EftelingLayout-labels staan weer zoals ze waren (AlwaysOnTop, 600).
   * Interieur (keukenscène, figuren, geschilderd doek) komt later (Daan).
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 

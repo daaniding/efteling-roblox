@@ -116,3 +116,8 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   character_navigation kan in de wachtrij blijven hangen en later het personage wegsturen).
 - Layout-labels (EftelingLayout) nooit AlwaysOnTop: dan zie je namen van andere attracties door muren heen (Daan).
 - Daken die elkaar raken mogen niet overlappen (flikkeren): laat het ene dak beginnen waar het andere eindigt.
+- Snijvolumes (boolean) mogen elkaar niet precies raken of vlakken delen: laten overlappen, anders blijft er soms een muur staan
+  die je wel ziet maar door kunt lopen (botsblokken zeggen open) -> Daan: "glitcht".
+- Bij een melding van Daan eerst zelf op zijn plek kijken (screenshot op zijn camerastand) voordat je iets verandert; niet gokken welke muur.
+- Kleine fix = klein houden: niet de hele keten draaien als het om 1 onderdeel gaat. bouw_alles.sh hergebruikt nu ongewijzigde texturen (md5).
+- Niet met MoveTo/teleport testen terwijl Daan zelf in Play is: dan stuur je zijn personage.

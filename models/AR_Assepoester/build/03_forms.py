@@ -361,8 +361,9 @@ def build(master):
     ROOM = (-3.50, 4.90, 5.02, 11.37, 3.40)       # keuken (show), alleen te zien door de kijkramen
     cutters.append((bz(HALL[0], HALL[1], HALL[2], HALL[3], 0.0, HALL[4]), F))
     cutters.append((bz(HALL[1] - 0.1, -2.30, GANG[2], HALL[3], 0.0, 2.25), F))     # doorgang hal -> gang
-    cutters.append((bz(GANG[0], 2.42, GANG[2], GANG[3], 0.0, GANG[4]), F))
-    cutters.append((bz(2.42, GANG[1], GANG[2], TOWER[2] - 0.02, 0.0, GANG[4]), F))
+    # gang in twee overlappende stukken (niet vlak tegen elkaar: dan sneed de boolean het eind niet weg en stond er een muur, Daan)
+    cutters.append((bz(GANG[0], GANG[1], GANG[2], TOWER[2] - 0.02, 0.0, GANG[4]), F))
+    cutters.append((bz(GANG[0] + 0.05, 2.37, GANG[2] + 0.5, GANG[3], -0.05, GANG[4] - 0.05), F))
     cutters.append((bz(ROOM[0], ROOM[1], ROOM[2], ROOM[3], 0.0, ROOM[4]), F))
     VIEW = (-1.55, 0.45, 2.30)                     # drie kijkramen gang -> keuken (Assepoesterdoorhetraam.jpg)
     for xv in VIEW:

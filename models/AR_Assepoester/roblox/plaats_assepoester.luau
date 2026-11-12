@@ -2,9 +2,9 @@
 -- Blender: gevel kijkt naar -Y (west), +X = zuid, oorsprong = voorkant uitgangsportiek, midden gevel, z=0 = maaiveld.
 -- OSM-kalibratie: modeloorsprong = OSM (-3.18, 95.15) m = studs (-9.54, -285.44); kijkrichting Roblox (-0.983, 0, 0.185); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing), de meshes zelf botsen niet (deuropeningen blijven open). Lampen: LAMP_-punten.
-local HUIS = 90187101137664   -- v2: gebakken texturen (05_bake), binnenroute, botsblokken + lampen
-local OMG = 107962207315554
-local TEX = {groen = {81834719569516}, omlijsting = {87948221887360}, pannen_hoofd = {77636042874488, 106283833457150}, pannen_laag = {122713295976618, 96717225369930}, plint = {119922222348627}, stuc_achter = {133546970680659, 92636686440629}, stuc_binnen = {74215830399290, 88768649560193}, stuc_noord = {91966066380851, 115711031846310}, stuc_voor = {136554997230084, 109895420988954}, stuc_zuid = {73175908141281, 118117389474333}}   -- groep -> {kleur, normaal}, textures/asset_ids.txt
+local HUIS = 79510654585922   -- v2: gebakken texturen (05_bake), binnenroute, botsblokken + lampen
+local OMG = 125652696529990
+local TEX = {groen = {94483495330444}, omlijsting = {120058708565988}, pannen_hoofd = {127328943572072, 119659411011846}, pannen_laag = {72495645482911, 94198254581534}, plint = {124629527906710}, stuc_achter = {101020326787881, 91855543773060}, stuc_binnen = {76482763780810, 135558783738335}, stuc_noord = {135326299963060, 100006659663595}, stuc_voor = {101344779085616, 99764799393910}, stuc_zuid = {71686997101810, 77990557805597}}   -- groep -> {kleur, normaal}, textures/asset_ids.txt
 local F = Vector3.new(-0.9828, 0, 0.1846)
 local ORIGIN = CFrame.new(-9.54, 2.0, -285.44) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
