@@ -355,6 +355,8 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
 - v3 details uit Herbergfris1 (x = 7.85 + (px-768)/112): boomstambank (grijze verweerde stam, gevorkte poten), jutezak tegen de muur + liggende zak,
   bootvormige uitgeholde trog, vaten (groot bij de deur, klein + hoog op de overgang, klein bij de toren), kruik, smal boograampje echt 0.36x1.15 m
   met tralies. Nieuwe kleurmaterialen jute/stamhout/aardewerk in `plaats_herberg.luau`. Asset **112518972306080**, 72.5k tris. `review/studio_v3_details.jpg`.
+- Knuppel uit de zak hangt BINNEN (lemma: voorportaal van de herberg, kooi aan de wand tussen 2 lampen, vitrine met de zak) -> komt met het
+  interieur. Concept-code voorportaal + knuppel klaar in `build/later_voorportaal_knuppel.py`, foto's in `ref/` (Knuppelenzak, Knuppeltje, Herbergfris2-5).
 - KLAAR volgens Daan (13 nov). Later: binnenkant (Herberginterieur-ontwerp + Herbergfris2-5: balkenplafond, haard, jongen aan tafel, waard), wandeltest.
 
 ## Daarna (volgorde met Daan afgesproken)
