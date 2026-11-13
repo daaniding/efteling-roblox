@@ -336,7 +336,7 @@ kop naar de Prinsenpoort (lemma). Bloemenborders met banken eromheen stonden er 
   Let op: een net geuploade textuur toont even wit in Studio (verwerking); ColorMap opnieuw zetten of even wachten.
 - NOG: kaak/staart bewegen bij muntinworp (pas als Daan animatie wil), ezel nog wat stijf (hoofd/oren), herberg De Ersteling.
 
-## Herberg De Ersteling (chat 8-9, 13 nov) — v2 in Studio
+## Herberg De Ersteling (chat 8-9, 13 nov) — buitenkant KLAAR (Daan: "hij is goed"), interieur later
 Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet (ref/Herberg.jpg), foto's 2009, BAG-plattegrond (OSM 55447978).
 - `build/03_forms.py`: gevelbaai met rieten zadeldak (profiel geextrudeerd + bevel, geen subsurf: die blies het dak op), schilddak riet (2 delen),
   wenkbrauwdakkapel, toren (achthoek, stuc/plankwerk/pannen + spits), schoorstenen, ramen met luiken, deuren met boog, lantaarn, uithangbord
@@ -355,7 +355,7 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
 - v3 details uit Herbergfris1 (x = 7.85 + (px-768)/112): boomstambank (grijze verweerde stam, gevorkte poten), jutezak tegen de muur + liggende zak,
   bootvormige uitgeholde trog, vaten (groot bij de deur, klein + hoog op de overgang, klein bij de toren), kruik, smal boograampje echt 0.36x1.15 m
   met tralies. Nieuwe kleurmaterialen jute/stamhout/aardewerk in `plaats_herberg.luau`. Asset **112518972306080**, 72.5k tris. `review/studio_v3_details.jpg`.
-- NOG: wandeltest; interieur later.
+- KLAAR volgens Daan (13 nov). Later: binnenkant (Herberginterieur-ontwerp + Herbergfris2-5: balkenplafond, haard, jongen aan tafel, waard), wandeltest.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
