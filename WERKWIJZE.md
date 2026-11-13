@@ -14,6 +14,36 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Geen zwevende tekst** (layout-labels, tekstballonnen) bij gebouwde dingen; scripts die op zo'n label wachten aanpassen.
 - **Altijd checken:** close-ups in Studio (facetten, gaten, zwevers) en een prestatietest in Play (fps met en zonder de nieuwe scène).
 
+## Checklist VOOR je iets aan Daan laat zien (uit Sneeuwwitje v1-v4: dit moest elke keer achteraf; nu meteen goed doen)
+**Texturen**
+- Vanaf de eerste versie gebakken texturen per materiaalrol (05_bake): baksteen met metselverband per gevelrichting, steen, pannen, rots, ruine.
+  Nooit kale Roblox-materialen opleveren ("het mist textures").
+- Na het plaatsen texturen voorladen (Decals + PreloadAsync) en wachten tot alles geladen is (Success = aantal texturen) vóór de screenshot.
+- Rots: grijsgroen met mos/korstmos, geen golvende strepen of lagen, AO-vloer ~0.3; tint wit laten (kleur zit in de textuur).
+- Baksteen licht geel/roze gemeleerd zoals de foto; binnenkant donkerder tint. Oude textuur rendert wit -> opnieuw uploaden.
+**Geen gaten / alles sluit aan**
+- Gebouwdelen die elkaar raken (toren tegen romp, weergang tegen toren, muur tegen rots) laten OVERLAPPEN, nooit tegen elkaar leggen;
+  gevelvulling (wig) waar een schuin vlak aansluit. Check van boven en van opzij op kieren.
+- Plint/sokkel en ringen om torens alleen aan de BUITENkant en open bij deuren; banken/richels nooit in de looproute (je loopt erdoorheen = "verhoging").
+- Kunstrots: dikte boven een tunnel afdwingen (min ~0.95 m boven de tunnelboog), tunnel ≥0.7 m van de buitenrand, rots vol hoog tegen muren
+  en ingangsmuren, bij de uitgang de rots wel laten aflopen (anders vlakke gele wand).
+- Klei-renders in Blender vanuit vaste checkstanden (tunnel van binnen, gang, achterkant, elke aansluiting, in- en uitgang) en kijken naar
+  lucht/licht door de wanden, vóór elke upload.
+**Looproute vrij**
+- Geen bloembakken, klimop, banken, boekstandaard of potten vóór deuren/tunnelmonden of op een pad. Paden als strook vierhoeken (geen triangle_fill: zwarte driehoeken).
+- Een vloer/pad dat net boven terrein ligt: terreingras eronder vervangen door Ground (grassprieten prikken anders door de vloer).
+- Wandeltest van de hele route (alleen als Daan niet in Play is) en layout-labels/horizonbomen in het gebied weghalen.
+
+## Sneller werken met hetzelfde of beter resultaat (Daan: "het duurt elke keer zo lang")
+1. Grote attracties vanaf het begin als losse assets per deel (bv. kasteel / grot / omgeving), elk met een eigen bouw/bake/upload (`bouw_deel.sh`).
+   Een fix aan één deel bakt en uploadt alleen dat deel en vervangt in Studio alleen dat model.
+2. Texturen alleen opnieuw bakken/uploaden als hun mesh veranderde (hash per bakegroep; ongewijzigd = oude asset-id houden).
+3. Automatische check vóór Studio: één script met de vaste klei-checkstanden + gatenmeting (stralen vanuit tunnel/binnenruimte naar buiten
+   mogen de lucht niet raken). Fouten vinden voordat Daan ze ziet.
+4. Kleine dingen (tint, licht, terrein, een plant/bak verzetten) direct in Studio doen én in het plaatsscript zetten, geen herbouw.
+5. Bij het plaatsen alleen het veranderde deel vervangen, niet ook alle planten opnieuw.
+6. Studio MCP is vaak "Target is not reachable": plaatsing lukt meestal toch, controleren met een korte query in plaats van alles opnieuw.
+
 ## Eerst bronnen, dan bouwen ("zoals in de Efteling", niet verzinnen)
 - OSM (`reference/data/efteling_osm.xml`): footprints, paden, hagen, muren, wachtrij-zigzag, poortjes, deuren, lantaarns, bomen.
   Omrekenen naar modelcoordinaten per attractie (zie `models/AR_VillaVolta/ref/osm_lokaal.json`).
