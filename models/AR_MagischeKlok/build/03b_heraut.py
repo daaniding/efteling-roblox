@@ -93,8 +93,33 @@ def skin_body():
     for v in bm.verts:                                                          # kuiten voller, dijen iets breder
         z = v.co.z
         if 0.18 < z < 0.45: s = 1 + 0.25 * math.sin((z - 0.18) / 0.27 * math.pi); v.co.x = math.copysign(abs(v.co.x - math.copysign(0.105, v.co.x)) * s, v.co.x - math.copysign(0.105, v.co.x)) + math.copysign(0.105, v.co.x); v.co.y *= 1 + 0.15 * (s - 1)
+    bm.normal_update()
+    for v in bm.verts:                                                          # kreukels in de mouwen (Herauten-Efteling-6)
+        if v.co.z > 0.96 and abs(v.co.x) > 0.13:
+            v.co += v.normal * (0.006 * math.sin(v.co.z * 85 + v.co.x * 30) + 0.003 * math.sin(v.co.z * 190))
     for f in bm.faces: f.smooth = True
     return bm
+
+
+def g(a, b, s): return math.exp(-((a - b) / s) ** 2)
+
+
+def hand(wrist, fwd, palm_n, curl, thumb_curl=0.4):
+    """hand met handpalm, 4 vingers (3 kootjes) en duim; fwd = richting van de vingers, palm_n = normaal van de handpalm"""
+    fwd = Vector(fwd).normalized(); pn = Vector(palm_n); pn = (pn - fwd * pn.dot(fwd)).normalized(); sd = fwd.cross(pn)
+    W = Vector(wrist); out = []
+    R = Matrix((sd, pn, fwd)).transposed()
+    pb = ellipsoid((0, 0, 0), (0.04, 0.017, 0.048), 14, 10); bmesh.ops.transform(pb, matrix=Matrix.Translation(W + fwd * 0.045) @ R.to_4x4(), verts=pb.verts); out.append(pb)
+    for i, (off, ln) in enumerate(((-0.027, 0.075), (-0.009, 0.085), (0.009, 0.08), (0.026, 0.065))):
+        p = W + fwd * 0.088 + sd * off; d = fwd.copy(); pts = [p.copy()]
+        for j in range(3):
+            ang = curl * (0.8 + 0.2 * j); d = (d * math.cos(ang) - pn * math.sin(ang)).normalized(); p = p + d * (ln / 3); pts.append(p.copy())
+        out.append(tube(pts, [0.0095, 0.009, 0.008, 0.007], 7))
+    p = W + fwd * 0.035 + sd * 0.035 - pn * 0.005; d = (fwd * 0.5 + sd * 0.7 - pn * 0.3).normalized(); pts = [p.copy()]
+    for j in range(2):
+        d = (d * math.cos(thumb_curl) - pn * math.sin(thumb_curl)).normalized(); p = p + d * 0.03; pts.append(p.copy())
+    out.append(tube(pts, [0.011, 0.0095, 0.008], 7))
+    return out
 
 
 def herald():
@@ -103,11 +128,11 @@ def herald():
     add("stof_rood", skin_body())
     # ---- tuniek: lijfje + uitlopende rok, verticale strepen zwart/goud (breder zwart), gouden zoom
     stripe = lambda k: "goud" if k % 2 else "zwart"
-    body = loft([(0.61, 0.245, 0.20, 0.0, 0.03), (0.70, 0.215, 0.175, 0.0, 0.025), (0.82, 0.185, 0.145, 0.0, 0.015), (0.93, 0.165, 0.125, 0.0, 0.005),
+    body = loft([(0.61, 0.245, 0.20, 0.0, 0.05), (0.70, 0.215, 0.175, 0.0, 0.04), (0.82, 0.185, 0.145, 0.0, 0.022), (0.93, 0.165, 0.125, 0.0, 0.005),
                  (1.08, 0.175, 0.13, -0.005, 0.0), (1.25, 0.20, 0.14, -0.01, 0.0), (1.40, 0.205, 0.13, 0.0, 0.0), (1.47, 0.12, 0.09, 0.0, 0.0), (1.50, 0.06, 0.055, 0.0, 0.0)],
                 24, stripe)
     for m_, bm in body.items(): add(m_, bm)
-    add("goud", tube([(0.245 * math.cos(t) * (1 + 0.03 * math.cos(8 * t)), -0.20 * math.sin(t) * (1 + 0.03 * math.cos(8 * t)), 0.625) for t in [i * math.tau / 48 for i in range(49)]], 0.018, 6, cap=False))
+    add("goud", tube([(0.245 * math.cos(t) * (1 + 0.05 * math.cos(8 * t)), -0.20 * math.sin(t) * (1 + 0.05 * math.cos(8 * t)), 0.625) for t in [i * math.tau / 48 for i in range(49)]], 0.018, 6, cap=False))
     # riem met groene stenen en gesp
     add("riem", loft([(0.895, 0.175, 0.135, 0, 0), (0.955, 0.175, 0.135, 0, 0)], 32)["zwart"])
     for k in range(-2, 3):
@@ -130,8 +155,8 @@ def herald():
     add("goud", tube([(-0.07, -0.05, 1.49), (-0.06, -0.12, 1.33), (-0.02, -0.145, 1.26), (0, -0.145, 1.265)], 0.007, 5, cap=False))
     add("goud", tube([(0.07, -0.05, 1.49), (0.06, -0.12, 1.33), (0.02, -0.145, 1.26), (0, -0.145, 1.265)], 0.007, 5, cap=False))
     # handen (huid): linker in de zij, rechter om de trompet
-    add("huid", ellipsoid((0.15, -0.045, 0.955), (0.045, 0.03, 0.06), 10, 8), Matrix.Translation((0, 0, 0)))
-    add("huid", ellipsoid((-0.10, -0.19, 1.07), (0.035, 0.045, 0.05), 10, 8))
+    for bm in hand((0.168, -0.035, 0.975), (-0.25, -0.55, -0.8), (-1, 0.2, 0), 0.25, 0.3): add("huid", bm)        # in de zij
+    for bm in hand((-0.105, -0.165, 1.095), (0.05, -0.75, -0.25), (-0.6, -0.2, 0.75), 1.15, 0.9): add("huid", bm)  # om de trompet
     # schoenen: zwart, puntig (Herauten-Efteling-6)
     for sx, rot in ((1, 18), (-1, -8)):
         bm = ellipsoid((0, -0.07, 0.045), (0.048, 0.15, 0.048), 20, 10)
@@ -143,24 +168,28 @@ def herald():
         kx = 0.115 if sx > 0 else -0.10
         add("zwart", bm, Matrix.Translation((kx, 0.01, 0)) @ Matrix.Rotation(math.radians(rot), 4, "Z"))
     # ---- hoofd
-    hc = Vector((0, -0.01, 1.70))
-    bm = ellipsoid((0, 0, 0), (0.088, 0.105, 0.122), 24, 16)
-    for v in bm.verts:
+    hc = Vector((0, -0.01, 1.70)); MH = Matrix.Translation(hc) @ Matrix.Scale(1.08, 4)
+    bm = ellipsoid((0, 0, 0), (0.088, 0.105, 0.122), 36, 26)
+    for v in bm.verts:                                                          # gezicht modelleren (Herauten-Efteling-6: smal, rechte neus, volle lippen)
         x, y, z = v.co
-        if z < 0: v.co.x *= 1 - 0.28 * (-z / 0.122) ** 1.5; v.co.y *= 1 - 0.12 * (-z / 0.122)       # kaak smaller
-        if y < -0.06 and -0.03 < z < 0.04: v.co.y -= 0.006                                              # wangen naar voren
-    add("huid", bm, Matrix.Translation(hc) @ Matrix.Scale(1.08, 4))
-    bm = ellipsoid((0, -0.108, 1.69), (0.014, 0.016, 0.034), 12, 8)                                  # neus
-    for v in bm.verts:
-        if v.co.z < 1.69: v.co.y -= (1.69 - v.co.z) * 0.35
-    MF = Matrix.Translation(hc) @ Matrix.Scale(1.08, 4) @ Matrix.Translation(-hc)                      # gezichtsdelen schalen mee met het hoofd
-    add("huid", bm, MF)
+        if z < 0: x *= 1 - 0.28 * (-z / 0.122) ** 1.5; y *= 1 - 0.12 * (-z / 0.122)
+        f = max(0.0, -y / 0.105) ** 2; ax = abs(x)
+        y += f * 0.009 * g(ax, 0.035, 0.017) * g(z, 0.022, 0.014)              # oogkassen
+        y -= f * 0.006 * g(z, 0.047, 0.012) * g(ax, 0.035, 0.03)                # wenkbrauwboog
+        y -= f * 0.026 * g(x, 0, 0.011) * g(z, -0.008, 0.032)                   # neus
+        y -= f * 0.008 * g(ax, 0.013, 0.008) * g(z, -0.036, 0.01)               # neusvleugels
+        y -= f * 0.006 * g(ax, 0.056, 0.02) * g(z, 0.0, 0.02); x *= 1 + 0.04 * g(z, 0.0, 0.03)   # jukbeenderen
+        y += f * 0.004 * g(x, 0, 0.026) * g(z, -0.06, 0.005)                    # mondspleet
+        y -= f * 0.005 * g(x, 0, 0.022) * (g(z, -0.053, 0.007) + g(z, -0.068, 0.007))   # lippen
+        y -= f * 0.011 * g(x, 0, 0.026) * g(z, -0.106, 0.016)                   # kin
+        v.co = Vector((x, y, z))
+    add("huid", bm, MH)
     add("huid", tube([(0, 0, 1.47), (0, -0.005, 1.6)], 0.05, 12))                                     # hals
-    for sx in (-1, 1):                                                                                  # ogen (wit + blauwe iris), wenkbrauwen
-        add("oogwit", ellipsoid((sx * 0.035, -0.108, 1.722), (0.017, 0.006, 0.01), 10, 6), MF)
-        add("iris", ellipsoid((sx * 0.035, -0.113, 1.722), (0.007, 0.003, 0.007), 8, 6), MF)
-        add("haar", tube([(sx * 0.052, -0.103, 1.742), (sx * 0.035, -0.112, 1.748), (sx * 0.016, -0.112, 1.744)], 0.0045, 5), MF)
-    add("lip", ellipsoid((0, -0.106, 1.632), (0.024, 0.008, 0.007), 10, 6), MF)
+    for sx in (-1, 1):
+        add("oogwit", ellipsoid((sx * 0.035, -0.081, 0.022), (0.013, 0.012, 0.011), 12, 8), MH)
+        add("iris", ellipsoid((sx * 0.035, -0.0925, 0.022), (0.0065, 0.002, 0.0065), 10, 6), MH)
+        add("haar", tube([(sx * 0.054, -0.088, 0.046), (sx * 0.035, -0.1, 0.052), (sx * 0.014, -0.102, 0.047)], 0.004, 5), MH)
+    add("lip", ellipsoid((0, -0.093, -0.06), (0.021, 0.006, 0.0075), 12, 6), MH)
     # haar: schouderlang blond, golvend, gezicht vrij
     bm = ellipsoid((0, 0.012, 0), (0.1, 0.112, 0.128), 24, 16)
     kill = [f for f in bm.faces if f.calc_center_median().y < -0.04 and f.calc_center_median().z < 0.085 and abs(f.calc_center_median().x) < 0.08]
@@ -173,6 +202,15 @@ def herald():
     for f in bm.faces: f.smooth = True
     sol = bmesh.ops.solidify(bm, geom=bm.faces[:], thickness=0.012) if hasattr(bmesh.ops, "solidify") else None
     add("haar", bm, Matrix.Translation(hc) @ Matrix.Scale(1.08, 4))
+    for k in range(22):                                                         # losse golvende lokken van kruin tot schouder, gezicht vrij
+        a = math.radians(-125 + k * 250 / 21)                                   # 0 = achter (+y)
+        ca, sa = math.sin(a), math.cos(a); pts = []
+        for j in range(15):
+            t = j / 14; r = 0.1 + 0.028 * t; z = 0.11 - t * 0.24
+            w = 0.004 * math.sin(t * 7 + k * 0.7)
+            pts.append(Vector((ca * (r + w), 0.012 + sa * (r + w), z)))
+        rads = [0.016 * (1 - 0.55 * (j / 14) ** 2) + 0.004 for j in range(15)]
+        add("haar", tube(pts, rads, 8), MH)
     # baret + pluim (pluim aan de rechterkant van de figuur = -X, krult omhoog en naar achter)
     bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=28, radius1=0.125, radius2=0.115, depth=0.055)
     for f in bm.faces: f.smooth = True

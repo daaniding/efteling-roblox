@@ -208,6 +208,9 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
   achter de muren en rond het pleinvierkant, 45 rododendron/taxus, 110 varens, 90 bodembedekkers, rand heesters buiten het pad; grasveld LeafyGrass
   (Grass = VV_Gazon, te strak), plein grijs grind (Pebble: Cobblestone = EftelingKlinkers rood). 'struik'-modellen niet gebruiken (kale sprieten).
   Screenshots `review/studio_v3_*.jpg`.
+- v4 herauten (Daan): gezicht gemodelleerd (oogkassen, wenkbrauwboog, neus, jukbeenderen, lippen, kin; ogen in de kassen), handen met 4 vingers
+  + duim (links in de zij, rechts om de trompet), 22 haarlokken (bob), kreukels in de mouwen, diepere rokplooien. Asset **76477453584742**
+  (154k tris, herauten ~21k per stuk). Render `review/06/heraut_sheet.jpg`, Studio `review/studio_v4_herauten.jpg`. Place opgeslagen (versie 92, voor v4).
 - NOG/kan beter: oevers van de gracht dichter begroeien (riet), herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 

@@ -2,9 +2,9 @@
 -- Model: klok kijkt naar -Y (WNW), +X = ZZW, oorsprong = midden toren, z=0 maaiveld (asset-brief.md).
 -- Kalibratie: oorsprong = OSM (56.44, 53.25) m = studs (169.32, -159.75); kijkrichting Roblox (-0.855, 0, -0.518); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing). Herauten: aparte map Herauten (zelfde asset, groep heraut).
-local MODEL = 84133768551001
+local MODEL = 76477453584742
 local COLL = {{1.653, 0.0, 2.2, 0.85, 0.5, 4.4, 90.0}, {1.5268499999999998, 0.63249, 2.2, 0.85, 0.5, 4.4, 112.5}, {1.16928, 1.16928, 2.2, 0.85, 0.5, 4.4, 135.0}, {0.63249, 1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 157.5}, {0.0, 1.653, 2.2, 0.85, 0.5, 4.4, 180.0}, {-0.63249, 1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 202.5}, {-1.16928, 1.16928, 2.2, 0.85, 0.5, 4.4, 225.0}, {-1.5268499999999998, 0.63249, 2.2, 0.85, 0.5, 4.4, 247.5}, {-1.653, 0.0, 2.2, 0.85, 0.5, 4.4, 270.0}, {-1.5268499999999998, -0.63249, 2.2, 0.85, 0.5, 4.4, 292.5}, {-1.16928, -1.16928, 2.2, 0.85, 0.5, 4.4, 315.0}, {-0.63249, -1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 337.5}, {-0.0, -1.653, 2.2, 0.85, 0.5, 4.4, 360.0}, {0.63249, -1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 382.5}, {1.16928, -1.16928, 2.2, 0.85, 0.5, 4.4, 405.0}, {1.5268499999999998, -0.63249, 2.2, 0.85, 0.5, 4.4, 427.5}, {-5.953, -5.609, 2.0, 18.65, 0.6, 4.0, -134.384}, {6.556, -6.725, 2.0, 21.45, 0.6, 4.0, -45.681}}   -- [cx, cy, cz, sx, sy, sz, hoek] in modelmeters, ingevuld uit exports/klok_extra.json (maak_plaatsscript.py)
-local TEX = {baksteen_detail = {98919505676641, 98441937513294}, baksteen_toren = {106792609100363, 98757760719558}, klimop = {75153798740029}, klok = {127168149551485}, leien = {113242851985008, 91109038076936}, ruiter = {117001844464393}, steen = {81574207246097}, stuc_N = {71061860786384, 76211821518513}, stuc_W = {94336699150259, 88951323215272}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
+local TEX = {baksteen_detail = {130387562488534, 98441937513294}, baksteen_toren = {106792609100363, 98757760719558}, klimop = {75153798740029}, klok = {127168149551485}, leien = {113242851985008, 91109038076936}, ruiter = {117001844464393}, steen = {81574207246097}, stuc_N = {112556134127614, 76211821518513}, stuc_W = {139530050364729, 88951323215272}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
 local F = Vector3.new(-0.855, 0, -0.518)
 local ORIGIN = CFrame.new(169.32, 2.0, -159.75) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -13,7 +13,7 @@ local M = {
 	kern = {Color3.fromRGB(138, 140, 138), "Plaster"}, lood = {Color3.fromRGB(112, 116, 118), "Metal"}, ijzer = {Color3.fromRGB(26, 30, 30), "Metal"},
 	brons = {Color3.fromRGB(110, 90, 58), "Metal"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, pannen = {Color3.fromRGB(150, 84, 64), "ClayRoofTiles"},
 	klokhout = {Color3.fromRGB(46, 86, 82), "Wood"}, hout = {Color3.fromRGB(36, 78, 60), "Wood"}, rood = {Color3.fromRGB(176, 34, 28), "SmoothPlastic"},
-	bodem = {Color3.fromRGB(92, 70, 50), "Ground"}, water = {Color3.fromRGB(38, 46, 30), "SmoothPlastic"}, klinker = {Color3.fromRGB(150, 146, 138), "Cobblestone"},
+	bodem = {Color3.fromRGB(92, 70, 50), "Ground"}, water = {Color3.fromRGB(38, 46, 30), "SmoothPlastic"}, klinker = {Color3.fromRGB(158, 152, 142), "Pebble"}   -- Cobblestone = EftelingKlinkers (rood) in deze place,
 	toon_groen = {Color3.fromRGB(70, 112, 96), "SmoothPlastic"}, toon_rood = {Color3.fromRGB(190, 92, 70), "SmoothPlastic"},
 	huid = {Color3.fromRGB(232, 186, 156), "SmoothPlastic"}, haar = {Color3.fromRGB(218, 176, 100), "SmoothPlastic"},
 	stof_rood = {Color3.fromRGB(150, 36, 30), "Fabric"}, zwart = {Color3.fromRGB(18, 18, 20), "SmoothPlastic"}, kant = {Color3.fromRGB(226, 226, 220), "Fabric"},
