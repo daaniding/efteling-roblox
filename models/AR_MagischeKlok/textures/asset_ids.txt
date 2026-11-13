@@ -1,0 +1,14 @@
+MODEL 90334417357517
+MK_baksteen_detail_kleur 108979434028974
+MK_baksteen_detail_normaal 112282749940764
+MK_baksteen_toren_kleur 70970170035341
+MK_baksteen_toren_normaal 98757760719558
+MK_klok_kleur 127168149551485
+MK_leien_kleur 113242851985008
+MK_leien_normaal 91109038076936
+MK_ruiter_kleur 117001844464393
+MK_steen_kleur 82997977649814
+MK_stuc_N_kleur 111877303736600
+MK_stuc_N_normaal 119192160525210
+MK_stuc_W_kleur 87242237772715
+MK_stuc_W_normaal 76750031041242

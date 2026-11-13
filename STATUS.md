@@ -189,6 +189,20 @@ Fotocamera: `cam_match.py --cam -0.3,-8.6,1.6,26 --sensor 25.4 --pitch 8 --res 1
   (tuin-stuc 97840886839892 / 105162864177043). Begonia's/perkplanten ontbraken in Studio (waarschijnlijk niet opgeslagen voordat Studio dicht ging): `plaats_hansgrietje_groen.luau` opnieuw gedraaid (begonia 352, binnen 50, linkerperk 110, bos 527). Review `review/06/sheet.jpg`; staat in Studio.
 - Play-test 13 nov: Studio liep overal ~15 fps (ook bij Sneeuwwitje, venster niet vooraan); met de scène in beeld 12, zonder 15. Opnieuw meten als Studio vooraan staat.
 
+## De Magische Klok (chat 7, 13 nov) — BEZIG: toren + muren + gracht staan in Studio; nog klimop, beplanting, herauten
+Map `models/AR_MagischeKlok/`. Bronnen: 56 Eftepedia-plaatjes (`ref/eftepedia/`, contactbladen `review/contact_*.jpg`), lemma-tekst, OSM 55424253
+(L: toren + 2 muurarmen), brief `asset-brief.md`. front.jpg = Boekloc_MagischeKlok.jpg. Daan: Herautenplein LATER; herauten NU in Blender.
+- Model: klok kijkt -Y (WNW), +X = ZZW, oorsprong = midden toren = studs (169.32, -159.75), kijkrichting Roblox (-0.855, 0, -0.518), grond Y=2.
+- Fotocamera: `cam_match.py --cam 0,-30,1.6,55 --sensor 24 --pitch 3 --res 1000x665` (tele van ver: de muren lijken in een lijn). Overlay `review/02/compare_clay.jpg`.
+  Uit de foto: toren 13% smaller dan OSM-dakrand (K=0.87), romp tot 4.07, klok 2.75..3.92 (onderkant op kantelhoogte), band 0.44, dak 1.77;
+  muren 2.4 + kantelen 0.5; binnenvlakken 1.2 m achter de OSM-lijn (toren staat helemaal voor de muren).
+- Keten: `build/03a_atlas.py` (getekende wijzerplaat + ruitertje) -> `03_forms.py` -> `05_bake.py` (baksteen_toren/detail, stuc_N/W, leien, steen)
+  -> `09_export_roblox.py` -> `build/upload.sh` -> `python3 roblox/maak_plaatsscript.py` -> `roblox/plaats_magischeklok.luau`. Alles: `build/bouw_alles.sh`.
+- Asset v1 **90334417357517** (13.7k tris), texturen in `textures/asset_ids.txt`. In Studio: workspace.MagischeKlok, 66 planten van andere scenes weg,
+  terrein onder de gracht uitgegraven (FillBlock Air met rechte blokken tot Y -4: het terreinraster is 4 studs).
+- NOG: klimop (veel, op muren en onderkant toren), varens/bodembedekkers, 6 herauten (generate_3d uit Herauten-Efteling-6.jpg zodra de Blender-app
+  met MCP draait, anders zelf modelleren), Slimme Toon beter, kleiner torentje aan het eind van arm W.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

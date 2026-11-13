@@ -178,3 +178,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Meubilair (lantaarns, bankjes, prullenbakken) komt later (Daan, 13 nov):** niet vanzelf oppakken.
 - **Na een sessie in Studio de place opslaan (Daan vragen):** bij Hans en Grietje waren de perkplanten weg na een herstart van Studio.
   Bij twijfel eerst tellen per map (bloem_* in ...Groen) voordat je iets plaatst.
+- **Schuine botsblokken niet als mesh exporteren:** Roblox maakt van een gedraaide kubus-mesh een rechte doos om de hele diagonaal
+  (Magische Klok: 13 x 13 m in plaats van een dunne muur). Botsblokken als Parts in het plaatsscript maken (tabel uit *_extra.json, CFrame met hoek+pi).
+  Let op bij oudere scenes met schuine COLL_ (Hans en Grietje-muurtjes, Sneeuwwitje-torenring): die zijn ook dozen.
+- **Terrein uitgraven:** FillBlock Air werkt per cel van 4 studs en alleen als het celmidden binnen het blok valt; graaf diep genoeg (tot Y -4) met rechte blokken.
+- **Tele-foto's:** als muren die een hoek maken op de foto in een lijn lijken te staan, is de foto van ver met een lange lens genomen (cam ~30 m, 55 mm).
+- **Glass in Roblox weerspiegelt de lucht (felblauw):** troebel water als SmoothPlastic donkergroen met weinig transparantie.
+
