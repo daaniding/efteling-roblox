@@ -173,3 +173,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Figuren via generate_mesh** komen er chibi/cartoon uit, ook met "realistic proportions". Daan: Hans en Grietje komen later. Kleine dingen
   (vogels, windvaan) werken wel. `plaats()` bewaart nu de map Figuren als het huis opnieuw geplaatst wordt.
 - **FPS meten:** meet ook een referentieplek elders. Studio kan als geheel throttlen (alles ~15 fps), dan zegt het verschil meer dan het getal.
+- **Afbakening = het perceel, niet de paden (Daan):** "afbakenen" betekent het perceel van de attractie rondom dichtzetten in de stijl die er al
+  staat (hier de lage witte muurtjes), niet hekjes langs alle padranden. Bij twijfel over vorm/stijl eerst vragen.
+- **Meubilair (lantaarns, bankjes, prullenbakken) komt later (Daan, 13 nov):** niet vanzelf oppakken.
+
