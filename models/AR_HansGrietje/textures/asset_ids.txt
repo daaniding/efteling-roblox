@@ -1,0 +1,13 @@
+MODEL 139382073870455
+HG_pannenkoek_kleur 75733789969526
+HG_snoep_kleur 116416741730115
+HG_stuc_achter_kleur 92015225526568
+HG_stuc_achter_normaal 128901005308082
+HG_stuc_noord_kleur 104906801297171
+HG_stuc_noord_normaal 109862843342181
+HG_stuc_tuin_kleur 108259494727642
+HG_stuc_tuin_normaal 97917567891523
+HG_stuc_voor_kleur 109318122648105
+HG_stuc_voor_normaal 104324566879797
+HG_stuc_zuid_kleur 137577513753329
+HG_stuc_zuid_normaal 126230881043910

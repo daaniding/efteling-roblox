@@ -156,3 +156,20 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Geen klimopvlakken bij in- en uitgangen; bladplakkaten alleen op torens/hoge muren.
 - Grote attracties in losse assets per deel (kasteel / grot / omgeving), zodat een fix aan een deel niet alles opnieuw bakt en uploadt.
 - Python-tekstvervanging in scripts: nooit op 'def build(master):' ankeren (staat ook in de exec-regel bovenaan); gebruik '\ndef build(master):\n'.
+
+## Lessen Hans en Grietje (13 nov, chat 6)
+- **Fotocamera terugrekenen:** met de cam_match-camera een pixel uit front.jpg omzetten naar een straal en die tegen de muur-BVH schieten
+  (`ray900` / `at_plane` in `03_forms.py`). Zo staan harten, koeken, deur, ramen en luiken precies waar ze op de foto zitten.
+- **Pannenkoekendak:** losse 8-hoekige schijven met vaste UV's naar een 2x2-atlas (geen bake nodig). Pannenkoeken die over de rand vallen
+  buigen (`edge_bend`). Per rij gelijk verdelen met een pannenkoek op beide randen, anders krijgt één windveer geen rand.
+- **Atlas-objecten** (naam `BAKE_...` met eigen UV) slaan de bake over. Alleen het stuc wordt gebakken (1:40 min).
+- **Organisch stuc:** primitieven samen -> voxel remesh 0.05 -> uitlopende voet + ruis -> decimeren (0.14) -> openingen pas daarna met booleans
+  (strakke randen, ~21k tris).
+- **04 importeert 03 als module:** de templatefuncties houden de owner-tag van 03, dus de tuinobjecten zelf hertaggen, anders ruimt 03 ze op.
+- **Eerst alle foto's op muren/hekken bekijken, ook die van opzij:** de voorkant bleek een groene buisleuning, de witte muurtjes lopen links
+  om de hoek en rechts langs het grindpad (HGoverzicht2016). Een hek over het grindpad hoorde er niet.
+- **Daan:** hoofdpad van grind, en het pad volgen zoals OSM (splitsingen en aansluitingen mee) in plaats van alleen een recht stuk voor de
+  attractie. Meer bos tot ~25 m rondom, ook tussen en langs de paden.
+- **Figuren via generate_mesh** komen er chibi/cartoon uit, ook met "realistic proportions". Daan: Hans en Grietje komen later. Kleine dingen
+  (vogels, windvaan) werken wel. `plaats()` bewaart nu de map Figuren als het huis opnieuw geplaatst wordt.
+- **FPS meten:** meet ook een referentieplek elders. Studio kan als geheel throttlen (alles ~15 fps), dan zegt het verschil meer dan het getal.

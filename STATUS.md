@@ -30,7 +30,7 @@ Usage sparen: foto's verkleind bekijken (`sips -Z 700`), één vergelijkingsblad
 | Wat | Asset-id | Staat |
 |---|---|---|
 | Entreegebouw (Huis v.d. Vijf Zintuigen) blokkering | 128928417227160 | placeholder, afgekeurd, later opnieuw |
-| Hans en Grietje v1 | 134881477873995 | scriptmatig, afgekeurd als eindniveau; .blend in `models/HansGrietje_wip.blend` |
+| Hans en Grietje v1 | 134881477873995 | VERVANGEN door v2 (models/AR_HansGrietje, nov 13) |
 | Holle Bolle Gijs v2 (huisje + Gijs + animatie) | 133621430486686 | goedgekeurd als richting; animatie in `models/CH_HolleBolleGijs/roblox/GijsAnimatie.server.luau` |
 | Bomen v2 (zwaar) | 110183678792616 | 5 soorten + 3 struiken met texturen |
 | Bomen v3 (licht) | 131773367492573 | zelfde look, helft driehoeken |
@@ -167,8 +167,25 @@ overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665
 - LET OP: Studio herstartte tijdens het plaatsen (Assistant-plugin bijgewerkt). Als Sneeuwwitje/SneeuwwitjeGroen ontbreken: plaats_sneeuwwitje.luau
   + de plantentabel opnieuw draaien.
 
+## Hans en Grietje (chat 6, 13 nov) — v1 staat in Studio; figuren Hans/Grietje komen later (Daan)
+Map `models/AR_HansGrietje/`. Bronnen: 87 Eftepedia-plaatjes (herbouw 2024 = nagenoeg 2016, pannenkoeken hangen over de dakrand), OSM/BAG 50911615,
+tuin 766787177, paadjes 766787178/9 (`ref/osm_model.json/png` in modelframe), brief `asset-brief.md`. front.jpg = Hghuis-vk.jpeg.
+Model: gevel kijkt WNW (-Y), +X = ZZO; oorsprong midden BAG = studs (200.43, -82.44), kijkrichting Roblox (-0.944, 0, -0.332), grond Y=2.
+Fotocamera: `cam_match.py --cam -0.3,-8.6,1.6,26 --sensor 25.4 --pitch 8 --res 1000x1000`. Review: `build/review.sh <map>`.
+- Keten: `build/03a_atlas.py` (pannenkoek- en snoepatlas) -> `03_forms.py` (stucmassa, pannenkoekendaken, snoep, deur/luiken/tralies, steunbalken,
+  taartlampen) -> `04_omgeving.py` (grindpad volgens OSM met splitsing, witte muurtjes links om de hoek en rechts langs het witte grindpad, leuning +
+  tuinhek met kruk, binnenhek met krulpoortje, snoeppad, perken, 2 limonadefonteintjes, taarten/puddingen op pijlers, sprookjesboek, potten, oven,
+  houtstapel, tegels voor de kooi) -> `05_bake.py` (stuc per gevel + tuin) -> `09_export_roblox.py`. Alles: `build/bouw_alles.sh`, dan
+  `python3 roblox/maak_plaatsscript.py` en `roblox/plaats_hansgrietje.luau`; beplanting `roblox/plaats_hansgrietje_groen.luau` (HansEnGrietjeGroen,
+  ~1040 planten: begonia's, bodembedekkers, 42 bomen, 95 heesters, ~390 varens/struiken tot ~25 m).
+- Assets: huis **139382073870455** (83k tris), tuin **98956237263382** (23k); texturen in `textures/asset_ids.txt` (tuin-stuc 108259494727642 / 97917567891523).
+- In Studio: HansEnGrietje (+ map Figuren: witte vogel op de stapel 117860705892867, zwarte vogel windvaan 83043200989950 via generate_mesh),
+  HansEnGrietjeOmgeving, HansEnGrietjeGroen. Oude v1 weg, label weg, spawn op het grindpad voor het tuinhek. Wind + LantaarnsDagNacht doen mee.
+- NIET gedaan: figuren Hans en Grietje (Daan: later; generate_mesh gaf chibi-poppen), heks achter het luikje en de kat (horen bij de show), animatie.
+- Play-test 13 nov: Studio liep overal ~15 fps (ook bij Sneeuwwitje, venster niet vooraan); met de scène in beeld 12, zonder 15. Opnieuw meten als Studio vooraan staat.
+
 ## Daarna (volgorde met Daan afgesproken)
-1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken.
+1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
 Kaatsheuvel eromheen: later.
 
