@@ -227,12 +227,15 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - v7 paden (Daan): OSM 1169014962 (V om het pleinvierkant, ~10.6 m voor de muren) + 967458491/490 (doorgang Prinsenpoort), 3.2 m, mesh
   'padklinker' = Cobblestone -> EftelingKlinkers (zoals de parkpaden). Asset **124674002080571**. 19 planten van het pad weg. Wandeltest: pad west ->
   knik bij de haag -> pad noord -> Prinsenpoort -> over het gras het plein op: OK. Tussen pad en pleiningangen ligt gras (OSM heeft daar geen pad).
-- v8 (Daan): ALTIJD grind (Pebble + VV_Grind, kleur 150,142,130 = precies als Hans en Grietje), geen tuin, geen haag, geen manden, geen V-pad. Grind = het plein + een randpad
+- v8 (Daan): ALTIJD grind (Pebble + VV_Grind, kleur 235,228,214 = het lichte grind van Sneeuwwitje/Assepoester/Villa Volta), geen tuin, geen haag, geen manden, geen V-pad. Grind = het plein + een randpad
   langs de herauten: west langs de gracht (t 2.35..5.4) tot sW 22, noord langs de verhoogde strook tot voorbij de Prinsenpoort + de doorgang.
   Herauten op een verhoging: noord begroeide strook achter het keermuurtje (0.42 m), west grasoever boven de gracht (0.30 m); sokkels/herauten mee omhoog.
   Loopvlakken: bovenkant naar boven (omhoog()), 10-11 cm boven maaiveld (anders prikt bladgras erdoor). Vrijgekomen grond = bos (geen bomen of hoge
   struiken in het zicht voor het plein). Asset **95617904563293**. Wandeltest randpad west -> plein -> randpad noord -> Prinsenpoort: OK.
   Screenshot `review/studio_v8_randpad.jpg`.
+- v9 (Daan): stenen rand doorgetrokken tot het eind van beide kasteelmuren en daar tegen de muur afgesloten (west langs de gracht tot sW 17.75,
+  noord langs de verhoogde strook tot sN 14.75); verhoogde strook noord op volle hoogte tot de eindrand. Asset **85276771159667**
+  (`review/eindranden.jpg`). Grind 235,228,214 zoals Sneeuwwitje. Nog te plaatsen als Daan uit Play is.
 - NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 

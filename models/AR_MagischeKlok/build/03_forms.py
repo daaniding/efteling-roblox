@@ -230,11 +230,13 @@ def build(master):
     if a1 - a0 > math.pi: a0, a1 = a1, a0 + math.tau
     arc_ = [Vector((math.cos(a0 + (a1 - a0) * k / 8), math.sin(a0 + (a1 - a0) * k / 8))) * (na.length + (wa.length - na.length) * k / 8) for k in range(9)]
     if (arc_[0] - na).length > 0.5: arc_ = arc_[::-1]
-    back = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(5.0, TB + 0.1), WP(SWE, TB + 0.1), WP(SWE + 0.5, TB - 0.2), WP(SWE + 0.7, TB - 0.6)]
+    # stenen rand doorgetrokken tot het eind van beide kasteelmuren en daar tegen de muur afgesloten (Daan: netjes afwerken)
+    WEND, NEND = 17.75, 14.75
+    back = [NP(NEND, -0.15), NP(NEND, TB), NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(5.0, TB + 0.1), WP(SWE, TB + 0.1), WP(WEND, TB + 0.1), WP(WEND, -0.15)]
     C = snijpunt(TF, TF)
     front = [WP(SWE, TF), C, NP(SNE, TF)]
     # grind: band tussen achter- en voorrand (oor-snijden voor de concave chevron)
-    poly = [NP(SNE, TB)] + back[1:-2] + [WP(SWE, TB + 0.1), WP(SWE, TF), C, NP(SNE, TF)]
+    poly = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(5.0, TB + 0.1), WP(SWE, TB + 0.1), WP(SWE, TF), C, NP(SNE, TF)]
     gb = bmesh.new(); gv = [gb.verts.new((q.x, q.y, 0.1)) for q in poly]; gf = gb.faces.new(gv)
     bmesh.ops.triangulate(gb, faces=[gf], ngon_method="EAR_CLIP"); omhoog(gb); put("plein", "klinker", gb)
     # muurtje van ruwe natuursteen: twee lagen blokken + afdekstenen, licht onregelmatig
@@ -286,7 +288,7 @@ def build(master):
     PADEN = [[tuple(NP(20.8, RB - 0.2)), tuple(NP(20.8, 2.3)), tuple(NP(20.8, -3.0))]]                   # doorgang Prinsenpoort (OSM 967458491/490)
     for pts in PADEN: put("paden", "padklinker", pad_strook(pts))
     # randpad: west langs de gracht (t 2.35..RB) vanaf het plein, noord langs de verhoogde strook (t 2.45..RB) tot voorbij de Prinsenpoort
-    for (F_, lo, hi, t0) in ((WP, SWE - 0.2, 22.0, 2.35), (NP, SNE - 0.4, 22.4, TB - 0.15)):
+    for (F_, lo, hi, t0) in ((WP, SWE - 0.2, 22.0, TB + 0.32), (NP, SNE - 0.4, 22.4, TB + 0.22)):   # grind tegen de stenen rand
         q4 = [F_(lo, t0), F_(hi, t0), F_(hi, RB), F_(lo, RB)]
         cb = bmesh.new(); cv = [cb.verts.new((q.x, q.y, 0.1)) for q in q4]; cb.faces.new(cv); omhoog(cb); put("paden", "padklinker", cb)
     # verhogingen: begroeide strook achter het keermuurtje (noord + bocht bij de toren) en grasoever boven de gracht (west)
@@ -297,10 +299,10 @@ def build(master):
         bmesh.ops.triangulate(vb, faces=[ft], ngon_method="EAR_CLIP"); bmesh.ops.recalc_face_normals(vb, faces=vb.faces); return vb
     arcN = [q for q in arc_]
     if (arcN[0] - NP(1.4, TB)).length > (arcN[-1] - NP(1.4, TB)).length: arcN = arcN[::-1]          # van noord naar west
-    polyN = [NP(14.4, 0.03), NP(-0.8, 0.03), WP(-0.8, 0.03), WP(0.4, 0.03), WP(0.4, 0.95), WP(1.2, TB - 0.05)] + [q * ((q.length - 0.18) / q.length) for q in arcN[::-1]] + \
-            [NP(SNE, TB - 0.18), NP(14.4, 1.2)]
+    polyN = [NP(NEND - 0.1, 0.03), NP(-0.8, 0.03), WP(-0.8, 0.03), WP(0.4, 0.03), WP(0.4, 0.95), WP(1.2, TB - 0.05)] + [q * ((q.length - 0.18) / q.length) for q in arcN[::-1]] + \
+            [NP(SNE, TB - 0.18), NP(NEND - 0.1, TB - 0.18)]                      # op volle hoogte tot de eindrand
     put("verhoging", "gras", verhoging(polyN, VER["N"]))
-    polyW = [WP(0.2, 0.03), WP(17.0, 0.03), WP(17.0, 0.95), WP(0.2, 0.95)]
+    polyW = [WP(0.2, 0.03), WP(WEND - 0.1, 0.03), WP(WEND - 0.1, 0.95), WP(0.2, 0.95)]
     put("verhoging", "gras", verhoging(polyW, VER["W"]))
     PLEIN["paden"] = PADEN
     # front.jpg: toren ~13% smaller t.o.v. de muren (hoogtes kloppen) -> alleen in x/y schalen
