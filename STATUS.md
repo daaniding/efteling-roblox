@@ -336,6 +336,15 @@ kop naar de Prinsenpoort (lemma). Bloemenborders met banken eromheen stonden er 
   Let op: een net geuploade textuur toont even wit in Studio (verwerking); ColorMap opnieuw zetten of even wachten.
 - NOG: kaak/staart bewegen bij muntinworp (pas als Daan animatie wil), ezel nog wat stijf (hoofd/oren), herberg De Ersteling.
 
+## Herberg De Ersteling (chat 8, 13 nov) — v1 in Studio
+Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet (ref/Herberg.jpg), foto's 2009, BAG-plattegrond (OSM 55447978).
+- `build/03_forms.py`: gevelbaai met rieten zadeldak (profiel geextrudeerd + bevel, geen subsurf: die blies het dak op), schilddak riet (2 delen),
+  wenkbrauwdakkapel, toren (achthoek, stuc/plankwerk/pannen + spits), schoorstenen, ramen met luiken, deuren met boog, lantaarn, uithangbord
+  (PIL-textuur), vaten, bankje. `05_bake.py` met nieuwe rollen riet (strengen langs de helling + mos), natuursteen (oker verband), hout
+  (verticale planken), pannen, stuc (crème). Keten `build/bouw_alles.sh`, plaatsen `roblox/plaats_herberg.luau`. Asset **97498436658390**.
+  Staat tussen het Ezeltje-pleintje en het kasteel van Sneeuwwitje, toren rechts (zoals Herberg_exterieur). Screenshot `review/studio_v1.jpg`.
+- NOG: interieur (Herberginterieur-ontwerp: haard, balkenplafond, jongen aan tafel, waard, hondje), kozijnen/roeden fijner, wenkbrauw-textuur.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
