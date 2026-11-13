@@ -118,6 +118,12 @@ def build(master):
     b = bmesh.new(); b.from_mesh(me); bpy.data.meshes.remove(me); omhoog(b); put("keien", "kassei", b)
     for o_ in [pv] + snij: bpy.data.objects.remove(o_, do_unlink=True)
     vlak([Vector((-1.6, -4.3)), Vector((1.6, -4.3)), Vector((1.6, -8.5)), Vector((-1.6, -8.5))], 0.08, "kassei", "keien")   # aanloop van de Prinsenpoort (OSM 967458491)
+    # ================= GAZONSTROOK OOSTZIJDE (luchtfoto + hoekfoto Daan): open gazon tussen de pleinrand (x 15.8) en de MK-strook / bosrand,
+    # vanaf het uitsteeksel (y -15.2, sluit aan op het MK-gazon voor de westarm) tot y -42; laag bakstenen randje langs het plein =================
+    gz = [Vector((15.75, -15.15)), Vector((20.5, -15.15)), Vector((20.5, -42.0)), Vector((15.4, -42.0)), Vector((15.12, -40.0))]
+    gb_ = bmesh.new(); gv_ = [gb_.verts.new((p.x, p.y, 0.14)) for p in gz]; gb_.faces.new(gv_); omhoog(gb_); put("gazon", "gras", gb_)
+    for a_, b_ in ((Vector((15.75, -15.15)), Vector((15.12, -40.0))), (Vector((15.12, -40.0)), Vector((15.4, -42.0))), (Vector((15.4, -42.0)), Vector((20.5, -42.0)))):
+        rand_box(a_, b_, 0.2, -0.05, 0.2, "baksteen", "bloemvakken", inset=0.0, ch=0.01)
     # ================= ZUIDDEEL: hagen (h 1 m), gebogen bloemvakken met laag bakstenen muurtje (Herautenplein99), bankjes, bosje =================
     for hid in ("505382910", "505382911"):
         hp = INNER[hid]; put("hagen_zuid", "taxus", prisma(hp, 0.05, 1.0))

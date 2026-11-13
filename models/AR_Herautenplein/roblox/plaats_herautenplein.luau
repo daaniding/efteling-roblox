@@ -1,7 +1,7 @@
 -- Herautenplein + Kikkerkoningfontein. Asset uit build/bouw_alles.sh. Zelfde frame als de Prinsenpoort:
 -- oorsprong OSM (50.53, 76.22) = studs (151.58, -228.65), grond Y=2, -Y = van de poort het plein op. Kikkers: plaats_kikkers.luau. Groen: plaats_herautenplein_groen.luau.
-local MODEL = 130206013763885
-local TEX = {baksteen_bakken = {77159866873710, 122906145682863}, baksteen_fontein = {86692309367866, 79219781188509}, steen = {114641039168670}}
+local MODEL = 100856002577530
+local TEX = {baksteen_bakken = {89127368571889, 122906145682863}, baksteen_fontein = {86692309367866, 79219781188509}, steen = {114641039168670}}
 local HAAG = {73997585762296, 114509386598524}
 local F = Vector3.new(-0.968, 0, 0.250)
 local ORIGIN = CFrame.new(151.58, 2.0, -228.65) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)

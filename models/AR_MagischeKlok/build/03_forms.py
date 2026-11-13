@@ -243,7 +243,9 @@ def build(master):
     # v14 (Daan, foto van de hoek): bestrating voor de noordarm en in de hoek voor de toren; voor de westarm (3 herauten dicht bij de toren)
     # een gazon met een laag bakstenen randje langs de bestrating; zigzagbank op de grens; lantaarn met krularm aan de gazonrand
     SL, SLE = 2.4, 12.3                                                        # gazon west: van s 2.4 tot 12.3 langs de westmuur
-    poly = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(SL, TB + 0.1), WP(SL, TF), C, NP(SNE, TF)]
+    # v15 (Daan, luchtfoto linksboven): het stuk plein bij de MK is helemaal bestraat tot in de hoek; het gazon begint pas na het uitsteeksel
+    # (lange strook langs de pleinrand, zit in AR_Herautenplein). Bestrating dus weer over de hele band voor beide armen.
+    poly = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(5.0, TB + 0.1), WP(SWE, TB + 0.1), WP(SWE, TF), C, NP(SNE, TF)]
     gb = bmesh.new(); gv = [gb.verts.new((q.x, q.y, 0.1)) for q in poly]; gf = gb.faces.new(gv)
     bmesh.ops.triangulate(gb, faces=[gf], ngon_method="EAR_CLIP"); omhoog(gb); put("plein", "klinker", gb)
     # muurtje van ruwe natuursteen: twee lagen blokken + afdekstenen, licht onregelmatig
@@ -262,9 +264,7 @@ def build(master):
     stenen_muur(back)
     # lange lage groene bankjes langs de binnenkant van de voorrand (volgen de knik = de 'Z' van de totaalfoto)
     gz = [WP(SL, TB + 0.1), WP(SLE, TB + 0.1), WP(SLE, TF), WP(SL, TF)]
-    lb = bmesh.new(); lv = [lb.verts.new((q.x, q.y, 0.14)) for q in gz]; lb.faces.new(lv); omhoog(lb); put("plein", "gras", lb)
-    for a_, b_ in ((WP(SL, TB + 0.1), WP(SL, TF)), (WP(SL, TF), WP(SLE, TF))):                 # laag bakstenen randje (foto: rollaag)
-        d_ = b_ - a_; put("plein", "baksteen", bz(0.0, d_.length, -0.1, 0.1, -0.05, 0.2, 0.01), TR(a_.x, a_.y, 0, math.degrees(math.atan2(d_.y, d_.x))))
+    # (gazon voor de westarm vervallen in v15: zie AR_Herautenplein gazonstrook oostzijde)
     # zigzagbank in de hoek op de grens bestrating/gazon (foto), buxuskegel ernaast
     bank = [WP(SL - 0.5, TB + 0.9), WP(SL - 0.5, TF - 1.6), WP(SL - 2.3, TF - 0.9), WP(SL - 2.3, TF + 0.6)]
     for a_, b_ in zip(bank, bank[1:]):
@@ -283,7 +283,7 @@ def build(master):
     kq = WP(SL - 3.1, TF + 0.9)
     put("bankjes", "haag", blathe([(0, 0.1), (0.32, 0.12), (0.3, 0.45), (0.2, 0.8), (0.06, 1.05), (0, 1.08)], 14), TR(kq.x, kq.y, 0))
     # lantaarn met krularm aan de gazonrand (foto: grijze paal, sierlijke arm, één vierkante lantaarn)
-    lq = WP(7.0, TF - 0.35); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(-nW.y, -nW.x))
+    lq = WP(12.9, TF - 0.9); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(-nW.y, -nW.x))   # aan het begin van de gazonstrook (hoekfoto)
     ax_ = Vector((math.cos(math.radians(la)), math.sin(math.radians(la)))) * -1
     put("lantaarn", "ijzer", blathe([(0, 0), (0.11, 0), (0.11, 0.35), (0.075, 0.42), (0.06, 3.0), (0.07, 3.05), (0, 3.1)], 12), TR(lx, ly, 0))
     tip = Vector((lx, ly)) + ax_ * 0.7

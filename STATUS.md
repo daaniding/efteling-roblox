@@ -304,6 +304,10 @@ iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
 - v4 (Daan stuurde een luchtfoto, 225 px, Nick Ringelberg): indeling klopt met de OSM-relatie (rechthoek, 4 tuinvakken, fontein, rond pleintje
   aan de korte kant); het plein ligt helemaal in het bos. 59 bomen in een band van 1.2-15 m rond de omtrek (`roblox/plaats_herautenplein_bos.luau`,
   `exports/bosrand.json`). Bovenaanzicht `review/studio_v4_bovenaanzicht.jpg`. Grotere versie van de luchtfoto nodig voor details.
+- v5 (Daan: "kijk linksboven op de luchtfoto, het stuk plein bij de MK"): het uitsteeksel bij de MK is helemaal bestraat tot in de hoek bij de
+  toren (MK v15 asset **126060859233156**: MK-gazon voor de westarm weg, bestrating weer over de hele band, lantaarn met krularm naar het begin
+  van de gazonstrook). Daarna een lange open gazonstrook langs de oostrand van het plein (x 15.1..20.5, y -15.2..-42) met laag bakstenen randje
+  = de groene band op de luchtfoto. 18 bosrandbomen op/achter die strook weg. Plein asset **100856002577530**. `review/studio_v5_mkhoek_boven.jpg`.
 - NOG: Ezeltje-strek-je zelf (beeld op sokkel, aparte attractie), waterstralen (pas als Daan animatie wil),
   wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
 
