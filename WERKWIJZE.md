@@ -184,4 +184,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Terrein uitgraven:** FillBlock Air werkt per cel van 4 studs en alleen als het celmidden binnen het blok valt; graaf diep genoeg (tot Y -4) met rechte blokken.
 - **Tele-foto's:** als muren die een hoek maken op de foto in een lijn lijken te staan, is de foto van ver met een lange lens genomen (cam ~30 m, 55 mm).
 - **Glass in Roblox weerspiegelt de lucht (felblauw):** troebel water als SmoothPlastic donkergroen met weinig transparantie.
+- **Eerst de echte indeling (Daan, Magische Klok):** overzichtsfoto's + OSM-paden/-punten in het modelframe tekenen (`01b_plan.py`) en per element
+  een bron hebben (aantal figuren, waar het water loopt, wat ervoor ligt: gras/plein/perk). Een tekst als "gracht voor de muren" kan maar voor één muur gelden.
+- **Mud in deze place = VV_Bosgrond (felgroen):** niet gebruiken voor oevers.
+- **Terrein herstellen:** WriteVoxels per 4-stud-cel met (Ground 1, Ground 1, Air 0) op Y -8..4 geeft weer maaiveld op Y=2 (zo ligt het ongerepte terrein).
+- **Herauten/figuren zonder generator:** skin-modifier (gewrichten + stralen) + subsurf 2 voor het lichaam, kleding als lofts met strepen per segment,
+  gezichtsdelen meeschalen met het hoofd (anders verdwijnen ze erin). generate_3d vraagt een generator-sleutel in de Blender-addon.
 

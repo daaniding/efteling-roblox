@@ -68,3 +68,45 @@ d.line([300, 150, 40, 60], fill=(120, 80, 40, 255), width=9); d.polygon([(40, 60
 d.line([300, 255, 300, 300], fill=ZW, width=12)                                                               # been
 r.save(os.path.join(D, "MK_ruiter_kleur.png"))
 print("atlassen klaar")
+
+# ---------------- klimop (Hedera helix): 2x2 tegels, elk een tros van 7-11 bladeren, RGBA ----------------
+import random
+rng = random.Random(7)
+A = 1024; T = A // 2
+kl = Image.new("RGBA", (A, A), (0, 0, 0, 0))
+def ivy_leaf(sz, col, vein):
+    """vijflobbig klimopblad, punt naar boven, met nerven en lichte rand; geeft RGBA-tegel"""
+    L = Image.new("RGBA", (sz, sz), (0, 0, 0, 0)); d = ImageDraw.Draw(L); c = sz / 2
+    lobes = [(90, 1.0), (28, 0.86), (152, 0.86), (-28, 0.68), (208, 0.68)]   # hoek, lengte (brede, ronde lobben)
+    pts = []
+    for i in range(72):
+        a = math.radians(i * 5); r = 0.18
+        for la, ll in lobes:
+            da = math.radians((math.degrees(a) - la + 180) % 360 - 180)
+            r = max(r, ll * math.exp(-(da / 0.62) ** 2), 0.5)
+        if 240 < i * 5 < 300: r = min(r, 0.22)                               # inham bij de steel
+        pts.append((c + r * c * 0.95 * math.cos(a), c - r * c * 0.95 * math.sin(a)))
+    d.polygon(pts, fill=col)
+    for la, ll in lobes:                                                       # nerven
+        a = math.radians(la); d.line([c, c + c * 0.12, c + ll * c * 0.8 * math.cos(a), c - ll * c * 0.8 * math.sin(a)], fill=vein, width=max(1, sz // 60))
+    sh = Image.new("L", (sz, sz), 0); ImageDraw.Draw(sh).ellipse([c * 0.2, c * 0.1, c * 1.5, c * 1.2], fill=60)   # glans linksboven
+    sh = sh.filter(ImageFilter.GaussianBlur(sz / 8)); hl = Image.new("RGBA", (sz, sz), (255, 255, 240, 0)); hl.putalpha(sh)
+    L = Image.alpha_composite(L, Image.composite(hl, Image.new("RGBA", (sz, sz), (0, 0, 0, 0)), L.split()[3]))
+    return L
+GREENS = [(38, 62, 30), (44, 72, 34), (52, 82, 38), (32, 54, 28), (60, 92, 44), (72, 104, 50)]
+for ty in range(2):
+    for tx in range(2):
+        tile = Image.new("RGBA", (T, T), (0, 0, 0, 0)); td = ImageDraw.Draw(tile)
+        stems = []
+        for k in range(rng.randint(34, 42)):                                  # dichte mat: dichter in het midden, losser aan de rand
+            r_ = (rng.random() ** 0.7) * T * 0.46; a_ = rng.random() * math.tau
+            cx_, cy_ = T / 2 + r_ * math.cos(a_), T / 2 + r_ * math.sin(a_)
+            sz = rng.randint(95, 165); g = rng.choice(GREENS); g = tuple(max(0, min(255, v + rng.randint(-10, 10))) for v in g)
+            vein = tuple(min(255, v + 40) for v in g) + (255,)
+            lf = ivy_leaf(sz, g + (255,), vein).rotate(rng.uniform(-80, 80), resample=Image.BICUBIC, expand=True)
+            x = int(max(0, min(T - lf.width, cx_ - lf.width / 2))); y = int(max(0, min(T - lf.height, cy_ - lf.height / 2)))
+            sh = Image.new("RGBA", lf.size, (0, 0, 0, 0)); sh.putalpha(lf.split()[3].point(lambda v: v * 0.5))
+            tile.alpha_composite(sh, (min(T - lf.width, x + 5), min(T - lf.height, y + 7))); tile.alpha_composite(lf, (x, y))
+        kl.alpha_composite(tile, (tx * T, ty * T))
+kl.save(os.path.join(D, "MK_klimop_kleur.png"))
+print("klimop klaar")

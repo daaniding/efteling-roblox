@@ -2,9 +2,9 @@
 -- Model: klok kijkt naar -Y (WNW), +X = ZZW, oorsprong = midden toren, z=0 maaiveld (asset-brief.md).
 -- Kalibratie: oorsprong = OSM (56.44, 53.25) m = studs (169.32, -159.75); kijkrichting Roblox (-0.855, 0, -0.518); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing). Herauten: aparte map Herauten (zelfde asset, groep heraut).
-local MODEL = 90334417357517
-local COLL = {{1.653, 0.0, 2.2, 0.85, 0.5, 4.4, 90.0}, {1.5268499999999998, 0.63249, 2.2, 0.85, 0.5, 4.4, 112.5}, {1.16928, 1.16928, 2.2, 0.85, 0.5, 4.4, 135.0}, {0.63249, 1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 157.5}, {0.0, 1.653, 2.2, 0.85, 0.5, 4.4, 180.0}, {-0.63249, 1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 202.5}, {-1.16928, 1.16928, 2.2, 0.85, 0.5, 4.4, 225.0}, {-1.5268499999999998, 0.63249, 2.2, 0.85, 0.5, 4.4, 247.5}, {-1.653, 0.0, 2.2, 0.85, 0.5, 4.4, 270.0}, {-1.5268499999999998, -0.63249, 2.2, 0.85, 0.5, 4.4, 292.5}, {-1.16928, -1.16928, 2.2, 0.85, 0.5, 4.4, 315.0}, {-0.63249, -1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 337.5}, {-0.0, -1.653, 2.2, 0.85, 0.5, 4.4, 360.0}, {0.63249, -1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 382.5}, {1.16928, -1.16928, 2.2, 0.85, 0.5, 4.4, 405.0}, {1.5268499999999998, -0.63249, 2.2, 0.85, 0.5, 4.4, 427.5}, {-5.953, -5.609, 2.0, 18.65, 0.6, 4.0, -134.384}, {6.556, -6.725, 2.0, 21.45, 0.6, 4.0, -45.681}, {3.518, -13.469, 1.3, 1.144, 0.4, 2.6, 117.5}, {2.924, -12.621, 1.3, 1.144, 0.4, 2.6, 132.5}, {2.131, -11.955, 1.3, 1.144, 0.4, 2.6, 147.5}, {1.193, -11.518, 1.3, 1.144, 0.4, 2.6, 162.5}, {0.173, -11.338, 1.3, 1.144, 0.4, 2.6, 177.5}, {-0.858, -11.428, 1.3, 1.144, 0.4, 2.6, -167.5}, {-1.831, -11.782, 1.3, 1.144, 0.4, 2.6, -152.5}, {-2.679, -12.376, 1.3, 1.144, 0.4, 2.6, -137.5}, {-3.345, -13.169, 1.3, 1.144, 0.4, 2.6, -122.5}}   -- [cx, cy, cz, sx, sy, sz, hoek] in modelmeters, ingevuld uit exports/klok_extra.json (maak_plaatsscript.py)
-local TEX = {baksteen_detail = {108979434028974, 112282749940764}, baksteen_toren = {70970170035341, 98757760719558}, klok = {127168149551485}, leien = {113242851985008, 91109038076936}, ruiter = {117001844464393}, steen = {82997977649814}, stuc_N = {111877303736600, 119192160525210}, stuc_W = {87242237772715, 76750031041242}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
+local MODEL = 84133768551001
+local COLL = {{1.653, 0.0, 2.2, 0.85, 0.5, 4.4, 90.0}, {1.5268499999999998, 0.63249, 2.2, 0.85, 0.5, 4.4, 112.5}, {1.16928, 1.16928, 2.2, 0.85, 0.5, 4.4, 135.0}, {0.63249, 1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 157.5}, {0.0, 1.653, 2.2, 0.85, 0.5, 4.4, 180.0}, {-0.63249, 1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 202.5}, {-1.16928, 1.16928, 2.2, 0.85, 0.5, 4.4, 225.0}, {-1.5268499999999998, 0.63249, 2.2, 0.85, 0.5, 4.4, 247.5}, {-1.653, 0.0, 2.2, 0.85, 0.5, 4.4, 270.0}, {-1.5268499999999998, -0.63249, 2.2, 0.85, 0.5, 4.4, 292.5}, {-1.16928, -1.16928, 2.2, 0.85, 0.5, 4.4, 315.0}, {-0.63249, -1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 337.5}, {-0.0, -1.653, 2.2, 0.85, 0.5, 4.4, 360.0}, {0.63249, -1.5268499999999998, 2.2, 0.85, 0.5, 4.4, 382.5}, {1.16928, -1.16928, 2.2, 0.85, 0.5, 4.4, 405.0}, {1.5268499999999998, -0.63249, 2.2, 0.85, 0.5, 4.4, 427.5}, {-5.953, -5.609, 2.0, 18.65, 0.6, 4.0, -134.384}, {6.556, -6.725, 2.0, 21.45, 0.6, 4.0, -45.681}}   -- [cx, cy, cz, sx, sy, sz, hoek] in modelmeters, ingevuld uit exports/klok_extra.json (maak_plaatsscript.py)
+local TEX = {baksteen_detail = {98919505676641, 98441937513294}, baksteen_toren = {106792609100363, 98757760719558}, klimop = {75153798740029}, klok = {127168149551485}, leien = {113242851985008, 91109038076936}, ruiter = {117001844464393}, steen = {81574207246097}, stuc_N = {71061860786384, 76211821518513}, stuc_W = {94336699150259, 88951323215272}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
 local F = Vector3.new(-0.855, 0, -0.518)
 local ORIGIN = CFrame.new(169.32, 2.0, -159.75) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -13,10 +13,16 @@ local M = {
 	kern = {Color3.fromRGB(138, 140, 138), "Plaster"}, lood = {Color3.fromRGB(112, 116, 118), "Metal"}, ijzer = {Color3.fromRGB(26, 30, 30), "Metal"},
 	brons = {Color3.fromRGB(110, 90, 58), "Metal"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, pannen = {Color3.fromRGB(150, 84, 64), "ClayRoofTiles"},
 	klokhout = {Color3.fromRGB(46, 86, 82), "Wood"}, hout = {Color3.fromRGB(36, 78, 60), "Wood"}, rood = {Color3.fromRGB(176, 34, 28), "SmoothPlastic"},
-	bodem = {Color3.fromRGB(70, 58, 42), "Ground"}, water = {Color3.fromRGB(46, 56, 36), "Glass"}, klinker = {Color3.fromRGB(128, 122, 114), "Cobblestone", "EftelingKlinkers"},
+	bodem = {Color3.fromRGB(92, 70, 50), "Ground"}, water = {Color3.fromRGB(38, 46, 30), "SmoothPlastic"}, klinker = {Color3.fromRGB(150, 146, 138), "Cobblestone"},
 	toon_groen = {Color3.fromRGB(70, 112, 96), "SmoothPlastic"}, toon_rood = {Color3.fromRGB(190, 92, 70), "SmoothPlastic"},
-	huid = {Color3.fromRGB(226, 182, 150), "SmoothPlastic"}, haar = {Color3.fromRGB(214, 168, 90), "SmoothPlastic"},
+	huid = {Color3.fromRGB(232, 186, 156), "SmoothPlastic"}, haar = {Color3.fromRGB(218, 176, 100), "SmoothPlastic"},
+	stof_rood = {Color3.fromRGB(150, 36, 30), "Fabric"}, zwart = {Color3.fromRGB(18, 18, 20), "SmoothPlastic"}, kant = {Color3.fromRGB(226, 226, 220), "Fabric"},
+	edelsteen = {Color3.fromRGB(40, 120, 104), "Glass"}, vaandel = {Color3.fromRGB(16, 20, 64), "Fabric"}, oogwit = {Color3.fromRGB(236, 234, 226), "SmoothPlastic"},
+	iris = {Color3.fromRGB(40, 86, 150), "SmoothPlastic"}, lip = {Color3.fromRGB(176, 84, 72), "SmoothPlastic"}, riem = {Color3.fromRGB(140, 28, 24), "SmoothPlastic"},
+	paal = {Color3.fromRGB(70, 46, 30), "Wood"}, glaslamp = {Color3.fromRGB(255, 226, 170), "Glass"}, kant_papier = {Color3.fromRGB(236, 228, 204), "SmoothPlastic"},
+	haag = {Color3.fromRGB(255, 255, 255), "Plastic"},
 }
+local HAAG = {73997585762296, 114509386598524}   -- buxus/taxus-textuur (zelfde als Villa Volta / Assepoester)
 local GEEN_SCHADUW = {water = true, bodem = true, klinker = true, ijzer = true}
 local BOTSEN = {klinker = true}
 
@@ -36,7 +42,10 @@ local function plaats(asset, naam)
 	for _, p in ipairs(m:GetChildren()) do
 		if not p:IsA("BasePart") then continue end
 		p.Anchored = true; p.CanTouch = false; p.CanCollide = false; p.CanQuery = true
-		if string.match(p.Name, "^COLL_") then
+		if string.match(p.Name, "^LAMP_") then
+			p.Transparency = 1; p.CastShadow = false; p.CanQuery = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.Name = "Lamp"
+			local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 196, 120); pl.Range = 14; pl.Brightness = 1.2; pl.Shadows = false; pl.Parent = p
+		elseif string.match(p.Name, "^COLL_") then
 			p.Transparency = 1; p.CanCollide = true; p.CastShadow = false; p.Parent = bots
 			if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.Box end
 		else
@@ -46,13 +55,15 @@ local function plaats(asset, naam)
 				p.Color = Color3.new(1, 1, 1); p.Material = Enum.Material.Plastic
 				local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex][1]
 				if TEX[tex][2] then sa.NormalMap = "rbxassetid://" .. TEX[tex][2] end
-				if tex == "ruiter" then sa.AlphaMode = Enum.AlphaMode.Transparency; p.CastShadow = false end
+				if tex == "ruiter" or tex == "klimop" then sa.AlphaMode = Enum.AlphaMode.Transparency; p.CastShadow = false end
+				if tex == "steen" then sa.Color = Color3.fromRGB(160, 156, 148) elseif string.find(tex, "stuc") then sa.Color = Color3.fromRGB(205, 202, 190) end   -- rendert anders te licht
 				sa.Parent = p
 			elseif key and M[key] then
 				local s = M[key]; p.Color = s[1]; p.Material = Enum.Material[s[2]]; if s[3] then p.MaterialVariant = s[3] end
 				if GEEN_SCHADUW[key] then p.CastShadow = false end
 				if BOTSEN[key] then p.CanCollide = true; if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end end
-				if key == "water" then p.Transparency = 0.2; p.Reflectance = 0.15 end
+				if key == "water" then p.Transparency = 0.05; p.Reflectance = 0 end   -- troebel (Glass weerspiegelt de lucht felblauw)
+				if key == "haag" then local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. HAAG[1]; sa.NormalMap = "rbxassetid://" .. HAAG[2]; sa.Color = Color3.fromRGB(150, 175, 130); sa.Parent = p; p.CanCollide = true end
 			else table.insert(onbekend, p.Name) end
 		end
 	end
@@ -94,17 +105,21 @@ local ARMS = {
 	N = {Vector2.new(-1.33, -2.96), Vector2.new(-0.6997, -0.7149), Vector2.new(0.7149, -0.6997), 14.45},
 	W = {Vector2.new(0.96, -3.07), Vector2.new(0.6986, -0.7154), Vector2.new(-0.7154, -0.6986), 17.25},
 }
-for _, a in pairs(ARMS) do
-	local p0 = a[1] - a[3] * 1.2; local u, n, L = a[2], a[3], a[4]
-	local g0, g1 = 1.4, L - 0.4
-	local c = p0 + u * ((g0 + g1) / 2) + n * 1.65
-	local cf = lokaal(c.X, c.Y, -0.1) * CFrame.Angles(0, math.atan2(-u.Y, -u.X), 0)   -- lokaal X = -model x, lokaal Z = model y
-	T:FillBlock(cf * CFrame.new(0, 0.6, 0), Vector3.new((g1 - g0) * S, 4.4, math.max(1.45 * S, 4.4)), Enum.Material.Air)   -- terreinraster is 4 studs: ruim uitgraven
+do   -- gracht alleen langs de westmuur. Terreinraster is 4 studs en FillBlock pakt alleen cellen met het midden in het blok: rechte blokken tot Y -4
+	local a = ARMS.W; local p0 = a[1] - a[3] * 1.2
+	for s = 1.7, a[4] - 0.7, 0.6 do
+		local q = p0 + a[2] * s + a[3] * 1.65; local p = lokaal(q.X, q.Y, 0).Position
+		T:FillBlock(CFrame.new(p.X, 0.5, p.Z), Vector3.new(3.4, 9, 3.4), Enum.Material.Air)
+	end
 end
-for x = -15, 17, 1.3 do for y = -20, 4, 1.3 do
+-- grasveld (overzicht-okt2009): binnen het pleinvierkant gras, behalve een strook van 2.5 m langs de noordmuur, de toren en de gracht (aarde)
+for x = -15, 17, 1.3 do for y = -22, 4, 1.3 do
 	local p = lokaal(x, y, 0).Position
 	local r = Region3.new(Vector3.new(p.X - 2, -4, p.Z - 2), Vector3.new(p.X + 2, 4, p.Z + 2)):ExpandToGrid(4)
-	T:ReplaceMaterial(r, 4, Enum.Material.Grass, Enum.Material.Ground); T:ReplaceMaterial(r, 4, Enum.Material.LeafyGrass, Enum.Material.Ground)
+	local q = Vector2.new(x, y); local tN = (q - (ARMS.N[1] - ARMS.N[3] * 1.2)):Dot(ARMS.N[3]); local tW = (q - (ARMS.W[1] - ARMS.W[3] * 1.2)):Dot(ARMS.W[3])
+	local gras = tN > 2.6 and tW > 3.0 and q.Magnitude > 4.5
+	if gras then T:ReplaceMaterial(r, 4, Enum.Material.Ground, Enum.Material.Grass); T:ReplaceMaterial(r, 4, Enum.Material.Mud, Enum.Material.Grass)
+	else T:ReplaceMaterial(r, 4, Enum.Material.Grass, Enum.Material.Ground); T:ReplaceMaterial(r, 4, Enum.Material.LeafyGrass, Enum.Material.Ground) end
 end end
 local ids = {}
 for _, sa in ipairs(klok:GetDescendants()) do if sa:IsA("SurfaceAppearance") then

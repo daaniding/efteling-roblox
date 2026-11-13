@@ -17,8 +17,9 @@ MATS = {
     "rood": ((0.62, 0.08, 0.06, 1), 0.5), "bodem": ((0.20, 0.16, 0.11, 1), 1.0), "water": ((0.10, 0.12, 0.08, 1), 0.05),
     "klinker": ((0.45, 0.43, 0.40, 1), 0.9), "toon_groen": ((0.25, 0.42, 0.36, 1), 0.7), "toon_rood": ((0.70, 0.30, 0.22, 1), 0.7),
     "huid": ((0.85, 0.66, 0.52, 1), 0.6), "haar": ((0.80, 0.62, 0.30, 1), 0.7),
+    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
 }
-COLL = []; HERAUTEN = []
+COLL = []; HERAUTEN = []; LAMPS_ = []; PLEIN = {}
 def coll_box(cx, cy, cz, sx, sy, sz, ang=0.0): COLL.append([round(v, 3) for v in (cx, cy, cz, sx, sy, sz, ang)])
 
 # ------------------------------------------------------------------ maten (asset-brief.md)
@@ -32,7 +33,7 @@ ARMS = {   # binnenvlak-start, richting, plein-normaal, lengte (vanaf de start)
     "N": (Vector((-1.33, -2.96)), Vector((-0.6997, -0.7149)), Vector((0.7149, -0.6997)), 14.45),
     "W": (Vector((0.96, -3.07)), Vector((0.6986, -0.7154)), Vector((-0.7154, -0.6986)), 17.25),
 }
-HERAUT_S = (5.2, 8.0, 10.8)            # afstand langs de arm vanaf de start
+HERAUT_S = {"N": (3.8, 8.0, 11.8), "W": (2.8, 5.3, 7.8)}   # afstand langs de arm (overzicht-okt2009: west dicht bij de toren, noord ver uit elkaar)
 SHIFT = 1.2                           # front.jpg: de toren staat helemaal voor de muren -> binnenvlakken 1.2 m achter de OSM-lijn
 for _k, (_p, _u, _n, _L) in list(ARMS.items()): ARMS[_k] = (_p - _n * SHIFT, _u, _n, _L)
 
@@ -90,7 +91,7 @@ def quad_uv(bm, corners, uvs):
 def build(master):
     if os.path.exists(master): open_master(master)
     else: bpy.ops.wm.read_factory_settings(use_empty=True)
-    clear_owned(); PARTS.clear(); COLL.clear(); HERAUTEN.clear()
+    clear_owned(); PARTS.clear(); COLL.clear(); HERAUTEN.clear(); LAMPS_.clear(); PLEIN.clear()
     for n, (c, r) in MATS.items(): material("MAT_" + n, c, r)
     # ================= TOREN =================
     put("toren", "baksteen", blathe([(0, -0.45), (R_ROMP, -0.45), (R_ROMP, Z_ROMP - 0.1), (R_ROMP + 0.07, Z_ROMP - 0.1), (R_ROMP + 0.07, Z_ROMP), (R_KERN, Z_ROMP), (0, Z_ROMP)], 48))
@@ -165,8 +166,8 @@ def build(master):
         while s + KANT_W < L - 0.1:
             put("muur_" + name, "stuc", bz(s, s + KANT_W, 0, WALL_T, WALL_H - 0.02, WALL_H + KANT_H), M)
             s += KANT_W + KANT_GAP
-        for hs in HERAUT_S:                                                # lisenen + sokkels + schildjes
-            hp = p0 + u * hs - n * 0.49; HERAUTEN.append([round(hp.x, 3), round(hp.y, 3), 0.43, round(math.degrees(math.atan2(n.y, n.x)), 2), name])
+        for hs in HERAUT_S[name]:                                          # lisenen + sokkels + schildjes
+            hp = p0 + u * hs + n * 0.49; HERAUTEN.append([round(hp.x, 3), round(hp.y, 3), 0.43, round(math.degrees(math.atan2(n.y, n.x)), 2), name])
             put("muur_" + name, "stuc", bz(hs - 0.35, hs + 0.35, -0.12, 0.05, -0.45, WALL_H + KANT_H), M)
             put("sokkels", "baksteen", bz(hs - 0.36, hs + 0.36, -0.86, -0.12, -0.45, 0.35), M)
             put("sokkels", "steen", bz(hs - 0.4, hs + 0.4, -0.9, -0.1, 0.35, 0.43, 0.01), M)
@@ -175,37 +176,83 @@ def build(master):
             put("schildjes", "goud", band(sh + [sh[0]], 0.012, -0.175, 0.02), M)
             lel = [(hs + 0.57, 2.08), (hs + 0.6, 2.0), (hs + 0.64, 1.95), (hs + 0.6, 1.93), (hs + 0.57, 1.82), (hs + 0.54, 1.93), (hs + 0.5, 1.95), (hs + 0.54, 2.0)]
             put("schildjes", "goud", boutline(lel, -0.185, 0.015), M)
-        # gracht (bodem + oevers) van s 1.4 tot L-0.4, 1.0..2.3 voor het binnenvlak
-        g0, g1 = 1.4, L - 0.4
-        put("gracht", "bodem", bz(g0, g1, -2.3, -1.0, -0.45, -0.4), M)
-        put("gracht", "bodem", bz(g0, g1, -2.35, -2.25, -0.45, 0.0), M); put("gracht", "bodem", bz(g0, g1, -1.05, -0.95, -0.45, 0.0), M)
-        put("gracht", "bodem", bz(g0 - 0.05, g0 + 0.05, -2.35, -0.95, -0.45, 0.0), M); put("gracht", "bodem", bz(g1 - 0.05, g1 + 0.05, -2.35, -0.95, -0.45, 0.0), M)
-        put("gracht", "water", bz(g0 + 0.05, g1 - 0.05, -2.25, -1.05, -0.17, -0.15), M)
-        for k in range(int((g1 - g0) / 0.7)):                              # oeverstenen aan de pleinkant
-            sk = g0 + 0.3 + k * 0.7 + RNG.uniform(-0.1, 0.1)
-            put("gracht", "steen", bz(sk - 0.28, sk + 0.28, -2.45, -2.15, -0.1, 0.06 + RNG.uniform(0, 0.05), 0.04), M @ TR(0, 0, 0, RNG.uniform(-6, 6)))
+        # gracht: natuurlijk slootje (Herauten-okt2009): geen bak of losse stenen; terrein vormt de oever (uitgegraven in Studio),
+        # hier alleen een donker modderbed en een waterspiegel met afgeronde koppen die iets onder de oever ligt
+        g0, g1 = 1.2, L - 0.4
+        if name == "W": put("gracht", "bodem", bz(g0 - 0.3, g1 + 0.3, -2.6, -0.7, -0.5, -0.42), M)
+        wbm = bmesh.new(); ring = []
+        for k in range(40 if name == "W" else 0):    # gracht alleen langs de westmuur (overzicht-okt2009)                                                    # stadionvorm: rechte zijden, ronde koppen
+            ang = k * math.tau / 40; ca, sa = math.cos(ang), math.sin(ang)
+            sx = (g1 if ca > 0 else g0) + ca * 0.6; ty = -1.65 + sa * 0.6
+            ring.append(wbm.verts.new((sx, ty, -0.2)))
+        if ring: wbm.faces.new(ring); put("gracht", "water", wbm, M)
         # botsing: muur (hoog, niet erover) + grachtrand
         c = p0 + u * ((s0 + L) / 2) - n * (WALL_T / 2); ang = math.degrees(math.atan2(u.y, u.x))
         coll_box(c.x, c.y, 2.0, L - s0, WALL_T + 0.1, 4.0, ang)
-    # ================= VOORGROND: gebogen muurtje om een klinkerhalfrond (front.jpg) =================
-    CY, RM = -15.3, 4.0                                                     # midden halfrond, straal muurtje
-    pts = [(RM * math.cos(math.radians(a)), CY + RM * math.sin(math.radians(a))) for a in range(20, 161, 5)]
-    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-        ang = math.degrees(math.atan2(y1 - y0, x1 - x0)); L = math.hypot(x1 - x0, y1 - y0)
-        put("muurtje", "baksteen", bz(0, L + 0.02, -0.17, 0.17, -0.05, 0.42), TR(x0, y0, 0, ang))
-    for i in range(len(pts) * 2 - 1):                                       # grove afdekstenen
-        a = math.radians(20 + i * 2.5 + RNG.uniform(-0.6, 0.6)); r = RM + RNG.uniform(-0.03, 0.03)
-        put("muurtje", "steen", bbox(0.38 + RNG.uniform(-0.06, 0.08), 0.4, 0.14 + RNG.uniform(0, 0.05), 0, 0, 0, 0.05), TR(r * math.cos(a), CY + r * math.sin(a), 0.47, math.degrees(a) + 90 + RNG.uniform(-8, 8)))
-    put("klinkers", "klinker", blathe([(0, -0.02), (RM - 0.18, -0.02), (RM - 0.18, 0.02), (0, 0.02)], 48), TR(0, CY, 0))
-    for (x0, y0), (x1, y1) in zip(pts[::3], pts[3::3]):
-        c = Vector(((x0 + x1) / 2, (y0 + y1) / 2)); ang = math.degrees(math.atan2(y1 - y0, x1 - x0))
-        coll_box(c.x, c.y, 1.3, math.hypot(x1 - x0, y1 - y0) + 0.1, 0.4, 2.6, ang)
-    # sprookjesboek op standaard (front.jpg, iets rechts van het midden)
-    bx, by = 0.9, -10.9
-    put("boek", "ijzer", btube([(bx, by, 0), (bx, by, 0.85)], 0.03, 6)); put("boek", "ijzer", bz(bx - 0.25, bx + 0.25, by - 0.2, by + 0.2, 0, 0.03))
+    # ================= HERAUTENPLEIN (overzicht-okt2009, MagischeKloktotaal, Boekloc 2016, OSM-pad 1169014962 op ~14 m) =================
+    # langwerpig klinkerplein evenwijdig aan de noordmuur, rond uiteinde naar de toren (= het gebogen muurtje van Boekloc), laag bakstenen
+    # muurtje met grove afdekstenen, twee openingen aan de graskant, groene bankjes langs de graskant (kijken naar de muur), buxushaag eromheen.
+    p0N, uN, nN, _ = ARMS["N"]
+    PA, PB, RP = p0N + uN * 2.6 + nN * 4.6, p0N + uN * 11.6 + nN * 4.6, 2.9
+    def caps(r, n=18):
+        out = []
+        for k in range(n + 1):
+            a = -math.pi / 2 + math.pi * k / n; out.append(PB + uN * (r * math.cos(a)) + nN * (r * math.sin(a)))
+        for k in range(n + 1):
+            a = math.pi / 2 + math.pi * k / n; out.append(PA + uN * (r * math.cos(a)) + nN * (r * math.sin(a)))
+        return out
+    def s_of(p): return (p - p0N).dot(uN)
+    def t_of(p): return (p - p0N).dot(nN)
+    GAPS = ((4.9, 6.5), (8.7, 10.3))                                          # openingen aan de graskant (+n)
+    def in_gap(p, extra=0.0): return t_of(p) > 4.6 + RP * 0.7 and any(g0_ - extra < s_of(p) < g1_ + extra for g0_, g1_ in GAPS)
+    ring = caps(RP, 18)
+    for a_, b_ in zip(ring, ring[1:] + ring[:1]):
+        m_ = (a_ + b_) / 2
+        if in_gap(m_): continue
+        d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x))
+        put("plein", "baksteen", bz(-0.02, L_ + 0.02, -0.17, 0.17, -0.05, 0.42), TR(a_.x, a_.y, 0, ang))
+        for k in range(max(1, round(L_ / 0.42))):                          # grove afdekstenen (Boekloc)
+            q = a_.lerp(b_, (k + 0.5) / max(1, round(L_ / 0.42)))
+            put("plein", "steen", bbox(0.4 + RNG.uniform(-0.05, 0.06), 0.42, 0.13 + RNG.uniform(0, 0.05), 0, 0, 0, 0.05), TR(q.x, q.y, 0.48, ang + RNG.uniform(-7, 7)))
+    inner = caps(RP - 0.17, 18); kb = bmesh.new(); kv = [kb.verts.new((q.x, q.y, 0.025)) for q in inner]; kf = kb.faces.new(kv)
+    bmesh.ops.triangulate(kb, faces=[kf]); put("plein", "klinker", kb)
+    for g0_, g1_ in GAPS:                                                     # klinkers door de openingen tot in het gras
+        c_ = p0N + uN * ((g0_ + g1_) / 2) + nN * (4.6 + RP + 0.6)
+        put("plein", "klinker", bz(-(g1_ - g0_) / 2, (g1_ - g0_) / 2, -0.9, 0.9, 0.0, 0.025), TR(c_.x, c_.y, 0, math.degrees(math.atan2(uN.y, uN.x))))
+    for sc in (3.7, 7.6, 11.3):                                               # groene bankjes langs de graskant, rugleuning aan de graskant
+        c_ = p0N + uN * sc + nN * (4.6 + RP - 0.62); Mb = TR(c_.x, c_.y, 0, math.degrees(math.atan2(uN.y, uN.x)))
+        for dz in (0.0,):
+            for k in range(4): put("bankjes", "hout", bz(-0.9, 0.9, -0.2 + k * 0.1, -0.12 + k * 0.1, 0.42, 0.46), Mb)
+            for k in range(3): put("bankjes", "hout", bz(-0.9, 0.9, 0.2, 0.24, 0.55 + k * 0.12, 0.63 + k * 0.12), Mb)
+            for xx in (-0.75, 0.75): put("bankjes", "steen", bz(xx - 0.06, xx + 0.06, -0.22, 0.24, 0.0, 0.42), Mb); put("bankjes", "hout", bz(xx - 0.03, xx + 0.03, 0.18, 0.24, 0.42, 0.9), Mb)
+    # buxushaag op het gras om het plein (MagischeKloktotaal), open bij de openingen; niet aan de muurkant
+    hr = caps(RP + 1.35, 18)
+    for a_, b_ in zip(hr, hr[1:]):
+        m_ = (a_ + b_) / 2
+        if t_of(m_) < 4.6 + 0.3 or in_gap(m_, 0.25): continue
+        d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x))
+        put("haag", "haag", bz(-0.04, L_ + 0.04, -0.27, 0.27, -0.05, 0.6, 0.06), TR(a_.x, a_.y, 0, ang))
+    # sprookjesboek bij het ronde uiteinde (Boekloc), tussen muurtje en toren
+    bq = PA - uN * (RP + 0.7); bx, by = bq.x, bq.y; ba = math.degrees(math.atan2(-uN.y, -uN.x)) - 90
+    MB = TR(bx, by, 0, ba)
+    put("boek", "ijzer", btube([(0, 0, 0), (0, 0, 0.85)], 0.03, 6), MB); put("boek", "ijzer", bz(-0.25, 0.25, -0.2, 0.2, 0, 0.03), MB)
+    put("boek", "kant_papier", bz(-0.36, 0.36, -0.24, 0.24, 0, 0.04), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(25), 4, "X"))
+    put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(25), 4, "X"))
+    # galgenlantaarn op het OSM-punt (street_lamp -1.61, -19.66): bruine paal, twee armen met hangende lantaarns (MagischeKloktotaal)
+    lx, ly = -1.61, -19.66
+    put("lantaarn", "paal", bz(lx - 0.09, lx + 0.09, ly - 0.09, ly + 0.09, 0, 3.3, 0.02))
     for sg in (-1, 1):
-        put("boek", "steen", bz(0, 0.36, -0.24, 0.24, 0, 0.04), TR(bx, by, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X") @ Matrix.Rotation(math.radians(sg * 8), 4, "Y") @ Matrix.Scale(sg, 4, Vector((1, 0, 0))))
-    put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), TR(bx, by, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
+        put("lantaarn", "paal", bz(lx - 0.05, lx + 0.05, ly - 0.05 + sg * 0.0, ly + sg * 0.75 + 0.05 * sg, 2.95, 3.05) if False else bz(lx + min(0, sg * 0.8), lx + max(0, sg * 0.8), ly - 0.05, ly + 0.05, 2.95, 3.05))
+        put("lantaarn", "paal", btube([(lx + sg * 0.1, ly, 2.55), (lx + sg * 0.45, ly, 2.98)], 0.03, 5))
+        cx_ = lx + sg * 0.72
+        put("lantaarn", "ijzer", btube([(cx_, ly, 2.95), (cx_, ly, 2.75)], 0.01, 4))
+        put("lantaarn", "ijzer", blathe([(0, 2.72), (0.13, 2.68), (0.13, 2.66), (0.1, 2.64), (0.1, 2.36), (0.07, 2.32), (0, 2.3)], 6), TR(cx_, ly, 0))
+        put("lantaarn", "glaslamp", blathe([(0, 2.37), (0.085, 2.37), (0.085, 2.63), (0, 2.63)], 6), TR(cx_, ly, 0))
+        LAMPS_.append([round(cx_, 2), round(ly, 2), 2.5])
+    # rozenperk in het gras tussen gracht en plein (overzicht-okt2009)
+    p0W, uW, nW, _ = ARMS["W"]; rc = p0W + uW * 10.5 + nW * 6.2
+    put("perk", "bodem", bz(-2.1, 2.1, -1.1, 1.1, -0.05, 0.04), TR(rc.x, rc.y, 0, math.degrees(math.atan2(uW.y, uW.x))))
+    PLEIN.update({"A": [round(PA.x, 3), round(PA.y, 3)], "B": [round(PB.x, 3), round(PB.y, 3)], "R": RP, "perk": [round(rc.x, 3), round(rc.y, 3)], "lamp": [lx, ly]})
     # front.jpg: toren ~13% smaller t.o.v. de muren (hoogtes kloppen) -> alleen in x/y schalen
     K = 0.87
     for (part, mat), bm in PARTS.items():
@@ -226,7 +273,7 @@ def build(master):
     for (part, mat), bm in PARTS.items():
         ob = new_mesh_object(f"MK_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])
     out = os.path.join(ROOT, "exports"); os.makedirs(out, exist_ok=True)
-    json.dump({"colliders": COLL, "lamps": [], "herauten": HERAUTEN}, open(os.path.join(out, "klok_extra.json"), "w"))
+    json.dump({"colliders": COLL, "lamps": LAMPS_, "herauten": HERAUTEN, "plein": PLEIN}, open(os.path.join(out, "klok_extra.json"), "w"))
     save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "colliders", len(COLL),
                              "tris", sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"))
 
