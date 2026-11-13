@@ -31,7 +31,8 @@ local function vrij(q, r, boom)
 	if q.Magnitude < 3.5 then return false end
 	if binnenVierkant(q) then return false end
 	if padAfst(q) < (boom and 2.8 or 1.6) then return false end
-	if segd(q, PA, PB) < 2.9 + 2.0 then return false end
+	local sN, tN = (q - ARMS[1][1]):Dot(ARMS[1][2]), (q - ARMS[1][1]):Dot(ARMS[1][3]); local sW, tW = (q - ARMS[2][1]):Dot(ARMS[2][2]), (q - ARMS[2][1]):Dot(ARMS[2][3])
+	if (tN > 2.2 and tN < 9.5 and sN < 13.5 and tW > 2.3) or (tW > 2.4 and tW < 9.5 and sW < 11 and tN > 2.2) then return false end   -- plein v3 + haag
 	for _, a in ipairs(ARMS) do
 		local s = (q - a[1]):Dot(a[2]); local t = (q - a[1]):Dot(a[3])
 		if s > -4 and s < a[4] + 1 and t > -(boom and 2.2 or 1.2) and t < 0.2 then return false end   -- direct achter de muur (gang/mechaniek)

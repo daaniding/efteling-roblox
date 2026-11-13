@@ -18,12 +18,10 @@ local ARMS = {
 	{Vector2.new(0.96, -3.07) - Vector2.new(-0.7154, -0.6986) * 1.2, Vector2.new(0.6986, -0.7154), Vector2.new(-0.7154, -0.6986), 17.25},
 }
 local function armst(x, y, a) local d = Vector2.new(x, y) - a[1]; return d:Dot(a[2]), d:Dot(a[3]) end   -- s langs de muur, t naar het plein
-local PA, PB, PR = Vector2.new(-0.719, -7.198), Vector2.new(-7.016, -13.632), 2.9 + 1.7   -- plein + haag (exports/klok_extra.json)
-local function inPlein(x, y)
-	local q = Vector2.new(x, y); local ab = PB - PA; local t = math.clamp((q - PA):Dot(ab) / ab:Dot(ab), 0, 1)
-	local d = (q - (PA + ab * t)).Magnitude
-	if d < 2.9 + 0.3 then return true end                                                                  -- plein + muurtje
-	return d < PR and (q - PA):Dot(ARMS[1][3]) > 0                                                         -- haag alleen aan de graskant
+local function inPlein(x, y)   -- pleinband v3 (grind t 2.6..7.5, haag tot ~8.1), exports/klok_extra.json "plein"
+	local q = Vector2.new(x, y)
+	local sN, tN = (q - ARMS[1][1]):Dot(ARMS[1][2]), (q - ARMS[1][1]):Dot(ARMS[1][3]); local sW, tW = (q - ARMS[2][1]):Dot(ARMS[2][2]), (q - ARMS[2][1]):Dot(ARMS[2][3])
+	return (tN > 2.2 and tN < 8.4 and sN < 12.8 and tW > 2.3) or (tW > 2.4 and tW < 8.4 and sW < 10.3 and tN > 2.2)
 end
 local function vrijGrond(x, y, r, opPerk)
 	if inPlein(x, y) then return false end
@@ -85,7 +83,7 @@ local ns = vul(10, noordstrook(1.2, 1.9), STRUIK, 1.2, 1.7, false, 1500)
 local nw = vul(30, west(2.5, 3.3), VAREN, 1.3, 2.0, false, 2000)
 local nw2 = vul(30, west(2.5, 3.2), BODEM, 1.0, 1.5, false, 2000)
 -- 3. rozen in het perk
-local pc = Vector2.new(4.718, -14.075); local uW = ARMS[2][2]; local nW = ARMS[2][3]
+local pc = Vector2.new(7.034, -15.587); local uW = ARMS[2][2]; local nW = ARMS[2][3]
 local nr = vul(46, function() local q = pc + uW * rng:NextNumber(-1.9, 1.9) + nW * rng:NextNumber(-0.9, 0.9); return q.X, q.Y end,
 	{VV.bloem_rood, VV.bloem_rood, VV.bloem_roze, VV.bloem_wit}, 1.3, 1.6, false, 2000, true)
 -- 4. voet van de toren

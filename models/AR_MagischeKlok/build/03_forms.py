@@ -17,7 +17,7 @@ MATS = {
     "rood": ((0.62, 0.08, 0.06, 1), 0.5), "bodem": ((0.20, 0.16, 0.11, 1), 1.0), "water": ((0.10, 0.12, 0.08, 1), 0.05),
     "klinker": ((0.45, 0.43, 0.40, 1), 0.9), "toon_groen": ((0.25, 0.42, 0.36, 1), 0.7), "toon_rood": ((0.70, 0.30, 0.22, 1), 0.7),
     "huid": ((0.85, 0.66, 0.52, 1), 0.6), "haar": ((0.80, 0.62, 0.30, 1), 0.7),
-    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
+    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "mand": ((0.42, 0.30, 0.16, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
 }
 COLL = []; HERAUTEN = []; LAMPS_ = []; PLEIN = {}
 def coll_box(cx, cy, cz, sx, sy, sz, ang=0.0): COLL.append([round(v, 3) for v in (cx, cy, cz, sx, sy, sz, ang)])
@@ -189,70 +189,86 @@ def build(master):
         # botsing: muur (hoog, niet erover) + grachtrand
         c = p0 + u * ((s0 + L) / 2) - n * (WALL_T / 2); ang = math.degrees(math.atan2(u.y, u.x))
         coll_box(c.x, c.y, 2.0, L - s0, WALL_T + 0.1, 4.0, ang)
-    # ================= HERAUTENPLEIN (overzicht-okt2009, MagischeKloktotaal, Boekloc 2016, OSM-pad 1169014962 op ~14 m) =================
-    # langwerpig klinkerplein evenwijdig aan de noordmuur, rond uiteinde naar de toren (= het gebogen muurtje van Boekloc), laag bakstenen
-    # muurtje met grove afdekstenen, twee openingen aan de graskant, groene bankjes langs de graskant (kijken naar de muur), buxushaag eromheen.
-    p0N, uN, nN, _ = ARMS["N"]
-    PA, PB, RP = p0N + uN * 2.6 + nN * 4.6, p0N + uN * 11.6 + nN * 4.6, 2.9
-    def caps(r, n=18):
-        out = []
-        for k in range(n + 1):
-            a = -math.pi / 2 + math.pi * k / n; out.append(PB + uN * (r * math.cos(a)) + nN * (r * math.sin(a)))
-        for k in range(n + 1):
-            a = math.pi / 2 + math.pi * k / n; out.append(PA + uN * (r * math.cos(a)) + nN * (r * math.sin(a)))
-        return out
-    def s_of(p): return (p - p0N).dot(uN)
-    def t_of(p): return (p - p0N).dot(nN)
-    GAPS = ((4.9, 6.5), (8.7, 10.3))                                          # openingen aan de graskant (+n)
-    def in_gap(p, extra=0.0): return t_of(p) > 4.6 + RP * 0.7 and any(g0_ - extra < s_of(p) < g1_ + extra for g0_, g1_ in GAPS)
-    ring = caps(RP, 18)
-    for a_, b_ in zip(ring, ring[1:] + ring[:1]):
-        m_ = (a_ + b_) / 2
-        if in_gap(m_): continue
+    # ================= HERAUTENPLEIN v3 (MagischeKloktotaal, Herauten-overzicht-okt2009, Boekloc 2016, Herautenplein1974) =================
+    # groot grindveld in een band langs beide muren (t 2.6..7.5): achter een laag muurtje van ruwe natuursteen evenwijdig aan de kasteelmuren,
+    # bij de toren in een bocht (Boekloc), aan de westkant uitlopend op de gracht; voor een buxushaag evenwijdig aan het pad (chevron, de 'Z'
+    # op de totaalfoto) met aan de binnenkant lange lage groene bankjes; rieten manden op het grind; galgenlantaarn op de hoek bij de noordingang.
+    # Ingangen: het noordeinde (naar de Prinsenpoort/het pad) open, en aan het westeinde tussen haag en grachtmuurtje.
+    p0N, uN, nN, _ = ARMS["N"]; p0W, uW, nW, _ = ARMS["W"]
+    NP = lambda s_, t_: p0N + uN * s_ + nN * t_
+    WP = lambda s_, t_: p0W + uW * s_ + nW * t_
+    def snijpunt(tn, tw):                                                     # punt met afstand tn tot de noordmuur en tw tot de westmuur
+        a11, a12, b1 = nN.x, nN.y, tn + p0N.dot(nN); a21, a22, b2 = nW.x, nW.y, tw + p0W.dot(nW)
+        det = a11 * a22 - a12 * a21; return Vector(((b1 * a22 - a12 * b2) / det, (a11 * b2 - b1 * a21) / det))
+    TB, TF, SNE, SWE = 2.6, 7.5, 12.0, 9.5                                     # achterrand, voorrand, eind noord, eind west
+    # achterrand: noord -> bocht om de toren -> west (+ uitloop in de gracht)
+    na, wa = NP(1.4, TB), WP(1.4, TB + 0.1)
+    a0, a1 = math.atan2(na.y, na.x), math.atan2(wa.y, wa.x)
+    if a1 < a0: a1 += math.tau
+    if a1 - a0 > math.pi: a0, a1 = a1, a0 + math.tau
+    arc_ = [Vector((math.cos(a0 + (a1 - a0) * k / 8), math.sin(a0 + (a1 - a0) * k / 8))) * (na.length + (wa.length - na.length) * k / 8) for k in range(9)]
+    if (arc_[0] - na).length > 0.5: arc_ = arc_[::-1]
+    back = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(5.0, TB + 0.1), WP(SWE, TB + 0.1), WP(SWE + 0.5, TB - 0.2), WP(SWE + 0.7, TB - 0.6)]
+    C = snijpunt(TF, TF)
+    front = [WP(SWE, TF), C, NP(SNE, TF)]
+    # grind: band tussen achter- en voorrand (oor-snijden voor de concave chevron)
+    poly = [NP(SNE, TB)] + back[1:-2] + [WP(SWE, TB + 0.1), WP(SWE, TF), C, NP(SNE, TF)]
+    gb = bmesh.new(); gv = [gb.verts.new((q.x, q.y, 0.02)) for q in poly]; gf = gb.faces.new(gv)
+    bmesh.ops.triangulate(gb, faces=[gf], ngon_method="EAR_CLIP"); put("plein", "klinker", gb)
+    # muurtje van ruwe natuursteen: twee lagen blokken + afdekstenen, licht onregelmatig
+    def stenen_muur(pts, h=0.5):
+        for a_, b_ in zip(pts, pts[1:]):
+            d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x)); k = 0.0
+            while k < L_:
+                ln = min(RNG.uniform(0.32, 0.55), L_ - k + 0.05); q = a_ + d_.normalized() * (k + ln / 2)
+                z = -0.05; lay = 0
+                while z < h - 0.12:
+                    hh = RNG.uniform(0.17, 0.25); off = RNG.uniform(-0.05, 0.05) if lay else 0
+                    put("plein", "steen", bbox(ln + 0.03, RNG.uniform(0.36, 0.44), hh, 0, 0, 0, 0.045), TR(q.x + off * d_.normalized().x, q.y + off * d_.normalized().y, z + hh / 2, ang + RNG.uniform(-6, 6)))
+                    z += hh - 0.01; lay += 1
+                put("plein", "steen", bbox(ln + 0.06, 0.46, 0.12, 0, 0, 0, 0.05), TR(q.x, q.y, z + 0.05, ang + RNG.uniform(-5, 5)))
+                k += ln
+    stenen_muur(back)
+    # lange lage groene bankjes langs de binnenkant van de voorrand (volgen de knik = de 'Z' van de totaalfoto)
+    bank = [WP(SWE - 0.4, TF - 0.45), snijpunt(TF - 0.45, TF - 0.45), NP(SNE - 0.4, TF - 0.45)]
+    for a_, b_ in zip(bank, bank[1:]):
+        d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x)); Mb = TR(a_.x, a_.y, 0, ang)
+        put("bankjes", "hout", bz(0.0, L_, -0.22, 0.22, 0.42, 0.48, 0.01), Mb)                          # zitplank (doorlopend)
+        nst = max(2, int(L_ / 1.6) + 1)
+        for k in range(nst):
+            xx = 0.2 + (L_ - 0.4) * k / (nst - 1); put("bankjes", "baksteen", bz(xx - 0.15, xx + 0.15, -0.17, 0.17, 0.0, 0.42), Mb)   # gemetselde poten
+    # buxushaag aan de buitenkant (chevron) + westeinde (laat een ingang bij de gracht), noordeinde open
+    haag_lijn = [WP(SWE + 0.35, TB + 2.3), WP(SWE + 0.35, TF + 0.45), snijpunt(TF + 0.45, TF + 0.45), NP(SNE - 0.2, TF + 0.45)]
+    for a_, b_ in zip(haag_lijn, haag_lijn[1:]):
         d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x))
-        put("plein", "baksteen", bz(-0.02, L_ + 0.02, -0.17, 0.17, -0.05, 0.42), TR(a_.x, a_.y, 0, ang))
-        for k in range(max(1, round(L_ / 0.42))):                          # grove afdekstenen (Boekloc)
-            q = a_.lerp(b_, (k + 0.5) / max(1, round(L_ / 0.42)))
-            put("plein", "steen", bbox(0.4 + RNG.uniform(-0.05, 0.06), 0.42, 0.13 + RNG.uniform(0, 0.05), 0, 0, 0, 0.05), TR(q.x, q.y, 0.48, ang + RNG.uniform(-7, 7)))
-    inner = caps(RP - 0.17, 18); kb = bmesh.new(); kv = [kb.verts.new((q.x, q.y, 0.025)) for q in inner]; kf = kb.faces.new(kv)
-    bmesh.ops.triangulate(kb, faces=[kf]); put("plein", "klinker", kb)
-    for g0_, g1_ in GAPS:                                                     # klinkers door de openingen tot in het gras
-        c_ = p0N + uN * ((g0_ + g1_) / 2) + nN * (4.6 + RP + 0.6)
-        put("plein", "klinker", bz(-(g1_ - g0_) / 2, (g1_ - g0_) / 2, -0.9, 0.9, 0.0, 0.025), TR(c_.x, c_.y, 0, math.degrees(math.atan2(uN.y, uN.x))))
-    for sc in (3.7, 7.6, 11.3):                                               # groene bankjes langs de graskant, rugleuning aan de graskant
-        c_ = p0N + uN * sc + nN * (4.6 + RP - 0.62); Mb = TR(c_.x, c_.y, 0, math.degrees(math.atan2(uN.y, uN.x)))
-        for dz in (0.0,):
-            for k in range(4): put("bankjes", "hout", bz(-0.9, 0.9, -0.2 + k * 0.1, -0.12 + k * 0.1, 0.42, 0.46), Mb)
-            for k in range(3): put("bankjes", "hout", bz(-0.9, 0.9, 0.2, 0.24, 0.55 + k * 0.12, 0.63 + k * 0.12), Mb)
-            for xx in (-0.75, 0.75): put("bankjes", "steen", bz(xx - 0.06, xx + 0.06, -0.22, 0.24, 0.0, 0.42), Mb); put("bankjes", "hout", bz(xx - 0.03, xx + 0.03, 0.18, 0.24, 0.42, 0.9), Mb)
-    # buxushaag op het gras om het plein (MagischeKloktotaal), open bij de openingen; niet aan de muurkant
-    hr = caps(RP + 1.35, 18)
-    for a_, b_ in zip(hr, hr[1:]):
-        m_ = (a_ + b_) / 2
-        if t_of(m_) < 4.6 + 0.3 or in_gap(m_, 0.25): continue
-        d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x))
-        put("haag", "haag", bz(-0.04, L_ + 0.04, -0.27, 0.27, -0.05, 0.6, 0.06), TR(a_.x, a_.y, 0, ang))
-    # sprookjesboek bij het ronde uiteinde (Boekloc), tussen muurtje en toren
-    bq = PA - uN * (RP + 0.7); bx, by = bq.x, bq.y; ba = math.degrees(math.atan2(-uN.y, -uN.x)) - 90
-    MB = TR(bx, by, 0, ba)
+        put("haag", "haag", bz(-0.25, L_ + 0.25, -0.28, 0.28, -0.05, 0.62, 0.07), TR(a_.x, a_.y, 0, ang))
+    # rieten manden op het grind (totaalfoto: 4)
+    for q in (NP(9.5, 5.2), NP(5.0, 5.4), WP(4.2, 5.6), WP(7.6, 5.0)):
+        put("manden", "mand", blathe([(0, 0), (0.2, 0), (0.24, 0.42), (0.21, 0.42), (0.18, 0.04), (0, 0.04)], 16), TR(q.x, q.y, 0))
+        put("manden", "mand", ring_band_bm(q, 0.24, 0.4, 0.45), None) if False else None
+    # sprookjesboek in de bocht bij de toren, met de rug naar het muurtje (Boekloc)
+    mid = arc_[4]; bq = mid * (1 + 0.6 / mid.length); ba = math.degrees(math.atan2(mid.y, mid.x)) - 90
+    MB = TR(bq.x, bq.y, 0, ba)
     put("boek", "ijzer", btube([(0, 0, 0), (0, 0, 0.85)], 0.03, 6), MB); put("boek", "ijzer", bz(-0.25, 0.25, -0.2, 0.2, 0, 0.03), MB)
-    put("boek", "kant_papier", bz(-0.36, 0.36, -0.24, 0.24, 0, 0.04), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(25), 4, "X"))
-    put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(25), 4, "X"))
-    # galgenlantaarn op het OSM-punt (street_lamp -1.61, -19.66): bruine paal, twee armen met hangende lantaarns (MagischeKloktotaal)
-    lx, ly = -1.61, -19.66
+    put("boek", "kant_papier", bz(-0.36, 0.36, -0.24, 0.24, 0, 0.04), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
+    put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
+    # galgenlantaarn op de hoek bij de noordingang, buiten de haag (totaalfoto links)
+    lq = NP(SNE + 0.4, TF + 1.0); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(uN.y, uN.x))
     put("lantaarn", "paal", bz(lx - 0.09, lx + 0.09, ly - 0.09, ly + 0.09, 0, 3.3, 0.02))
     for sg in (-1, 1):
-        put("lantaarn", "paal", bz(lx - 0.05, lx + 0.05, ly - 0.05 + sg * 0.0, ly + sg * 0.75 + 0.05 * sg, 2.95, 3.05) if False else bz(lx + min(0, sg * 0.8), lx + max(0, sg * 0.8), ly - 0.05, ly + 0.05, 2.95, 3.05))
-        put("lantaarn", "paal", btube([(lx + sg * 0.1, ly, 2.55), (lx + sg * 0.45, ly, 2.98)], 0.03, 5))
-        cx_ = lx + sg * 0.72
-        put("lantaarn", "ijzer", btube([(cx_, ly, 2.95), (cx_, ly, 2.75)], 0.01, 4))
-        put("lantaarn", "ijzer", blathe([(0, 2.72), (0.13, 2.68), (0.13, 2.66), (0.1, 2.64), (0.1, 2.36), (0.07, 2.32), (0, 2.3)], 6), TR(cx_, ly, 0))
-        put("lantaarn", "glaslamp", blathe([(0, 2.37), (0.085, 2.37), (0.085, 2.63), (0, 2.63)], 6), TR(cx_, ly, 0))
-        LAMPS_.append([round(cx_, 2), round(ly, 2), 2.5])
-    # rozenperk in het gras tussen gracht en plein (overzicht-okt2009)
-    p0W, uW, nW, _ = ARMS["W"]; rc = p0W + uW * 10.5 + nW * 6.2
-    put("perk", "bodem", bz(-2.1, 2.1, -1.1, 1.1, -0.05, 0.04), TR(rc.x, rc.y, 0, math.degrees(math.atan2(uW.y, uW.x))))
-    PLEIN.update({"A": [round(PA.x, 3), round(PA.y, 3)], "B": [round(PB.x, 3), round(PB.y, 3)], "R": RP, "perk": [round(rc.x, 3), round(rc.y, 3)], "lamp": [lx, ly]})
+        ax_ = Vector((math.cos(math.radians(la)), math.sin(math.radians(la))))
+        e_ = Vector((lx, ly)) + ax_ * sg * 0.8
+        put("lantaarn", "paal", btube([(lx, ly, 3.0), (e_.x, e_.y, 3.0)], 0.05, 6))
+        m_ = Vector((lx, ly)) + ax_ * sg * 0.45; put("lantaarn", "paal", btube([(lx + ax_.x * sg * 0.1, ly + ax_.y * sg * 0.1, 2.55), (m_.x, m_.y, 2.98)], 0.03, 5))
+        c_ = Vector((lx, ly)) + ax_ * sg * 0.72
+        put("lantaarn", "ijzer", btube([(c_.x, c_.y, 2.95), (c_.x, c_.y, 2.75)], 0.01, 4))
+        put("lantaarn", "ijzer", blathe([(0, 2.72), (0.13, 2.68), (0.13, 2.66), (0.1, 2.64), (0.1, 2.36), (0.07, 2.32), (0, 2.3)], 6), TR(c_.x, c_.y, 0))
+        put("lantaarn", "glaslamp", blathe([(0, 2.37), (0.085, 2.37), (0.085, 2.63), (0, 2.63)], 6), TR(c_.x, c_.y, 0))
+        LAMPS_.append([round(c_.x, 2), round(c_.y, 2), 2.5])
+    # rozenperk in het gras voorbij het westeinde (overzicht-okt2009)
+    rc = WP(13.2, 5.6)
+    put("perk", "bodem", bz(-1.9, 1.9, -1.0, 1.0, -0.05, 0.04), TR(rc.x, rc.y, 0, math.degrees(math.atan2(uW.y, uW.x))))
+    PLEIN.update({"TB": TB, "TF": TF, "SNE": SNE, "SWE": SWE, "C": [round(C.x, 3), round(C.y, 3)], "perk": [round(rc.x, 3), round(rc.y, 3)], "lamp": [round(lx, 3), round(ly, 3)]})
     # front.jpg: toren ~13% smaller t.o.v. de muren (hoogtes kloppen) -> alleen in x/y schalen
     K = 0.87
     for (part, mat), bm in PARTS.items():

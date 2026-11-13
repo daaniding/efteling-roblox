@@ -217,6 +217,11 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - v5 grasoevers (Daan): `roblox/plaats_magischeklok_oever.luau` -> MagischeKlokOever: grachtstrook LeafyGrass, 260 riet/siergras op de waterranden,
   70 varens + 120 bodembedekkers op de oevers en tussen de sokkels, 40 kroosplekken (SprookjesboomWater.Kroos), 100 donkere ronde blaadjes.
   Screenshot `review/studio_v5_oever.jpg`.
+- v6 plein opnieuw (Daan: "ziet het plein er echt zo uit?" -> nee): naar MagischeKloktotaal + overzicht-okt2009 + Boekloc: grindband langs beide
+  muren (t 2.6..7.5) met achter een laag muurtje van ruwe natuursteen (bocht om de toren, uitloop in de gracht), voor een buxushaag in chevron
+  evenwijdig aan het pad met lange lage groene bankjes erachter, 4 rieten manden, galgenlantaarn op de hoek bij de open noordingang, ingang west
+  tussen haag en grachtmuurtje, rozenperk voorbij het westeinde. Asset **133609116330457**. Render naast de foto `review/plein_v3_vs_totaal.jpg`.
+  Plaatsen: plaats_magischeklok.luau, daarna groen/bos opnieuw (pleinband in beide scripts bijgewerkt).
 - NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
