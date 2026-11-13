@@ -238,3 +238,15 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Detail zonder driehoeken:** hoog model (voxel 4-5 mm + Displace met fijne ruis) -> normal map bakken op het gedecimeerde spelmodel
   (selected-to-active, cage 1 cm). AO apart bakken en in de kleur vermenigvuldigen. Let op: het hoge model moet uit de render bij de AO-bake.
 - **Gebakken kleur rendert in Roblox lichter/donkerder dan in Blender:** altijd in Studio nakijken en met SurfaceAppearance.Color bijstellen.
+
+## Lessen Herberg v2 (13 nov)
+- **Schaal eerst uit meerdere bronnen laten kloppen:** mensen op een foto staan vaak dichter bij de camera dan de gevel (te kleine px/m).
+  Een ontwerptekening met maatlijn ("6m") + BAG-footprint + deur/raam-maten gaven samen 87.5 px/m; v1 was daardoor veel te breed/hoog gedacht.
+- **Fotocamera nadoen met lens-shift** (`cam_match.py --shift`): uitgesneden foto's hebben de horizon niet in het midden; kantelen geeft valse convergentie.
+- **Diepte telt mee:** iets dat 3 m achter de gevel staat (nok, schoorsteen) staat op de foto ~10% lager; corrigeer met afstand/(afstand+diepte).
+- **Kaprand-vormen meten als punten** (buiten- en binnenrand op 5 hoogtes) en daar het profiel van maken; het muurvlak erachter tot ONDER de
+  kap laten doorlopen, anders kijk je schuin door een kier 4 m de kap in.
+- **"Lijkt niet op het echt" = materialen:** procedurele riet/steen leest als klei. Echte CC0-scans (Poly Haven riet_01, stone_wall) via
+  wallvec-projectie in de bake gaven meteen het echte beeld; kussenblokken-stenen zijn nooit zo goed als een stenen-scan op een vlak.
+- **Zoek eerst ALLE foto's in eerdere eftepedia-mappen** (hier `AR_Ezeltje/ref/eftepedia/Herbergfris1.jpg`: schone frontfoto met persoon).
+- **Studio rendert riet donkerder dan Blender** (tegenlicht + donkere scan): riet ~1.4x lichter bakken dan de foto lijkt te vragen.

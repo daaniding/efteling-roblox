@@ -17,7 +17,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(HERE))
 TEX = os.path.join(HERE, "textures"); os.makedirs(TEX, exist_ok=True)
 CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
-RGB = {"baksteen": (150, 98, 76), "steen": (170, 166, 158), "leien": (150, 92, 70), "stuc": (232, 222, 196), "natuursteen": (200, 166, 116), "riet": (150, 122, 80), "hout": (96, 78, 62), "pannen": (150, 92, 70)}
+RGB = {"baksteen": (150, 98, 76), "steen": (170, 166, 158), "leien": (118, 102, 90), "stuc": (228, 216, 182), "natuursteen": (214, 198, 160), "riet": (156, 141, 114), "hout": (84, 78, 70), "pannen": (178, 108, 82)}
 
 
 
@@ -65,6 +65,11 @@ def build_material(name, role, img):
         mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (scale, scale, scale)
         L.new(tc.outputs["Object"], mp.inputs["Vector"]); L.new(mp.outputs[0], im.inputs["Vector"])
         bw = N.new("ShaderNodeRGBToBW"); L.new(im.outputs["Color"], bw.inputs[0]); return bw.outputs[0]
+    PH = os.path.join(os.path.dirname(os.path.dirname(HERE)), "textures", "polyhaven")
+    def foto(naam, vec, scale):
+        im = N.new("ShaderNodeTexImage"); im.image = bpy.data.images.load(os.path.join(PH, naam, naam + "_diff_2k.jpg"), check_existing=True)
+        mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (scale, scale, scale); L.new(vec, mp.inputs["Vector"]); L.new(mp.outputs[0], im.inputs["Vector"])
+        bw = N.new("ShaderNodeRGBToBW"); L.new(im.outputs["Color"], bw.inputs[0]); return im.outputs["Color"], bw.outputs[0]
     geo = N.new("ShaderNodeNewGeometry"); sp = N.new("ShaderNodeSeparateXYZ"); L.new(geo.outputs["Position"], sp.inputs[0])
     sn = N.new("ShaderNodeSeparateXYZ"); L.new(geo.outputs["Normal"], sn.inputs[0])
     def wallvec():
@@ -98,11 +103,11 @@ def build_material(name, role, img):
         col = mix(col, ramp(noise(0.7, 4), (0.84, 0.88, 0.84, 1), (1.06, 1.05, 1.02, 1)), 1.0, "MULTIPLY")
         mr = N.new("ShaderNodeMapRange"); L.new(sn.outputs["Z"], mr.inputs["Value"]); mr.inputs["From Min"].default_value = 0.3; mr.inputs["From Max"].default_value = 0.9
         mm = N.new("ShaderNodeMath"); mm.operation = "MULTIPLY"; L.new(mr.outputs[0], mm.inputs[0]); L.new(noise(1.6, 5, 0.6), mm.inputs[1])
-        col = mix(col, lin((96, 110, 70)), ramp(mm.outputs[0], (0, 0, 0, 1), (1, 1, 1, 1), 0.32, 0.55))                          # mos op de kantelen
-        col = mix(col, lin((118, 126, 92)), ramp(noise(0.9, 6, 0.65), (0, 0, 0, 1), (1, 1, 1, 1), 0.6, 0.72))                      # groene aanslag in vlekken
+        col = mix(col, lin((150, 150, 120)), ramp(mm.outputs[0], (0, 0, 0, 1), (0.3, 0.3, 0.3, 1), 0.4, 0.6))                          # mos op de kantelen
+        col = mix(col, lin((190, 186, 150)), ramp(noise(0.9, 6, 0.65), (0, 0, 0, 1), (0.5, 0.5, 0.5, 1), 0.6, 0.72))                      # groene aanslag in vlekken
         zr = N.new("ShaderNodeMapRange"); L.new(sp.outputs["Z"], zr.inputs["Value"]); zr.inputs["From Min"].default_value = 0.8; zr.inputs["From Max"].default_value = -0.3
         mm2 = N.new("ShaderNodeMath"); mm2.operation = "MULTIPLY"; L.new(zr.outputs[0], mm2.inputs[0]); L.new(noise(2.5, 5), mm2.inputs[1])
-        col = mix(col, lin((92, 86, 70)), ramp(mm2.outputs[0], (0, 0, 0, 1), (1, 1, 1, 1), 0.15, 0.55))                           # vuil/vocht onderaan
+        col = mix(col, lin((150, 140, 112)), ramp(mm2.outputs[0], (0, 0, 0, 1), (0.6, 0.6, 0.6, 1), 0.3, 0.75))   # licht vuil onderaan (foto: schoon)                           # vuil/vocht onderaan
         bump = (scan(CONCRETE, 0.5), 0.3)
     elif role in ("leien", "pannen"):
         vo = N.new("ShaderNodeTexVoronoi"); mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (7.0, 7.0, 9.0)
@@ -110,23 +115,16 @@ def build_material(name, role, img):
         col = mix(col, ramp(vo.outputs["Color"], (0.78, 0.74, 0.74, 1), (1.18, 1.12, 1.05, 1)), 1.0, "MULTIPLY")
         col = mix(col, lin((78, 88, 56)), ramp(noise(1.4, 6, 0.6), (0, 0, 0, 1), (1, 1, 1, 1), 0.55, 0.68))                       # mos (Magklo)
         bump = (vo.outputs["Distance"], 0.25)
-    elif role == "natuursteen":   # okergele zandsteen in onregelmatig verband (Herberg_exterieur)
-        br = N.new("ShaderNodeTexBrick"); L.new(wallvec(), br.inputs["Vector"])
-        br.inputs["Scale"].default_value = 1.0; br.inputs["Brick Width"].default_value = 0.34; br.inputs["Row Height"].default_value = 0.17
-        br.inputs["Mortar Size"].default_value = 0.012; br.inputs["Mortar Smooth"].default_value = 0.5; br.offset = 0.4
-        br.inputs["Color1"].default_value = lin((206, 172, 120)); br.inputs["Color2"].default_value = lin((178, 142, 98)); br.inputs["Mortar"].default_value = lin((214, 204, 184))
-        col = br.outputs["Color"]
-        vb = N.new("ShaderNodeTexVoronoi"); vb.inputs["Scale"].default_value = 5.0; L.new(wallvec(), vb.inputs["Vector"])
-        col = mix(col, ramp(vb.outputs["Color"], (0.82, 0.8, 0.78, 1), (1.1, 1.05, 1.0, 1)), 1.0, "MULTIPLY")
-        col = mix(col, ramp(noise(3.0, 5), (0.86, 0.86, 0.84, 1), (1.04, 1.04, 1.04, 1)), 1.0, "MULTIPLY")
-        bump = (br.outputs["Fac"], 0.6)
-    elif role == "riet":   # riet: strengen langs de helling (ruis sterk uitgerekt in z), donkerder verweerd, mosplekken
-        mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (60.0, 60.0, 3.0); L.new(tc.outputs["Object"], mp.inputs["Vector"])
-        n1 = N.new("ShaderNodeTexNoise"); n1.inputs["Scale"].default_value = 1.0; n1.inputs["Detail"].default_value = 8; L.new(mp.outputs[0], n1.inputs["Vector"])
-        col = mix(col, ramp(n1.outputs["Fac"], (0.62, 0.6, 0.56, 1), (1.22, 1.18, 1.1, 1), 0.3, 0.7), 1.0, "MULTIPLY")
-        col = mix(col, ramp(noise(0.8, 4), (0.78, 0.76, 0.72, 1), (1.05, 1.04, 1.0, 1)), 1.0, "MULTIPLY")
-        col = mix(col, lin((84, 92, 56)), ramp(noise(1.2, 6, 0.6), (0, 0, 0, 1), (1, 1, 1, 1), 0.62, 0.74))                       # mos
-        bump = (n1.outputs["Fac"], 0.9)
+    elif role == "natuursteen":   # Poly Haven stone_wall (CC0): bleke afgeronde breuksteen met diepe voeg = gevelveld Intro_tafeltjedekje; stenen ~0.45 m
+        c_, h_ = foto("stone_wall", wallvec(), 0.2)
+        col = mix(c_, (1.12, 1.06, 0.92, 1), 1.0, "MULTIPLY")
+        bump = (h_, 1.0)
+    elif role == "riet":   # Poly Haven riet_01 (CC0, grijs verweerd Nederlands riet); strengen langs de helling (wallvec: z = verticaal in de scan)
+        c_, h_ = foto("riet_01", wallvec(), 0.75)
+        col = mix(c_, (1.5, 1.38, 1.15, 1), 1.0, "MULTIPLY")                                                                     # foto-riet is lichter grijsbruin dan de scan
+        col = mix(col, ramp(noise(0.6, 3), (0.86, 0.86, 0.86, 1), (1.08, 1.06, 1.04, 1)), 1.0, "MULTIPLY")
+        col = mix(col, lin((84, 92, 56)), ramp(noise(1.2, 6, 0.6), (0, 0, 0, 1), (1, 1, 1, 1), 0.66, 0.76))                       # mos
+        bump = (h_, 1.2)
     elif role == "hout":   # donker verweerd verticaal plankwerk
         mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (14.0, 14.0, 0.6); L.new(tc.outputs["Object"], mp.inputs["Vector"])
         wv = N.new("ShaderNodeTexWave"); wv.wave_type = "BANDS"; wv.bands_direction = "X"; wv.inputs["Scale"].default_value = 1.0; wv.inputs["Distortion"].default_value = 2.0

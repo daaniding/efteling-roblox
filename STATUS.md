@@ -336,7 +336,7 @@ kop naar de Prinsenpoort (lemma). Bloemenborders met banken eromheen stonden er 
   Let op: een net geuploade textuur toont even wit in Studio (verwerking); ColorMap opnieuw zetten of even wachten.
 - NOG: kaak/staart bewegen bij muntinworp (pas als Daan animatie wil), ezel nog wat stijf (hoofd/oren), herberg De Ersteling.
 
-## Herberg De Ersteling (chat 8, 13 nov) — v1 in Studio
+## Herberg De Ersteling (chat 8-9, 13 nov) — v2 in Studio
 Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet (ref/Herberg.jpg), foto's 2009, BAG-plattegrond (OSM 55447978).
 - `build/03_forms.py`: gevelbaai met rieten zadeldak (profiel geextrudeerd + bevel, geen subsurf: die blies het dak op), schilddak riet (2 delen),
   wenkbrauwdakkapel, toren (achthoek, stuc/plankwerk/pannen + spits), schoorstenen, ramen met luiken, deuren met boog, lantaarn, uithangbord
@@ -344,6 +344,15 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
   (verticale planken), pannen, stuc (crème). Keten `build/bouw_alles.sh`, plaatsen `roblox/plaats_herberg.luau`. Asset **97498436658390**.
   Staat tussen het Ezeltje-pleintje en het kasteel van Sneeuwwitje, toren rechts (zoals Herberg_exterieur). Screenshot `review/studio_v1.jpg`.
 - NOG: interieur (Herberginterieur-ontwerp: haard, balkenplafond, jongen aan tafel, waard, hondje), kozijnen/roeden fijner, wenkbrauw-textuur.
+- v2 (Daan: "niet mooi", "lijkt niet op het echt", "heb je geen blueprints"): opnieuw volgens blender-image-to-3d met fotocamera-overlay.
+  Echte bouwtekeningen zijn niet openbaar; maten uit: Intro_tafeltjedekje (87.5 px/m op de gevel, `cam_match.py --cam 4.86,-30,1.14,94.5 --shift 0,0.19`),
+  ontwerptekening Knoet ("6m" = ketel), BAG-footprint (gevel 10.0 m tot de toren, toren 1.4 m voor de gevel) en de schone frontfoto
+  `ref/Herbergfris1.jpg` (persoon bij de torendeur: toren voet r 1.95, plankwerk 2.5-4.6 m, deur 0.92x2.24).
+  Klein huisje: muur 2.05 m, gevelkap-top 5.6, ketel 6.5, nok 4.45 met rode vorsten, schoorsteen 6.4 + leien kap 7.4, toren tot 8.4.
+  Gevelkap uit gemeten randpunten (KO/KIL/KIR), wenkbrauw als brede golf, zijkap links, schilddak + achtervleugel. Texturen: Poly Haven CC0
+  `riet_01` (riet) en `stone_wall` (gevelveld) in `textures/polyhaven/`, torendak eigen rol leien (grijsbruine spanen). 65k tris.
+  Asset **126789978359252** (ids in `textures/asset_ids.txt`, plaatsen `roblox/plaats_herberg.luau`). Reviews `review/v2b..v3e`, `review/studio_v2.jpg`.
+- NOG v2: deur boven de boog naambordje, boomstambank/zakken/tobbe uit Herbergfris1, wandeltest; interieur later.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).

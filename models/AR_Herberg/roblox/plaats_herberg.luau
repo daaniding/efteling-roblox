@@ -1,16 +1,16 @@
 -- Herberg De Ersteling (BAG/OSM 55447978) aan het Herautenplein. Model: x langs de voorgevel (0 = noordoosthoek, toren rechts bij x 12),
 -- voorgevel y=0 kijkt naar het pleintje met het Ezeltje. Oorsprong = OSM-hoek (20.55, -73.97) in het Herautenplein-frame, grond Y=2.
-local MODEL = 97498436658390
-local TEX = {stuc = {139090551413531, 118550962765615}, natuursteen = {118665552507591, 133893406723928}, hout = {135294975412578, 126497447358088},
-	riet = {96559663867388, 70377907363420}, pannen = {94307001488876}, bord = {119068939521945}}
+local MODEL = 126789978359252
+local TEX = {stuc = {120408701098907, 96387308402680}, natuursteen = {87834715418672, 73862908816880}, hout = {105985817932858, 80074867891453},
+	riet = {71279290305545, 73332071549205}, pannen = {122051816225591}, leien = {80701431268197, 104757125539862}, bord = {119068939521945}}
 local FP = Vector3.new(-0.968, 0, 0.250); local OP = CFrame.new(151.58, 2.0, -228.65) * CFrame.Angles(0, math.atan2(-FP.X, -FP.Z), 0)
 local function P(x, y) return (OP * CFrame.new(-x * 3, 0, y * 3)).Position end
 local pos = P(20.55, -73.97)
 local F = OP:VectorToWorldSpace(Vector3.new(0.494, 0, 0.869))               -- voorgevel-normaal (-0.494, 0.869) in het pleinframe -> wereld
 local ORIGIN = CFrame.new(pos) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
-local M = {deur = {Color3.fromRGB(86, 56, 34), "Wood"}, luik = {Color3.fromRGB(110, 70, 42), "Wood"}, venster = {Color3.fromRGB(22, 24, 26), "Glass"},
-	ijzer = {Color3.fromRGB(26, 26, 26), "Metal"}, glaslamp = {Color3.fromRGB(255, 226, 170), "Glass"}, zink = {Color3.fromRGB(130, 134, 134), "Metal"},
+local M = {deur = {Color3.fromRGB(86, 56, 34), "Wood"}, luik = {Color3.fromRGB(92, 62, 44), "Wood"}, venster = {Color3.fromRGB(22, 24, 26), "Glass"},
+	ijzer = {Color3.fromRGB(26, 26, 26), "Metal"}, glaslamp = {Color3.fromRGB(255, 226, 170), "Glass"}, zink = {Color3.fromRGB(110, 112, 112), "Metal"},
 	vat = {Color3.fromRGB(116, 78, 46), "WoodPlanks"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}}
 local oud = workspace:FindFirstChild("HerbergErsteling"); if oud then oud:Destroy() end
 local m = Instance.new("Model"); m.Name = "HerbergErsteling"
@@ -38,6 +38,7 @@ for _, p in ipairs(m:GetChildren()) do
 			local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex][1]
 			if TEX[tex][2] then sa.NormalMap = "rbxassetid://" .. TEX[tex][2] end
 			if tex == "bord" then sa.AlphaMode = Enum.AlphaMode.Transparency end
+			if tex == "pannen" then sa.Color = Color3.fromRGB(225, 200, 190) end   -- vorsten iets gedempt (Studio rendert feller)
 			sa.Parent = p; p.CanCollide = (tex ~= "bord")
 		elseif key and M[key] then p.Color = M[key][1]; p.Material = Enum.Material[M[key][2]]
 		else table.insert(onb, p.Name) end
