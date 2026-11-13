@@ -301,6 +301,9 @@ iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
   RenderFidelity Precise (verdwenen anders van bovenaf). 480 bloemen/bomen in `HerautenpleinGroen` (`roblox/plaats_herautenplein_groen.luau`).
   Muren: in OSM en op foto's 2009/2010 geen; de witte kantelenmuren rond het plein waren er 1952-~1960. Asset **130206013763885**.
   Screenshots `review/studio_v3_*.jpg`.
+- v4 (Daan stuurde een luchtfoto, 225 px, Nick Ringelberg): indeling klopt met de OSM-relatie (rechthoek, 4 tuinvakken, fontein, rond pleintje
+  aan de korte kant); het plein ligt helemaal in het bos. 59 bomen in een band van 1.2-15 m rond de omtrek (`roblox/plaats_herautenplein_bos.luau`,
+  `exports/bosrand.json`). Bovenaanzicht `review/studio_v4_bovenaanzicht.jpg`. Grotere versie van de luchtfoto nodig voor details.
 - NOG: Ezeltje-strek-je zelf (beeld op sokkel, aparte attractie), waterstralen (pas als Daan animatie wil),
   wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
 
