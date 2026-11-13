@@ -214,7 +214,10 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - Toegang plein: twee openingen (1.6 m) in muurtje en haag aan de graskant (s 4.9-6.5 en 8.7-10.3 langs de noordmuur), klinkerstrook erdoor.
   Wandeltest in Play (Humanoid:MoveTo): gras -> haag -> muur -> plein -> tweede opening -> gras, en naar het ronde eind: alles OK. Haag botst precies
   (PreciseConvexDecomposition, anders kan Roblox de openingen dichtplakken). Er loopt nog geen pad van het OSM-pad naar de openingen (paden later).
-- NOG/kan beter: oevers van de gracht dichter begroeien (riet), herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
+- v5 grasoevers (Daan): `roblox/plaats_magischeklok_oever.luau` -> MagischeKlokOever: grachtstrook LeafyGrass, 260 riet/siergras op de waterranden,
+  70 varens + 120 bodembedekkers op de oevers en tussen de sokkels, 40 kroosplekken (SprookjesboomWater.Kroos), 100 donkere ronde blaadjes.
+  Screenshot `review/studio_v5_oever.jpg`.
+- NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
 ## Daarna (volgorde met Daan afgesproken)
