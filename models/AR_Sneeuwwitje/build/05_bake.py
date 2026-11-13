@@ -15,7 +15,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(HERE))
 TEX = os.path.join(HERE, "textures"); os.makedirs(TEX, exist_ok=True)
 CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
-RGB = {"baksteen": (204, 172, 146), "steen": (216, 208, 188), "pannen": (146, 86, 64), "rots": (138, 144, 130), "ruine": (178, 120, 90)}
+RGB = {"baksteen": (214, 196, 170), "steen": (216, 208, 188), "pannen": (146, 86, 64), "rots": (176, 180, 166), "ruine": (178, 120, 90)}
 TC = Vector((5.45, 2.2))
 INSIDE = [(-6.95, -2.7, 0.75, 5.53, -0.1, 3.45), (-3.0, 3.95, 1.55, 3.9, -0.1, 3.35)]
 
@@ -91,12 +91,12 @@ def build_material(name, role, img):
         br.inputs["Scale"].default_value = 1.0; br.inputs["Brick Width"].default_value = 0.21; br.inputs["Row Height"].default_value = 0.068
         br.inputs["Mortar Size"].default_value = 0.009; br.inputs["Mortar Smooth"].default_value = 0.3; br.inputs["Bias"].default_value = 0.0; br.offset = 0.5
         if role == "baksteen":
-            br.inputs["Color1"].default_value = lin((214, 182, 150)); br.inputs["Color2"].default_value = lin((176, 138, 118)); br.inputs["Mortar"].default_value = lin((214, 206, 188))
+            br.inputs["Color1"].default_value = lin((222, 204, 170)); br.inputs["Color2"].default_value = lin((196, 170, 150)); br.inputs["Mortar"].default_value = lin((222, 216, 200))   # licht geel/roze gemeleerd (front.jpg)
         else:
             br.inputs["Color1"].default_value = lin((186, 118, 84)); br.inputs["Color2"].default_value = lin((150, 98, 74)); br.inputs["Mortar"].default_value = lin((176, 166, 146))
         col = br.outputs["Color"]
         vb = N.new("ShaderNodeTexVoronoi"); vb.inputs["Scale"].default_value = 9.0; L.new(wallvec(), vb.inputs["Vector"])      # per steen grijs/roze/geel
-        col = mix(col, ramp(vb.outputs["Color"], (0.82, 0.84, 0.86, 1), (1.12, 1.05, 0.96, 1)), 1.0, "MULTIPLY")
+        col = mix(col, ramp(vb.outputs["Color"], (0.80, 0.82, 0.84, 1), (1.10, 1.06, 1.00, 1)), 1.0, "MULTIPLY")
         col = mix(col, ramp(noise(0.5, 3), (0.86, 0.86, 0.84, 1), (1.04, 1.04, 1.04, 1)), 1.0, "MULTIPLY")
         zr = N.new("ShaderNodeMapRange"); L.new(sp.outputs["Z"], zr.inputs["Value"]); zr.inputs["From Min"].default_value = 0.9; zr.inputs["From Max"].default_value = 0.0
         mm = N.new("ShaderNodeMath"); mm.operation = "MULTIPLY"; L.new(zr.outputs[0], mm.inputs[0]); L.new(noise(2.0, 5), mm.inputs[1])
@@ -124,7 +124,7 @@ def build_material(name, role, img):
         col = mix(col, ramp(noise(0.5, 3), (0.86, 0.86, 0.82, 1), (1.04, 1.04, 1.04, 1)), 1.0, "MULTIPLY")
         bump = (scan(CONCRETE, 0.6), 0.2)
     ao = N.new("ShaderNodeAmbientOcclusion"); ao.samples = 16; ao.inputs["Distance"].default_value = 0.5 if role in ("rots", "pannen", "baksteen") else 0.25
-    col = mix(col, ramp(ao.outputs["AO"], (0.32 if role == "rots" else 0.45,) * 3 + (1,), (1, 1, 1, 1)), 1.0, "MULTIPLY")
+    col = mix(col, ramp(ao.outputs["AO"], (0.5 if role == "rots" else 0.5,) * 3 + (1,), (1, 1, 1, 1)), 1.0, "MULTIPLY")
     L.new(col, em.inputs["Color"]); L.new(em.outputs[0], out.inputs[0])
     bsdf = N.new("ShaderNodeBsdfPrincipled"); bp = N.new("ShaderNodeBump")
     L.new(bump[0], bp.inputs["Height"]); bp.inputs["Strength"].default_value = bump[1]; bp.inputs["Distance"].default_value = 0.02

@@ -4,7 +4,7 @@ set -e
 B=/Applications/Blender.app/Contents/MacOS/Blender; D=${0:A:h:h}; R=${D:h:h}; M=$D/AR_Sneeuwwitje_master.blend
 $B --background --python $D/build/03_forms.py -- --master $M 2>&1 | grep -E "built|Error|Traceback"
 $B --background --python $D/build/03b_grot.py -- --master $M 2>&1 | grep -E "rots tris|Error|Traceback"
-$B --background --python $D/build/04_omgeving.py -- --master $M 2>&1 | grep -E "objects|Error|Traceback"
+$B --background --python $D/build/04_omgeving.py -- --master $M 2>&1 | grep -E "omgeving|objects|Error|Traceback"
 $B --background --python $D/build/05_bake.py -- --master $M --samples 16 2>&1 | grep -E "KLAAR|Error|Traceback"
 python3 -c "import json;a=json.load(open('$D/exports/kasteel_extra.json'));b=json.load(open('$D/exports/grot_extra.json'));json.dump({'colliders':a['colliders']+b['colliders'],'lamps':a['lamps']+b['lamps']},open('$D/exports/huis_extra.json','w'))"
 $B --background --python $D/build/09_export_roblox.py -- --master $D/AR_Sneeuwwitje_baked.blend --out $D/exports/AR_Sneeuwwitje_kasteel.fbx --extra $D/exports/huis_extra.json 2>&1 | grep -E "EXPORT|Error"

@@ -134,7 +134,7 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
   * Interieur (keukenscène, figuren, geschilderd doek) komt later (Daan).
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
-## Sneeuwwitje (chat 5, 12 nov) — in Studio gezet (kasteel + grot + plein + beplanting); nog: wandeltest + close-ups
+## Sneeuwwitje (chat 5, 12-13 nov) — v2 in Studio (Daan: 'niet mooi' -> grot opnieuw); nog: rots-strepen, beddenaarde, wandeltest
 Map `models/AR_Sneeuwwitje/`. Bronnen: 74 Eftepedia-plaatjes, OSM (Kasteel Sneeuwwitje 60095998 + grot 60095997, rotsen, entrances), brief `asset-brief.md`.
 Model: gevel kijkt OOST (-Y, 13.3 graden naar ZO), +X = noord; omrekening in `ref/model_frame.json`. front.jpg = Sneeuwwitjekasteelzomer.jpg,
 overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665`. Route: kasteelingang (zuid) -> spiegelzaal -> uitgang ronde toren
@@ -147,6 +147,12 @@ overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665
 - Assets: kasteel+grot **110658384004768** (46k tris, 100+ COLL_), omgeving **120339991780257**. Plaatsen: `roblox/plaats_sneeuwwitje.luau`
   (oorsprong studs (-75.65, 2, -167.32), kijkrichting (0.9731, 0, 0.2306)); beplanting `build/06_planten.py` -> workspace.SneeuwwitjeGroen (344).
   Wind + LantaarnsDagNacht doen ook Sneeuwwitje. Label 'Sneeuwwitje'/'Kasteel Sneeuwwitje' weg, spawn op het voorplein.
+- v2 (Daan: niet mooi, stenen zitten niet goed in elkaar, missende texturen): grot opnieuw = hoogteveld binnen de OSM-vorm + twee rijen grove
+  blokken langs de voorkant (icosphere sub 1 -> voxel remesh 0.09 -> weinig gladstrijken -> ribbel-plooien), ruinemuren als doorlopend metselwerk
+  met getrapte breukrand, holle ruinetoren met raamgaten, klimop als bladplakkaten met de haagtextuur; baksteen lichter geel/roze gemeleerd.
+  Kasteel+grot **120497972212126**, omgeving **132399062872581**. Tints: rots (245,245,218), ruine (205,200,200).
+  Nog: horizontale strepen in de rotstextuur (golfpatroon in 05_bake weghalen), perkaarde te zwart, ruine nog wat oranje, wandeltest.
+- Valkuil: bouw_alles.sh met set -e stopt als een grep niets vindt (04 meldt 'omgeving'); wachtlussen niet op 'Error' laten matchen (staat in de scriptregel).
 - LET OP: Studio herstartte tijdens het plaatsen (Assistant-plugin bijgewerkt). Als Sneeuwwitje/SneeuwwitjeGroen ontbreken: plaats_sneeuwwitje.luau
   + de plantentabel opnieuw draaien.
 

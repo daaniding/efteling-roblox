@@ -2,9 +2,9 @@
 -- Model: gevel kijkt naar -Y (oost), +X = noord, oorsprong = midden gevel op de voorkant van de ronde toren, z=0 = plein.
 -- Kalibratie (ref/model_frame.json): oorsprong = OSM (-25.22, 55.77) m = studs (-75.65, -167.32); kijkrichting Roblox (0.9731, 0, 0.2306); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing). Lampen: LAMP_ -> PointLight (binnen = attribuut Binnen).
-local HUIS = 110658384004768
-local OMG = 120339991780257
-local TEX = {baksteen_achter = {120813363222457, 99560541568422}, baksteen_binnen = {119040346312679, 137108216662140}, baksteen_detail = {95728704952128, 98098046272558}, baksteen_noord = {74402586073090, 74263391570680}, baksteen_voor = {108354093054978, 116665742861588}, baksteen_zuid = {89535596779724, 89522005164260}, pannen_daken = {101503641149535, 125385647833484}, pannen_torens = {109635027297722, 125943015442544}, rots_a = {138127249973723, 81205017692506}, rots_b = {133090911346311, 97894949355425}, ruine = {106775640652933, 96604225060263}, steen = {76119484647332}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
+local HUIS = 120497972212126
+local OMG = 132399062872581
+local TEX = {baksteen_achter = {101213150905396, 99560541568422}, baksteen_binnen = {91255743930457, 137108216662140}, baksteen_detail = {116551762202752, 98098046272558}, baksteen_noord = {87474375128177, 75393155356743}, baksteen_voor = {73163458394971, 116665742861588}, baksteen_zuid = {128290803571566, 102803307294996}, pannen_daken = {105734769949079, 125385647833484}, pannen_torens = {86994652815474, 125943015442544}, rots_a = {123824271607584, 106347501248455}, rots_b = {101304931318771, 85372887940768}, ruine = {80047141943966, 93421910374676}, steen = {126070887888994}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
 local F = Vector3.new(0.9731, 0, 0.2306)
 local ORIGIN = CFrame.new(-75.65, 2.0, -167.32) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -19,7 +19,7 @@ local M = {
 	klinker = {Color3.fromRGB(235, 228, 214), "Pebble", "VV_Grind"}, band = {Color3.fromRGB(128, 126, 120), "Concrete"},
 	aarde = {Color3.fromRGB(70, 52, 38), "Ground"}, papier = {Color3.fromRGB(232, 218, 176), "SmoothPlastic"}, terracotta = {Color3.fromRGB(160, 88, 60), "Concrete"},
 }
-local TINT = {baksteen = Color3.fromRGB(235, 230, 222), steen = Color3.fromRGB(230, 226, 216), pannen = Color3.fromRGB(190, 168, 158), rots = Color3.fromRGB(225, 228, 222), ruine = Color3.fromRGB(225, 220, 212)}
+local TINT = {baksteen = Color3.fromRGB(235, 230, 222), steen = Color3.fromRGB(230, 226, 216), pannen = Color3.fromRGB(190, 168, 158), rots = Color3.fromRGB(245, 245, 218), ruine = Color3.fromRGB(205, 200, 200)}   -- rots niet blauwig, ruine minder oranje
 local GEEN_SCHADUW = {donker = true, papier = true, goud = true, lood = true, klimop = true}
 
 local function plaats(asset, naam, binnen)
@@ -61,6 +61,11 @@ local function plaats(asset, naam, binnen)
 			elseif key and M[key] then
 				local s = M[key]; p.Color = s[1]; p.Material = Enum.Material[s[2]]; if s[3] then p.MaterialVariant = s[3] end
 				if GEEN_SCHADUW[key] then p.CastShadow = false end
+				if key == "klimop" then   -- bladplakkaten met de haagtextuur (opnieuw geupload, textures/haag)
+					p.Material = Enum.Material.Plastic; p.Color = Color3.new(1, 1, 1); p.DoubleSided = true
+					local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://73997585762296"; sa.NormalMap = "rbxassetid://114509386598524"
+					pcall(function() sa.Color = Color3.fromRGB(150, 190, 120) end); sa.Parent = p
+				end
 			else table.insert(onbekend, p.Name) end
 		end
 	end

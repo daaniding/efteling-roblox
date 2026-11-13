@@ -48,51 +48,110 @@ def arch_tube(pts, w, h, z0=0.0, segs=10):
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces); return bm
 
 
+def segd(p, a, b):
+    dx, dy = b[0] - a[0], b[1] - a[1]; t = max(0, min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy or 1)))
+    return math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy)
+
+
 def rock_mass():
-    """grote ronde blokken binnen de OSM-vorm -> voxel remesh -> naden/ruis"""
+    """kunstrots als hoogteveld binnen de OSM-vorm (Langnek-les): steile voorkant, grote platte blokken (voronoi) met diepe naden,
+    blijft binnen de contour (drukt de ingangen niet dicht). Kolommen -> voxel remesh -> gladstrijken -> fijne ruis."""
+    xs = [p[0] for p in GROT]; ys = [p[1] for p in GROT]; step = 0.2
+    edges = list(zip(GROT, GROT[1:] + GROT[:1])); r = random.Random(5)
+    cells = [(r.uniform(min(xs), max(xs)), r.uniform(min(ys), max(ys)), r.uniform(0.78, 1.12)) for _ in range(70)]
     bm = bmesh.new()
-    xs = [p[0] for p in GROT]; ys = [p[1] for p in GROT]
-    pts = []
-    for _ in range(4000):
-        x = RNG.uniform(min(xs), max(xs)); y = RNG.uniform(min(ys), max(ys))
-        if inside(x, y, GROT) and all((Vector((x, y)) - q).length > 1.0 for q in pts): pts.append(Vector((x, y)))
-    edge = resample(GROT + [GROT[0]], 1.1)
-    for e in edge:        # rand: blokken iets naar binnen, hoog en bol
-        c = Vector((sum(xs) / len(xs), sum(ys) / len(ys)))
-        d = (c - Vector((e.x, e.y))).normalized() * 0.55
-        pts.append(Vector((e.x, e.y)) + d)
-    for p in pts:
-        r = RNG.uniform(0.95, 1.6); h = RNG.uniform(2.6, 4.3)
-        if p.x < 11.5 or p.x > 22.2: h *= 0.75
-        sb = bmesh.new(); bmesh.ops.create_icosphere(sb, subdivisions=2, radius=1.0)
-        for v in sb.verts: v.co = Vector((v.co.x * r * RNG.uniform(0.9, 1.2), v.co.y * r, (v.co.z * 0.5 + 0.5) * h))
-        bmesh.ops.rotate(sb, cent=(0, 0, 0), matrix=Matrix.Rotation(RNG.uniform(0, math.tau), 3, "Z"), verts=sb.verts)
-        bmesh.ops.translate(sb, vec=(p.x, p.y, -0.3), verts=sb.verts)
-        me = bpy.data.meshes.new("_b"); sb.to_mesh(me); sb.free(); bm.from_mesh(me); bpy.data.meshes.remove(me)
+    x = min(xs)
+    while x < max(xs):
+        y = min(ys)
+        while y < max(ys):
+            if inside(x, y, GROT):
+                d = min(segd((x, y), a, b) for a, b in edges)
+                dd = sorted(((x - c[0]) ** 2 + (y - c[1]) ** 2, k) for k, c in enumerate(cells))
+                f1, f2 = math.sqrt(dd[0][0]), math.sqrt(dd[1][0]); blk = cells[dd[0][1]][2]
+                h = 3.9 * blk * (1 - math.exp(-d / 0.5)) * (0.88 + 0.12 * noise.noise(Vector((x * 0.35, y * 0.35, 0.3))))
+                crev = max(0.0, 0.32 - (f2 - f1)) / 0.32
+                h -= 1.1 * crev ** 1.5
+                if x < 11.6 or x > 22.2: h *= 0.72          # lager naar de ruines toe (Sneeuwwitjegrot.jpg)
+                h = max(0.35, h)
+                bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((x, y, (h - 0.3) / 2)) @ Matrix.Diagonal((step * 1.02, step * 1.02, h + 0.3, 1)))
+            y += step
+        x += step
+    # voorkant: twee rijen grote bolle blokken langs de rand (Sneeuwwitjegrot.jpg), niet bij de in- en uitgang
+    rr = random.Random(9)
+    for e in resample(GROT + [GROT[0]], 1.05):
+        if (e - Vector((10.42, -1.63))).length < 2.0 or (e - Vector((22.53, -7.16))).length < 2.0: continue
+        cen = Vector((sum(xs) / len(xs), sum(ys) / len(ys))); inn = (cen - e).normalized()
+        tng = Vector((-inn.y, inn.x))
+        for row, (zc, rz) in enumerate(((0.95, rr.uniform(1.0, 1.35)), (2.35, rr.uniform(0.9, 1.3)))):
+            c = e + inn * (0.45 + 0.25 * row) + tng * rr.uniform(-0.3, 0.3)
+            sb = bmesh.new(); bmesh.ops.create_icosphere(sb, subdivisions=1, radius=1.0)   # grof: wordt na het samensmelten een hoekig-ronde plaat
+            rx, ry = rr.uniform(0.8, 1.25), rr.uniform(0.5, 0.75)
+            for v in sb.verts:
+                q = v.co.copy(); v.co = Vector((q.x * rx, q.y * ry, q.z * rz))
+            ang = math.atan2(tng.y, tng.x)
+            bmesh.ops.rotate(sb, cent=(0, 0, 0), matrix=Matrix.Rotation(rr.uniform(-0.35, 0.35), 3, "X") @ Matrix.Rotation(rr.uniform(-0.3, 0.3), 3, "Y"), verts=sb.verts)
+            bmesh.ops.rotate(sb, cent=(0, 0, 0), matrix=Matrix.Rotation(ang + rr.uniform(-0.3, 0.3), 3, "Z"), verts=sb.verts)
+            bmesh.ops.translate(sb, vec=(c.x, c.y, zc), verts=sb.verts)
+            me_ = bpy.data.meshes.new("_b"); sb.to_mesh(me_); sb.free(); bm.from_mesh(me_); bpy.data.meshes.remove(me_)
     me = bpy.data.meshes.new("SW_rots__rots"); bm.to_mesh(me); bm.free()
     ob = bpy.data.objects.new("SW_rots__rots", me); col("FORMS").objects.link(ob); own(ob)
-    remesh_voxel(ob, 0.12); apply_all_modifiers(ob)
-    bm = bmesh.new(); bm.from_mesh(ob.data)
-    for v in bm.verts:     # gladde bulten + enkele diepe naden (Efteling-kunstrots)
-        q = v.co * 0.8
-        n1 = noise.noise(q * 0.9); n2 = noise.noise(q * 2.6 + Vector((5, 1, 2)))
-        seam = max(0.0, 0.18 - abs(noise.noise(q * 0.55 + Vector((9, 4, 1))))) * 1.8
-        nrm = v.normal
-        v.co += nrm * (0.22 * n1 + 0.06 * n2 - seam)
-        if v.co.z < 0: v.co.z = -0.05 if v.co.z > -0.4 else v.co.z
+    remesh_voxel(ob, 0.09); apply_all_modifiers(ob)
+    sm = ob.modifiers.new("glad", "SMOOTH"); sm.factor = 0.5; sm.iterations = 2; apply_all_modifiers(ob)
+    bm = bmesh.new(); bm.from_mesh(ob.data); bm.normal_update()
+    for v in bm.verts:
+        q = v.co * 0.9
+        ridge = 1.0 - abs(noise.noise(q * 0.75 + Vector((7, 2, 5))))                       # plooien (Efteling-kunstrots)
+        v.co += v.normal * (0.16 * ridge ** 3 - 0.06 + 0.05 * noise.noise(q * 2.2) + 0.02 * noise.noise(q * 6.0 + Vector((3, 1, 2))))
+        if v.co.z < -0.05: v.co.z = -0.05
     bm.to_mesh(ob.data); bm.free()
     return ob
 
 
-def ruin_wall(part, x0, y0, x1, y1, h, top_noise=0.9, thick=0.55, seed=0):
-    """bakstenen ruinemuur van (x0,y0) naar (x1,y1) met afgebrokkelde, getrapte bovenrand"""
+def ruin_wall(part, x0, y0, x1, y1, h, top_noise=1.0, thick=0.5, seed=0, z0=0.0):
+    """bakstenen ruinemuur: een doorlopend stuk metselwerk met getrapt afgebrokkelde bovenrand (metselrij-stappen 6.8 cm)"""
     L = math.hypot(x1 - x0, y1 - y0); a = math.degrees(math.atan2(y1 - y0, x1 - x0)); M = TR(x0, y0, 0, a)
-    n = max(3, int(L / 0.32)); r = random.Random(seed)
+    rr = random.Random(seed); n = max(4, int(L / 0.24)); prof = [(0.0, z0)]
     for i in range(n):
-        u0 = L * i / n; u1 = L * (i + 1) / n
-        hh = h - top_noise * max(0, noise.noise(Vector((u0 * 0.7 + seed, 0, 0)))) - r.uniform(0, 0.25)
-        put(part, "ruine", bz(u0, u1 + 0.002, -thick / 2, thick / 2, 0, max(0.6, hh)), M)
+        u0, u1 = L * i / n, L * (i + 1) / n
+        hh = h - top_noise * 1.5 * max(0.0, noise.noise(Vector((u0 * 0.55 + seed * 3.1, 0.5, 0.2)))) - rr.uniform(0, 0.22)
+        hh = max(z0 + 0.5, round(hh / 0.068) * 0.068)
+        prof += [(u0, hh), (u1, hh)]
+    prof.append((L, z0))
+    put(part, "ruine", boutline(prof, -thick / 2, thick), M)
     return M, L
+
+
+def ruin_tower(cx, cy, ro, ri, zb, htop, seed=0):
+    """holle ruinetoren: ring van segmenten met gebroken, getrapte bovenrand"""
+    segs = 30; rr = random.Random(seed)
+    for k in range(segs):
+        a0 = k * math.tau / segs; a1 = (k + 1) * math.tau / segs
+        hh = htop - 1.5 * max(0.0, noise.noise(Vector((k * 0.45 + seed, 2.0, 0.0)))) - rr.uniform(0, 0.15)
+        if k in (6, 7, 19): hh -= 1.0
+        hh = round(hh / 0.068) * 0.068
+        bm = bmesh.new()
+        P = [(ro, a0), (ro, a1), (ri, a1), (ri, a0)]
+        lo = [bm.verts.new((cx + rad * math.cos(a), cy + rad * math.sin(a), zb)) for rad, a in P]
+        hi = [bm.verts.new((cx + rad * math.cos(a), cy + rad * math.sin(a), hh)) for rad, a in P]
+        bm.faces.new(lo[::-1]); bm.faces.new(hi)
+        for q in range(4): bm.faces.new((lo[q], lo[(q + 1) % 4], hi[(q + 1) % 4], hi[q]))
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces); put("ruine", "ruine", bm)
+
+
+def ivy_sheet(M, u0, u1, z0, z1, off, seed):
+    """klimop: onregelmatig bladplakkaat net voor een muurvlak (lokaal y = -off), wordt in Roblox de haagtextuur"""
+    bm = bmesh.new(); st = 0.14; nu = max(2, int((u1 - u0) / st)); nz = max(2, int((z1 - z0) / st)); grid = {}
+    for i in range(nu + 1):
+        for j in range(nz + 1):
+            u = u0 + (u1 - u0) * i / nu; z = z0 + (z1 - z0) * j / nz
+            m = noise.noise(Vector((u * 0.9 + seed, z * 0.9, seed * 0.3))) + 0.35 - 0.9 * ((z - z0) / (z1 - z0)) ** 2 * (1 if z > (z0 + z1) / 2 else 0)
+            if m > 0.0: grid[(i, j)] = bm.verts.new((u, -off - 0.04 * max(0.0, noise.noise(Vector((u * 4, z * 4, seed)))), z))
+    for i in range(nu):
+        for j in range(nz):
+            q = [grid.get(k) for k in ((i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1))]
+            if all(q): bm.faces.new(q)
+    if bm.faces: put("klimop", "klimop", bm, M)
+    else: bm.free()
 
 
 def build(master):
@@ -104,40 +163,34 @@ def build(master):
     voor = set(o.name for o in bpy.data.objects)
     rots = rock_mass()
     cutters = [arch_tube(PAD, TW, TH)]
-    # ruinemuur bij de ingang (Boekloc_Sneeuwwitje.jpg): 4.5 m, getrapt, rondboogtunnel, nisje; lage ruinemuur ernaast met bankje
-    Mi, Li = ruin_wall("ruine", 10.05, -3.9, 10.25, 0.9, 4.6, 1.6, 0.6, seed=3)
-    ap = arch_pts(0, 0, TW, TH, 12)
-    put("ruine", "steen", band(ap, 0.12, -0.36, 0.06), TR(10.15, -1.8, 0, 92))
-    put("ruine", "ruine", boutline([(-0.25, 2.9), (0.25, 2.9)] + arc(0, 3.3, 0.25, 0, 180, 6)[1:-1] + [(-0.25, 2.9)], -0.4, 0.15), TR(10.15, -0.2, 0, 92))   # nisje
-    # lage ruinemuur van de ronde toren naar de grotingang (Sneeuwwitjezijaanzicht / Boekloc: kasteel en grot zitten aan elkaar, Daan)
-    Ml, Ll = ruin_wall("ruine", 6.95, 3.45, 10.25, 0.95, 1.9, 0.9, 0.45, seed=7)
-    ang = math.atan2(0.95 - 3.45, 10.25 - 6.95); t = Vector((math.cos(ang), math.sin(ang))); nn = Vector((t.y, -t.x))   # nn wijst naar het pad (oost)
+    # ruinemuur bij de ingang (Boekloc_Sneeuwwitje.jpg): 4.6 m, afgebrokkeld, rondboogtunnel (uitgesneden), nisje
+    Mi, Li = ruin_wall("ruine", 10.0, -3.95, 10.3, 1.0, 4.6, 1.1, 0.6, seed=3)
+    put("ruine", "steen", band(arch_pts(0, 0, TW, TH, 12), 0.12, -0.36, 0.06), TR(10.15, -1.8, 0, 92))
+    put("ruine", "donker", bz(-0.25, 0.25, -0.33, -0.3, 2.9, 3.5), TR(10.2, -0.2, 0, 92))
+    # lage ruinemuur van de ronde toren naar de grotingang (kasteel en grot zitten aan elkaar, Daan)
+    Ml, Ll = ruin_wall("ruine", 6.9, 3.5, 10.3, 0.95, 1.9, 0.7, 0.45, seed=7)
+    ang = math.atan2(0.95 - 3.5, 10.3 - 6.9); t = Vector((math.cos(ang), math.sin(ang))); nn = Vector((t.y, -t.x))
     for k in range(3):
-        pp = Vector((6.95, 3.45)) + t * (1.2 + k * 0.9)
+        pp = Vector((6.9, 3.5)) + t * (1.2 + k * 0.9)
         COLL.append([round(pp.x, 3), round(pp.y, 3), 1.0, 1.0, 0.5, 2.0, round(math.degrees(ang), 2)])
-    bc = Vector((6.95, 3.45)) + t * 2.1 + nn * 0.55                                                  # bankje tegen het muurtje
+    bc = Vector((6.9, 3.5)) + t * 2.1 + nn * 0.55
     put("ruine", "hout", bz(-0.6, 0.6, -0.2, 0.2, 0.42, 0.48), TR(bc.x, bc.y, 0, math.degrees(ang)))
     for u in (-0.45, 0.45): put("ruine", "steen", bz(u - 0.08, u + 0.08, -0.17, 0.17, 0, 0.42), TR(bc.x, bc.y, 0, math.degrees(ang)))
     # ruinemuur bij de uitgang (Sneeuwwitjegrot.jpg rechts)
-    Mu, Lu = ruin_wall("ruine", 21.3, -8.2, 23.95, -6.45, 3.6, 1.2, 0.55, seed=11)
-    # ruinetorentje met klimop op de rots (Grotvernieuwd.jpg)
-    tc = Vector((15.6, -0.6)); zb = 2.6
-    for k in range(18):
-        a0 = k * math.tau / 18; a1 = (k + 1) * math.tau / 18
-        hh = 6.9 - 1.3 * max(0, noise.noise(Vector((k * 0.6, 3, 0)))) - (0.9 if k in (4, 5, 11) else 0)
-        p0 = tc + Vector((math.cos(a0), math.sin(a0))) * 1.05; p1 = tc + Vector((math.cos(a1), math.sin(a1))) * 1.05
-        bm = bz(0, (p1 - p0).length + 0.01, -0.22, 0.22, zb, hh)
-        put("ruine", "ruine", bm, TR(p0.x, p0.y, 0, math.degrees(math.atan2(p1.y - p0.y, p1.x - p0.x))))
-    for k, (a, z) in enumerate(((200, 4.6), (320, 5.0), (80, 4.4))):     # raamgaten (donker)
-        p = tc + Vector((math.cos(math.radians(a)), math.sin(math.radians(a)))) * 1.27
-        put("ruine", "donker", bz(-0.22, 0.22, -0.02, 0.02, z, z + 0.75), TR(p.x, p.y, 0, a + 90))
-    for k in range(70):    # klimop: plukjes bladeren tegen toren en muren
-        if k < 45: a = RNG.uniform(0, math.tau); p = tc + Vector((math.cos(a), math.sin(a))) * 1.25; z = RNG.uniform(zb, 6.3)
-        else: u = RNG.uniform(0, 1); p = Vector((10.05 + 0.2 * u, -3.9 + 4.8 * u)) + Vector((-0.32, 0)); z = RNG.uniform(1.5, 4.2)
-        b = bmesh.new(); bmesh.ops.create_icosphere(b, subdivisions=1, radius=1.0)
-        s = RNG.uniform(0.25, 0.5)
-        for v in b.verts: v.co = Vector((v.co.x * s, v.co.y * s * 0.6, v.co.z * s * 0.8))
-        bmesh.ops.translate(b, vec=(p.x, p.y, z), verts=b.verts); put("klimop", "klimop", b)
+    Mu, Lu = ruin_wall("ruine", 21.2, -8.3, 24.0, -6.4, 3.8, 1.1, 0.55, seed=11)
+    # holle ruinetoren op de rots (Grotvernieuwd.jpg), raamgaten uitgesneden
+    tc = Vector((15.6, -0.4))
+    ruin_tower(tc.x, tc.y, 1.05, 0.78, 1.6, 7.0, seed=2)
+    for a_, z_ in ((200, 4.7), (320, 5.1), (80, 4.5)):
+        p_ = tc + Vector((math.cos(math.radians(a_)), math.sin(math.radians(a_)))) * 0.92
+        cb = bz(-0.22, 0.22, -0.3, 0.3, z_, z_ + 0.8); bmesh.ops.transform(cb, matrix=TR(p_.x, p_.y, 0, a_ + 90), verts=cb.verts); cutters.append(cb)
+    # klimop (Grotvernieuwd / Boekloc): plakkaten op toren en muren
+    for k in range(9):
+        a_ = k * 40 + 10
+        Mt = TR(tc.x + 1.05 * math.cos(math.radians(a_)), tc.y + 1.05 * math.sin(math.radians(a_)), 0, a_ + 90)
+        ivy_sheet(Mt, -0.45, 0.45, 2.6, 6.4 - 0.4 * (k % 3), 0.03, k)
+    ivy_sheet(Mi, 0.1, 0.95, 0.8, 4.2, 0.28, 21); ivy_sheet(Mi, 3.6, 4.9, 1.5, 4.0, 0.28, 22)
+    ivy_sheet(Mu, 0.3, 1.5, 0.6, 3.2, 0.3, 23); ivy_sheet(Ml, 0.5, 1.6, 0.2, 1.6, 0.25, 24)
     # tunnelvloer + lampjes (lantaarn aan de ruinemuur, Sneeuwwitjegrot.jpg)
     padpoly = []
     P = resample(PAD, 0.5)
