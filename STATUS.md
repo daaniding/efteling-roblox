@@ -314,6 +314,17 @@ iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
 - NOG: Ezeltje-strek-je zelf (beeld op sokkel, aparte attractie), waterstralen (pas als Daan animatie wil),
   wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
 
+## Ezeltje Strek Je (chat 8, 13 nov) — v1 in Studio
+Map `models/AR_Ezeltje/`. Bronnen: Eftepedia-lemma Tafeltje Dek Je, Ezeltje Strek Je (60 plaatjes in `ref/eftepedia/`). Alleen de ezel op de sokkel
+(herberg De Ersteling + knuppel/tafeltje = later). Plek: OSM 55423191 = midden van het ronde pleintje op het Herautenplein (5.96, -64.45),
+kop naar de Prinsenpoort (lemma). Bloemenborders met banken eromheen stonden er al (Herautenplein).
+- `build/03_ezel.py`: sokkel (ijsselsteentjes-basis, sierbeton met krullen op de hoeken, cartouches "Ezeltje strekje" op de lange zijden,
+  muntdeurtje achter, dekplaat met rode rand, bovenkant 1.66 m); ezel in gestrekte houding (ellipsoiden/buizen -> voxel-remesh -> smooth,
+  gebakken grijze huid met lichtere buik/snuit), rood tuig met gouden nagels, dekje met Pieck-ornament en zigzagfranje (PIL-textuur),
+  ogen, manen, hoeven. Asset **117994407314720**; texturen ezel 113321106189533, dekje 112437444046680, bord 128244839705244.
+  Plaatsen: `roblox/plaats_ezeltje.luau`. Screenshot `review/studio_v1.jpg`.
+- NOG: kaak/staart bewegen bij muntinworp (pas als Daan animatie wil), ezel nog wat stijf (hoofd/oren), herberg De Ersteling.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
