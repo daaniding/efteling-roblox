@@ -12,7 +12,7 @@ RNG = random.Random(1999)
 MATS = {"stuc": ((0.88, 0.83, 0.72, 1), 0.9), "natuursteen": ((0.72, 0.6, 0.42, 1), 0.9), "riet": ((0.52, 0.42, 0.26, 1), 0.95),
         "hout": ((0.3, 0.24, 0.19, 1), 0.8), "pannen": ((0.55, 0.33, 0.25, 1), 0.85), "deur": ((0.28, 0.18, 0.11, 1), 0.7),
         "luik": ((0.36, 0.22, 0.13, 1), 0.7), "venster": ((0.05, 0.05, 0.05, 1), 0.3), "ijzer": ((0.05, 0.05, 0.05, 1), 0.45),
-        "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "zink": ((0.5, 0.52, 0.52, 1), 0.5), "leien": ((0.45, 0.38, 0.33, 1), 0.85), "vat": ((0.42, 0.28, 0.16, 1), 0.8), "goud": ((0.8, 0.6, 0.2, 1), 0.3)}
+        "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "zink": ((0.5, 0.52, 0.52, 1), 0.5), "leien": ((0.45, 0.38, 0.33, 1), 0.85), "vat": ((0.42, 0.28, 0.16, 1), 0.8), "jute": ((0.55, 0.46, 0.33, 1), 0.95), "stamhout": ((0.6, 0.56, 0.5, 1), 0.85), "aardewerk": ((0.3, 0.24, 0.2, 1), 0.6), "goud": ((0.8, 0.6, 0.2, 1), 0.3)}
 COLL = []; LAMPS_ = []
 def coll_box(cx, cy, cz, sx, sy, sz, ang=0.0): COLL.append([round(v, 3) for v in (cx, cy, cz, sx, sy, sz, ang)])
 LX, DY = 9.6, 8.0                       # hoofdhuis (gevelbreedte, diepte)
@@ -201,9 +201,9 @@ def build(master):
     dp = arch_pts(1.83, -0.05, 1.44, 1.95, 16)                                           # open boogentree (px 172-298, top py 625)
     put("deuren", "venster", boutline(dp, GY - 0.06, 0.08)); put("deuren", "hout", band(dp, 0.11, GY - 0.12, 0.14))
     put("deuren", "hout", bz(1.62, 2.04, GY - 0.16, GY - 0.1, 1.97, 2.08, 0.01))                                    # naambordje boven de boog
-    sp = arch_pts(3.83, 1.03, 0.36, 0.52, 8)                                             # smal boograampje (px 395-425)
+    sp = arch_pts(3.83, 0.78, 0.36, 1.12, 8)                                             # smal boograampje (Herbergfris1: 0.36 x 1.15 m, onder 0.78)
     put("ramen", "venster", boutline(sp, GY - 0.06, 0.08)); put("ramen", "hout", band(sp, 0.06, GY - 0.1, 0.1))
-    put("ramen", "hout", bz(3.83 - 0.014, 3.83 + 0.014, GY - 0.09, GY - 0.05, 1.03, 1.5))
+    
     ruit(5.71, 6.51, 0.46, 1.49, -0.03, cols=2, rows=3, fr=0.07, luiken=True)            # middendeel, raam 1 (px 530-690)
     ruit(8.15, 8.95, 0.46, 1.49, -0.03, cols=2, rows=3, fr=0.07, luiken=True)            # raam 2 (luik px 755-780)
     lantaarn(0.75, GY - 0.05, 1.85)                                                      # links onder de kap (px 140, py 600-630)
@@ -250,12 +250,32 @@ def build(master):
     lantaarn(10.45, T.y - 0.95, 1.7, arm=0.3)                                            # px 965
     coll_box(T.x, T.y, 1.25, 2 * TR0, 2 * TR0, 2.5)
     # ================= vaten (px 330-400, Ø0.8) en een bankje =================
-    for (x, y, s, hz) in ((3.5, GY - 0.55, 1.0, 0.66), (9.75, -0.45, 0.8, 1.35), (13.2, -1.6, 0.65, 0.9), (13.75, -1.15, 0.65, 0.9)):
+    for (x, y, s, hz) in ((3.1, GY - 0.5, 0.95, 1.0), (9.75, -0.42, 0.62, 0.9), (10.2, -0.55, 0.62, 1.6), (11.35, -1.45, 0.56, 0.9), (13.5, -1.55, 0.6, 0.85)):
         put("vaten", "vat", blathe([(0, 0), (0.33 * s, 0), (0.39 * s, 0.24 * s * hz), (0.41 * s, 0.47 * s * hz), (0.39 * s, 0.7 * s * hz), (0.33 * s, 0.94 * s * hz), (0, 0.94 * s * hz)], 18), TR(x, y))
         for zz in [z_ * hz for z_ in (0.12, 0.35, 0.59, 0.82)]: put("vaten", "ijzer", blathe([(0.35 * s + 0.06 * math.sin(zz * math.pi / (0.94 * hz)) * s, zz * s - 0.025), (0.37 * s + 0.06 * math.sin(zz * math.pi / (0.94 * hz)) * s, zz * s), (0.35 * s + 0.06 * math.sin(zz * math.pi / (0.94 * hz)) * s, zz * s + 0.025)], 18), TR(x, y))
         coll_box(x, y, 0.47 * s, 0.82 * s, 0.82 * s, 0.94 * s)
-    put("bankje", "hout", bz(6.8, 7.95, -0.58, -0.22, 0.42, 0.49, 0.01))
-    for xx in (6.92, 7.83): put("bankje", "hout", bz(xx - 0.05, xx + 0.05, -0.55, -0.25, 0.0, 0.42))
+    # ================= rekwisieten uit Herbergfris1 (x = 7.85 + (px - 768) / 112) =================
+    # boomstambank px 625-860: verweerde grijze stam, licht gebogen, opgaande uiteinden, twee gevorkte poten
+    st = merge(btube([(6.55, -0.5, 0.55), (6.8, -0.5, 0.47), (7.6, -0.48, 0.44), (8.4, -0.5, 0.47), (8.75, -0.52, 0.58)], 0.16, 10),
+               btube([(6.95, -0.5, 0.45), (6.85, -0.45, 0.2), (6.8, -0.5, 0.0)], 0.09, 8), btube([(6.95, -0.5, 0.45), (7.12, -0.55, 0.0)], 0.07, 8),
+               btube([(8.35, -0.5, 0.45), (8.45, -0.48, 0.2), (8.5, -0.5, 0.0)], 0.09, 8), btube([(8.35, -0.5, 0.45), (8.2, -0.56, 0.0)], 0.07, 8))
+    put("bankje", "stamhout", organisch(st, 0.03, 6, 0.6, 0.02, 4.0, 0.25)); coll_box(7.65, -0.5, 0.25, 2.2, 0.35, 0.5)
+    # jutezak tegen de muur (px 450-515) en een liggende zak (px 545-615)
+    zk = merge(ell((5.3, -0.32, 0.22), (0.29, 0.24, 0.24), 20, 12), ell((5.22, -0.3, 0.32), (0.2, 0.18, 0.18), 14, 8), ell((5.32, -0.28, 0.48), (0.13, 0.11, 0.08), 12, 8), ell((5.36, -0.3, 0.56), (0.08, 0.07, 0.06), 10, 6))
+    bmesh.ops.rotate(zk, verts=zk.verts, cent=(5.3, -0.3, 0.0), matrix=Matrix.Rotation(math.radians(8), 3, "Y"))
+    put("zakken", "jute", organisch(zk, 0.025, 6, 0.6, 0.02, 6.0, 0.3))
+    put("zakken", "luik", organisch(merge(ell((6.18, -0.42, 0.15), (0.34, 0.2, 0.15), 20, 10), ell((6.52, -0.42, 0.15), (0.08, 0.09, 0.08), 10, 6)), 0.025, 6, 0.6, 0.02, 6.0, 0.3))
+    # houten trog (px 985-1125): uitgeholde stam
+    tr = merge(ell((10.4, -0.85, 0.08), (0.66, 0.26, 0.2), 24, 12), ell((9.82, -0.85, 0.2), (0.1, 0.16, 0.1), 10, 6), ell((10.98, -0.85, 0.2), (0.1, 0.16, 0.1), 10, 6))
+    put("trog", "stamhout", organisch(tr, 0.03, 8, 0.7, 0.015, 4.0, 0.25))                                          # bootvormige uitgeholde stam
+    put("trog", "deur", organisch(ell((10.4, -0.85, 0.235), (0.54, 0.17, 0.05), 20, 8), 0.025, 4, 0.6, 0.0))     # donkere holte
+    coll_box(10.4, -0.82, 0.14, 1.2, 0.45, 0.28)
+    # kruik bij de toren (px 1215-1250)
+    put("kruik", "aardewerk", blathe([(0, 0), (0.1, 0), (0.15, 0.1), (0.16, 0.2), (0.11, 0.3), (0.06, 0.34), (0.07, 0.38), (0.0, 0.38)], 14), TR(11.95, -1.55))
+    put("kruik", "aardewerk", btube([(12.06, -1.55, 0.3), (12.16, -1.55, 0.28), (12.14, -1.55, 0.16)], 0.015, 5))
+    # tralies in het smalle boograampje (Herbergfris1 px 300-345)
+    for dx in (-0.09, 0.0, 0.09): put("ramen", "ijzer", btube([(3.83 + dx, GY - 0.12, 0.76), (3.83 + dx, GY - 0.12, 1.8 - 0.9 * dx * dx / 0.0081 * 0.1)], 0.012, 5))
+    for zz in (1.1, 1.45): put("ramen", "ijzer", btube([(3.67, GY - 0.12, zz), (3.99, GY - 0.12, zz)], 0.01, 5))
     coll_box(2.1, 3.05, 1.2, 4.25, 6.1, 2.4); coll_box(7.9, 4.29, 1.2, 4.9, 8.58, 2.4); coll_box(GW / 2, GY / 2, 1.2, GW, -GY, 2.4)
     # ================= wegschrijven =================
     for (part, mat), bm in PARTS.items():

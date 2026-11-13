@@ -352,7 +352,10 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
   Gevelkap uit gemeten randpunten (KO/KIL/KIR), wenkbrauw als brede golf, zijkap links, schilddak + achtervleugel. Texturen: Poly Haven CC0
   `riet_01` (riet) en `stone_wall` (gevelveld) in `textures/polyhaven/`, torendak eigen rol leien (grijsbruine spanen). 65k tris.
   Asset **126789978359252** (ids in `textures/asset_ids.txt`, plaatsen `roblox/plaats_herberg.luau`). Reviews `review/v2b..v3e`, `review/studio_v2.jpg`.
-- NOG v2: deur boven de boog naambordje, boomstambank/zakken/tobbe uit Herbergfris1, wandeltest; interieur later.
+- v3 details uit Herbergfris1 (x = 7.85 + (px-768)/112): boomstambank (grijze verweerde stam, gevorkte poten), jutezak tegen de muur + liggende zak,
+  bootvormige uitgeholde trog, vaten (groot bij de deur, klein + hoog op de overgang, klein bij de toren), kruik, smal boograampje echt 0.36x1.15 m
+  met tralies. Nieuwe kleurmaterialen jute/stamhout/aardewerk in `plaats_herberg.luau`. Asset **112518972306080**, 72.5k tris. `review/studio_v3_details.jpg`.
+- NOG: wandeltest; interieur later.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
