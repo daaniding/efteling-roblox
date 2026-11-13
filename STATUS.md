@@ -239,7 +239,13 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - v10 (Daan: "je hebt water toegevoegd maar dat moet gras zijn"): GEEN gracht meer. Westkant = dezelfde verhoogde begroeide strook (0.42 m) als noord,
   achter het doorgetrokken stenen randje; herauten west ook op 0.42. MagischeKlokOever (riet/kroos/blaadjes) verwijderd, strook west beplant (150).
   Asset **108564933546713**. Screenshot `review/studio_v10.jpg`. (Het grachtterrein onder de strook is nog uitgegraven; de strook dekt het af.)
-- NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
+- v11 (Daan: "Magische Klok afmaken"): **torentje** aan het eind van de westmuur naar Magischeklok1976 (rechts) + Herauten-okt2009: vierkant
+  ruw stuc 1.6 x 1.6 m, lijst op 3.15 m, vier hoekkantelen tot 3.7 m (~0.8 m boven de muurkantelen), botsblok in COLL. **Slimme Toon** opnieuw
+  (`build/03d_toon.py`, na 03b in bouw_alles.sh): skin-modifier-figuur x1.35 (~0.42 m zittend), zit op een eigen loden zitkrul links van de klok,
+  voor de stijl linksvoor, kijkt opzij naar de klok (vanaf het plein in profiel zoals Slimme-Toon.jpg), trekt met beide handen aan het touw;
+  groen jak met rode puntkraag en riem, rode maillot, zwarte puntschoenen, blond pagekopje, grijsgroen hoedje met rode krulveer (MAT toon_hoed).
+  Asset **134679544462063**. Geplaatst zonder terreinstappen (alleen model + botsing + texturen voorladen). Screenshots `review/studio_v11_*.jpg`.
+- NOG/kan beter: herauten gezicht/handen fijner,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
 ## Daarna (volgorde met Daan afgesproken)

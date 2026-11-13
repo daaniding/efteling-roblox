@@ -118,16 +118,7 @@ def build(master):
     put("stoel", "goud", blathe([(0, 7.52), (0.05, 7.55), (0.06, 7.6), (0.05, 7.65), (0, 7.68)], 12))
     put("stoel", "ijzer", btube([(0, 0, 7.66), (0, 0, 7.95)], 0.01, 5))
     put("stoel", "ijzer", boutline([(0.0, 7.8), (0.26, 7.82), (0.3, 7.88), (0.24, 7.92), (0.0, 7.9)], -0.005, 0.01))   # vaantje
-    # Slimme Toon (eenvoudig, zit op de krul aan de voorkant, trekt aan het touw)
-    tx, ty = 0.0, -0.55
-    put("toon", "toon_groen", blathe([(0, 0), (0.09, 0.02), (0.1, 0.18), (0.07, 0.26), (0, 0.27)], 10), TR(tx, ty, 6.42))
-    put("toon", "huid", blathe([(0, 0), (0.06, 0.01), (0.07, 0.07), (0.05, 0.12), (0, 0.13)], 10), TR(tx, ty, 6.7))
-    put("toon", "toon_rood", btube([(tx - 0.05, ty, 6.44), (tx - 0.06, ty - 0.2, 6.44), (tx - 0.06, ty - 0.24, 6.32)], 0.035, 6))
-    put("toon", "toon_rood", btube([(tx + 0.05, ty, 6.44), (tx + 0.06, ty - 0.2, 6.44), (tx + 0.06, ty - 0.24, 6.32)], 0.035, 6))
-    put("toon", "toon_groen", btube([(tx + 0.08, ty, 6.62), (tx + 0.1, ty + 0.2, 6.78), (tx + 0.04, ty + 0.4, 6.75)], 0.025, 6))
-    put("toon", "toon_rood", blathe([(0, 0), (0.07, 0), (0.02, 0.14), (0, 0.15)], 8), TR(tx, ty, 6.82))
-    put("toon", "rood", btube([(tx, ty, 6.94), (tx + 0.08, ty + 0.08, 7.02), (tx + 0.18, ty + 0.1, 7.0)], 0.018, 5))
-    put("toon", "ijzer", btube([(tx + 0.04, ty + 0.4, 6.75), (0.0, 0.0, 6.72)], 0.004, 4))
+    # Slimme Toon: zie build/03d_toon.py (gemodelleerde figuur op de krul linksvoor, trekt aan het klokkentouw)
     # uurwerk op de voorkant (-Y): kast, kroonlijst, wijzerplaat (atlas), gouden wijzers
     yk = -math.sqrt(R_ROMP ** 2 - 0.75 ** 2)                              # romp-oppervlak aan de rand van de kast
     put("klok", "klokhout", bz(-0.75, 0.75, yk - 0.14, yk + 0.4, KZ0, KZ1))
@@ -161,8 +152,17 @@ def build(master):
         s0 = -4.2                                                          # loopt tot in de toren
         M = arm_M(name)
         put("muur_" + name, "stuc", bz(s0, L, 0, WALL_T, -0.45, WALL_H), M)
-        put("muur_" + name, "stuc", bz(L - 0.05, L + 0.25, -0.12, WALL_T + 0.12, -0.45, WALL_H + KANT_H + 0.05), M)   # eindpijler
-        put("muur_" + name, "stuc", bz(L - 0.1, L + 0.3, -0.17, WALL_T + 0.17, WALL_H + KANT_H + 0.05, WALL_H + KANT_H + 0.12, 0.01), M)
+        if name == "W":   # kleiner torentje aan het eind van de westmuur (Magischeklok1976 rechts, Herauten-okt2009 links): vierkant, ruw stuc,
+            # ~0.8 m hoger dan de muurkantelen, twee kantelen per zijde, steekt iets voor de muur uit
+            T0, T1, TW0, TW1, TH = L - 0.55, L + 1.05, -0.3, 1.3, 3.15
+            put("muur_W", "stuc", bz(T0, T1, TW0, TW1, -0.45, TH), M)
+            put("muur_W", "stuc", bz(T0 - 0.06, T1 + 0.06, TW0 - 0.06, TW1 + 0.06, TH - 0.12, TH, 0.01), M)        # lijst
+            for (a0, a1, b0, b1) in ((T0, T0 + 0.5, TW0, TW0 + 0.5), (T1 - 0.5, T1, TW0, TW0 + 0.5), (T0, T0 + 0.5, TW1 - 0.5, TW1), (T1 - 0.5, T1, TW1 - 0.5, TW1)):
+                put("muur_W", "stuc", bz(a0 - 0.04, a1 + 0.04, b0 - 0.04, b1 + 0.04, TH - 0.02, TH + 0.55), M)        # hoekkantelen (2 per zijde)
+            c_ = p0 + u * ((T0 + T1) / 2) - n * ((TW0 + TW1) / 2); coll_box(c_.x, c_.y, 1.8, T1 - T0, TW1 - TW0, 3.6, math.degrees(math.atan2(u.y, u.x)))
+        else:
+            put("muur_" + name, "stuc", bz(L - 0.05, L + 0.25, -0.12, WALL_T + 0.12, -0.45, WALL_H + KANT_H + 0.05), M)   # eindpijler
+            put("muur_" + name, "stuc", bz(L - 0.1, L + 0.3, -0.17, WALL_T + 0.17, WALL_H + KANT_H + 0.05, WALL_H + KANT_H + 0.12, 0.01), M)
         s = 0.9                                                            # kantelen (vanaf de toren)
         while s + KANT_W < L - 0.1:
             put("muur_" + name, "stuc", bz(s, s + KANT_W, 0, WALL_T, WALL_H - 0.02, WALL_H + KANT_H), M)

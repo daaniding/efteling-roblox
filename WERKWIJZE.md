@@ -196,3 +196,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Niets hoogs in het zicht vóór een voorstelling** (bomen/struiken tussen kijkplek en figuren weghalen na het beplanten).
 - **Bij twijfel over wat Daan bedoelt: eerst de 2 interpretaties voorleggen** in plaats van te bouwen (Magische Klok: "langs de rand" = smal randpad, niet alles grind).
 
+
+## Lessen Magische Klok v11 (13 nov)
+- **"Geen bruikbare foto" eerst opnieuw checken met uitsneden:** het torentje stond gewoon op Magischeklok1976 (rechterrand) en Herauten-okt2009;
+  de ontwerpschets (rond torentje met spits) week af van wat gebouwd is. Foto gaat voor schets.
+- **Kleine figuur op hoogte (Slimme Toon):** eerst de kijkrichting van de foto nadoen. Vanaf de voorkant naar de klok kijkend zag je zijn rug;
+  hij moet links van de klok zitten en opzij kijken, dan staat hij net als op de foto in profiel. Een eigen zitkrul voorkomt dat hij zweeft.
+- **Alleen het model vervangen:** het plaatsscript graaft ook terrein/vervangt gras; bij een modelupdate alleen plaats() + botsing + voorladen draaien.
