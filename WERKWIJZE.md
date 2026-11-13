@@ -250,3 +250,13 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   wallvec-projectie in de bake gaven meteen het echte beeld; kussenblokken-stenen zijn nooit zo goed als een stenen-scan op een vlak.
 - **Zoek eerst ALLE foto's in eerdere eftepedia-mappen** (hier `AR_Ezeltje/ref/eftepedia/Herbergfris1.jpg`: schone frontfoto met persoon).
 - **Studio rendert riet donkerder dan Blender** (tegenlicht + donkere scan): riet ~1.4x lichter bakken dan de foto lijkt te vragen.
+
+## Lessen De Zes Zwanen (13 nov)
+- **Camerahoek eerst goed bepalen:** twee gevels die op de foto allebei recht lijken staan in werkelijkheid evenwijdig; de foto kwam van ZZO onder ~30 graden.
+  Een verkeerde aanname (vleugel schuin) kostte drie overlays. Breedte op de foto < plattegrondbreedte = schuin standpunt.
+- **Kunstrots = gestapelde hoekige blokken**, geen glad hoogteveld: `rotsblokken()` (lagen 0.45-0.85 m, blokken 1.2-1.8 m, afgeschuind + verschoven hoeken,
+  donkere kern erachter). Blokken nooit met een boolean snijden (overlappende schillen -> lege mesh): grot/uitsparing = blokken overslaan, alleen de kern snijden.
+- **Samengevoegde snijders met overlap** in een EXACT-boolean gaven een lege rots: elk stuk apart snijden (`snij()` met losse cutter-objecten).
+- **Groen genereren in Luau zelf** (polygonen + zelfde regels) i.p.v. een lange lijst plakken: 8 KB in plaats van 15 KB en geen kopieerfouten.
+- **Vanaf de voorkant bekeken leek de zwaan een gans:** hals slanker (0.24 -> 0.105), kleinere kop/snavel, platte maskers; altijd ook een vooraanzicht renderen.
+- **Ondergrond:** alleen onder het water terrein weggraven (4-stud cellen) en een oeverring van 1.45 m mesh erover; paden als OSM-vlak (geen rasterkartels).

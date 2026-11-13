@@ -359,6 +359,24 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
   interieur. Concept-code voorportaal + knuppel klaar in `build/later_voorportaal_knuppel.py`, foto's in `ref/` (Knuppelenzak, Knuppeltje, Herbergfris2-5).
 - KLAAR volgens Daan (13 nov). Later: binnenkant (Herberginterieur-ontwerp + Herbergfris2-5: balkenplafond, haard, jongen aan tafel, waard), wandeltest.
 
+## De Zes Zwanen (chat 9, 13 nov) — v2 in Studio (buitenkant; interieur + Elisa later, zwanen statisch)
+Map `models/AR_ZesZwanen/`, brief `asset-brief.md`. Bronnen: 78 Eftepedia-plaatjes (`ref/eftepedia/`), Efteling-blog/pers (`ref/efteling_blog/`:
+zwaan zijaanzicht + 3D-model, staalskelet, bouwfeiten: toren 15 m, slot 350 m2, vijver 75.000 l). Echte bouwtekeningen niet openbaar (vergunningen/ride-databases
+nagezocht). Plattegrond = OSM: gebouw 961616753, vijvers 961616757/758/760, vaarbaan 837234781 (lus, tegen de klok in: in door de poort rechts, uit via de grot
+links), rotsen 961616756 (eiland) / 961616759, controlehokje 961616755, pad 961616754, hek 1255787244. Modelframe `ref/model_frame.json` (voorkant -Y = naar de vijver).
+- Hoofdfoto `ref/hoofdfoto.jpg` (D6z_exterieur_totaal) als overlay: `build/cam.sh <tag> 0.18,-22.68,1.7,47 30 0.075 [master] [clay|mat]` (camera ZZO, 30 graden).
+  Gemeten: vleugel (5.25x2.6, gevel evenwijdig aan de poortvoorzijde) op de rots z 3.6, goot 5.8, nok 6.9; toren rode ring 7.3, donkere leien band 8.4, kop met
+  neus 8.4-9.45, hoedendak 9.4, pannenkap tot 12.1, ui 2 tot 13.0, spits 14.3, vaan 15; poort kantelen 4.35, spitsboog-waterpoort in de schuine zijde.
+- Delen met eigen master/bake/upload: `build/03_kasteel.py` (ZZ_kasteel), `03_omgeving.py` (ZZ_omgeving), `03_zwaan.py` (ZZ_zwaan, 1x gemaakt, 6x geplaatst
+  op de vaarbaan: `exports/zwanen.json`). Gedeelde helpers `build/zz_helpers.py` (spitsboog, kantelen, gelaagde kunstrots `rotsblokken`, `snij`).
+  Bake `05_bake.py --pre ZK|ZO` met Poly Haven CC0: plastered_stone_wall (stuc), castle_wall_varriation (natuursteen), cliff_side (rots), clay_roof_tiles_02 (pannen).
+  Sjerpen `build/02_sjerp.py` (rood/teal). Upload `build/upload.sh`, plaatsen `roblox/maak_plaatsscript.py` -> `plaats_zeszwanen.luau` (graaft terrein onder de vijvers,
+  Ground onder pad/oevergrond), groen `roblox/plaats_zeszwanen_groen.luau` (76 bomen, ondergroei, asters langs het water, varens; kloont BomenBronV3/VVEchtePlanten).
+- Assets: kasteel **100541413989663**, omgeving **125064138686858**, zwaan **111482698984449** (ids in `textures/asset_ids.txt`). Screenshots `review/studio_v2_*.jpg`.
+- Schaal gecontroleerd met een 1.8 m testpop (SchaalPop): kasteel 16.1 m incl. rots onder water, zwaan 3.6 m.
+- NOG (Daan: "veel beter, gedetailleerder, op schaal"): stuc meer contrast/vlekken, zwanen fijner (veren-normalmap), Elisa + interieur later, bruggetje/beekje,
+  sprookjesboek, zwemvlies-afdrukken in het pad, wandeltest + fps-test.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
