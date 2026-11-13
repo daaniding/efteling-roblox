@@ -34,7 +34,7 @@ ARMS = {   # binnenvlak-start, richting, plein-normaal, lengte (vanaf de start)
     "W": (Vector((0.96, -3.07)), Vector((0.6986, -0.7154)), Vector((-0.7154, -0.6986)), 17.25),
 }
 HERAUT_S = {"N": (3.8, 8.0, 11.8), "W": (2.8, 5.3, 7.8)}   # afstand langs de arm (overzicht-okt2009: west dicht bij de toren, noord ver uit elkaar)
-VER = {"N": 0.42, "W": 0.30}         # verhoging onder de herauten (totaalfoto: keermuurtje met begroeide strook; west: grasoever boven de gracht)
+VER = {"N": 0.42, "W": 0.42}         # verhoging onder de herauten (totaalfoto: keermuurtje met begroeide strook; west: grasoever boven de gracht)
 SHIFT = 1.2                           # front.jpg: de toren staat helemaal voor de muren -> binnenvlakken 1.2 m achter de OSM-lijn
 for _k, (_p, _u, _n, _L) in list(ARMS.items()): ARMS[_k] = (_p - _n * SHIFT, _u, _n, _L)
 
@@ -180,9 +180,9 @@ def build(master):
         # gracht: natuurlijk slootje (Herauten-okt2009): geen bak of losse stenen; terrein vormt de oever (uitgegraven in Studio),
         # hier alleen een donker modderbed en een waterspiegel met afgeronde koppen die iets onder de oever ligt
         g0, g1 = 1.2, L - 0.4
-        if name == "W": put("gracht", "bodem", bz(g0 - 0.3, g1 + 0.3, -2.6, -0.7, -0.5, -0.42), M)
+        # geen gracht meer (Daan: "dat moet gras zijn") -> verhoogde grasstrook, zie polyW
         wbm = bmesh.new(); ring = []
-        for k in range(40 if name == "W" else 0):    # gracht alleen langs de westmuur (overzicht-okt2009)                                                    # stadionvorm: rechte zijden, ronde koppen
+        for k in range(0):    # geen gracht meer (Daan: dat moet gras zijn)                                                    # stadionvorm: rechte zijden, ronde koppen
             ang = k * math.tau / 40; ca, sa = math.cos(ang), math.sin(ang)
             sx = (g1 if ca > 0 else g0) + ca * 0.6; ty = -1.65 + sa * 0.6
             ring.append(wbm.verts.new((sx, ty, -0.2)))
@@ -302,7 +302,7 @@ def build(master):
     polyN = [NP(NEND - 0.1, 0.03), NP(-0.8, 0.03), WP(-0.8, 0.03), WP(0.4, 0.03), WP(0.4, 0.95), WP(1.2, TB - 0.05)] + [q * ((q.length - 0.18) / q.length) for q in arcN[::-1]] + \
             [NP(SNE, TB - 0.18), NP(NEND - 0.1, TB - 0.18)]                      # op volle hoogte tot de eindrand
     put("verhoging", "gras", verhoging(polyN, VER["N"]))
-    polyW = [WP(0.2, 0.03), WP(WEND - 0.1, 0.03), WP(WEND - 0.1, 0.95), WP(0.2, 0.95)]
+    polyW = [WP(0.3, 0.03), WP(WEND - 0.1, 0.03), WP(WEND - 0.1, TB - 0.1), WP(1.2, TB - 0.1)]          # west: zelfde verhoogde grasstrook als noord (geen gracht)
     put("verhoging", "gras", verhoging(polyW, VER["W"]))
     PLEIN["paden"] = PADEN
     # front.jpg: toren ~13% smaller t.o.v. de muren (hoogtes kloppen) -> alleen in x/y schalen

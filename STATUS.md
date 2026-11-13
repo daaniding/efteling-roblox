@@ -236,6 +236,9 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - v9 (Daan): stenen rand doorgetrokken tot het eind van beide kasteelmuren en daar tegen de muur afgesloten (west langs de gracht tot sW 17.75,
   noord langs de verhoogde strook tot sN 14.75); verhoogde strook noord op volle hoogte tot de eindrand. Asset **85276771159667**
   (`review/eindranden.jpg`). Grind 235,228,214 zoals Sneeuwwitje. Nog te plaatsen als Daan uit Play is.
+- v10 (Daan: "je hebt water toegevoegd maar dat moet gras zijn"): GEEN gracht meer. Westkant = dezelfde verhoogde begroeide strook (0.42 m) als noord,
+  achter het doorgetrokken stenen randje; herauten west ook op 0.42. MagischeKlokOever (riet/kroos/blaadjes) verwijderd, strook west beplant (150).
+  Asset **108564933546713**. Screenshot `review/studio_v10.jpg`. (Het grachtterrein onder de strook is nog uitgegraven; de strook dekt het af.)
 - NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
