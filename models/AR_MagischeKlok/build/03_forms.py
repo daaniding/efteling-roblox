@@ -266,7 +266,7 @@ def build(master):
     gz = [WP(SL, TB + 0.1), WP(SLE, TB + 0.1), WP(SLE, TF), WP(SL, TF)]
     # (gazon voor de westarm vervallen in v15: zie AR_Herautenplein gazonstrook oostzijde)
     # zigzagbank in de hoek op de grens bestrating/gazon (foto), buxuskegel ernaast
-    bank = [WP(SL - 0.5, TB + 0.9), WP(SL - 0.5, TF - 1.6), WP(SL - 2.3, TF - 0.9), WP(SL - 2.3, TF + 0.6)]
+    bank = []                                                                  # v16 (Daan): geen bankjes in de hoek
     for a_, b_ in zip(bank, bank[1:]):
         d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x)); Mb = TR(a_.x, a_.y, 0, ang)
         put("bankjes", "hout", bz(0.0, L_, -0.22, 0.22, 0.42, 0.48, 0.01), Mb)                          # zitplank (doorlopend)
@@ -281,7 +281,7 @@ def build(master):
     put("boek", "kant_papier", bz(-0.36, 0.36, -0.24, 0.24, 0, 0.04), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
     put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
     kq = WP(SL - 3.1, TF + 0.9)
-    put("bankjes", "haag", blathe([(0, 0.1), (0.32, 0.12), (0.3, 0.45), (0.2, 0.8), (0.06, 1.05), (0, 1.08)], 14), TR(kq.x, kq.y, 0))
+    # (buxuskegel bij de bank vervallen, v16)
     # lantaarn met krularm aan de gazonrand (foto: grijze paal, sierlijke arm, één vierkante lantaarn)
     lq = WP(12.9, TF - 0.9); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(-nW.y, -nW.x))   # aan het begin van de gazonstrook (hoekfoto)
     ax_ = Vector((math.cos(math.radians(la)), math.sin(math.radians(la)))) * -1

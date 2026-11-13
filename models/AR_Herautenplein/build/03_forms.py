@@ -124,6 +124,16 @@ def build(master):
     gb_ = bmesh.new(); gv_ = [gb_.verts.new((p.x, p.y, 0.14)) for p in gz]; gb_.faces.new(gv_); omhoog(gb_); put("gazon", "gras", gb_)
     for a_, b_ in ((Vector((15.75, -15.15)), Vector((15.12, -40.0))), (Vector((15.12, -40.0)), Vector((15.4, -42.0))), (Vector((15.4, -42.0)), Vector((20.5, -42.0)))):
         rand_box(a_, b_, 0.2, -0.05, 0.2, "baksteen", "bloemvakken", inset=0.0, ch=0.01)
+    # ================= HAGEN om de grasstukken langs het plein (Daan): taxushaag 0.9 m tussen bestrating en gras =================
+    def haag(a, b):
+        a, b = Vector(a), Vector(b); d = b - a
+        put("hagen_rand", "taxus", bz(0.0, d.length, -0.3, 0.3, 0.05, 0.9, 0.12), TR(a.x, a.y, 0, math.degrees(math.atan2(d.y, d.x))))
+        c = (a + b) / 2; coll_box(c.x, c.y, 0.45, d.length, 0.6, 0.9, math.degrees(math.atan2(d.y, d.x)))
+    for a, b in (((-18.6, -8.0), (-2.15, -8.0)), ((2.15, -8.0), (8.45, -8.0)),            # noordrand plein, gras richting de Prinsenpoort
+                 ((-2.15, -5.6), (-2.15, -8.0)), ((2.15, -5.6), (2.15, -8.0)),              # langs de aanloop naar de brug
+                 ((-19.3, -8.0), (-19.3, -25.5)),                                           # westrand plein (gras/bos)
+                 ((15.0, -15.5), (15.0, -41.5)), ((15.3, -42.4), (20.3, -42.4))):         # om de gazonstrook oostzijde
+        haag(a, b)
     # ================= ZUIDDEEL: hagen (h 1 m), gebogen bloemvakken met laag bakstenen muurtje (Herautenplein99), bankjes, bosje =================
     for hid in ("505382910", "505382911"):
         hp = INNER[hid]; put("hagen_zuid", "taxus", prisma(hp, 0.05, 1.0))

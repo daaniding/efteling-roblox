@@ -308,6 +308,9 @@ iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
   toren (MK v15 asset **126060859233156**: MK-gazon voor de westarm weg, bestrating weer over de hele band, lantaarn met krularm naar het begin
   van de gazonstrook). Daarna een lange open gazonstrook langs de oostrand van het plein (x 15.1..20.5, y -15.2..-42) met laag bakstenen randje
   = de groene band op de luchtfoto. 18 bosrandbomen op/achter die strook weg. Plein asset **100856002577530**. `review/studio_v5_mkhoek_boven.jpg`.
+- v6 (Daan: "haal die bankjes weg, hagen om de grasstukken, dan zijn we klaar"): zigzagbank + buxuskegel in de MK-hoek weg (MK v16 asset
+  **139174637289363**). Taxushagen 0.9 m tussen bestrating en gras: noordrand plein (bij de Prinsenpoort/brug), langs de aanloop naar de brug,
+  westrand plein, om de gazonstrook oostzijde. Plein asset **121494619592510**. `review/studio_v6_hagen.jpg`. Herautenplein KLAAR (Daan).
 - NOG: Ezeltje-strek-je zelf (beeld op sokkel, aparte attractie), waterstralen (pas als Daan animatie wil),
   wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
 
