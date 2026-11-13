@@ -323,6 +323,13 @@ kop naar de Prinsenpoort (lemma). Bloemenborders met banken eromheen stonden er 
   gebakken grijze huid met lichtere buik/snuit), rood tuig met gouden nagels, dekje met Pieck-ornament en zigzagfranje (PIL-textuur),
   ogen, manen, hoeven. Asset **117994407314720**; texturen ezel 113321106189533, dekje 112437444046680, bord 128244839705244.
   Plaatsen: `roblox/plaats_ezeltje.luau`. Screenshot `review/studio_v1.jpg`.
+- v2 (Daan: "moet echt mooier, gedetailleerder en realistischer"): ezel opnieuw in Blender (`build/ezel_anatomie.py`, ge-exec'd door 03_ezel.py):
+  romp uit echte doorsneden, hals/kop als loft langs hun as, benen met knie/kogel/hak, spieren (hals, triceps, borst, onderarm, hamstrings,
+  schenkel, heupknobbels, ruggengraat), kop met kaakspier, wenkbrauwbogen, oogleden + wimpers, neusvleugels, lippen, open mond, voorlok,
+  44 manenplukjes, holle oren met rand en haren, staart met 22 strengen; gestrekte pose (voorbenen ver naar voren, achterbenen ver naar achter),
+  sokkel langer (1.8 m dekplaat). Hoog model (voxel 4.5 mm + vachtruis) -> normal map 2048 op het spelmodel (36k tris), AO in de kleur gebakken.
+  Dekje naar de foto: rood middenpaneel met wit ornament, zwart-zilveren zigzagrand; brede rode singel met gouden nagels.
+  Asset **81767048492683**, kleur 104013001055875, normal 131210851252410, dekje 89288262847523. SA.Color 228,220,208. `review/studio_v2_detail.jpg`.
 - NOG: kaak/staart bewegen bij muntinworp (pas als Daan animatie wil), ezel nog wat stijf (hoofd/oren), herberg De Ersteling.
 
 ## Daarna (volgorde met Daan afgesproken)

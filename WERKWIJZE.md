@@ -231,3 +231,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   (tuinen, fontein, bosje). Een "ringpad" is maar een deel. Hier bleek het plein 2x zo groot en had het maar 1 uitsteeksel (Daan had gelijk).
 - **Getrapte/haakse veelhoeken niet oorknippen** voor zichtbare vlakken (driehoeken buiten de rand); maak ze uit rechthoeken (raster op de hoekpunten).
 - **Grote platte MeshParts (gazon, grind) RenderFidelity Precise geven**, anders verdwijnen ze van een afstand/bovenaf.
+
+## Lessen Ezeltje (13 nov)
+- **Realistisch dier in Blender:** romp als loft van doorsneden (breedte/boven/onder per y) en kop/hals als loft langs hun as geven veel meer
+  controle dan losse ellipsoiden. Spieren als ellipsoiden die grotendeels IN het lijf zitten (anders "eieren"). Pose bepaalt de herkenbaarheid.
+- **Detail zonder driehoeken:** hoog model (voxel 4-5 mm + Displace met fijne ruis) -> normal map bakken op het gedecimeerde spelmodel
+  (selected-to-active, cage 1 cm). AO apart bakken en in de kleur vermenigvuldigen. Let op: het hoge model moet uit de render bij de AO-bake.
+- **Gebakken kleur rendert in Roblox lichter/donkerder dan in Blender:** altijd in Studio nakijken en met SurfaceAppearance.Color bijstellen.
