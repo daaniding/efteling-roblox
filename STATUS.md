@@ -221,7 +221,9 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
   muren (t 2.6..7.5) met achter een laag muurtje van ruwe natuursteen (bocht om de toren, uitloop in de gracht), voor een buxushaag in chevron
   evenwijdig aan het pad met lange lage groene bankjes erachter, 4 rieten manden, galgenlantaarn op de hoek bij de open noordingang, ingang west
   tussen haag en grachtmuurtje, rozenperk voorbij het westeinde. Asset **133609116330457**. Render naast de foto `review/plein_v3_vs_totaal.jpg`.
-  Plaatsen: plaats_magischeklok.luau, daarna groen/bos opnieuw (pleinband in beide scripts bijgewerkt).
+  In Studio geplaatst: asset **71191317351708** (dakonderkant bewaard in 05_bake: van dichtbij keek je door het dak). 111 planten van het plein weg,
+  48 rozen in het nieuwe perk. Wandeltest Play: noordingang -> grind -> bocht bij de toren -> manden -> westingang -> gras -> terug: alles OK.
+  Screenshot `review/studio_v6_plein.jpg`.
 - NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 

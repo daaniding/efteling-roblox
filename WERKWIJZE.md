@@ -190,4 +190,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Terrein herstellen:** WriteVoxels per 4-stud-cel met (Ground 1, Ground 1, Air 0) op Y -8..4 geeft weer maaiveld op Y=2 (zo ligt het ongerepte terrein).
 - **Herauten/figuren zonder generator:** skin-modifier (gewrichten + stralen) + subsurf 2 voor het lichaam, kleding als lofts met strepen per segment,
   gezichtsdelen meeschalen met het hoofd (anders verdwijnen ze erin). generate_3d vraagt een generator-sleutel in de Blender-addon.
+- **Daken: onderkant van een overstek niet wegbakken.** Roblox-meshes zijn enkelzijdig; zonder onderkant kijk je van dichtbij onder de dakrand door het dak.
+- **Alle foto's van een plein bekijken vóór de vorm kiezen** (Magische Klok: de totaalfoto liet de echte vorm zien, de andere twee foto's waren uitsneden).
 

@@ -144,7 +144,7 @@ for o in list(forms.all_objects):
     if mn not in RGB: continue
     srcs.append(o); bm = world_bm(o); bm.normal_update()
     dead = [f for f in bm.faces if f.normal.z < -0.5 and f.calc_center_median().z < 0.1]
-    if mn == "leien": dead += [f for f in bm.faces if f.normal.z < -0.5]
+    # leien: onderkant van het overstek BEWAREN (van dichtbij onder de dakrand keek je anders door het dak heen)
     bmesh.ops.delete(bm, geom=list(set(dead)), context="FACES")
     if mn == "baksteen": add("baksteen_toren" if o.name.startswith("MK_toren") else "baksteen_detail", "baksteen", bm)
     elif mn == "stuc": add("stuc_N" if "_muur_N" in o.name else "stuc_W", "stuc", bm)
