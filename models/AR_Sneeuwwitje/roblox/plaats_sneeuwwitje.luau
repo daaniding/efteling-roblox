@@ -93,6 +93,19 @@ for _, naam in ipairs({"VillaVoltaHorizon", "AssepoesterGroen"}) do
 		if p and binnenGebied(p) then t:Destroy(); weg += 1 end
 	end end
 end
+-- terreingras prikt door de tunnelvloer (pad ligt 0.1 stud boven het terrein): onder de tunnel gras -> Ground
+local PAD = {{8.8,-1.75},{10.6,-1.75},{12.6,-1.9},{14.5,-2.2},{16.4,-2.5},{18.4,-2.9},{20.3,-3.8},{21.6,-5.2},{22.5,-6.7},{23.0,-8.6}}
+local gedaan = {}
+for i = 1, #PAD - 1 do local a, b = PAD[i], PAD[i + 1]
+	for t = 0, 1, 0.1 do for dx = -1.4, 1.4, 0.7 do for dy = -1.4, 1.4, 0.7 do
+		local p = lokaal(a[1] + (b[1] - a[1]) * t + dx, a[2] + (b[2] - a[2]) * t + dy, 0).Position
+		local cx, cz = math.floor(p.X / 4) * 4, math.floor(p.Z / 4) * 4
+		if not gedaan[cx .. "," .. cz] then gedaan[cx .. "," .. cz] = true
+			local r = Region3.new(Vector3.new(cx, -4, cz), Vector3.new(cx + 4, 4, cz + 4))
+			workspace.Terrain:ReplaceMaterial(r, 4, Enum.Material.Grass, Enum.Material.Ground); workspace.Terrain:ReplaceMaterial(r, 4, Enum.Material.LeafyGrass, Enum.Material.Ground)
+		end
+	end end end
+end
 -- spawn op het voorplein, kijkend naar het kasteel (oude plek in attribuut OudeCFrame)
 local sp = workspace:FindFirstChildWhichIsA("SpawnLocation", true)
 if sp then

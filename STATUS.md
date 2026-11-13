@@ -162,7 +162,7 @@ overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665
   tot de ronde toren + gevelvulling (geen kier meer), plint alleen aan de buitenkant en de torenring open bij de deuren (geen richel binnen),
   boogbankjes naar buiten; rots boven de tunnel altijd min. 0.95 m dik + uitloop bij de grotuitgang hersteld (geen gele vlakke wand).
   Kasteel+grot **117515855048104**, omgeving **72248096298132** (31 texturen geladen). Blender-klei-check tunnel/gang/achterkant: dicht.
-  Studio-tunnel: geen gaten. Nog: tunnelwanden ogen egaal geel-beige + gras door de tunnelvloer (pad-materiaal/tint bijwerken), wandeltest v4.
+  Studio: geen gaten, toren sluit aan. Terreingras prikte door de tunnelvloer -> terrein onder de tunnel Ground (in plaats_sneeuwwitje.luau).
 - Valkuil: bouw_alles.sh met set -e stopt als een grep niets vindt (04 meldt 'omgeving'); wachtlussen niet op 'Error' laten matchen (staat in de scriptregel).
 - LET OP: Studio herstartte tijdens het plaatsen (Assistant-plugin bijgewerkt). Als Sneeuwwitje/SneeuwwitjeGroen ontbreken: plaats_sneeuwwitje.luau
   + de plantentabel opnieuw draaien.
