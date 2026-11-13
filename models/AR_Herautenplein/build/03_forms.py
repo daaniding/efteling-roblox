@@ -96,24 +96,63 @@ def build(master):
     for n, (c, r) in MATS.items(): material("MAT_" + n, c, r)
     ring = WAY["1169014962"]                                             # ringpad (sett): x -13.9..13.8, y -10.4..-46.6
     X0, X1, Y0, Y1 = -13.8 - 1.75, 13.8 + 1.75, -46.6 - 1.75, -10.45 + 1.75
-    # ================= KEIEN: hele vlak binnen de buitenrand van het ringpad + aanloop naar de poort + uitloop zuid =================
-    H_ = 3.98 + 0.16; fx, fy = FC.x, FC.y                                  # gat voor het grachtje van de fontein
-    for (a0, a1, b0, b1) in ((X0, X1, fy + H_, Y1), (X0, X1, Y0, fy - H_), (X0, fx - H_, fy - H_, fy + H_), (fx + H_, X1, fy - H_, fy + H_)):
-        vlak([Vector((a0, b1)), Vector((a1, b1)), Vector((a1, b0)), Vector((a0, b0))], 0.08, "kassei", "keien")
-    vlak([Vector((-1.6, -4.3)), Vector((1.6, -4.3)), Vector((1.6, Y1 + 0.05)), Vector((-1.6, Y1 + 0.05))], 0.08, "kassei", "keien")
-    for x in (-0.55, 13.27):                                             # zuid: middenpad 1169014964 en 55426212
-        vlak([Vector((x - 1.6, Y0 + 0.05)), Vector((x + 1.6, Y0 + 0.05)), Vector((x + 1.6, Y0 - 3.0)), Vector((x - 1.6, Y0 - 3.0))], 0.08, "kassei", "keien")
-    # aansluiting op het grindrandpad van de Magische Klok (Daan: alles aaneengesloten grind): west tussen ringpad en MK-randpad,
-    # noord tussen ringpad en MK-randpad (MK-muren in dit frame: noord y ~0, west x ~23; MK-randpad tot t 5.4)
-    vlak([Vector((X1, -12.0)), Vector((17.8, -12.0)), Vector((17.8, -25.0)), Vector((X1, -25.0))], 0.08, "kassei", "keien")
-    vlak([Vector((1.6, -5.2)), Vector((X1, -5.2)), Vector((X1, Y1)), Vector((1.6, Y1))], 0.08, "kassei", "keien")
+    # ================= GRIND: het hele Herautenplein volgens OSM-relatie 2907394 (outer 369580589), met gaten voor het grachtje
+    # van de fontein en het bosje; incl. het uitsteekseltje in de hoek van de Magische Klok (voor de 6 herauten) =================
+    H_ = 3.98 + 0.16; fx, fy = FC.x, FC.y
+    REL = json.load(open(os.path.join(ROOT, "ref", "plein_relatie.json")))
+    outer = [Vector(p) for p in REL["outer"][0]["pts"][:-1]]
+    INNER = {w["id"]: [Vector(p) for p in w["pts"][:-1]] for w in REL["inner"]}
+    def prisma(poly, z0, z1):
+        b = bmesh.new(); top = [b.verts.new((p.x, p.y, z1)) for p in poly]; bot = [b.verts.new((p.x, p.y, z0)) for p in poly]
+        ft = b.faces.new(top); fb = b.faces.new(bot[::-1])
+        for i in range(len(poly)): b.faces.new((top[i], bot[i], bot[(i + 1) % len(poly)], top[(i + 1) % len(poly)]))
+        bmesh.ops.triangulate(b, faces=[ft, fb], ngon_method="EAR_CLIP"); bmesh.ops.recalc_face_normals(b, faces=b.faces); return b
+    def obj_van(b, naam):
+        me = bpy.data.meshes.new(naam); b.to_mesh(me); b.free(); o = bpy.data.objects.new(naam, me); bpy.context.scene.collection.objects.link(o); return o
+    pv = obj_van(prisma(outer, -0.15, 0.08), "_plein")
+    snij = [obj_van(prisma([Vector((fx - H_, fy - H_)), Vector((fx + H_, fy - H_)), Vector((fx + H_, fy + H_)), Vector((fx - H_, fy + H_))], -1, 1), "_gracht"),
+            obj_van(prisma(INNER["505382909"], -1, 1), "_bosje")]
+    for c_ in snij:
+        md = pv.modifiers.new("b" + c_.name, "BOOLEAN"); md.operation = "DIFFERENCE"; md.object = c_; md.solver = "EXACT"
+    dg = bpy.context.evaluated_depsgraph_get(); me = bpy.data.meshes.new_from_object(pv.evaluated_get(dg))
+    b = bmesh.new(); b.from_mesh(me); bpy.data.meshes.remove(me); omhoog(b); put("keien", "kassei", b)
+    for o_ in [pv] + snij: bpy.data.objects.remove(o_, do_unlink=True)
+    vlak([Vector((-1.6, -4.3)), Vector((1.6, -4.3)), Vector((1.6, -8.5)), Vector((-1.6, -8.5))], 0.08, "kassei", "keien")   # aanloop van de Prinsenpoort (OSM 967458491)
+    # ================= ZUIDDEEL: hagen (h 1 m), gebogen bloemvakken met laag bakstenen muurtje (Herautenplein99), bankjes, bosje =================
+    for hid in ("505382910", "505382911"):
+        hp = INNER[hid]; put("hagen_zuid", "taxus", prisma(hp, 0.05, 1.0))
+        xs = [p.x for p in hp]; ys = [p.y for p in hp]; coll_box((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, 0.5, max(xs) - min(xs), max(ys) - min(ys), 1.0)
+    EZ = sum(INNER["55423191"], Vector((0.0, 0.0))) / len(INNER["55423191"])          # midden Ezeltje-strek-je
+    BLOEMVAKKEN = []
+    for gid in ("505382906", "505382907", "505382908"):
+        gp = INNER[gid]; gc = sum(gp, Vector((0.0, 0.0))) / len(gp)
+        for a, b_ in zip(gp, gp[1:] + gp[:1]):
+            rand_box(a, b_, 0.22, -0.05, 0.4, "baksteen", "bloemvakken", inset=0.11, ch=0.01, poly_c=gc)
+        put("bloemvakken", "bodem", prisma(gp, 0.05, 0.32))
+        BLOEMVAKKEN.append([[round(p.x, 2), round(p.y, 2)] for p in gp])
+        d_ = (EZ - gc); bc = gc + d_.normalized() * 1.25                                        # bankje aan de pleinkant van het vak, kijkt naar het Ezeltje
+        bank(bc, math.degrees(math.atan2(d_.y, d_.x)) + 90, 2.6)
+
     # natuurstenen plaveisel rond de fontein (Boekloc_Kikkerkoning, Rooster 2023): het pleintje tussen de tuininhammen
     for (a0, a1, b0, b1) in ((-7.2, 7.2, fy + H_, -21.0), (-7.2, 7.2, -36.45, fy - H_), (-7.2, fx - H_, fy - H_, fy + H_), (fx + H_, 7.2, fy - H_, fy + H_)):
         vlak([Vector((a0, b1)), Vector((a1, b1)), Vector((a1, b0)), Vector((a0, b0))], 0.095, "plavuis", "plavuis")
     # ================= TUINVAKKEN =================
     for naam, wid in TUINEN.items():
         poly = WAY[wid][:-1]; c = zwaartepunt(WAY[wid])
-        vlak(poly, 0.13, "gras", "gazon")
+        # gazon als losse rechthoeken (de vakken zijn haaks; oorknippen van de getrapte vorm gaf driehoeken buiten de haag)
+        xs_ = sorted(set(round(p.x, 2) for p in poly)); ys_ = sorted(set(round(p.y, 2) for p in poly))
+        def binnen_(px_, py_):
+            c_ = False; pl = list(poly); j = len(pl) - 1
+            for i in range(len(pl)):
+                a_, b_ = pl[i], pl[j]
+                if ((a_.y > py_) != (b_.y > py_)) and (px_ < (b_.x - a_.x) * (py_ - a_.y) / (b_.y - a_.y) + a_.x): c_ = not c_
+                j = i
+            return c_
+        for i in range(len(xs_) - 1):
+            for j in range(len(ys_) - 1):
+                if xs_[i + 1] - xs_[i] < 0.3 or ys_[j + 1] - ys_[j] < 0.3: continue
+                if binnen_((xs_[i] + xs_[i + 1]) / 2, (ys_[j] + ys_[j + 1]) / 2):
+                    put("gazon", "gras", omhoog(bz(xs_[i] - 0.01, xs_[i + 1] + 0.01, ys_[j] - 0.01, ys_[j + 1] + 0.01, -0.15, 0.13)))
         for a, b in zip(WAY[wid], WAY[wid][1:]):                         # lage buxusrand op de tuinrand (iets naar binnen)
             m_ = (a + b) / 2
             if (abs(a.x - b.x) < 0.2 and abs(abs(m_.x) - 1.72) < 0.15) or (abs(a.y - b.y) < 0.2 and min(abs(m_.y + 26.48), abs(m_.y + 30.48)) < 0.15 and abs(m_.x) > 7.5):
@@ -194,7 +233,8 @@ def build(master):
     out = os.path.join(ROOT, "exports"); os.makedirs(out, exist_ok=True)
     hoeken = [[round(cx + sx * (B - 0.15), 2), round(cy + sy * (B - 0.15), 2), BH + 0.12] for sx in (-1, 1) for sy in (-1, 1)]
     json.dump({"colliders": COLL, "lamps": LAMPS_, "kikkers": hoeken, "fontein": [cx, cy, G], "plein": [X0, X1, Y0, Y1],
-               "bloembakken": [[sx * 12.15, ya_yb] for sx in (-1, 1) for ya_yb in ((-15.4, -26.5), (-30.5, -41.5))]},
+               "bloembakken": [[sx * 12.15, ya_yb] for sx in (-1, 1) for ya_yb in ((-15.4, -26.5), (-30.5, -41.5))], "bloemvakken": BLOEMVAKKEN,
+               "bosje": [[round(p.x, 2), round(p.y, 2)] for p in INNER["505382909"]], "ezeltje": [round(EZ.x, 2), round(EZ.y, 2)]},
               open(os.path.join(out, "plein_extra.json"), "w"))
     save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "colliders", len(COLL),
                              "tris", sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"))

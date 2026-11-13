@@ -287,7 +287,16 @@ iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
   textuur **75961250645608** (SA.Color 205,205,178). Geplaatst met `roblox/plaats_kikkers.luau`: x1.25, op de binnenhoeken, kijken naar de
   rotsen. generate_mesh-kikkers verwijderd. `review/kikker_vs_foto.jpg`, `review/studio_v2_kikkers.jpg`.
 - Screenshots `review/studio_v1_overzicht.jpg`, `review/studio_v1_fontein.jpg`.
-- NOG: bloemen in de bloembakken, waterstralen (pas als Daan animatie wil),
+- v3 (Daan: "het is gewoon een uitsteekseltje, doe onderzoek, muren?, 100x vetter"): OSM-relatie 2907394 (highway=pedestrian, name=Herautenplein)
+  gevonden: outer 369580589 + 12 inners (`ref/plein_relatie.json`, plan `review/plan_plein_relatie.png`). Het plein heeft maar 1 uitsteeksel: in de
+  MK-hoek voor de 6 herauten (x 8.8..19.8, y -5.2..-15.2). MK-randpaden voorbij de herauten en mijn aansluitstroken bestonden niet -> weg
+  (MK v13, asset **80714108634542**; terrein daar weer gras). Het plein loopt verder west (x -19, inham bij de Kleyne Klaroen) en zuid tot y -87:
+  2 hagen (1 m), gebogen bloemvakken met laag bakstenen muurtje + rode bloemen + bankjes rond het Ezeltje (Herautenplein99), bosje met 3 bomen.
+  Grind = hele omtrek (boolean-gaten voor grachtje en bosje). Gazons nu als rechthoeken (oorknippen gaf driehoeken buiten de haag) en
+  RenderFidelity Precise (verdwenen anders van bovenaf). 480 bloemen/bomen in `HerautenpleinGroen` (`roblox/plaats_herautenplein_groen.luau`).
+  Muren: in OSM en op foto's 2009/2010 geen; de witte kantelenmuren rond het plein waren er 1952-~1960. Asset **130206013763885**.
+  Screenshots `review/studio_v3_*.jpg`.
+- NOG: Ezeltje-strek-je zelf (beeld op sokkel, aparte attractie), waterstralen (pas als Daan animatie wil),
   wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
 
 ## Daarna (volgorde met Daan afgesproken)

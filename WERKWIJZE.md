@@ -227,3 +227,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Dieren die op een foto moeten lijken (kikkers): zelf in Blender beter dan generate_mesh.** Overlappende ellipsoiden/buizen ->
   voxel-remesh (unie) -> Smooth-modifier (vloeiende overgangen) -> decimate geeft in 1 script een organisch dier; huid procedureel
   bakken (ruisvlekken + buik via normaal-Z) naar een BAKE_-object met eigen UV. Pupillen plat in de oogbol, anders "googly eyes".
+- **Zoek in OSM naar een relatie (multipolygon) met de naam van het plein:** die geeft de exacte omtrek van een plein met alle gaten
+  (tuinen, fontein, bosje). Een "ringpad" is maar een deel. Hier bleek het plein 2x zo groot en had het maar 1 uitsteeksel (Daan had gelijk).
+- **Getrapte/haakse veelhoeken niet oorknippen** voor zichtbare vlakken (driehoeken buiten de rand); maak ze uit rechthoeken (raster op de hoekpunten).
+- **Grote platte MeshParts (gazon, grind) RenderFidelity Precise geven**, anders verdwijnen ze van een afstand/bovenaf.
