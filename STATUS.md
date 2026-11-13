@@ -204,6 +204,10 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - Terrein: gras op het grasveld, Ground langs de muren; westgracht uitgegraven; oude kuil langs de noordmuur hersteld met WriteVoxels (Ground 1/1/0).
 - LET OP: Mud heeft in deze place een MaterialVariant VV_Bosgrond (felgroen) -> geen Mud gebruiken. Herauten-generatie via generate_3d kon niet
   (geen generator-sleutels in de Blender-addon); ze zijn zelf gemodelleerd.
+- v3 sfeer/bos (Daan): `roblox/plaats_magischeklok_bos.luau` -> workspace.MagischeKlokBos: 23 bosreuzen (beuk/eik/kastanje schaal 4-5.4 = 20-27 m)
+  achter de muren en rond het pleinvierkant, 45 rododendron/taxus, 110 varens, 90 bodembedekkers, rand heesters buiten het pad; grasveld LeafyGrass
+  (Grass = VV_Gazon, te strak), plein grijs grind (Pebble: Cobblestone = EftelingKlinkers rood). 'struik'-modellen niet gebruiken (kale sprieten).
+  Screenshots `review/studio_v3_*.jpg`.
 - NOG/kan beter: oevers van de gracht dichter begroeien (riet), herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
