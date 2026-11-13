@@ -174,9 +174,13 @@ def build(master):
             put("sokkels", "steen", bz(hs - 0.4, hs + 0.4, -0.9, -0.1, 0.35 + VER[name], 0.43 + VER[name], 0.01), M)
             sh = [(hs + 0.42, 2.15), (hs + 0.72, 2.15), (hs + 0.71, 1.93), (hs + 0.65, 1.8), (hs + 0.57, 1.74), (hs + 0.49, 1.8), (hs + 0.43, 1.93)]
             put("schildjes", "rood", boutline(sh, -0.17, 0.05), M @ TR(0, 0, VER[name]))
-            put("schildjes", "goud", band(sh + [sh[0]], 0.012, -0.175, 0.02), M @ TR(0, 0, VER[name]))
-            lel = [(hs + 0.57, 2.08), (hs + 0.6, 2.0), (hs + 0.64, 1.95), (hs + 0.6, 1.93), (hs + 0.57, 1.82), (hs + 0.54, 1.93), (hs + 0.5, 1.95), (hs + 0.54, 2.0)]
-            put("schildjes", "goud", boutline(lel, -0.185, 0.015), M @ TR(0, 0, VER[name]))
+            put("schildjes", "goud", band(sh + [sh[0]], 0.02, -0.175, 0.022), M @ TR(0, 0, VER[name]))   # brede gouden rand (MagischeKlokheraut)
+            # Franse lelie: middenblad, twee omkrullende zijbladen, band, voetjes (rechterhelft gespiegeld)
+            hv = [(0, 1.0), (0.13, 0.72), (0.15, 0.45), (0.08, 0.2), (0.26, 0.38), (0.46, 0.58), (0.62, 0.52), (0.64, 0.3), (0.5, 0.1), (0.3, 0.02),
+                  (0.13, 0.0), (0.3, -0.02), (0.3, -0.18), (0.12, -0.18), (0.2, -0.38), (0.36, -0.58), (0.2, -0.64), (0.06, -0.45), (0, -0.5)]
+            fl = hv + [(-x, z) for x, z in reversed(hv[1:-1])]
+            lel = [(hs + 0.57 + x * 0.105, 1.955 + z * 0.12) for x, z in fl]
+            lb = boutline(lel, -0.19, 0.02); bmesh.ops.triangulate(lb, faces=lb.faces[:], ngon_method="EAR_CLIP"); put("schildjes", "goud", lb, M @ TR(0, 0, VER[name]))
         # gracht: natuurlijk slootje (Herauten-okt2009): geen bak of losse stenen; terrein vormt de oever (uitgegraven in Studio),
         # hier alleen een donker modderbed en een waterspiegel met afgeronde koppen die iets onder de oever ligt
         g0, g1 = 1.2, L - 0.4

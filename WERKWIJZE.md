@@ -203,3 +203,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Kleine figuur op hoogte (Slimme Toon):** eerst de kijkrichting van de foto nadoen. Vanaf de voorkant naar de klok kijkend zag je zijn rug;
   hij moet links van de klok zitten en opzij kijken, dan staat hij net als op de foto in profiel. Een eigen zitkrul voorkomt dat hij zweeft.
 - **Alleen het model vervangen:** het plaatsscript graaft ook terrein/vervangt gras; bij een modelupdate alleen plaats() + botsing + voorladen draaien.
+- **Bij alleen-model-vervangen in Studio ook LAMP_ en COLL_ afhandelen** (lampen -> PointLight, geexporteerde COLL_-meshes weg; botsing = Parts uit COLL).
+- **Herauten v12:** eerst een close-up render naast de foto zetten maakt de verschillen meteen duidelijk (hoed zweefde, haar te kort, vaandel onleesbaar).
+  Vaandel/leeuw/lelie als uitgesneden plaat (`plaat()` met EAR_CLIP-triangulatie): concave n-hoeken anders verkeerd getrianguleerd bij export.

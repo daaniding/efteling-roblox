@@ -245,7 +245,12 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
   voor de stijl linksvoor, kijkt opzij naar de klok (vanaf het plein in profiel zoals Slimme-Toon.jpg), trekt met beide handen aan het touw;
   groen jak met rode puntkraag en riem, rode maillot, zwarte puntschoenen, blond pagekopje, grijsgroen hoedje met rode krulveer (MAT toon_hoed).
   Asset **134679544462063**. Geplaatst zonder terreinstappen (alleen model + botsing + texturen voorladen). Screenshots `review/studio_v11_*.jpg`.
-- NOG/kan beter: herauten gezicht/handen fijner,
+- v12 herauten (Daan: "ja, alle vijf"), naar Intro_magischeklok + MagischeKlokheraut: zachte zwarte baret op het hoofd met band en een dikke
+  rozet van gekrulde donkerrode veren; vol golvend blond haar tot op de kraag (32 lokken); grote geschulpte kanten kraag + wijde kanten manchetten;
+  medaillon groter met klimmende leeuw; trompet met grote beker + ring; vaandel hangt recht onder de trompet: paars met gouden leeuw (beide kanten),
+  brede oranje rand, donkere franje, stok en oranje lussen; wandschildjes met echte Franse lelie en brede gouden rand. Nieuwe MAT oranje/franje,
+  vaandel nu paars (62,34,96). Herauten ~31k tris per stuk (asset 238k). Asset **107392453250241**. `review/v12_heraut_vs_foto.jpg`, `review/studio_v12_heraut.jpg`.
+- NOG/kan beter: gezicht nog stijf (glimlach, oogleden), pluim meer als één krullende veer,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
 ## Daarna (volgorde met Daan afgesproken)
