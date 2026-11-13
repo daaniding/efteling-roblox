@@ -13,14 +13,14 @@ local M = {
 	kern = {Color3.fromRGB(138, 140, 138), "Plaster"}, lood = {Color3.fromRGB(112, 116, 118), "Metal"}, ijzer = {Color3.fromRGB(26, 30, 30), "Metal"},
 	brons = {Color3.fromRGB(110, 90, 58), "Metal"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, pannen = {Color3.fromRGB(150, 84, 64), "ClayRoofTiles"},
 	klokhout = {Color3.fromRGB(46, 86, 82), "Wood"}, hout = {Color3.fromRGB(36, 78, 60), "Wood"}, rood = {Color3.fromRGB(176, 34, 28), "SmoothPlastic"},
-	bodem = {Color3.fromRGB(92, 70, 50), "Ground"}, water = {Color3.fromRGB(38, 46, 30), "SmoothPlastic"}, klinker = {Color3.fromRGB(122, 116, 106), "Pebble", "VV_Grind"}   -- grind zoals Hans en Grietje (Daan: altijd dat grind),
+	bodem = {Color3.fromRGB(92, 70, 50), "Ground"}, water = {Color3.fromRGB(38, 46, 30), "SmoothPlastic"}, klinker = {Color3.fromRGB(150, 142, 130), "Pebble", "VV_Grind"}   -- grind zoals Hans en Grietje (Daan: altijd dat grind),
 	toon_groen = {Color3.fromRGB(70, 112, 96), "SmoothPlastic"}, toon_rood = {Color3.fromRGB(190, 92, 70), "SmoothPlastic"},
 	huid = {Color3.fromRGB(232, 186, 156), "SmoothPlastic"}, haar = {Color3.fromRGB(218, 176, 100), "SmoothPlastic"},
 	stof_rood = {Color3.fromRGB(150, 36, 30), "Fabric"}, zwart = {Color3.fromRGB(18, 18, 20), "SmoothPlastic"}, kant = {Color3.fromRGB(226, 226, 220), "Fabric"},
 	edelsteen = {Color3.fromRGB(40, 120, 104), "Glass"}, vaandel = {Color3.fromRGB(16, 20, 64), "Fabric"}, oogwit = {Color3.fromRGB(236, 234, 226), "SmoothPlastic"},
 	iris = {Color3.fromRGB(40, 86, 150), "SmoothPlastic"}, lip = {Color3.fromRGB(176, 84, 72), "SmoothPlastic"}, riem = {Color3.fromRGB(140, 28, 24), "SmoothPlastic"},
 	paal = {Color3.fromRGB(70, 46, 30), "Wood"}, glaslamp = {Color3.fromRGB(255, 226, 170), "Glass"}, kant_papier = {Color3.fromRGB(236, 228, 204), "SmoothPlastic"},
-	haag = {Color3.fromRGB(255, 255, 255), "Plastic"}, mand = {Color3.fromRGB(140, 104, 62), "Fabric"}, padklinker = {Color3.fromRGB(122, 116, 106), "Pebble", "VV_Grind"}, gras = {Color3.fromRGB(104, 124, 72), "LeafyGrass"},
+	haag = {Color3.fromRGB(255, 255, 255), "Plastic"}, mand = {Color3.fromRGB(140, 104, 62), "Fabric"}, padklinker = {Color3.fromRGB(150, 142, 130), "Pebble", "VV_Grind"}, gras = {Color3.fromRGB(104, 124, 72), "LeafyGrass"},
 }
 local HAAG = {73997585762296, 114509386598524}   -- buxus/taxus-textuur (zelfde als Villa Volta / Assepoester)
 local GEEN_SCHADUW = {water = true, bodem = true, klinker = true, ijzer = true}

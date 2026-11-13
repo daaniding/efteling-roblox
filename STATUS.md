@@ -227,7 +227,7 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - v7 paden (Daan): OSM 1169014962 (V om het pleinvierkant, ~10.6 m voor de muren) + 967458491/490 (doorgang Prinsenpoort), 3.2 m, mesh
   'padklinker' = Cobblestone -> EftelingKlinkers (zoals de parkpaden). Asset **124674002080571**. 19 planten van het pad weg. Wandeltest: pad west ->
   knik bij de haag -> pad noord -> Prinsenpoort -> over het gras het plein op: OK. Tussen pad en pleiningangen ligt gras (OSM heeft daar geen pad).
-- v8 (Daan): ALTIJD grind (Pebble + VV_Grind, kleur 122,116,106), geen tuin, geen haag, geen manden, geen V-pad. Grind = het plein + een randpad
+- v8 (Daan): ALTIJD grind (Pebble + VV_Grind, kleur 150,142,130 = precies als Hans en Grietje), geen tuin, geen haag, geen manden, geen V-pad. Grind = het plein + een randpad
   langs de herauten: west langs de gracht (t 2.35..5.4) tot sW 22, noord langs de verhoogde strook tot voorbij de Prinsenpoort + de doorgang.
   Herauten op een verhoging: noord begroeide strook achter het keermuurtje (0.42 m), west grasoever boven de gracht (0.30 m); sokkels/herauten mee omhoog.
   Loopvlakken: bovenkant naar boven (omhoog()), 10-11 cm boven maaiveld (anders prikt bladgras erdoor). Vrijgekomen grond = bos (geen bomen of hoge
