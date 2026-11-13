@@ -289,10 +289,11 @@ def build(master):
     # ================= PADEN (OSM 1169014962 + 967458491/490, surface=sett): V om het pleinvierkant + doorgang naar de Prinsenpoort =================
     # Daan: alleen een grindpad langs de rand waar de herauten staan (plein + strook langs gracht en noordstrook), geen V-pad om het vierkant.
     RB = 5.4                                                                  # buitenrand van het randpad (t)
-    PADEN = [[tuple(NP(20.8, RB - 0.2)), tuple(NP(20.8, 2.3)), tuple(NP(20.8, -3.0))]]                   # doorgang Prinsenpoort (OSM 967458491/490)
+    PADEN = [[tuple(NP(20.8, -2.1)), tuple(NP(20.8, -3.0))]]       # achter de Prinsenpoort; ervoor ligt nu het grachtje + brug (AR_Prinsenpoort)
     for pts in PADEN: put("paden", "padklinker", pad_strook(pts))
     # randpad: west langs de gracht (t 2.35..RB) vanaf het plein, noord langs de verhoogde strook (t 2.45..RB) tot voorbij de Prinsenpoort
-    for (F_, lo, hi, t0) in ((WP, SWE - 0.2, 22.0, TB + 0.32), (NP, SNE - 0.4, 22.4, TB + 0.22)):   # grind tegen de stenen rand
+    # noord: tot s 15.4 tegen de stenen rand; daarna (voor de Prinsenpoort) pas voorbij het grachtje (t >= 4.35) tot de brug en verder
+    for (F_, lo, hi, t0) in ((WP, SWE - 0.2, 22.0, TB + 0.32), (NP, SNE - 0.4, 15.4, TB + 0.22), (NP, 15.4, 22.4, 4.35)):   # grind tegen de stenen rand
         q4 = [F_(lo, t0), F_(hi, t0), F_(hi, RB), F_(lo, RB)]
         cb = bmesh.new(); cv = [cb.verts.new((q.x, q.y, 0.1)) for q in q4]; cb.faces.new(cv); omhoog(cb); put("paden", "padklinker", cb)
     # verhogingen: begroeide strook achter het keermuurtje (noord + bocht bij de toren) en grasoever boven de gracht (west)

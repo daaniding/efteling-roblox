@@ -253,6 +253,24 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - NOG/kan beter: gezicht nog stijf (glimlach, oogleden), pluim meer als één krullende veer,
   Prinsenpoort (aparte attractie) ontbreekt links.
 
+## Prinsenpoort (chat 8, 13 nov) — v1 in Studio
+Map `models/AR_Prinsenpoort/`. Bronnen: 22 Eftepedia-plaatjes (lemma's Prinsenpoort + Herautenplein), OSM 967458492; brief `asset-brief.md`.
+Plek gecontroleerd: OSM-footprint, OSM-pad 967458491/490 door de doorgang, toren met gouden prins aan het eind van de noordmuur op
+Herauten-overzicht-okt2009, en "na de poort links naar de Indische Waterlelies" (62 m noord) klopt.
+- Frame: oorsprong OSM (50.53, 76.22) = studs (151.58, -228.65), grond Y=2; -Y = voorkant naar het plein, F roblox (-0.968, 0, 0.250).
+- Maten uit de 1957-foto (bezoekers in de boog): middenpoort 4.9 x 4.4 (diepte = OSM), dakvoet 3.5, rondboog 3.1 breed / 2.85 hoog,
+  schilddak met nok tot 6.0 + klokkentorentje met spits 7.4; torens r 1.0 op x ±3.35, muur 4.05, kegeldak tot 6.75 + gouden prins te paard.
+  Lantaarn links van de boog, groen luik in de doorgang, vogelkooi met kraai aan de linkertoren, steen schildje boven de boog
+  (wapen Loon op Zand nog neutraal: kleuren niet zeker). Klimop (2003): rechtertoren bijna dicht, linker grotendeels, zijkanten.
+- Daan: grachtje + bruggetje zoals de foto: water x ±4.8, y -2.45..-3.95, grasoevers, terrein uitgegraven; brug met keien, lage bakstenen
+  muurtjes, grove natuursteen en eindstenen. MK-randpad noord gaat voor de poort nu langs de plein-oever (t >= 4.35), MK-doorgangspad alleen
+  nog achter de poort (MK asset **106308506735113**). Te diep gegraven cellen onder het pad hersteld (WriteVoxels Ground 1/1/0).
+- Keten `build/bouw_alles.sh` (03_forms -> 03c_klimop -> 05_bake -> 09_export -> upload), plaatsen met `roblox/plaats_prinsenpoort.luau`.
+  Asset **74186202233056** (15.9k tris). 8 struiken/taxussen voor de poort weg (MagischeKlokBos), layout-blok Prinsenpoort weg.
+  Screenshots `review/studio_v1_voor.jpg`, `review/studio_v1_schuin.jpg`, klei naast foto `review/v1_klei_vs_foto.jpg`.
+- NOG: wandeltest in Play (brug -> doorgang -> achterkant), put achter de rechtertoren (PrinsenpoortPut), riet/kroos in het grachtje,
+  natuursteen-look van de torens (1957 grijs, 2003 baksteen: nu baksteen).
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

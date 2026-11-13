@@ -206,3 +206,12 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Bij alleen-model-vervangen in Studio ook LAMP_ en COLL_ afhandelen** (lampen -> PointLight, geexporteerde COLL_-meshes weg; botsing = Parts uit COLL).
 - **Herauten v12:** eerst een close-up render naast de foto zetten maakt de verschillen meteen duidelijk (hoed zweefde, haar te kort, vaandel onleesbaar).
   Vaandel/leeuw/lelie als uitgesneden plaat (`plaat()` met EAR_CLIP-triangulatie): concave n-hoeken anders verkeerd getrianguleerd bij export.
+
+## Lessen Prinsenpoort (13 nov)
+- **Plek bewijzen met meerdere bronnen** (Daan vroeg "staat het echt hier?"): OSM-naam, OSM-pad door de doorgang, een foto waarop het buurobject
+  te zien is, en een routebeschrijving uit de lemma-tekst tegen OSM leggen. Zet dat bewijs in STATUS.md.
+- **Maten van een gebouw uit een oude frontfoto:** schaal via mensen die IN de boog staan (zelfde diepte), niet via mensen op de voorgrond.
+  OSM-footprints van kleine gebouwen zijn ruw (hier 12.3 m i.p.v. 8.7 m breed); diepte uit OSM, breedte uit de foto.
+- **Terrein uitgraven graaft cellen van 4 studs:** daarna de cellen buiten het gewenste gat terugzetten (WriteVoxels Ground 1/1/0 op Y -8..4)
+  en oevers als mesh tot ~1 m buiten het water laten lopen zodat ze het gat afdekken.
+- **Struiken/taxussen vóór een nieuwe attractie weghalen** (zicht vanaf het pad); zoeken op BaseParts met Size.Y > 5 in het gebied.

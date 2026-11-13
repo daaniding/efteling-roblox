@@ -1,0 +1,9 @@
+MODEL 74186202233056
+PP_baksteen_poort_kleur 100203940861419
+PP_baksteen_poort_normaal 116169477876700
+PP_baksteen_torens_kleur 71030263605060
+PP_baksteen_torens_normaal 74001330732660
+PP_klimop_kleur 88314417435691
+PP_leien_kleur 121136605195305
+PP_leien_normaal 114227496015116
+PP_steen_kleur 116865063925741
