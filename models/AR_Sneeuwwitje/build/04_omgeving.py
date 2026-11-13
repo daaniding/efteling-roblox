@@ -81,7 +81,8 @@ def build(master):
             L = math.hypot(b[0] - a[0], b[1] - a[1]); ang = math.degrees(math.atan2(b[1] - a[1], b[0] - a[0]))
             put("perken", "band", bz(0, L + 0.08, -0.06, 0.06, 0, 0.12), TR(a[0], a[1], 0, ang))
     # gemetselde bloembak bij de ronde toren (front.jpg rechtsonder)
-    bk = (7.6, -1.6); put("bloembak", "baksteen", bz(bk[0] - 1.6, bk[0] + 1.6, bk[1] - 0.6, bk[1] + 0.6, 0, 0.62)); put("bloembak", "steen", bz(bk[0] - 1.65, bk[0] + 1.65, bk[1] - 0.65, bk[1] + 0.65, 0.62, 0.7, 0.01))
+    bk = (-8.9, -2.2)   # zuidkant plein: niet voor de uitgangsdeur en niet op een looproute (Daan: pad vrij)
+    put("bloembak", "baksteen", bz(bk[0] - 1.6, bk[0] + 1.6, bk[1] - 0.6, bk[1] + 0.6, 0, 0.62)); put("bloembak", "steen", bz(bk[0] - 1.65, bk[0] + 1.65, bk[1] - 0.65, bk[1] + 0.65, 0.62, 0.7, 0.01))
     put("bloembak", "aarde", bz(bk[0] - 1.5, bk[0] + 1.5, bk[1] - 0.5, bk[1] + 0.5, 0.7, 0.72)); collr(bk[0], bk[1], 0.35, 3.3, 1.3, 0.7)
     # bloempotten langs de gevel (front.jpg: oranje bloemen in houten/terracotta potten)
     POT = [(0, 0), (0.19, 0), (0.24, 0.36), (0.26, 0.38), (0, 0.38)]

@@ -2,9 +2,9 @@
 -- Model: gevel kijkt naar -Y (oost), +X = noord, oorsprong = midden gevel op de voorkant van de ronde toren, z=0 = plein.
 -- Kalibratie (ref/model_frame.json): oorsprong = OSM (-25.22, 55.77) m = studs (-75.65, -167.32); kijkrichting Roblox (0.9731, 0, 0.2306); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing). Lampen: LAMP_ -> PointLight (binnen = attribuut Binnen).
-local HUIS = 120497972212126
-local OMG = 132399062872581
-local TEX = {baksteen_achter = {101213150905396, 99560541568422}, baksteen_binnen = {91255743930457, 137108216662140}, baksteen_detail = {116551762202752, 98098046272558}, baksteen_noord = {87474375128177, 75393155356743}, baksteen_voor = {73163458394971, 116665742861588}, baksteen_zuid = {128290803571566, 102803307294996}, pannen_daken = {105734769949079, 125385647833484}, pannen_torens = {86994652815474, 125943015442544}, rots_a = {123824271607584, 106347501248455}, rots_b = {101304931318771, 85372887940768}, ruine = {80047141943966, 93421910374676}, steen = {126070887888994}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
+local HUIS = 86201030345062
+local OMG = 99053383937028
+local TEX = {baksteen_achter = {101213150905396, 99560541568422}, baksteen_binnen = {121420675177360, 111335078012935}, baksteen_detail = {116551762202752, 98098046272558}, baksteen_noord = {120008777885177, 119929721291655}, baksteen_voor = {73163458394971, 116665742861588}, baksteen_zuid = {105884560013813, 113358077311075}, pannen_daken = {105734769949079, 125385647833484}, pannen_torens = {86994652815474, 125943015442544}, rots_a = {121170033923461, 98140123548466}, rots_b = {103475390624592, 73951768995907}, ruine = {79108633380576, 89441277487721}, steen = {134306011327687}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
 local F = Vector3.new(0.9731, 0, 0.2306)
 local ORIGIN = CFrame.new(-75.65, 2.0, -167.32) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -17,9 +17,9 @@ local M = {
 	vloer = {Color3.fromRGB(96, 88, 80), "Slate"}, schild = {Color3.fromRGB(28, 34, 34), "SmoothPlastic"}, rood = {Color3.fromRGB(160, 32, 26), "SmoothPlastic"},
 	ijzer = {Color3.fromRGB(24, 26, 26), "Metal"}, klimop = {Color3.fromRGB(46, 78, 34), "LeafyGrass"}, pad = {Color3.fromRGB(150, 142, 130), "Pebble", "VV_Grind"},
 	klinker = {Color3.fromRGB(235, 228, 214), "Pebble", "VV_Grind"}, band = {Color3.fromRGB(128, 126, 120), "Concrete"},
-	aarde = {Color3.fromRGB(70, 52, 38), "Ground"}, papier = {Color3.fromRGB(232, 218, 176), "SmoothPlastic"}, terracotta = {Color3.fromRGB(160, 88, 60), "Concrete"},
+	aarde = {Color3.fromRGB(104, 80, 60), "Ground"}, papier = {Color3.fromRGB(232, 218, 176), "SmoothPlastic"}, terracotta = {Color3.fromRGB(160, 88, 60), "Concrete"},
 }
-local TINT = {baksteen = Color3.fromRGB(235, 230, 222), steen = Color3.fromRGB(230, 226, 216), pannen = Color3.fromRGB(190, 168, 158), rots = Color3.fromRGB(245, 245, 218), ruine = Color3.fromRGB(205, 200, 200)}   -- rots niet blauwig, ruine minder oranje
+local TINT = {baksteen = Color3.fromRGB(235, 230, 222), steen = Color3.fromRGB(230, 226, 216), pannen = Color3.fromRGB(190, 168, 158), rots = Color3.fromRGB(255, 255, 255), ruine = Color3.fromRGB(235, 232, 228)}
 local GEEN_SCHADUW = {donker = true, papier = true, goud = true, lood = true, klimop = true}
 
 local function plaats(asset, naam, binnen)

@@ -121,3 +121,8 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Bij een melding van Daan eerst zelf op zijn plek kijken (screenshot op zijn camerastand) voordat je iets verandert; niet gokken welke muur.
 - Kleine fix = klein houden: niet de hele keten draaien als het om 1 onderdeel gaat. bouw_alles.sh hergebruikt nu ongewijzigde texturen (md5).
 - Niet met MoveTo/teleport testen terwijl Daan zelf in Play is: dan stuur je zijn personage.
+- Kunstrots met een tunnel erdoor: tunnel minstens ~0.7 m van de buitenkant houden (anders breekt de rots open = gaten, Daan). Rots tegen
+  aansluitende muren vol hoog laten doorlopen (randafstand niet meten tot randen langs muren).
+- Geen klimopvlakken bij in- en uitgangen; bladplakkaten alleen op torens/hoge muren.
+- Grote attracties in losse assets per deel (kasteel / grot / omgeving), zodat een fix aan een deel niet alles opnieuw bakt en uploadt.
+- Python-tekstvervanging in scripts: nooit op 'def build(master):' ankeren (staat ook in de exec-regel bovenaan); gebruik '\ndef build(master):\n'.

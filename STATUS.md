@@ -151,7 +151,13 @@ overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665
   blokken langs de voorkant (icosphere sub 1 -> voxel remesh 0.09 -> weinig gladstrijken -> ribbel-plooien), ruinemuren als doorlopend metselwerk
   met getrapte breukrand, holle ruinetoren met raamgaten, klimop als bladplakkaten met de haagtextuur; baksteen lichter geel/roze gemeleerd.
   Kasteel+grot **120497972212126**, omgeving **132399062872581**. Tints: rots (245,245,218), ruine (205,200,200).
-  Nog: horizontale strepen in de rotstextuur (golfpatroon in 05_bake weghalen), perkaarde te zwart, ruine nog wat oranje, wandeltest.
+  v3 (Daan: klimop voor de ingang, stenen sluiten niet aan, gaten in de steen, pad niet vrij): klimop alleen nog op de toren; rots vol tegen de
+  ruinemuren (randen langs de ruines tellen niet mee in het hoogteveld); tunnel naar het midden van de rots (aan de buitenkant brak hij open);
+  nieuwe rotstextuur grijsgroen + mos, geen strepen; bloembak van voor de uitgangsdeur naar de zuidkant van het plein; perkaarde lichter.
+  Kasteel+grot **86201030345062**, omgeving **99053383937028**. Wandeltest Play: hele route OK (ingang -> zaal -> gang -> ronde toren -> uitgang
+  -> grotingang -> tunnel -> grotuitgang -> parkpad).
+  Sneller werken (Daan: "het duurt elke keer zo lang"): `build/bouw_deel.sh grot|kasteel|omgeving` bouwt/bakt/upload alleen dat deel
+  (05_bake --deel). Nog niet in gebruik: eerste keer moet plaats_sneeuwwitje.luau kasteel en grot als twee assets plaatsen.
 - Valkuil: bouw_alles.sh met set -e stopt als een grep niets vindt (04 meldt 'omgeving'); wachtlussen niet op 'Error' laten matchen (staat in de scriptregel).
 - LET OP: Studio herstartte tijdens het plaatsen (Assistant-plugin bijgewerkt). Als Sneeuwwitje/SneeuwwitjeGroen ontbreken: plaats_sneeuwwitje.luau
   + de plantentabel opnieuw draaien.

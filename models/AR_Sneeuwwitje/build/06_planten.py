@@ -23,7 +23,7 @@ def vrij(x, y, rad=0.3, pad=0.25):
     for pts, hw in PADEN:
         if min(segd((x, y), a, b) for a, b in zip(pts, pts[1:])) < hw + pad + rad * 0.5: return False
     if segd((x, y), (6.95, 3.45), (10.25, 0.95)) < 0.6 + rad * 0.5: return False       # ruinemuurtje
-    if abs(x - 7.6) < 1.9 and abs(y + 1.6) < 0.9: return False                       # bloembak
+    if abs(x + 8.9) < 1.9 and abs(y + 2.2) < 0.9: return False                       # bloembak
     return True
 P = []
 def add(n, x, y, s, z=0.0): P.append([n, round(x, 2), round(y, 2), round(s, 2), RNG.randrange(360), round(z, 2)])
@@ -37,7 +37,7 @@ for perk in ("perk_a", "perk_b"):
         kind = ["bloem_rood", "bloem_wit", "bloem_geel"][band] if RNG.random() > 0.15 else RNG.choice(["PH_flower_gazania_%d" % k for k in range(8)])
         add(kind, x, y, RNG.uniform(1.1, 1.45), 0.06)
 for k in range(18):       # bloembak rood
-    add("bloem_rood", 6.1 + (k % 9) * 0.35, -1.85 + (k // 9) * 0.5, RNG.uniform(1.0, 1.25), 0.72)
+    add("bloem_rood", -10.3 + (k % 9) * 0.35, -2.45 + (k // 9) * 0.5, RNG.uniform(1.0, 1.25), 0.72)
 for px in (-6.6, -5.9, -3.75, -3.05, 0.95, 6.2):   # potten oranje
     py = 0.2 if px < -2.46 else (1.0 if px < 3.4 else -0.3)
     add(RNG.choice(["PH_flower_ursinia_%d" % k for k in range(5)]), px, py, 0.9, 0.36)

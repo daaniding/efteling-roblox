@@ -13,7 +13,7 @@ MATS.update({"rots": ((0.55, 0.57, 0.51, 1), 0.95), "ruine": ((0.66, 0.46, 0.34,
 GROT = [(15.28, 2.26), (18.64, 1.76), (21.95, -1.88), (21.34, -2.42), (23.69, -6.61), (22.53, -7.16), (21.46, -7.62), (19.6, -6.57), (18.58, -6.61),
         (17.7, -6.55), (16.88, -6.4), (16.08, -6.16), (15.25, -5.83), (14.63, -5.5), (13.88, -5.0), (13.4, -4.59), (13.06, -4.28), (12.46, -3.62),
         (10.18, -2.96), (10.42, -1.63), (10.68, -0.31), (12.49, -0.51)]
-PAD = [(8.8, -1.75), (10.6, -1.8), (12.7, -2.25), (14.5, -3.4), (16.3, -4.1), (18.4, -4.55), (20.3, -4.85), (21.8, -5.8), (22.6, -7.3), (23.0, -8.6)]
+PAD = [(8.8, -1.75), (10.6, -1.75), (12.6, -1.9), (14.5, -2.2), (16.4, -2.5), (18.4, -2.9), (20.3, -3.8), (21.6, -5.2), (22.5, -6.7), (23.0, -8.6)]   # midden van de rots: aan de buitenkant brak de rots open (Daan: gaten)
 TW, TH = 2.2, 2.7          # tunnel breed (looproute ~1.5x) en hoog
 
 
@@ -57,7 +57,8 @@ def rock_mass():
     """kunstrots als hoogteveld binnen de OSM-vorm (Langnek-les): steile voorkant, grote platte blokken (voronoi) met diepe naden,
     blijft binnen de contour (drukt de ingangen niet dicht). Kolommen -> voxel remesh -> gladstrijken -> fijne ruis."""
     xs = [p[0] for p in GROT]; ys = [p[1] for p in GROT]; step = 0.2
-    edges = list(zip(GROT, GROT[1:] + GROT[:1])); r = random.Random(5)
+    edges = [(a, b) for a, b in zip(GROT, GROT[1:] + GROT[:1]) if not (max(a[0], b[0]) < 11.0 or (min(a[0], b[0]) > 21.0 and max(a[1], b[1]) < -6.0))]   # randen langs de ruines tellen niet: rots staat er vol tegenaan (Daan)
+    r = random.Random(5)
     cells = [(r.uniform(min(xs), max(xs)), r.uniform(min(ys), max(ys)), r.uniform(0.78, 1.12)) for _ in range(70)]
     bm = bmesh.new()
     x = min(xs)
@@ -71,7 +72,6 @@ def rock_mass():
                 h = 3.9 * blk * (1 - math.exp(-d / 0.5)) * (0.88 + 0.12 * noise.noise(Vector((x * 0.35, y * 0.35, 0.3))))
                 crev = max(0.0, 0.32 - (f2 - f1)) / 0.32
                 h -= 1.1 * crev ** 1.5
-                if x < 11.6 or x > 22.2: h *= 0.72          # lager naar de ruines toe (Sneeuwwitjegrot.jpg)
                 h = max(0.35, h)
                 bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((x, y, (h - 0.3) / 2)) @ Matrix.Diagonal((step * 1.02, step * 1.02, h + 0.3, 1)))
             y += step
@@ -189,8 +189,7 @@ def build(master):
         a_ = k * 40 + 10
         Mt = TR(tc.x + 1.05 * math.cos(math.radians(a_)), tc.y + 1.05 * math.sin(math.radians(a_)), 0, a_ + 90)
         ivy_sheet(Mt, -0.45, 0.45, 2.6, 6.4 - 0.4 * (k % 3), 0.03, k)
-    ivy_sheet(Mi, 0.1, 0.95, 0.8, 4.2, 0.28, 21); ivy_sheet(Mi, 3.6, 4.9, 1.5, 4.0, 0.28, 22)
-    ivy_sheet(Mu, 0.3, 1.5, 0.6, 3.2, 0.3, 23); ivy_sheet(Ml, 0.5, 1.6, 0.2, 1.6, 0.25, 24)
+    # (geen klimop op de muren: hing voor de ingang, Daan)
     # tunnelvloer + lampjes (lantaarn aan de ruinemuur, Sneeuwwitjegrot.jpg)
     padpoly = []
     P = resample(PAD, 0.5)

@@ -11,11 +11,12 @@ args = sys.argv[sys.argv.index("--") + 1:]
 master = args[args.index("--master") + 1]
 RES = int(args[args.index("--res") + 1]) if "--res" in args else 1024
 SAMPLES = int(args[args.index("--samples") + 1]) if "--samples" in args else 16
+DEEL = args[args.index("--deel") + 1] if "--deel" in args else "alles"   # kasteel | grot | alles: alleen dat deel bakken (sneller; de rest blijft zichtbaar voor de AO)
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(HERE))
 TEX = os.path.join(HERE, "textures"); os.makedirs(TEX, exist_ok=True)
 CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
-RGB = {"baksteen": (214, 196, 170), "steen": (216, 208, 188), "pannen": (146, 86, 64), "rots": (176, 180, 166), "ruine": (178, 120, 90)}
+RGB = {"baksteen": (214, 196, 170), "steen": (216, 208, 188), "pannen": (146, 86, 64), "rots": (152, 160, 144), "ruine": (180, 140, 108)}
 TC = Vector((5.45, 2.2))
 INSIDE = [(-6.95, -2.7, 0.75, 5.53, -0.1, 3.45), (-3.0, 3.95, 1.55, 3.9, -0.1, 3.35)]
 
@@ -93,7 +94,7 @@ def build_material(name, role, img):
         if role == "baksteen":
             br.inputs["Color1"].default_value = lin((222, 204, 170)); br.inputs["Color2"].default_value = lin((196, 170, 150)); br.inputs["Mortar"].default_value = lin((222, 216, 200))   # licht geel/roze gemeleerd (front.jpg)
         else:
-            br.inputs["Color1"].default_value = lin((186, 118, 84)); br.inputs["Color2"].default_value = lin((150, 98, 74)); br.inputs["Mortar"].default_value = lin((176, 166, 146))
+            br.inputs["Color1"].default_value = lin((196, 156, 120)); br.inputs["Color2"].default_value = lin((168, 128, 100)); br.inputs["Mortar"].default_value = lin((190, 180, 160))   # ruine: bruin/beige (Boekloc)
         col = br.outputs["Color"]
         vb = N.new("ShaderNodeTexVoronoi"); vb.inputs["Scale"].default_value = 9.0; L.new(wallvec(), vb.inputs["Vector"])      # per steen grijs/roze/geel
         col = mix(col, ramp(vb.outputs["Color"], (0.80, 0.82, 0.84, 1), (1.10, 1.06, 1.00, 1)), 1.0, "MULTIPLY")
@@ -104,15 +105,14 @@ def build_material(name, role, img):
         if role == "ruine":
             col = mix(col, lin((96, 100, 70)), ramp(noise(1.6, 6, 0.6), (0, 0, 0, 1), (1, 1, 1, 1), 0.58, 0.7))                 # groen aanslag
         bump = (br.outputs["Fac"], 0.5)
-    elif role == "rots":
-        col = mix(col, ramp(scan(CONCRETE, 0.45), (0.66, 0.66, 0.66, 1), (1.22, 1.22, 1.22, 1)), 1.0, "MULTIPLY")
-        wv = N.new("ShaderNodeTexWave"); wv.wave_type = "BANDS"; wv.bands_direction = "Z"; wv.inputs["Scale"].default_value = 1.3
-        wv.inputs["Distortion"].default_value = 6; wv.inputs["Detail"].default_value = 3; L.new(tc.outputs["Object"], wv.inputs["Vector"])
-        col = mix(col, ramp(wv.outputs["Fac"], (0.88, 0.9, 0.9, 1), (1.06, 1.04, 1.0, 1)), 1.0, "MULTIPLY")
-        mr = N.new("ShaderNodeMapRange"); L.new(sn.outputs["Z"], mr.inputs["Value"]); mr.inputs["From Min"].default_value = 0.5; mr.inputs["From Max"].default_value = 0.9
-        mm = N.new("ShaderNodeMath"); mm.operation = "MULTIPLY"; L.new(mr.outputs[0], mm.inputs[0]); L.new(noise(1.4), mm.inputs[1])
-        col = mix(col, lin((80, 94, 56)), ramp(mm.outputs[0], (0, 0, 0, 1), (1, 1, 1, 1), 0.28, 0.55))                            # mos bovenop
-        bump = (scan(CONCRETE, 0.45), 0.35)
+    elif role == "rots":   # Efteling-kunstrots (Sneeuwwitjegrot.jpg): grijsgroen geverfd beton, donkere naden, groene mosplekken, korstmos; geen strepen
+        col = mix(col, ramp(scan(CONCRETE, 0.5), (0.80, 0.80, 0.80, 1), (1.12, 1.12, 1.12, 1)), 1.0, "MULTIPLY")
+        col = mix(col, ramp(noise(0.7, 4), (0.84, 0.88, 0.84, 1), (1.06, 1.05, 1.02, 1)), 1.0, "MULTIPLY")
+        mr = N.new("ShaderNodeMapRange"); L.new(sn.outputs["Z"], mr.inputs["Value"]); mr.inputs["From Min"].default_value = 0.3; mr.inputs["From Max"].default_value = 0.9
+        mm = N.new("ShaderNodeMath"); mm.operation = "MULTIPLY"; L.new(mr.outputs[0], mm.inputs[0]); L.new(noise(1.6, 5, 0.6), mm.inputs[1])
+        col = mix(col, lin((92, 108, 62)), ramp(mm.outputs[0], (0, 0, 0, 1), (1, 1, 1, 1), 0.32, 0.55))                          # mos bovenop
+        col = mix(col, lin((198, 200, 182)), ramp(noise(16.0, 2), (0, 0, 0, 1), (1, 1, 1, 1), 0.7, 0.74))                          # korstmos
+        bump = (scan(CONCRETE, 0.5), 0.3)
     elif role == "pannen":
         vo = N.new("ShaderNodeTexVoronoi"); mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (4.5, 4.5, 6.0)
         L.new(tc.outputs["Object"], mp.inputs["Vector"]); L.new(mp.outputs[0], vo.inputs["Vector"])
@@ -124,7 +124,7 @@ def build_material(name, role, img):
         col = mix(col, ramp(noise(0.5, 3), (0.86, 0.86, 0.82, 1), (1.04, 1.04, 1.04, 1)), 1.0, "MULTIPLY")
         bump = (scan(CONCRETE, 0.6), 0.2)
     ao = N.new("ShaderNodeAmbientOcclusion"); ao.samples = 16; ao.inputs["Distance"].default_value = 0.5 if role in ("rots", "pannen", "baksteen") else 0.25
-    col = mix(col, ramp(ao.outputs["AO"], (0.5 if role == "rots" else 0.5,) * 3 + (1,), (1, 1, 1, 1)), 1.0, "MULTIPLY")
+    col = mix(col, ramp(ao.outputs["AO"], (0.3 if role == "rots" else 0.5,) * 3 + (1,), (1, 1, 1, 1)), 1.0, "MULTIPLY")
     L.new(col, em.inputs["Color"]); L.new(em.outputs[0], out.inputs[0])
     bsdf = N.new("ShaderNodeBsdfPrincipled"); bp = N.new("ShaderNodeBump")
     L.new(bump[0], bp.inputs["Height"]); bp.inputs["Strength"].default_value = bump[1]; bp.inputs["Distance"].default_value = 0.02
@@ -145,12 +145,14 @@ def switch(m, mode):
 
 
 groups = {}
-def add(g, role, bm): groups.setdefault(g, (role, []))[1].append(bm)
+def add(g, role, bm): groups.setdefault(("grot_" + g if DEEL == "grot" and not g.startswith(("rots", "ruine")) else g), (role, []))[1].append(bm)
 srcs = []
 for o in list(forms.all_objects):
     if o.type != "MESH" or o.hide_render or not o.data.materials or not o.data.materials[0]: continue
     mn = o.data.materials[0].name.replace("MAT_", "")
     if mn not in RGB: continue
+    is_grot = o.get("owner") == "phase:03b_grot"
+    if (DEEL == "grot" and not is_grot) or (DEEL == "kasteel" and is_grot): continue
     srcs.append(o); bm = world_bm(o); bm.normal_update()
     dead = [f for f in bm.faces if f.normal.z < -0.5 and f.calc_center_median().z < 0.1]
     if mn == "pannen": dead += [f for f in bm.faces if f.normal.z < -0.5]
@@ -200,5 +202,5 @@ for gname, role, ob in objs:
         bpy.ops.object.bake(type="NORMAL", normal_space="TANGENT", margin=6, use_clear=True); sc.cycles.samples = SAMPLES
         nimg.filepath_raw = os.path.join(TEX, "Sneeuwwitje_%s_normaal.png" % gname); nimg.file_format = "PNG"; nimg.save(); set_target(m, img)
     switch(m, "EMIT"); print("BAKED", gname, len(ob.data.polygons), flush=True)
-bpy.ops.wm.save_as_mainfile(filepath=os.path.join(HERE, "AR_Sneeuwwitje_baked.blend"))
+bpy.ops.wm.save_as_mainfile(filepath=os.path.join(HERE, "AR_Sneeuwwitje_baked.blend" if DEEL == "alles" else "AR_Sneeuwwitje_baked_%s.blend" % DEEL))
 print("KLAAR", [g for g, _, _ in objs])
