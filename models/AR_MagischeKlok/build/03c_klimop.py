@@ -54,8 +54,8 @@ for name, (p0, u, n, L) in ARMS.items():
         while z < WALL_H + 0.05:
             ss = s + rnd.uniform(-0.17, 0.17); zz = z + rnd.uniform(-0.15, 0.15)
             near_h = min(abs(ss - h) for h in HERAUT_S)
-            if near_h < 0.5 and zz < 2.55: z += 0.2; continue                 # heraut + sokkel vrij
-            if any(h + 0.36 < ss < h + 0.78 and 1.68 < zz < 2.22 for h in HERAUT_S): z += 0.2; continue   # schildje vrij
+            if near_h < 0.5 and zz < 3.0: z += 0.2; continue                 # heraut + sokkel vrij
+            if any(h + 0.36 < ss < h + 0.78 and 1.68 < zz < 2.65 for h in HERAUT_S): z += 0.2; continue   # schildje vrij
             d = dens(ss, zz, seed)
             pr = min(1.0, max(0.0, (d - 0.5) / 0.16))                            # zachte rand: kans loopt op van 0.5 tot 0.66
             if rnd.random() < pr * pr * (3 - 2 * pr):

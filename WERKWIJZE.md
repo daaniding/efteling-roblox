@@ -192,4 +192,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   gezichtsdelen meeschalen met het hoofd (anders verdwijnen ze erin). generate_3d vraagt een generator-sleutel in de Blender-addon.
 - **Daken: onderkant van een overstek niet wegbakken.** Roblox-meshes zijn enkelzijdig; zonder onderkant kijk je van dichtbij onder de dakrand door het dak.
 - **Alle foto's van een plein bekijken vóór de vorm kiezen** (Magische Klok: de totaalfoto liet de echte vorm zien, de andere twee foto's waren uitsneden).
+- **Loopvlakken altijd met de bovenkant naar boven** (los vlak / ear-clip kan omgedraaid uitkomen; Roblox toont dan het terrein eronder) en ~10 cm boven het maaiveld.
+- **Niets hoogs in het zicht vóór een voorstelling** (bomen/struiken tussen kijkplek en figuren weghalen na het beplanten).
+- **Bij twijfel over wat Daan bedoelt: eerst de 2 interpretaties voorleggen** in plaats van te bouwen (Magische Klok: "langs de rand" = smal randpad, niet alles grind).
 

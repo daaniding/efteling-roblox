@@ -17,7 +17,7 @@ MATS = {
     "rood": ((0.62, 0.08, 0.06, 1), 0.5), "bodem": ((0.20, 0.16, 0.11, 1), 1.0), "water": ((0.10, 0.12, 0.08, 1), 0.05),
     "klinker": ((0.45, 0.43, 0.40, 1), 0.9), "toon_groen": ((0.25, 0.42, 0.36, 1), 0.7), "toon_rood": ((0.70, 0.30, 0.22, 1), 0.7),
     "huid": ((0.85, 0.66, 0.52, 1), 0.6), "haar": ((0.80, 0.62, 0.30, 1), 0.7),
-    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "mand": ((0.42, 0.30, 0.16, 1), 0.9), "padklinker": ((0.36, 0.24, 0.20, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
+    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "mand": ((0.42, 0.30, 0.16, 1), 0.9), "padklinker": ((0.55, 0.52, 0.47, 1), 0.9), "gras": ((0.18, 0.28, 0.10, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
 }
 COLL = []; HERAUTEN = []; LAMPS_ = []; PLEIN = {}
 def coll_box(cx, cy, cz, sx, sy, sz, ang=0.0): COLL.append([round(v, 3) for v in (cx, cy, cz, sx, sy, sz, ang)])
@@ -34,6 +34,7 @@ ARMS = {   # binnenvlak-start, richting, plein-normaal, lengte (vanaf de start)
     "W": (Vector((0.96, -3.07)), Vector((0.6986, -0.7154)), Vector((-0.7154, -0.6986)), 17.25),
 }
 HERAUT_S = {"N": (3.8, 8.0, 11.8), "W": (2.8, 5.3, 7.8)}   # afstand langs de arm (overzicht-okt2009: west dicht bij de toren, noord ver uit elkaar)
+VER = {"N": 0.42, "W": 0.30}         # verhoging onder de herauten (totaalfoto: keermuurtje met begroeide strook; west: grasoever boven de gracht)
 SHIFT = 1.2                           # front.jpg: de toren staat helemaal voor de muren -> binnenvlakken 1.2 m achter de OSM-lijn
 for _k, (_p, _u, _n, _L) in list(ARMS.items()): ARMS[_k] = (_p - _n * SHIFT, _u, _n, _L)
 
@@ -167,15 +168,15 @@ def build(master):
             put("muur_" + name, "stuc", bz(s, s + KANT_W, 0, WALL_T, WALL_H - 0.02, WALL_H + KANT_H), M)
             s += KANT_W + KANT_GAP
         for hs in HERAUT_S[name]:                                          # lisenen + sokkels + schildjes
-            hp = p0 + u * hs + n * 0.49; HERAUTEN.append([round(hp.x, 3), round(hp.y, 3), 0.43, round(math.degrees(math.atan2(n.y, n.x)), 2), name])
+            hp = p0 + u * hs + n * 0.49; HERAUTEN.append([round(hp.x, 3), round(hp.y, 3), 0.43 + VER[name], round(math.degrees(math.atan2(n.y, n.x)), 2), name])
             put("muur_" + name, "stuc", bz(hs - 0.35, hs + 0.35, -0.12, 0.05, -0.45, WALL_H + KANT_H), M)
-            put("sokkels", "baksteen", bz(hs - 0.36, hs + 0.36, -0.86, -0.12, -0.45, 0.35), M)
-            put("sokkels", "steen", bz(hs - 0.4, hs + 0.4, -0.9, -0.1, 0.35, 0.43, 0.01), M)
+            put("sokkels", "baksteen", bz(hs - 0.36, hs + 0.36, -0.86, -0.12, -0.45, 0.35 + VER[name]), M)
+            put("sokkels", "steen", bz(hs - 0.4, hs + 0.4, -0.9, -0.1, 0.35 + VER[name], 0.43 + VER[name], 0.01), M)
             sh = [(hs + 0.42, 2.15), (hs + 0.72, 2.15), (hs + 0.71, 1.93), (hs + 0.65, 1.8), (hs + 0.57, 1.74), (hs + 0.49, 1.8), (hs + 0.43, 1.93)]
-            put("schildjes", "rood", boutline(sh, -0.17, 0.05), M)
-            put("schildjes", "goud", band(sh + [sh[0]], 0.012, -0.175, 0.02), M)
+            put("schildjes", "rood", boutline(sh, -0.17, 0.05), M @ TR(0, 0, VER[name]))
+            put("schildjes", "goud", band(sh + [sh[0]], 0.012, -0.175, 0.02), M @ TR(0, 0, VER[name]))
             lel = [(hs + 0.57, 2.08), (hs + 0.6, 2.0), (hs + 0.64, 1.95), (hs + 0.6, 1.93), (hs + 0.57, 1.82), (hs + 0.54, 1.93), (hs + 0.5, 1.95), (hs + 0.54, 2.0)]
-            put("schildjes", "goud", boutline(lel, -0.185, 0.015), M)
+            put("schildjes", "goud", boutline(lel, -0.185, 0.015), M @ TR(0, 0, VER[name]))
         # gracht: natuurlijk slootje (Herauten-okt2009): geen bak of losse stenen; terrein vormt de oever (uitgegraven in Studio),
         # hier alleen een donker modderbed en een waterspiegel met afgeronde koppen die iets onder de oever ligt
         g0, g1 = 1.2, L - 0.4
@@ -189,6 +190,27 @@ def build(master):
         # botsing: muur (hoog, niet erover) + grachtrand
         c = p0 + u * ((s0 + L) / 2) - n * (WALL_T / 2); ang = math.degrees(math.atan2(u.y, u.x))
         coll_box(c.x, c.y, 2.0, L - s0, WALL_T + 0.1, 4.0, ang)
+    def omhoog(b_):   # loopvlakken: bovenkant moet naar boven wijzen (Roblox toont meshes enkelzijdig; anders zie je het terrein eronder)
+        b_.normal_update()
+        for f_ in b_.faces:
+            if f_.normal.z < -0.5: f_.normal_flip()
+        b_.normal_update()
+        for f_ in b_.faces:                                                     # zijkanten naar buiten
+            if abs(f_.normal.z) < 0.5:
+                c_ = f_.calc_center_median(); cen = sum((v.co for v in b_.verts), Vector()) / len(b_.verts)
+    def pad_strook(pts, w=3.2, z1=0.11):   # 11 cm boven maaiveld: terrein (bladgras) prikt anders door het grind
+        P_ = [Vector(q) for q in pts]; L_, R_ = [], []
+        for i, q in enumerate(P_):
+            dA = (q - P_[i - 1]).normalized() if i > 0 else (P_[1] - q).normalized()
+            dB = (P_[i + 1] - q).normalized() if i < len(P_) - 1 else dA
+            t_ = (dA + dB).normalized(); nrm = Vector((-t_.y, t_.x)); k = 1.0 / max(0.5, nrm.dot(Vector((-dA.y, dA.x))))
+            L_.append(q + nrm * (w / 2) * k); R_.append(q - nrm * (w / 2) * k)
+        b_ = bmesh.new()
+        for i in range(len(P_) - 1):
+            vs = [b_.verts.new((p_.x, p_.y, z1)) for p_ in (R_[i], R_[i + 1], L_[i + 1], L_[i])]; b_.faces.new(vs)
+            vb = [b_.verts.new((p_.x, p_.y, -0.1)) for p_ in (R_[i], R_[i + 1], L_[i + 1], L_[i])]
+            for a2 in range(4): b_.faces.new((vs[a2], vb[a2], vb[(a2 + 1) % 4], vs[(a2 + 1) % 4]))
+        omhoog(b_); return b_
     # ================= HERAUTENPLEIN v3 (MagischeKloktotaal, Herauten-overzicht-okt2009, Boekloc 2016, Herautenplein1974) =================
     # groot grindveld in een band langs beide muren (t 2.6..7.5): achter een laag muurtje van ruwe natuursteen evenwijdig aan de kasteelmuren,
     # bij de toren in een bocht (Boekloc), aan de westkant uitlopend op de gracht; voor een buxushaag evenwijdig aan het pad (chevron, de 'Z'
@@ -213,8 +235,8 @@ def build(master):
     front = [WP(SWE, TF), C, NP(SNE, TF)]
     # grind: band tussen achter- en voorrand (oor-snijden voor de concave chevron)
     poly = [NP(SNE, TB)] + back[1:-2] + [WP(SWE, TB + 0.1), WP(SWE, TF), C, NP(SNE, TF)]
-    gb = bmesh.new(); gv = [gb.verts.new((q.x, q.y, 0.02)) for q in poly]; gf = gb.faces.new(gv)
-    bmesh.ops.triangulate(gb, faces=[gf], ngon_method="EAR_CLIP"); put("plein", "klinker", gb)
+    gb = bmesh.new(); gv = [gb.verts.new((q.x, q.y, 0.1)) for q in poly]; gf = gb.faces.new(gv)
+    bmesh.ops.triangulate(gb, faces=[gf], ngon_method="EAR_CLIP"); omhoog(gb); put("plein", "klinker", gb)
     # muurtje van ruwe natuursteen: twee lagen blokken + afdekstenen, licht onregelmatig
     def stenen_muur(pts, h=0.5):
         for a_, b_ in zip(pts, pts[1:]):
@@ -237,15 +259,7 @@ def build(master):
         nst = max(2, int(L_ / 1.6) + 1)
         for k in range(nst):
             xx = 0.2 + (L_ - 0.4) * k / (nst - 1); put("bankjes", "baksteen", bz(xx - 0.15, xx + 0.15, -0.17, 0.17, 0.0, 0.42), Mb)   # gemetselde poten
-    # buxushaag aan de buitenkant (chevron) + westeinde (laat een ingang bij de gracht), noordeinde open
-    haag_lijn = [WP(SWE + 0.35, TB + 2.3), WP(SWE + 0.35, TF + 0.45), snijpunt(TF + 0.45, TF + 0.45), NP(SNE - 0.2, TF + 0.45)]
-    for a_, b_ in zip(haag_lijn, haag_lijn[1:]):
-        d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x))
-        put("haag", "haag", bz(-0.25, L_ + 0.25, -0.28, 0.28, -0.05, 0.62, 0.07), TR(a_.x, a_.y, 0, ang))
-    # rieten manden op het grind (totaalfoto: 4)
-    for q in (NP(9.5, 5.2), NP(5.0, 5.4), WP(4.2, 5.6), WP(7.6, 5.0)):
-        put("manden", "mand", blathe([(0, 0), (0.2, 0), (0.24, 0.42), (0.21, 0.42), (0.18, 0.04), (0, 0.04)], 16), TR(q.x, q.y, 0))
-        put("manden", "mand", ring_band_bm(q, 0.24, 0.4, 0.45), None) if False else None
+    # geen haag en geen manden (Daan): grind loopt door van het plein tot het pad (strook waar de haag stond)
     # sprookjesboek in de bocht bij de toren, met de rug naar het muurtje (Boekloc)
     mid = arc_[4]; bq = mid * (1 + 0.6 / mid.length); ba = math.degrees(math.atan2(mid.y, mid.x)) - 90
     MB = TR(bq.x, bq.y, 0, ba)
@@ -253,7 +267,7 @@ def build(master):
     put("boek", "kant_papier", bz(-0.36, 0.36, -0.24, 0.24, 0, 0.04), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
     put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
     # galgenlantaarn op de hoek bij de noordingang, buiten de haag (totaalfoto links)
-    lq = NP(SNE + 0.4, TF + 1.0); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(uN.y, uN.x))
+    lq = NP(SNE - 0.4, TF - 0.5); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(uN.y, uN.x))
     put("lantaarn", "paal", bz(lx - 0.09, lx + 0.09, ly - 0.09, ly + 0.09, 0, 3.3, 0.02))
     for sg in (-1, 1):
         ax_ = Vector((math.cos(math.radians(la)), math.sin(math.radians(la))))
@@ -265,27 +279,29 @@ def build(master):
         put("lantaarn", "ijzer", blathe([(0, 2.72), (0.13, 2.68), (0.13, 2.66), (0.1, 2.64), (0.1, 2.36), (0.07, 2.32), (0, 2.3)], 6), TR(c_.x, c_.y, 0))
         put("lantaarn", "glaslamp", blathe([(0, 2.37), (0.085, 2.37), (0.085, 2.63), (0, 2.63)], 6), TR(c_.x, c_.y, 0))
         LAMPS_.append([round(c_.x, 2), round(c_.y, 2), 2.5])
-    # rozenperk in het gras voorbij het westeinde (overzicht-okt2009)
-    rc = WP(13.2, 5.6)
-    put("perk", "bodem", bz(-1.9, 1.9, -1.0, 1.0, -0.05, 0.04), TR(rc.x, rc.y, 0, math.degrees(math.atan2(uW.y, uW.x))))
-    PLEIN.update({"TB": TB, "TF": TF, "SNE": SNE, "SWE": SWE, "C": [round(C.x, 3), round(C.y, 3)], "perk": [round(rc.x, 3), round(rc.y, 3)], "lamp": [round(lx, 3), round(ly, 3)]})
+    PLEIN.update({"TB": TB, "TF": TF, "SNE": SNE, "SWE": SWE, "C": [round(C.x, 3), round(C.y, 3)], "lamp": [round(lx, 3), round(ly, 3)]})
     # ================= PADEN (OSM 1169014962 + 967458491/490, surface=sett): V om het pleinvierkant + doorgang naar de Prinsenpoort =================
-    def pad_strook(pts, w=3.2, z1=0.03):
-        P_ = [Vector(q) for q in pts]; L_, R_ = [], []
-        for i, q in enumerate(P_):
-            dA = (q - P_[i - 1]).normalized() if i > 0 else (P_[1] - q).normalized()
-            dB = (P_[i + 1] - q).normalized() if i < len(P_) - 1 else dA
-            t_ = (dA + dB).normalized(); nrm = Vector((-t_.y, t_.x)); k = 1.0 / max(0.5, nrm.dot(Vector((-dA.y, dA.x))))
-            L_.append(q + nrm * (w / 2) * k); R_.append(q - nrm * (w / 2) * k)
-        b_ = bmesh.new()
-        for i in range(len(P_) - 1):
-            vs = [b_.verts.new((p_.x, p_.y, z1)) for p_ in (R_[i], R_[i + 1], L_[i + 1], L_[i])]; b_.faces.new(vs)
-            vb = [b_.verts.new((p_.x, p_.y, -0.1)) for p_ in (R_[i], R_[i + 1], L_[i + 1], L_[i])]
-            for a2 in range(4): b_.faces.new((vs[a2], vb[a2], vb[(a2 + 1) % 4], vs[(a2 + 1) % 4]))
-        bmesh.ops.recalc_face_normals(b_, faces=b_.faces); return b_
-    PADEN = [[(-18.67, -33.94), (-9.13, -24.32), (0.65, -14.48), (13.54, -27.2), (21.5, -35.3)],
-             [(-9.13, -24.32), (-10.63, -22.92), (-15.08, -18.55), (-18.23, -15.56)]]
+    # Daan: alleen een grindpad langs de rand waar de herauten staan (plein + strook langs gracht en noordstrook), geen V-pad om het vierkant.
+    RB = 5.4                                                                  # buitenrand van het randpad (t)
+    PADEN = [[tuple(NP(20.8, RB - 0.2)), tuple(NP(20.8, 2.3)), tuple(NP(20.8, -3.0))]]                   # doorgang Prinsenpoort (OSM 967458491/490)
     for pts in PADEN: put("paden", "padklinker", pad_strook(pts))
+    # randpad: west langs de gracht (t 2.35..RB) vanaf het plein, noord langs de verhoogde strook (t 2.45..RB) tot voorbij de Prinsenpoort
+    for (F_, lo, hi, t0) in ((WP, SWE - 0.2, 22.0, 2.35), (NP, SNE - 0.4, 22.4, TB - 0.15)):
+        q4 = [F_(lo, t0), F_(hi, t0), F_(hi, RB), F_(lo, RB)]
+        cb = bmesh.new(); cv = [cb.verts.new((q.x, q.y, 0.1)) for q in q4]; cb.faces.new(cv); omhoog(cb); put("paden", "padklinker", cb)
+    # verhogingen: begroeide strook achter het keermuurtje (noord + bocht bij de toren) en grasoever boven de gracht (west)
+    def verhoging(poly, h, slope=0.0):
+        vb = bmesh.new(); top = [vb.verts.new((q.x, q.y, h)) for q in poly]; bot = [vb.verts.new((q.x, q.y, -0.15)) for q in poly]
+        ft = vb.faces.new(top); vb.faces.new(bot[::-1])
+        for i in range(len(poly)): vb.faces.new((top[i], bot[i], bot[(i + 1) % len(poly)], top[(i + 1) % len(poly)]))
+        bmesh.ops.triangulate(vb, faces=[ft], ngon_method="EAR_CLIP"); bmesh.ops.recalc_face_normals(vb, faces=vb.faces); return vb
+    arcN = [q for q in arc_]
+    if (arcN[0] - NP(1.4, TB)).length > (arcN[-1] - NP(1.4, TB)).length: arcN = arcN[::-1]          # van noord naar west
+    polyN = [NP(14.4, 0.03), NP(-0.8, 0.03), WP(-0.8, 0.03), WP(0.4, 0.03), WP(0.4, 0.95), WP(1.2, TB - 0.05)] + [q * ((q.length - 0.18) / q.length) for q in arcN[::-1]] + \
+            [NP(SNE, TB - 0.18), NP(14.4, 1.2)]
+    put("verhoging", "gras", verhoging(polyN, VER["N"]))
+    polyW = [WP(0.2, 0.03), WP(17.0, 0.03), WP(17.0, 0.95), WP(0.2, 0.95)]
+    put("verhoging", "gras", verhoging(polyW, VER["W"]))
     PLEIN["paden"] = PADEN
     # front.jpg: toren ~13% smaller t.o.v. de muren (hoogtes kloppen) -> alleen in x/y schalen
     K = 0.87
