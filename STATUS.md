@@ -280,11 +280,14 @@ iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
 - Paden licht grind (Pebble + VV_Grind 235,228,214). Grindstroken sluiten het plein aan op het MK-randpad (west en noord), dus nu één grindvlak
   van de herauten tot de tuinen. 144 planten/struiken van MK-bos/-groen van het plein gehaald; layout-blokken kikker/heraut weg.
 - Terrein: grachtje uitgegraven; onder alle paden/vloeren Ground (gras prikt anders door), open stukken (naast de poort, zuid van het MK-randpad) Grass.
-- Kikkers: Roblox generate_mesh (2e poging: hurkende kikker), 4 klonen in workspace.Kikkerkoning op de hoeken van de bak, kijken naar het midden;
-  bron in ServerStorage.KikkerBron2. Nog vrij cartoonachtig en lichter dan de foto (textuur, geen SurfaceAppearance: tint werkt niet).
-  Staan NIET in het plaatsscript (alleen in de place) -> place opslaan.
+- Kikkers v2 (Daan: "betere kikkers"): zelf gemodelleerd in Blender (`build/03e_kikker.py` -> `AR_Kikker.blend`, `exports/AR_Kikker.fbx`)
+  naar Kikkerkoningontwerp2 (Pieck), Kikker1973 en Kikkers-tuinslang 2023: zittende waterkikker (gestrekte voorpoten, kop omhoog,
+  opgevouwen achterpoten, rugwallen, trommelvlies), lijf = overlappende ellipsoiden -> voxel-remesh 8 mm -> smooth -> decimate (7k tris);
+  huid gebakken (geelgroen met olijfgroene vlekken, lichtere buik), ogen crème ring + platte zwarte pupil. Asset **70914706705065**,
+  textuur **75961250645608** (SA.Color 205,205,178). Geplaatst met `roblox/plaats_kikkers.luau`: x1.25, op de binnenhoeken, kijken naar de
+  rotsen. generate_mesh-kikkers verwijderd. `review/kikker_vs_foto.jpg`, `review/studio_v2_kikkers.jpg`.
 - Screenshots `review/studio_v1_overzicht.jpg`, `review/studio_v1_fontein.jpg`.
-- NOG: kikkers echter (Blender, naar Kikkerkoningontwerp2/Kikker1954), bloemen in de bloembakken, waterstralen (pas als Daan animatie wil),
+- NOG: bloemen in de bloembakken, waterstralen (pas als Daan animatie wil),
   wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
 
 ## Daarna (volgorde met Daan afgesproken)

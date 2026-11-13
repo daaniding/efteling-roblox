@@ -224,3 +224,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   stukken bepalen, alleen daar gras.
 - **generate_mesh-kikkers** worden hurkend beter met "crouching, low flat body, no base, no lily pad"; kleur zit in de textuur (geen
   SurfaceAppearance), dus tinten lukt niet. Grootte opgeven werkt in studs, daarna ScaleTo.
+- **Dieren die op een foto moeten lijken (kikkers): zelf in Blender beter dan generate_mesh.** Overlappende ellipsoiden/buizen ->
+  voxel-remesh (unie) -> Smooth-modifier (vloeiende overgangen) -> decimate geeft in 1 script een organisch dier; huid procedureel
+  bakken (ruisvlekken + buik via normaal-Z) naar een BAKE_-object met eigen UV. Pupillen plat in de oogbol, anders "googly eyes".
