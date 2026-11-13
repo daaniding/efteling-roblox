@@ -250,6 +250,11 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
   medaillon groter met klimmende leeuw; trompet met grote beker + ring; vaandel hangt recht onder de trompet: paars met gouden leeuw (beide kanten),
   brede oranje rand, donkere franje, stok en oranje lussen; wandschildjes met echte Franse lelie en brede gouden rand. Nieuwe MAT oranje/franje,
   vaandel nu paars (62,34,96). Herauten ~31k tris per stuk (asset 238k). Asset **107392453250241**. `review/v12_heraut_vs_foto.jpg`, `review/studio_v12_heraut.jpg`.
+- v13/v14 (Daan: foto van de hoek, `ref/hoek_daan.webp`): randpaden voorbij de herauten weg (OSM: alleen een uitsteeksel voor de herauten).
+  Hoek nu als de foto: bestrating (grind) voor de noordarm en in de hoek voor de toren; voor de westarm een gazon (s 2.4..12.3) met een laag
+  bakstenen randje langs de bestrating; zigzagbank op de grens + buxuskegel; lantaarn met krularm (grijze paal, één vierkante lantaarn) aan de
+  gazonrand i.p.v. de galgenlantaarn. Geen kantelenmuren rond het plein (alleen 1952-~1960). Asset **83896085574394**.
+  Screenshot `review/studio_v14_hoek.jpg` (zelfde standpunt als de foto).
 - NOG/kan beter: gezicht nog stijf (glimlach, oogleden), pluim meer als één krullende veer,
   Prinsenpoort (aparte attractie) ontbreekt links.
 

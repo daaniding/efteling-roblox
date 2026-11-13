@@ -240,7 +240,10 @@ def build(master):
     C = snijpunt(TF, TF)
     front = [WP(SWE, TF), C, NP(SNE, TF)]
     # grind: band tussen achter- en voorrand (oor-snijden voor de concave chevron)
-    poly = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(5.0, TB + 0.1), WP(SWE, TB + 0.1), WP(SWE, TF), C, NP(SNE, TF)]
+    # v14 (Daan, foto van de hoek): bestrating voor de noordarm en in de hoek voor de toren; voor de westarm (3 herauten dicht bij de toren)
+    # een gazon met een laag bakstenen randje langs de bestrating; zigzagbank op de grens; lantaarn met krularm aan de gazonrand
+    SL, SLE = 2.4, 12.3                                                        # gazon west: van s 2.4 tot 12.3 langs de westmuur
+    poly = [NP(SNE, TB), NP(7.0, TB)] + arc_ + [WP(SL, TB + 0.1), WP(SL, TF), C, NP(SNE, TF)]
     gb = bmesh.new(); gv = [gb.verts.new((q.x, q.y, 0.1)) for q in poly]; gf = gb.faces.new(gv)
     bmesh.ops.triangulate(gb, faces=[gf], ngon_method="EAR_CLIP"); omhoog(gb); put("plein", "klinker", gb)
     # muurtje van ruwe natuursteen: twee lagen blokken + afdekstenen, licht onregelmatig
@@ -258,7 +261,12 @@ def build(master):
                 k += ln
     stenen_muur(back)
     # lange lage groene bankjes langs de binnenkant van de voorrand (volgen de knik = de 'Z' van de totaalfoto)
-    bank = [WP(SWE - 0.4, TF - 0.45), snijpunt(TF - 0.45, TF - 0.45), NP(SNE - 0.4, TF - 0.45)]
+    gz = [WP(SL, TB + 0.1), WP(SLE, TB + 0.1), WP(SLE, TF), WP(SL, TF)]
+    lb = bmesh.new(); lv = [lb.verts.new((q.x, q.y, 0.14)) for q in gz]; lb.faces.new(lv); omhoog(lb); put("plein", "gras", lb)
+    for a_, b_ in ((WP(SL, TB + 0.1), WP(SL, TF)), (WP(SL, TF), WP(SLE, TF))):                 # laag bakstenen randje (foto: rollaag)
+        d_ = b_ - a_; put("plein", "baksteen", bz(0.0, d_.length, -0.1, 0.1, -0.05, 0.2, 0.01), TR(a_.x, a_.y, 0, math.degrees(math.atan2(d_.y, d_.x))))
+    # zigzagbank in de hoek op de grens bestrating/gazon (foto), buxuskegel ernaast
+    bank = [WP(SL - 0.5, TB + 0.9), WP(SL - 0.5, TF - 1.6), WP(SL - 2.3, TF - 0.9), WP(SL - 2.3, TF + 0.6)]
     for a_, b_ in zip(bank, bank[1:]):
         d_ = b_ - a_; L_ = d_.length; ang = math.degrees(math.atan2(d_.y, d_.x)); Mb = TR(a_.x, a_.y, 0, ang)
         put("bankjes", "hout", bz(0.0, L_, -0.22, 0.22, 0.42, 0.48, 0.01), Mb)                          # zitplank (doorlopend)
@@ -272,10 +280,20 @@ def build(master):
     put("boek", "ijzer", btube([(0, 0, 0), (0, 0, 0.85)], 0.03, 6), MB); put("boek", "ijzer", bz(-0.25, 0.25, -0.2, 0.2, 0, 0.03), MB)
     put("boek", "kant_papier", bz(-0.36, 0.36, -0.24, 0.24, 0, 0.04), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
     put("boek", "rood", bz(-0.38, 0.38, -0.26, 0.26, -0.02, 0.0), MB @ TR(0, 0, 0.85) @ Matrix.Rotation(math.radians(-25), 4, "X"))
-    # galgenlantaarn op de hoek bij de noordingang, buiten de haag (totaalfoto links)
-    lq = NP(SNE - 0.4, TF - 0.5); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(uN.y, uN.x))
-    put("lantaarn", "paal", bz(lx - 0.09, lx + 0.09, ly - 0.09, ly + 0.09, 0, 3.3, 0.02))
-    for sg in (-1, 1):
+    kq = WP(SL - 3.1, TF + 0.9)
+    put("bankjes", "haag", blathe([(0, 0.1), (0.32, 0.12), (0.3, 0.45), (0.2, 0.8), (0.06, 1.05), (0, 1.08)], 14), TR(kq.x, kq.y, 0))
+    # lantaarn met krularm aan de gazonrand (foto: grijze paal, sierlijke arm, één vierkante lantaarn)
+    lq = WP(7.0, TF - 0.35); lx, ly = lq.x, lq.y; la = math.degrees(math.atan2(-nW.y, -nW.x))
+    ax_ = Vector((math.cos(math.radians(la)), math.sin(math.radians(la)))) * -1
+    put("lantaarn", "ijzer", blathe([(0, 0), (0.11, 0), (0.11, 0.35), (0.075, 0.42), (0.06, 3.0), (0.07, 3.05), (0, 3.1)], 12), TR(lx, ly, 0))
+    tip = Vector((lx, ly)) + ax_ * 0.7
+    put("lantaarn", "ijzer", btube([(lx, ly, 3.0), (tip.x, tip.y, 3.0)], 0.025, 6))
+    put("lantaarn", "ijzer", btube([(lx + ax_.x * 0.05 + ax_.x * 0.3 * (1 - math.cos(t)) , ly + ax_.y * 0.05 + ax_.y * 0.3 * (1 - math.cos(t)), 2.6 + 0.4 * math.sin(t)) for t in [i * math.pi / 2 / 8 for i in range(9)]], 0.018, 5))
+    put("lantaarn", "ijzer", blathe([(0, 3.32), (0.16, 3.3), (0.16, 3.27), (0.12, 3.25), (0.12, 2.9), (0.09, 2.86), (0, 2.85)], 4), TR(tip.x, tip.y, 0, 45))
+    put("lantaarn", "glaslamp", blathe([(0, 2.92), (0.105, 2.92), (0.105, 3.22), (0, 3.22)], 4), TR(tip.x, tip.y, 0, 45))
+    put("lantaarn", "ijzer", blathe([(0, 3.32), (0.05, 3.36), (0.02, 3.45), (0, 3.46)], 8), TR(tip.x, tip.y, 0))
+    LAMPS_.append([round(tip.x, 2), round(tip.y, 2), 3.05])
+    for sg in ():
         ax_ = Vector((math.cos(math.radians(la)), math.sin(math.radians(la))))
         e_ = Vector((lx, ly)) + ax_ * sg * 0.8
         put("lantaarn", "paal", btube([(lx, ly, 3.0), (e_.x, e_.y, 3.0)], 0.05, 6))
