@@ -182,6 +182,10 @@ Fotocamera: `cam_match.py --cam -0.3,-8.6,1.6,26 --sensor 25.4 --pitch 8 --res 1
 - In Studio: HansEnGrietje (+ map Figuren: witte vogel op de stapel 117860705892867, zwarte vogel windvaan 83043200989950 via generate_mesh),
   HansEnGrietjeOmgeving, HansEnGrietjeGroen. Oude v1 weg, label weg, spawn op het grindpad voor het tuinhek. Wind + LantaarnsDagNacht doen mee.
 - NIET gedaan: figuren Hans en Grietje (Daan: later; generate_mesh gaf chibi-poppen), heks achter het luikje en de kat (horen bij de show), animatie.
+- v1.1 (Daan: afbakening): laag wit hekje (paaltjes + 2 regels) langs alle grindpadranden waar geen muurtje/leuning staat, hoeken bij de
+  aansluiting doorgekoppeld, gesloten wit poortje over het dienstpad, botsblokken per hekvak (2.6 m hoog) + langs leuning/binnenhek (ijzer botst
+  zelf niet meer). Omgeving **88575539670713** (tuin-stuc 115467324969473 / 103737251238288). Render: `review/05/render_mat_boven.png`.
+  NOG NIET gecontroleerd in Studio: `roblox/plaats_hansgrietje.luau` draaien, close-ups + wandeltest langs het hek.
 - Play-test 13 nov: Studio liep overal ~15 fps (ook bij Sneeuwwitje, venster niet vooraan); met de scène in beeld 12, zonder 15. Opnieuw meten als Studio vooraan staat.
 
 ## Daarna (volgorde met Daan afgesproken)

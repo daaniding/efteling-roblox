@@ -3,8 +3,8 @@
 -- Kalibratie (asset-brief.md): oorsprong = OSM (66.81, 27.48) m = studs (200.43, -82.44); kijkrichting Roblox (-0.944, 0, -0.332); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing). Lampen: LAMP_ -> PointLight.
 local HUIS = 139382073870455
-local OMG = 98956237263382
-local TEX = {pannenkoek = {75733789969526}, snoep = {116416741730115}, snoepomg = {116416741730115}, stuc_achter = {92015225526568, 128901005308082}, stuc_noord = {104906801297171, 109862843342181}, stuc_tuin = {108259494727642, 97917567891523}, stuc_voor = {109318122648105, 104324566879797}, stuc_zuid = {137577513753329, 126230881043910}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
+local OMG = 88575539670713
+local TEX = {pannenkoek = {75733789969526}, snoep = {116416741730115}, snoepomg = {116416741730115}, stuc_achter = {92015225526568, 128901005308082}, stuc_noord = {104906801297171, 109862843342181}, stuc_tuin = {115467324969473, 103737251238288}, stuc_voor = {109318122648105, 104324566879797}, stuc_zuid = {137577513753329, 126230881043910}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
 local F = Vector3.new(-0.944, 0, -0.332)
 local ORIGIN = CFrame.new(200.43, 2.0, -82.44) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -17,6 +17,7 @@ local M = {
 	tegels = {Color3.fromRGB(150, 146, 136), "Slate"}, steen = {Color3.fromRGB(168, 166, 160), "Concrete"}, limonade = {Color3.fromRGB(196, 40, 50), "Glass"},
 	pannen = {Color3.fromRGB(150, 78, 58), "ClayRoofTiles"}, hout = {Color3.fromRGB(96, 64, 40), "Wood"}, papier = {Color3.fromRGB(236, 226, 196), "SmoothPlastic"},
 	snoeppad = {Color3.fromRGB(238, 232, 218), "Plaster"}, reling = {Color3.fromRGB(40, 78, 66), "Metal"}, terracotta = {Color3.fromRGB(170, 92, 62), "Concrete"},
+	hekwit = {Color3.fromRGB(238, 236, 228), "Wood"},
 }
 local GEEN_SCHADUW = {donker = true, vuur = true, papier = true, lood = true, glas = true, pad = true, aarde = true, grind = true, snoeppad = true, tegels = true}
 local BOTSEN = {pad = true, grind = true, tegels = true, snoeppad = true}   -- loopvlakken (meshes zijn dun)
@@ -62,7 +63,6 @@ local function plaats(asset, naam)
 				if BOTSEN[key] then p.CanCollide = true; if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end end
 				if key == "limonade" then p.Transparency = 0.15; p.Reflectance = 0.1 end
 				if key == "glas" then p.Transparency = 0.1; p.Reflectance = 0.15 end
-				if key == "reling" or key == "ijzer" then p.CanCollide = true end
 			else table.insert(onbekend, p.Name) end
 		end
 	end

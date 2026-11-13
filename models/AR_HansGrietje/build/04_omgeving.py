@@ -13,7 +13,7 @@ rnd = random.Random(23); hg.rnd = rnd
 cube, prism_y, frustum = hg.cube, hg.prism_y, hg.frustum
 MATS = {"pad": ((150, 142, 130), 1.0), "band": ((128, 126, 120), 0.9), "aarde": ((70, 52, 38), 1.0), "grind": ((232, 226, 214), 1.0),
         "tegels": ((150, 146, 136), 0.9), "steen": ((168, 166, 160), 0.9), "limonade": ((196, 40, 50), 0.1), "pannen": ((150, 78, 58), 0.8),
-        "hout": ((96, 64, 40), 0.9), "papier": ((236, 226, 196), 0.9), "snoeppad": ((238, 232, 218), 0.9), "reling": ((40, 78, 66), 0.5), "terracotta": ((170, 92, 62), 0.9)}
+        "hout": ((96, 64, 40), 0.9), "papier": ((236, 226, 196), 0.9), "snoeppad": ((238, 232, 218), 0.9), "reling": ((40, 78, 66), 0.5), "terracotta": ((170, 92, 62), 0.9), "hekwit": ((238, 236, 228), 0.7)}
 
 
 def sn_new():
@@ -38,6 +38,51 @@ def offset_strip(pts, w0, w1):   # polylijn -> strook tussen zijdelingse offsets
         a = Vector(pts[max(i - 1, 0)]); b = Vector(pts[min(i + 1, len(pts) - 1)]); d = (b - a).normalized(); n = Vector((-d.y, d.x))
         P = Vector(p); L.append(P + n * w1); R.append(P + n * w0)
     return L, R
+
+
+COLL = []   # onzichtbare botsblokken [cx, cy, cz, sx, sy, sz, hoek_graden] (2.6 m hoog: niet erover springen)
+def coll_seg(a, b, t=0.25, h=2.6):
+    a, b = Vector(a), Vector(b); d = b - a; L = d.length
+    if L < 0.05: return
+    c = (a + b) / 2; COLL.append([round(c.x, 3), round(c.y, 3), round(h / 2, 3), round(L + 0.1, 3), t, h, round(math.degrees(math.atan2(d.y, d.x)), 2)])
+
+
+def resample(pts, step):
+    out = [Vector(pts[0])]; acc = 0.0
+    for a, b in zip(pts, pts[1:]):
+        a, b = Vector(a), Vector(b); L = (b - a).length; t = 0.0
+        while acc + (L - t) >= step:
+            t += step - acc; acc = 0.0; out.append(a.lerp(b, t / L))
+        acc += L - t
+    if (out[-1] - Vector(pts[-1])).length > step * 0.3: out.append(Vector(pts[-1]))
+    return out
+
+
+def white_fence(bm, center, w, keep, step=1.6, h=0.62):
+    """laag wit hekje op zijdelingse offset w van een padlijn; alleen waar keep(p); paaltjes + 2 regels, botsblokken per vak"""
+    L, _ = offset_strip(center, w, w); pts = resample([(p.x, p.y) for p in L], step)
+    runs, cur = [], []
+    for p in pts:
+        if keep(p): cur.append(p)
+        elif cur: runs.append(cur); cur = []
+    if cur: runs.append(cur)
+    for run in runs:
+        if len(run) < 2: continue
+        fence_run(bm, run, h)
+    return [r for r in runs if len(r) >= 2]
+
+
+def fence_run(bm, run, h=0.62):
+    """paaltjes + 2 regels langs de punten van run, botsblok per vak"""
+    for p in run:
+        cube(bm, p.x - 0.045, p.x + 0.045, p.y - 0.045, p.y + 0.045, -0.05, h)
+        cube(bm, p.x - 0.06, p.x + 0.06, p.y - 0.06, p.y + 0.06, h, h + 0.04)
+    for a, b in zip(run, run[1:]):
+        d = b - a; Lr = d.length; ang = math.atan2(d.y, d.x)
+        for z in (0.28, h - 0.08):
+            sg = bmesh.new(); cube(sg, 0, Lr, -0.022, 0.022, z, z + 0.06)
+            bmesh.ops.transform(sg, matrix=Matrix.Translation((a.x, a.y, 0)) @ Matrix.Rotation(ang, 4, "Z"), verts=sg.verts); bm.from_mesh(me_of(sg))
+        coll_seg(a, b)
 
 
 def strip_mesh(bm, pts, w0, w1, z0, z1):
@@ -132,7 +177,7 @@ def build(master):
     for n, (c, r) in MATS.items():
         m = hg.material("MAT_" + n, tuple((v / 255) ** 2.2 for v in c) + (1,), r); m.diffuse_color = tuple((v / 255) ** 2.2 for v in c) + (1,)
     C = "OMGEVING"; B = {k: bmesh.new() for k in ("stuc", "pad", "aarde", "grind", "tegels", "steen", "limonade", "pannen", "hout", "papier",
-                                                  "snoeppad", "ijzer", "donker", "vuur", "reling", "terracotta")}
+                                                  "snoeppad", "ijzer", "donker", "vuur", "reling", "terracotta", "hekwit")}
     sn_new()
     # ---- hoofdpad: klinkerstrook langs de voorkant + schuine hoek (OSM 405848924), binnenrand tegen de muur, opsluitband alleen buiten
     # hoofdpad van grind (Daan), loop volgens OSM 405848924 + 55340110: rechts splitsing naar achteren en naar rechtsvoor, links naar achteren
@@ -140,6 +185,31 @@ def build(master):
     strip_mesh(B["pad"], path, -1.45, 1.7, -0.05, 0.03)
     tak = smooth_path([(11.0, -12.4), (11.9, -6.0), (12.3, -1.5), (13.3, 5.0), (14.0, 8.7), (15.5, 12.0)])
     strip_mesh(B["pad"], tak, -1.5, 1.5, -0.05, 0.028)
+    # ---- afbakening (Daan): laag wit hekje langs alle padranden waar geen muurtje/leuning staat, rondom het hele perceel
+    COLL.clear()
+    def tuinkant(p):    # hoofdpad, kant van de tuin: niet langs de tuinmuren/leuning/poort, niet bij de aansluiting van het zijpad
+        if p.y < 1.0 and p.x < 5.7: return False
+        if 9.3 < p.x < 12.9 and p.y > -14.5: return False
+        return True
+    rt = white_fence(B["hekwit"], path, -1.62, tuinkant)
+    ro = white_fence(B["hekwit"], path, 1.87, lambda p: True)
+    rp = white_fence(B["hekwit"], tak, 1.65, lambda p: p.y > -10.9)      # kant van het huis (-x)
+    rm = white_fence(B["hekwit"], tak, -1.65, lambda p: p.y > -10.9)     # overkant (+x)
+    # hoeken bij de aansluiting dicht: hekje langs het hoofdpad doorkoppelen naar het hekje langs het zijpad
+    voor = [r for r in rt if r[-1].x < 10.5]; na = [r for r in rt if r[0].x > 11.5]
+    if voor and rp: fence_run(B["hekwit"], [voor[-1][-1], rp[0][0]])
+    if na and rm: fence_run(B["hekwit"], [rm[0][0], na[0][0]])
+    nf = sum(len(r) for r in rt + ro + rp + rm)
+    # gesloten wit poortje over het grindpad bij het hoofdpad (dienstpad)
+    ga, gb = Vector((4.08, -11.25)), Vector((5.72, -11.22))
+    for q in (ga, gb): cube(B["hekwit"], q.x - 0.07, q.x + 0.07, q.y - 0.07, q.y + 0.07, -0.05, 0.85); cube(B["hekwit"], q.x - 0.09, q.x + 0.09, q.y - 0.09, q.y + 0.09, 0.85, 0.9)
+    for z in (0.15, 0.68): cube(B["hekwit"], ga.x, gb.x, -11.27, -11.21, z, z + 0.07)
+    for i in range(1, 12):
+        x = ga.x + (gb.x - ga.x) * i / 12; cube(B["hekwit"], x - 0.025, x + 0.025, -11.26, -11.22, 0.15, 0.62 + 0.1 * math.sin(math.pi * i / 12))
+    coll_seg(ga, gb)
+    # botsing langs leuning + tuinhek en het binnenhekje (de ijzeren meshes zelf botsen niet meer)
+    coll_seg((-4.0, -11.02), (3.45, -11.15)); coll_seg((-4.05, -4.72), (2.65, -4.72), 0.2, 1.4)
+    hg.log("wit hekje paaltjes", nf, "botsblokken", len(COLL))
     # ---- witte tuinmuur alleen om de linkerhoek (Boekloc_2024): dik, bolle kap, organisch; pijler met rode taart waar de leuning begint
     mb = bmesh.new()
     wl = smooth_path([(-4.3, -10.95), (-6.2, -10.85), (-8.6, -9.0), (-10.1, -6.6), (-10.7, -3.0), (-10.9, 0.8)])
@@ -245,7 +315,7 @@ def build(master):
     me = bpy.data.meshes.new("BAKE_snoepomg"); hg.SN.to_mesh(me); ob = bpy.data.objects.new("BAKE_snoepomg", me); hg.col(C).objects.link(ob); hg.own(ob)
     ob.data.materials.append(hg.atlas_material("MAT_snoep", os.path.join(HERE, "textures", "HG_snoep_kleur.png")))
     for o in hg.col(C).all_objects: o["owner"] = "phase:04_omgeving"
-    json.dump({"colliders": [], "lamps": []}, open(os.path.join(HERE, "exports", "omgeving_extra.json"), "w"))
+    json.dump({"colliders": COLL, "lamps": []}, open(os.path.join(HERE, "exports", "omgeving_extra.json"), "w"))
     hg.save_master(master); hg.log("omgeving objects", len([o for o in bpy.data.objects if o.get("owner") == "phase:04_omgeving"]), "snoeppad", cnt,
                                "tris", sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in hg.col(C).objects))
 
