@@ -271,6 +271,22 @@ Herauten-overzicht-okt2009, en "na de poort links naar de Indische Waterlelies" 
 - NOG: wandeltest in Play (brug -> doorgang -> achterkant), put achter de rechtertoren (PrinsenpoortPut), riet/kroos in het grachtje,
   natuursteen-look van de torens (1957 grijs, 2003 baksteen: nu baksteen).
 
+## Herautenplein + Kikkerkoning (chat 8, 13 nov) — v1 in Studio
+Map `models/AR_Herautenplein/`, brief `asset-brief.md`, plan `review/plan_osm.png`. Zelfde frame als de Prinsenpoort. Daan: "precies na, je mag
+iets weghalen" + "paden weer dat grind, pad bij de Magische Klok goed".
+- Indeling 1:1 uit OSM: ringpad, 4 getrapte tuinvakken (gazon, buxusrand, taxusblok + bakstenen bloembak, spiraaltopiary), ruwe stenen muurtjes
+  langs het middenkruis, fonteinpleintje met 4 bankjes, 4 galgenlantaarns op de OSM-punten, Kikkerkoningfontein (grachtje + hek, gemetselde bak,
+  rotsblokken, gouden bal, sprookjesboek). Asset **81541689190400** (42k tris). Plaatsen: `roblox/plaats_herautenplein.luau`.
+- Paden licht grind (Pebble + VV_Grind 235,228,214). Grindstroken sluiten het plein aan op het MK-randpad (west en noord), dus nu één grindvlak
+  van de herauten tot de tuinen. 144 planten/struiken van MK-bos/-groen van het plein gehaald; layout-blokken kikker/heraut weg.
+- Terrein: grachtje uitgegraven; onder alle paden/vloeren Ground (gras prikt anders door), open stukken (naast de poort, zuid van het MK-randpad) Grass.
+- Kikkers: Roblox generate_mesh (2e poging: hurkende kikker), 4 klonen in workspace.Kikkerkoning op de hoeken van de bak, kijken naar het midden;
+  bron in ServerStorage.KikkerBron2. Nog vrij cartoonachtig en lichter dan de foto (textuur, geen SurfaceAppearance: tint werkt niet).
+  Staan NIET in het plaatsscript (alleen in de place) -> place opslaan.
+- Screenshots `review/studio_v1_overzicht.jpg`, `review/studio_v1_fontein.jpg`.
+- NOG: kikkers echter (Blender, naar Kikkerkoningontwerp2/Kikker1954), bloemen in de bloembakken, waterstralen (pas als Daan animatie wil),
+  wandeltest, oude MK-onderdelen op het plein nalopen (MK-galgenlantaarn bij de poort staat er nog).
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

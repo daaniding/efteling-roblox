@@ -1,0 +1,6 @@
+MODEL 81541689190400
+HP_baksteen_bakken_kleur 134648861752621
+HP_baksteen_bakken_normaal 76042344713901
+HP_baksteen_fontein_kleur 86692309367866
+HP_baksteen_fontein_normaal 79219781188509
+HP_steen_kleur 102331535557394

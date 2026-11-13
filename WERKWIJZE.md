@@ -215,3 +215,12 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Terrein uitgraven graaft cellen van 4 studs:** daarna de cellen buiten het gewenste gat terugzetten (WriteVoxels Ground 1/1/0 op Y -8..4)
   en oevers als mesh tot ~1 m buiten het water laten lopen zodat ze het gat afdekken.
 - **Struiken/taxussen vóór een nieuwe attractie weghalen** (zicht vanaf het pad); zoeken op BaseParts met Size.Y > 5 in het gebied.
+
+## Lessen Herautenplein (13 nov)
+- **Paden altijd het lichte grind** (Pebble + VV_Grind 235,228,214), ook als de foto keien laat zien (Daan, opnieuw bevestigd).
+- **Nieuwe scene naast een oude: de paden laten aansluiten** (gat tussen MK-randpad en ringpad dichtzetten met hetzelfde grind) en de kale
+  grond die de oude scene achterliet weer gras maken.
+- **ReplaceMaterial Ground->Grass nooit blind over een groot gebied:** onder paden/vloeren moet Ground blijven (grassprieten). Eerst de open
+  stukken bepalen, alleen daar gras.
+- **generate_mesh-kikkers** worden hurkend beter met "crouching, low flat body, no base, no lily pad"; kleur zit in de textuur (geen
+  SurfaceAppearance), dus tinten lukt niet. Grootte opgeven werkt in studs, daarna ScaleTo.
