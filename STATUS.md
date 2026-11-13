@@ -211,6 +211,9 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
 - v4 herauten (Daan): gezicht gemodelleerd (oogkassen, wenkbrauwboog, neus, jukbeenderen, lippen, kin; ogen in de kassen), handen met 4 vingers
   + duim (links in de zij, rechts om de trompet), 22 haarlokken (bob), kreukels in de mouwen, diepere rokplooien. Asset **76477453584742**
   (154k tris, herauten ~21k per stuk). Render `review/06/heraut_sheet.jpg`, Studio `review/studio_v4_herauten.jpg`. Place opgeslagen (versie 92, voor v4).
+- Toegang plein: twee openingen (1.6 m) in muurtje en haag aan de graskant (s 4.9-6.5 en 8.7-10.3 langs de noordmuur), klinkerstrook erdoor.
+  Wandeltest in Play (Humanoid:MoveTo): gras -> haag -> muur -> plein -> tweede opening -> gras, en naar het ronde eind: alles OK. Haag botst precies
+  (PreciseConvexDecomposition, anders kan Roblox de openingen dichtplakken). Er loopt nog geen pad van het OSM-pad naar de openingen (paden later).
 - NOG/kan beter: oevers van de gracht dichter begroeien (riet), herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 

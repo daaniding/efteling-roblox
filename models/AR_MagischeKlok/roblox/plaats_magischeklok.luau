@@ -63,7 +63,7 @@ local function plaats(asset, naam)
 				if GEEN_SCHADUW[key] then p.CastShadow = false end
 				if BOTSEN[key] then p.CanCollide = true; if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end end
 				if key == "water" then p.Transparency = 0.05; p.Reflectance = 0 end   -- troebel (Glass weerspiegelt de lucht felblauw)
-				if key == "haag" then local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. HAAG[1]; sa.NormalMap = "rbxassetid://" .. HAAG[2]; sa.Color = Color3.fromRGB(150, 175, 130); sa.Parent = p; p.CanCollide = true end
+				if key == "haag" then local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. HAAG[1]; sa.NormalMap = "rbxassetid://" .. HAAG[2]; sa.Color = Color3.fromRGB(150, 175, 130); sa.Parent = p; p.CanCollide = true; p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end
 			else table.insert(onbekend, p.Name) end
 		end
 	end
