@@ -134,7 +134,7 @@ Map `models/AR_Assepoester/`. Bronnen: 53 Eftepedia-plaatjes (`ref/eftepedia/`),
   * Interieur (keukenscène, figuren, geschilderd doek) komt later (Daan).
   (binnenplaats met klinkers, buxusperk + lantaarns, hagen, hekpijlers met vazen, dienstpoort, grafje, kisten, pompoenen, boekstandaard).
 
-## Sneeuwwitje (chat 5, 12-13 nov) — v2 in Studio (Daan: 'niet mooi' -> grot opnieuw); nog: rots-strepen, beddenaarde, wandeltest
+## Sneeuwwitje (chat 5, 12-13 nov) — v4 in Studio; nog: tunnelvloer/-wanden, wandeltest v4, interieur later
 Map `models/AR_Sneeuwwitje/`. Bronnen: 74 Eftepedia-plaatjes, OSM (Kasteel Sneeuwwitje 60095998 + grot 60095997, rotsen, entrances), brief `asset-brief.md`.
 Model: gevel kijkt OOST (-Y, 13.3 graden naar ZO), +X = noord; omrekening in `ref/model_frame.json`. front.jpg = Sneeuwwitjekasteelzomer.jpg,
 overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665`. Route: kasteelingang (zuid) -> spiegelzaal -> uitgang ronde toren
@@ -158,6 +158,11 @@ overlay `build/cam_match.py --cam -0.35,-39.5,1.6,121 --pitch 3.9 --res 1000x665
   -> grotingang -> tunnel -> grotuitgang -> parkpad).
   Sneller werken (Daan: "het duurt elke keer zo lang"): `build/bouw_deel.sh grot|kasteel|omgeving` bouwt/bakt/upload alleen dat deel
   (05_bake --deel). Nog niet in gebruik: eerste keer moet plaats_sneeuwwitje.luau kasteel en grot als twee assets plaatsen.
+  v4 (Daan: "nog meer gaten", gat tussen ronde toren en rechter kasteel, verhoging in het kasteel waar je doorheen loopt): weergang doorgetrokken
+  tot de ronde toren + gevelvulling (geen kier meer), plint alleen aan de buitenkant en de torenring open bij de deuren (geen richel binnen),
+  boogbankjes naar buiten; rots boven de tunnel altijd min. 0.95 m dik + uitloop bij de grotuitgang hersteld (geen gele vlakke wand).
+  Kasteel+grot **117515855048104**, omgeving **72248096298132** (31 texturen geladen). Blender-klei-check tunnel/gang/achterkant: dicht.
+  Studio-tunnel: geen gaten. Nog: tunnelwanden ogen egaal geel-beige + gras door de tunnelvloer (pad-materiaal/tint bijwerken), wandeltest v4.
 - Valkuil: bouw_alles.sh met set -e stopt als een grep niets vindt (04 meldt 'omgeving'); wachtlussen niet op 'Error' laten matchen (staat in de scriptregel).
 - LET OP: Studio herstartte tijdens het plaatsen (Assistant-plugin bijgewerkt). Als Sneeuwwitje/SneeuwwitjeGroen ontbreken: plaats_sneeuwwitje.luau
   + de plantentabel opnieuw draaien.

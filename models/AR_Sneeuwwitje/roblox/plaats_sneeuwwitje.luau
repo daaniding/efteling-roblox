@@ -2,9 +2,9 @@
 -- Model: gevel kijkt naar -Y (oost), +X = noord, oorsprong = midden gevel op de voorkant van de ronde toren, z=0 = plein.
 -- Kalibratie (ref/model_frame.json): oorsprong = OSM (-25.22, 55.77) m = studs (-75.65, -167.32); kijkrichting Roblox (0.9731, 0, 0.2306); grond Y=2.
 -- Botsing: onzichtbare COLL_-blokken (map Botsing). Lampen: LAMP_ -> PointLight (binnen = attribuut Binnen).
-local HUIS = 86201030345062
-local OMG = 99053383937028
-local TEX = {baksteen_achter = {101213150905396, 99560541568422}, baksteen_binnen = {121420675177360, 111335078012935}, baksteen_detail = {116551762202752, 98098046272558}, baksteen_noord = {120008777885177, 119929721291655}, baksteen_voor = {73163458394971, 116665742861588}, baksteen_zuid = {105884560013813, 113358077311075}, pannen_daken = {105734769949079, 125385647833484}, pannen_torens = {86994652815474, 125943015442544}, rots_a = {121170033923461, 98140123548466}, rots_b = {103475390624592, 73951768995907}, ruine = {79108633380576, 89441277487721}, steen = {134306011327687}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
+local HUIS = 117515855048104
+local OMG = 72248096298132
+local TEX = {baksteen_achter = {71167782720034, 103548644498884}, baksteen_binnen = {88488081647481, 75776817875430}, baksteen_detail = {94758440972061, 123171850485068}, baksteen_noord = {92777226090361, 129321328063071}, baksteen_voor = {101665828334331, 77786143033371}, baksteen_zuid = {110206829329078, 122757706854953}, pannen_daken = {111520594999462, 125385647833484}, pannen_torens = {98996464531535, 125943015442544}, rots_a = {70419789476254, 97525175297854}, rots_b = {82975567935403, 90203113846092}, ruine = {92870556806499, 90835585673068}, steen = {98747270364092}}   -- wordt ingevuld door roblox/maak_plaatsscript.py
 local F = Vector3.new(0.9731, 0, 0.2306)
 local ORIGIN = CFrame.new(-75.65, 2.0, -167.32) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3

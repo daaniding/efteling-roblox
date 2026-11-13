@@ -102,15 +102,26 @@ def build(master):
     addwall(bz(-6.54, -2.79, 0.51, 5.77, 3.80, 6.75))              # romp boven de kraag
     addwall(bz(-5.76, -3.44, 0.51, 1.10, 6.73, 7.76))              # trapgevel trede 1
     addwall(bz(-5.25, -4.24, 0.51, 1.10, 7.74, 8.77))              # trede 2
-    addwall(bz(-2.48, 3.70, 1.31, 4.14, 0, 4.19))                  # weergang
+    addwall(bz(-2.48, 4.70, 1.31, 4.14, 0, 4.19))                  # weergang, doorgetrokken tot in de ronde toren (achteraan zat een gat, Daan)
+    bm = bmesh.new()                                                # topgevel onder het dak tot tegen de toren (dak loopt op van 4.17 naar de nok)
+    pr = [(1.31, 4.1), (4.14, 4.1), (4.14, 5.12), (1.75, 4.17), (1.31, 4.17)]
+    v0 = [bm.verts.new((3.40, y, z)) for y, z in pr]; v1 = [bm.verts.new((4.70, y, z)) for y, z in pr]
+    bm.faces.new(v0); bm.faces.new(v1[::-1])
+    for i in range(len(pr)): bm.faces.new((v0[i], v0[(i + 1) % len(pr)], v1[(i + 1) % len(pr)], v1[i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces); addwall(bm)
     addwall(bz(-1.06, 3.25, 4.12, 9.28, 0, 4.42))                  # hal (achterbouw, inferred hoogte)
     addwall(bz(-7.19, -1.04, 5.75, 9.28, 0, 4.42))                 # achterbouw links (inferred)
     bm = blathe([(0, 0), (TR_, 0), (TR_, 5.37), (0, 5.37)], 48); bmesh.ops.translate(bm, vec=(TC[0], TC[1], 0), verts=bm.verts); addwall(bm)
     # ---------------- natuursteen: plint, banden, hoekblokken, afdekkingen ----------------
-    PL = [(0.05, 0), (0.05, 0.62), (0.02, 0.7), (0, 0.7)]
-    put("steen", "steen", bsweep(PL, -7.19, -2.46, 0.51, 5.77, 0, back=False))
-    put("steen", "steen", bsweep(PL, -2.46, 3.5, 1.31, 4.14, 0, back=False))
-    ring_band("steen", "steen", TC[0], TC[1], TR_, 0, 0.7, 0.05)
+    # plint alleen aan de buitenkant (de zijkanten van de muurblokken liggen binnen: richel dwars door de gang, Daan)
+    for (a0, a1, yy) in ((-7.24, -4.79 - 0.84, 0.51), (-4.79 + 0.84, -2.41, 0.51), (-2.46, 3.6, 1.31)):
+        put("steen", "steen", bz(a0, a1, yy - 0.05, yy + 0.01, 0, 0.62)); put("steen", "steen", bz(a0, a1, yy - 0.03, yy + 0.01, 0.62, 0.7))
+    put("steen", "steen", bz(-7.24, -7.13, 0.51, 5.77, 0, 0.7))                                  # zijgevel linkertoren (buiten)
+    xa0 = math.degrees(math.atan2(0.5 - TC[1], 6.56 - TC[0]))          # plintring onderbroken bij de uitgang en de doorgang naar de gang (richel, Daan)
+    for k in range(48):
+        a = k * 360 / 48 + 3.75
+        if abs((a - xa0 + 180) % 360 - 180) < 24 or abs((a - 180 + 180) % 360 - 180) < 42: continue
+        put("steen", "steen", bz(-0.15, 0.15, -0.05, 0.01, 0, 0.7), TR(TC[0] + TR_ * math.cos(math.radians(a)), TC[1] + TR_ * math.sin(math.radians(a)), 0, a + 90))
     put("steen", "steen", bz(-2.46, 3.5, 1.24, 1.34, 3.58, 3.70))                                   # lichte band weergang (front.jpg 555 px)
     for (a0, a1, z0, z1) in ((-6.54, -2.79, 6.67, 6.79), (-5.76, -3.44, 7.70, 7.82), (-5.25, -4.24, 8.71, 8.83)):   # afdekking treden
         put("steen", "steen", bz(a0 - 0.05, a1 + 0.05, 0.44, 1.16, z0, z1, 0.01))
@@ -166,7 +177,7 @@ def build(master):
         bp = pointed_pts(xa, 0, 1.7, 2.9, 10)
         cutters.append((boutline(bp, 1.0, 0.43), F))
         put("bogen", "steen", band(bp, 0.17, 1.23, 0.1), F)
-        put("bogen", "hout", bz(xa - 0.62, xa + 0.62, 1.32, 1.68, 0.42, 0.48)); put("bogen", "steen", bz(xa - 0.55, xa - 0.35, 1.38, 1.65, 0, 0.42)); put("bogen", "steen", bz(xa + 0.35, xa + 0.55, 1.38, 1.65, 0, 0.42))
+        put("bogen", "hout", bz(xa - 0.62, xa + 0.62, 0.9, 1.26, 0.42, 0.48)); put("bogen", "steen", bz(xa - 0.55, xa - 0.35, 0.95, 1.22, 0, 0.42)); put("bogen", "steen", bz(xa + 0.35, xa + 0.55, 0.95, 1.22, 0, 0.42))   # bankje buiten voor de boog
     # ronde toren: raampje voor (front.jpg 1190..1225 px) en uitgangsdeur aan de NO-kant (OSM exit (6.56,0.5))
     def on_tower(ang_deg, d=0.3):
         a = math.radians(ang_deg); n = Vector((math.cos(a), math.sin(a), 0))

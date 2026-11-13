@@ -57,7 +57,8 @@ def rock_mass():
     """kunstrots als hoogteveld binnen de OSM-vorm (Langnek-les): steile voorkant, grote platte blokken (voronoi) met diepe naden,
     blijft binnen de contour (drukt de ingangen niet dicht). Kolommen -> voxel remesh -> gladstrijken -> fijne ruis."""
     xs = [p[0] for p in GROT]; ys = [p[1] for p in GROT]; step = 0.2
-    edges = [(a, b) for a, b in zip(GROT, GROT[1:] + GROT[:1]) if not (max(a[0], b[0]) < 11.0 or (min(a[0], b[0]) > 21.0 and max(a[1], b[1]) < -6.0))]   # randen langs de ruines tellen niet: rots staat er vol tegenaan (Daan)
+    edges = [(a, b) for a, b in zip(GROT, GROT[1:] + GROT[:1]) if not max(a[0], b[0]) < 11.0]   # rand langs de ingangsmuur telt niet: rots vol tegen die muur (Daan); bij de uitgang wel (lage muur)
+    padp = resample(PAD, 0.3)
     r = random.Random(5)
     cells = [(r.uniform(min(xs), max(xs)), r.uniform(min(ys), max(ys)), r.uniform(0.78, 1.12)) for _ in range(70)]
     bm = bmesh.new()
@@ -71,7 +72,10 @@ def rock_mass():
                 f1, f2 = math.sqrt(dd[0][0]), math.sqrt(dd[1][0]); blk = cells[dd[0][1]][2]
                 h = 3.9 * blk * (1 - math.exp(-d / 0.5)) * (0.88 + 0.12 * noise.noise(Vector((x * 0.35, y * 0.35, 0.3))))
                 crev = max(0.0, 0.32 - (f2 - f1)) / 0.32
-                h -= 1.1 * crev ** 1.5
+                dp = min((Vector((x, y)) - q).length for q in padp)
+                if dp < TW / 2 + 0.9: h = max(h, TH + 0.95 + 0.5 * abs(noise.noise(Vector((x * 0.6, y * 0.6, 1.7)))) + 0.3 * blk)   # dikke laag rots boven de tunnel (gaten, Daan), niet vlak
+                else: h -= 1.1 * crev ** 1.5
+                if x < 11.2: h = min(h, 3.9)
                 h = max(0.35, h)
                 bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((x, y, (h - 0.3) / 2)) @ Matrix.Diagonal((step * 1.02, step * 1.02, h + 0.3, 1)))
             y += step
@@ -164,7 +168,7 @@ def build(master):
     rots = rock_mass()
     cutters = [arch_tube(PAD, TW, TH)]
     # ruinemuur bij de ingang (Boekloc_Sneeuwwitje.jpg): 4.6 m, afgebrokkeld, rondboogtunnel (uitgesneden), nisje
-    Mi, Li = ruin_wall("ruine", 10.0, -3.95, 10.3, 1.0, 4.6, 1.1, 0.6, seed=3)
+    Mi, Li = ruin_wall("ruine", 10.0, -3.95, 10.3, 1.0, 4.7, 0.55, 0.6, seed=3)
     put("ruine", "steen", band(arch_pts(0, 0, TW, TH, 12), 0.12, -0.36, 0.06), TR(10.15, -1.8, 0, 92))
     put("ruine", "donker", bz(-0.25, 0.25, -0.33, -0.3, 2.9, 3.5), TR(10.2, -0.2, 0, 92))
     # lage ruinemuur van de ronde toren naar de grotingang (kasteel en grot zitten aan elkaar, Daan)
