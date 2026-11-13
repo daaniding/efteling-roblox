@@ -330,6 +330,10 @@ kop naar de Prinsenpoort (lemma). Bloemenborders met banken eromheen stonden er 
   sokkel langer (1.8 m dekplaat). Hoog model (voxel 4.5 mm + vachtruis) -> normal map 2048 op het spelmodel (36k tris), AO in de kleur gebakken.
   Dekje naar de foto: rood middenpaneel met wit ornament, zwart-zilveren zigzagrand; brede rode singel met gouden nagels.
   Asset **81767048492683**, kleur 104013001055875, normal 131210851252410, dekje 89288262847523. SA.Color 228,220,208. `review/studio_v2_detail.jpg`.
+- v3 kop (Daan): kop ~20% groter/langer en hoger (hangt vrij boven de sokkel, wijst meer naar voren), zware ronde kaken, mond verder open met
+  hangende onderlip, groot oog met wit rondom + bruine iris + lichtglans, grote ovale neusgaten met dikke vleugels, oren 0.4 m rechtop.
+  Asset **79079378764880**, kleur 119585118176594, normal 139416635340800. `review/studio_v3_kop.jpg`, `review/v3_kop_vs_foto.jpg`.
+  Let op: een net geuploade textuur toont even wit in Studio (verwerking); ColorMap opnieuw zetten of even wachten.
 - NOG: kaak/staart bewegen bij muntinworp (pas als Daan animatie wil), ezel nog wat stijf (hoofd/oren), herberg De Ersteling.
 
 ## Daarna (volgorde met Daan afgesproken)

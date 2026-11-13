@@ -37,20 +37,20 @@ def voeg(bm):
 voeg(loft_as([(0, y, Z + (zt + zb) / 2) for y, w, zt, zb in ROMP], [(w, (zt - zb) / 2) for y, w, zt, zb in ROMP], 32, sq=2.05))
 # hals: dik aan de borst, omlaag naar voren, smal en hoog (ezelhals)
 HALS = [((0, -0.40, Z + 0.9), (0.18, 0.21)), ((0, -0.55, Z + 0.88), (0.155, 0.2)), ((0, -0.7, Z + 0.83), (0.125, 0.175)),
-        ((0, -0.84, Z + 0.77), (0.105, 0.15)), ((0, -0.95, Z + 0.71), (0.09, 0.13)), ((0, -1.02, Z + 0.66), (0.085, 0.12))]
+        ((0, -0.84, Z + 0.81), (0.105, 0.15)), ((0, -0.95, Z + 0.79), (0.095, 0.135)), ((0, -1.03, Z + 0.76), (0.09, 0.125))]
 voeg(loft_as([p for p, s in HALS], [s for p, s in HALS], 28, sq=2.2))
 # kop: lang, schedel breed bij de ogen, smalle neusrug, ronde snuit; as van de achterhoofdsknobbel schuin omlaag naar de snuit
-KOP_A, KOP_B = Vector((0, -0.99, Z + 0.72)), Vector((0, -1.29, Z + 0.34))
-KS = [(0.0, 0.075, 0.07), (0.12, 0.098, 0.095), (0.25, 0.1, 0.1), (0.42, 0.083, 0.088), (0.6, 0.068, 0.078), (0.78, 0.066, 0.075),
-      (0.9, 0.074, 0.08), (0.97, 0.068, 0.07), (1.0, 0.045, 0.04)]
+KOP_A, KOP_B = Vector((0, -1.0, Z + 0.8)), Vector((0, -1.42, Z + 0.42))   # v3: kop ~20% langer (Ezelclose)
+KS = [(0.0, 0.085, 0.08), (0.12, 0.112, 0.108), (0.25, 0.116, 0.114), (0.42, 0.096, 0.1), (0.6, 0.08, 0.09), (0.78, 0.078, 0.088),
+      (0.9, 0.088, 0.094), (0.97, 0.08, 0.082), (1.0, 0.054, 0.048)]
 kop_pts = [KOP_A.lerp(KOP_B, t) for t, w, h in KS]
 kd = (KOP_B - KOP_A).normalized(); kn = kd.cross(Vector((1, 0, 0))).normalized()          # kn = naar de voorkant/boven van de kop
 kop_pts = [p + kn * (0.012 * math.sin(t * math.pi)) for p, (t, w, h) in zip(kop_pts, KS)]  # licht gebogen neusrug
 voeg(loft_as(kop_pts, [(w, h) for t, w, h in KS], 28, sq=2.1))
-voeg(ell(tuple(KOP_A.lerp(KOP_B, 0.3) - kn * 0.07), (0.085, 0.09, 0.1), (-40, 0, 0)))                  # kaken (ganache)
+voeg(ell(tuple(KOP_A.lerp(KOP_B, 0.3) - kn * 0.08), (0.1, 0.11, 0.12), (-40, 0, 0)))                  # kaken (ganache): zwaar en rond
 # onderkaak: mond iets open (Ezelclose): van de kaakhoek naar de kin, 12 graden omlaag gedraaid t.o.v. de snuit
-kin = KOP_A.lerp(KOP_B, 0.97) - kn * 0.075 + Vector((0, 0.0, -0.035))
-voeg(loft_as([KOP_A.lerp(KOP_B, 0.45) - kn * 0.075, KOP_A.lerp(KOP_B, 0.75) - kn * 0.085, kin], [(0.05, 0.035), (0.045, 0.03), (0.04, 0.026)], 20, sq=2.0))
+kin = KOP_A.lerp(KOP_B, 0.95) - kn * 0.1 + Vector((0, 0.01, -0.07))     # mond verder open
+voeg(loft_as([KOP_A.lerp(KOP_B, 0.45) - kn * 0.075, KOP_A.lerp(KOP_B, 0.75) - kn * 0.085, kin], [(0.06, 0.042), (0.054, 0.036), (0.048, 0.03)], 20, sq=2.0))
 # schouders en dijen (spierpartijen), voorbenen naar voren, achterbenen naar achter gestrekt
 for sx in (-1, 1):
     voeg(ell((sx * 0.16, -0.41, Z + 0.83), (0.08, 0.14, 0.22), (18, 0, 0)))                     # schouderblad
@@ -82,8 +82,8 @@ voeg(loft_as([(0, -0.44, Z + 1.07), (0, -0.2, Z + 1.03), (0, 0.1, Z + 1.0), (0, 
 for sx in (-1, 1):
     voeg(ell(tuple(KOP_A.lerp(KOP_B, 0.32) + Vector((sx * 0.075, 0, 0)) - kn * 0.045), (0.035, 0.075, 0.075), (-40, 0, 0)))
     voeg(ell(tuple(KOP_A.lerp(KOP_B, 0.2) + Vector((sx * 0.075, 0, 0)) + kn * 0.06), (0.028, 0.045, 0.02), (-40, 0, 0)))
-voeg(ell(tuple(KOP_A.lerp(KOP_B, 0.95) - kn * 0.04), (0.075, 0.05, 0.035), (-40, 0, 0)))          # bovenlip
-voeg(ell(tuple(kin + kn * 0.005), (0.05, 0.04, 0.03), (-30, 0, 0)))                                  # onderlip / kin
+voeg(ell(tuple(KOP_A.lerp(KOP_B, 0.95) - kn * 0.05), (0.088, 0.06, 0.045), (-40, 0, 0)))          # bovenlip (vol, iets overhangend)
+voeg(ell(tuple(kin + kn * 0.01 - kd * 0.01), (0.062, 0.05, 0.034), (-10, 0, 0)))                     # hangende onderlip
 me = bpy.data.meshes.new("ezel"); lijf.to_mesh(me); lijf.free()
 hi = bpy.data.objects.new("_ezel_hi", me); col.objects.link(hi)
 bpy.ops.object.select_all(action="DESELECT"); bpy.context.view_layer.objects.active = hi; hi.select_set(True)
@@ -110,9 +110,11 @@ for sx in (-1, 1):
         bmesh.ops.translate(bm, vec=(sx * 0.132, y + dy, Z + 0.037), verts=bm.verts); put("hoef", bm)
 # ogen: oogbol wit, donkere iris/pupil, oogleden als ring, iets uitpuilend (Ezelclose)
 for sx in (-1, 1):
-    ec = KOP_A.lerp(KOP_B, 0.24) + Vector((sx * 0.088, 0, 0)) + kn * 0.03
-    put("oog", ell(tuple(ec), (0.03, 0.036, 0.034)))
-    put("pupil", ell(tuple(ec + Vector((sx * 0.017, 0, 0)) - kd * 0.003), (0.018, 0.023, 0.021)))
+    ec = KOP_A.lerp(KOP_B, 0.24) + Vector((sx * 0.102, 0, 0)) + kn * 0.035
+    put("oog", ell(tuple(ec), (0.034, 0.042, 0.04)))                                             # groot oog, wit rondom (Ezelclose)
+    put("iris", ell(tuple(ec + Vector((sx * 0.02, 0, 0)) - kd * 0.004), (0.02, 0.026, 0.025)))
+    put("pupil", ell(tuple(ec + Vector((sx * 0.028, 0, 0)) - kd * 0.004), (0.012, 0.016, 0.015)))
+    put("oog", ell(tuple(ec + Vector((sx * 0.032, 0, 0)) - kd * 0.01 + kn * 0.01), (0.005, 0.006, 0.006)))   # lichtglans
     rp_ = [ec + Vector((sx * 0.008, 0, 0)) + (kd * math.cos(a) + kn * math.sin(a)) * 0.035 for a in [i * math.tau / 24 for i in range(25)]]
     put("ezelhuid", tube(rp_, 0.009, 6, cap=False))                                              # oogleden
     put("ezelhuid", tube([ec + Vector((sx * 0.01, 0, 0)) + (kd * math.cos(a) + kn * math.sin(a)) * 0.042 for a in [math.radians(v) for v in range(-20, 200, 20)]], 0.012, 6))   # bovenooglid
@@ -120,18 +122,18 @@ for sx in (-1, 1):
         a = math.radians(30 + k * 20); r0 = ec + Vector((sx * 0.012, 0, 0)) + (kd * math.cos(a) + kn * math.sin(a)) * 0.045
         put("pupil", tube([r0, r0 + (kd * math.cos(a) + kn * math.sin(a)) * 0.018 + Vector((sx * 0.01, 0, 0))], [0.0025, 0.0008], 4))
     # neusgaten + mondspleet
-    nc = KOP_A.lerp(KOP_B, 0.93) + Vector((sx * 0.05, 0, 0)) + kn * 0.03
-    put("neus", ell(tuple(nc), (0.012, 0.022, 0.03), (-40, 0, sx * 15)))
-    put("ezelhuid", tube([nc + Vector((sx * 0.006, 0, 0)) + (kd * math.cos(a) * 0.026 + kn * math.sin(a) * 0.034) for a in [i * math.tau / 16 for i in range(17)]], 0.008, 6, cap=False))   # neusvleugel
+    nc = KOP_A.lerp(KOP_B, 0.93) + Vector((sx * 0.06, 0, 0)) + kn * 0.035
+    put("neus", ell(tuple(nc), (0.016, 0.03, 0.042), (-40, 0, sx * 15)))
+    put("ezelhuid", tube([nc + Vector((sx * 0.006, 0, 0)) + (kd * math.cos(a) * 0.034 + kn * math.sin(a) * 0.046) for a in [i * math.tau / 16 for i in range(17)]], 0.011, 6, cap=False))   # neusvleugel
 put("neus", tube([KOP_A.lerp(KOP_B, 0.72) - kn * 0.06 + Vector((sx * 0.045, 0, 0)) for sx in (-1,)] + [KOP_B - kn * 0.055 + Vector((0, 0, -0.01))] +
                  [KOP_A.lerp(KOP_B, 0.72) - kn * 0.06 + Vector((0.045, 0, 0))], 0.01, 6))
 # oren: lang, holle bladvorm (gebogen plaat, solidify), schuin omhoog en iets naar achter/opzij
 for sx in (-1, 1):
-    base = KOP_A + Vector((sx * 0.055, 0.02, 0.02)); up_ = Vector((sx * 0.35, 0.25, 1.0)).normalized(); side = Vector((1, 0, 0))
+    base = KOP_A + Vector((sx * 0.055, 0.02, 0.02)); up_ = Vector((sx * 0.28, 0.08, 1.0)).normalized(); side = Vector((1, 0, 0))
     fw = up_.cross(side).normalized()
     bm = bmesh.new(); R = []
     for j in range(13):
-        t = j / 12; L_ = 0.35 * t; w = 0.05 * math.sin(math.pi * min(1, t * 1.15)) ** 0.8 + 0.006
+        t = j / 12; L_ = 0.4 * t; w = 0.056 * math.sin(math.pi * min(1, t * 1.15)) ** 0.8 + 0.006
         row = []
         for k in range(9):
             u = -1 + 2 * k / 8; cup = 0.025 * (1 - u * u) * (1 - t)
