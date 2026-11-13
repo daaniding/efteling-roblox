@@ -224,6 +224,9 @@ plattegrond `build/01b_plan.py` -> `review/plan_osm.png`. Brief `asset-brief.md`
   In Studio geplaatst: asset **71191317351708** (dakonderkant bewaard in 05_bake: van dichtbij keek je door het dak). 111 planten van het plein weg,
   48 rozen in het nieuwe perk. Wandeltest Play: noordingang -> grind -> bocht bij de toren -> manden -> westingang -> gras -> terug: alles OK.
   Screenshot `review/studio_v6_plein.jpg`.
+- v7 paden (Daan): OSM 1169014962 (V om het pleinvierkant, ~10.6 m voor de muren) + 967458491/490 (doorgang Prinsenpoort), 3.2 m, mesh
+  'padklinker' = Cobblestone -> EftelingKlinkers (zoals de parkpaden). Asset **124674002080571**. 19 planten van het pad weg. Wandeltest: pad west ->
+  knik bij de haag -> pad noord -> Prinsenpoort -> over het gras het plein op: OK. Tussen pad en pleiningangen ligt gras (OSM heeft daar geen pad).
 - NOG/kan beter:, herauten gezicht/handen fijner, Slimme Toon beter, kleiner torentje eind westmuur,
   Prinsenpoort (aparte attractie) ontbreekt links.
 

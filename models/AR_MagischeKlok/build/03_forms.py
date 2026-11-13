@@ -17,7 +17,7 @@ MATS = {
     "rood": ((0.62, 0.08, 0.06, 1), 0.5), "bodem": ((0.20, 0.16, 0.11, 1), 1.0), "water": ((0.10, 0.12, 0.08, 1), 0.05),
     "klinker": ((0.45, 0.43, 0.40, 1), 0.9), "toon_groen": ((0.25, 0.42, 0.36, 1), 0.7), "toon_rood": ((0.70, 0.30, 0.22, 1), 0.7),
     "huid": ((0.85, 0.66, 0.52, 1), 0.6), "haar": ((0.80, 0.62, 0.30, 1), 0.7),
-    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "mand": ((0.42, 0.30, 0.16, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
+    "haag": ((0.10, 0.20, 0.08, 1), 0.9), "mand": ((0.42, 0.30, 0.16, 1), 0.9), "padklinker": ((0.36, 0.24, 0.20, 1), 0.9), "paal": ((0.18, 0.11, 0.06, 1), 0.7), "glaslamp": ((0.9, 0.8, 0.6, 1), 0.2), "kant_papier": ((0.9, 0.88, 0.8, 1), 0.8),
 }
 COLL = []; HERAUTEN = []; LAMPS_ = []; PLEIN = {}
 def coll_box(cx, cy, cz, sx, sy, sz, ang=0.0): COLL.append([round(v, 3) for v in (cx, cy, cz, sx, sy, sz, ang)])
@@ -269,6 +269,24 @@ def build(master):
     rc = WP(13.2, 5.6)
     put("perk", "bodem", bz(-1.9, 1.9, -1.0, 1.0, -0.05, 0.04), TR(rc.x, rc.y, 0, math.degrees(math.atan2(uW.y, uW.x))))
     PLEIN.update({"TB": TB, "TF": TF, "SNE": SNE, "SWE": SWE, "C": [round(C.x, 3), round(C.y, 3)], "perk": [round(rc.x, 3), round(rc.y, 3)], "lamp": [round(lx, 3), round(ly, 3)]})
+    # ================= PADEN (OSM 1169014962 + 967458491/490, surface=sett): V om het pleinvierkant + doorgang naar de Prinsenpoort =================
+    def pad_strook(pts, w=3.2, z1=0.03):
+        P_ = [Vector(q) for q in pts]; L_, R_ = [], []
+        for i, q in enumerate(P_):
+            dA = (q - P_[i - 1]).normalized() if i > 0 else (P_[1] - q).normalized()
+            dB = (P_[i + 1] - q).normalized() if i < len(P_) - 1 else dA
+            t_ = (dA + dB).normalized(); nrm = Vector((-t_.y, t_.x)); k = 1.0 / max(0.5, nrm.dot(Vector((-dA.y, dA.x))))
+            L_.append(q + nrm * (w / 2) * k); R_.append(q - nrm * (w / 2) * k)
+        b_ = bmesh.new()
+        for i in range(len(P_) - 1):
+            vs = [b_.verts.new((p_.x, p_.y, z1)) for p_ in (R_[i], R_[i + 1], L_[i + 1], L_[i])]; b_.faces.new(vs)
+            vb = [b_.verts.new((p_.x, p_.y, -0.1)) for p_ in (R_[i], R_[i + 1], L_[i + 1], L_[i])]
+            for a2 in range(4): b_.faces.new((vs[a2], vb[a2], vb[(a2 + 1) % 4], vs[(a2 + 1) % 4]))
+        bmesh.ops.recalc_face_normals(b_, faces=b_.faces); return b_
+    PADEN = [[(-18.67, -33.94), (-9.13, -24.32), (0.65, -14.48), (13.54, -27.2), (21.5, -35.3)],
+             [(-9.13, -24.32), (-10.63, -22.92), (-15.08, -18.55), (-18.23, -15.56)]]
+    for pts in PADEN: put("paden", "padklinker", pad_strook(pts))
+    PLEIN["paden"] = PADEN
     # front.jpg: toren ~13% smaller t.o.v. de muren (hoogtes kloppen) -> alleen in x/y schalen
     K = 0.87
     for (part, mat), bm in PARTS.items():
