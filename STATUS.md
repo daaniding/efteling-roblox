@@ -186,7 +186,7 @@ Fotocamera: `cam_match.py --cam -0.3,-8.6,1.6,26 --sensor 25.4 --pitch 8 --res 1
   dezelfde lage witte muurtjes (ronde kap, 0.6 m): links door naar achteren, achter het huis langs, rechts langs het zijpad (OSM 55340110 =
   echt klinkerpad, tussen tuin en pad bosjes) en voor tot de puddingpijler (grindpad dicht). Eigen mesh `HO_muurrond__stuc` (lichter gedecimeerd,
   6.9k tris), onzichtbare botsblokken 2.6 m langs alle muurtjes (niet eroverheen springen). Omgeving **86649982613073**
-  (tuin-stuc 97840886839892 / 105162864177043). 6 planten die in de muur stonden weggehaald. Review `review/06/sheet.jpg`; staat in Studio.
+  (tuin-stuc 97840886839892 / 105162864177043). Begonia's/perkplanten ontbraken in Studio (waarschijnlijk niet opgeslagen voordat Studio dicht ging): `plaats_hansgrietje_groen.luau` opnieuw gedraaid (begonia 352, binnen 50, linkerperk 110, bos 527). Review `review/06/sheet.jpg`; staat in Studio.
 - Play-test 13 nov: Studio liep overal ~15 fps (ook bij Sneeuwwitje, venster niet vooraan); met de scène in beeld 12, zonder 15. Opnieuw meten als Studio vooraan staat.
 
 ## Daarna (volgorde met Daan afgesproken)

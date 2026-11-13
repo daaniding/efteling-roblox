@@ -176,4 +176,5 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Afbakening = het perceel, niet de paden (Daan):** "afbakenen" betekent het perceel van de attractie rondom dichtzetten in de stijl die er al
   staat (hier de lage witte muurtjes), niet hekjes langs alle padranden. Bij twijfel over vorm/stijl eerst vragen.
 - **Meubilair (lantaarns, bankjes, prullenbakken) komt later (Daan, 13 nov):** niet vanzelf oppakken.
-
+- **Na een sessie in Studio de place opslaan (Daan vragen):** bij Hans en Grietje waren de perkplanten weg na een herstart van Studio.
+  Bij twijfel eerst tellen per map (bloem_* in ...Groen) voordat je iets plaatst.
