@@ -1,13 +1,13 @@
 -- Roodkapje: huisje van grootmoeder (op het maaiveld) + vlak grindpad + vennetje. Gegenereerd door maak_plaatsscript.py.
 -- Modelframe: oorsprong = midden BAG 50911608, -Y = voorkant (noord, naar het pad), +X = west, z = 0 padniveau voor het huisje
--- (= maaiveld + 1.9 m, dus Roblox Y 7.7). Botsing = Parts uit de json (geen geexporteerde schuine botsmeshes).
+-- = maaiveld (Roblox Y 2.15, Daan: zelfde hoogte als de foto maar zonder de stenen; kelder/trap zitten onder de grond). Botsing = Parts uit de json (geen geexporteerde schuine botsmeshes).
 local HUIS, OMG = %HUIS%, %OMG%
 local TEX = {RK = %TEXH%, RO = %TEXO%}
 local COLL = {huisje = %COLLH%, omgeving = %COLLO%}
 local SEG = %SEG%
 local POLY = %POLY%
 local F = Vector3.new(0.098, 0, -0.995)
-local ORIGIN = CFrame.new(228.0, 7.7, 137.85) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
+local ORIGIN = CFrame.new(228.0, 2.15, 137.85) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
 local ZG = -1.9
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end
@@ -76,7 +76,7 @@ local function plaats(id, naam, pre, coll, org)
 end
 
 local mh, oh = plaats(HUIS, "Roodkapje", "RK", COLL.huisje)
-local PADO = ORIGIN - Vector3.new(0, 1.9 * S, 0)                               -- Daan: grindpad gewoon vlak op het maaiveld (Y 2)
+local PADO = ORIGIN - Vector3.new(0, 0.15, 0)                                   -- grindpad vlak op het maaiveld (Y 2)
 local mo, oo = plaats(OMG, "RoodkapjeOmgeving", "RO", COLL.omgeving, PADO)
 -- kaars achter het gevelraam flakkert licht (2016)
 for _, l in ipairs(mh.Lampen:GetChildren()) do
@@ -85,11 +85,11 @@ for _, l in ipairs(mh.Lampen:GetChildren()) do
 	elseif lp.Y / S > 1.5 and lp.Y / S < 2.2 then pl.Range = 10; pl.Brightness = 0.6 end   -- kamer achter de kijkramen
 end
 
--- terrein (Daan): overal vlak maaiveld (oppervlak Y 2), huisje staat er op volle hoogte op; vennetje (OSM 766787195)
+-- terrein: overal vlak maaiveld (oppervlak Y 2); vennetje (OSM 766787195)
 local T = workspace.Terrain; local oc = ORIGIN.Position
 T:FillBlock(CFrame.new(oc.X, 20, oc.Z), Vector3.new(170, 40, 170), Enum.Material.Air)
 T:FillBlock(CFrame.new(oc.X, -4, oc.Z), Vector3.new(170, 8, 170), Enum.Material.LeafyGrass)
-local vc = lokaal(-13.8, 8.8, ZG).Position
+local vc = lokaal(-13.8, 8.8, 0).Position
 T:FillCylinder(CFrame.new(vc.X, -4.5, vc.Z), 5, 3.6 * S, Enum.Material.Ground)
 T:FillCylinder(CFrame.new(vc.X, -0.6, vc.Z), 3.6, 3.25 * S, Enum.Material.Water)
 local nT = 0

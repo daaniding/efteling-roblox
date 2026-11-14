@@ -278,6 +278,8 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Daan: "gewoon blueprints en je komt er wel"**: Eftepedia-lemma's hebben vaak Pieck-werktekeningen (aanzichten/plattegrond 1:100). Geen maatlijnen:
   schaal via BAG-breedte + een maat op de tekening ('180'). Oude tekeningen kunnen GESPIEGELD zijn; OSM-punten (trap, poortje, lamp) beslissen.
   Hoogtes van een herbouw (2016) uit de foto, niet uit de schets van 1959.
+- **Hoogte = zoals op de foto t.o.v. het pad, maar alles op vlak maaiveld** (Daan, Roodkapje): ligt een huis echt tegen een hellingpad, dan zakt het
+  huis zo ver dat het pad-niveau op het maaiveld ligt; wat eronder zit (kelder) verdwijnt in de grond.
 - **Geen dijken/rotsmuren of hoogteverschillen voor paden** zonder het eerst te vragen: Daan wil paden "gewoon normaal zoals bij elke" = licht grind
   vlak op het maaiveld, en het huis niet "in de grond". Ook al is het in de Efteling een hellingpad: eerst vragen voordat je terrein ophoogt.
 - Losse padstrook altijd als DICHTE plaat met de bovenkant gecontroleerd omhoog (open strook kwam omgedraaid binnen = onzichtbaar van boven).

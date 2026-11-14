@@ -1,13 +1,13 @@
 -- Roodkapje: huisje van grootmoeder (op het maaiveld) + vlak grindpad + vennetje. Gegenereerd door maak_plaatsscript.py.
 -- Modelframe: oorsprong = midden BAG 50911608, -Y = voorkant (noord, naar het pad), +X = west, z = 0 padniveau voor het huisje
--- (= maaiveld + 1.9 m, dus Roblox Y 7.7). Botsing = Parts uit de json (geen geexporteerde schuine botsmeshes).
+-- = maaiveld (Roblox Y 2.15, Daan: zelfde hoogte als de foto maar zonder de stenen; kelder/trap zitten onder de grond). Botsing = Parts uit de json (geen geexporteerde schuine botsmeshes).
 local HUIS, OMG = 138826522235983, 77138895088158
 local TEX = {RK = {hout = {104281696098715, 73417955614127}, lei = {129100276385293, 77568180060232}, natuursteen = {121115756980472, 123584062912286}, stuc = {123643345611514, 113459759803224}}, RO = {}}
 local COLL = {huisje = {{0, 0.1, 0.225, 4.7, 4.6, 4.25, 0.0}, {-3.225, 1.843, -1.036, 0.95, 0.285, 1.727, 0.0}, {-3.225, 2.128, -1.123, 0.95, 0.285, 1.555, 0.0}, {-3.225, 2.414, -1.209, 0.95, 0.285, 1.382, 0.0}, {-3.225, 2.699, -1.295, 0.95, 0.285, 1.209, 0.0}, {-3.225, 2.985, -1.382, 0.95, 0.285, 1.036, 0.0}, {-3.225, 3.27, -1.468, 0.95, 0.285, 0.864, 0.0}, {-3.225, 3.555, -1.555, 0.95, 0.285, 0.691, 0.0}, {-3.225, 3.841, -1.641, 0.95, 0.285, 0.518, 0.0}, {-3.225, 4.126, -1.727, 0.95, 0.285, 0.345, 0.0}, {-3.225, 4.412, -1.814, 0.95, 0.285, 0.173, 0.0}, {-3.225, 4.697, -1.9, 0.95, 0.285, 0.0, 0.0}, {-3.05, -0.675, -0.98, 1.4, 4.75, 1.84, 0.0}, {-3.69, -0.3, 0.5, 0.1, 4.0, 1.0, 0.0}, {-3.38, -3.01, 0.5, 0.7, 0.08, 1.0, 0.0}, {-3.6, -2.65, 1.0, 0.2, 0.2, 2.0, 0.0}, {2.05, 2.35, 1.85, 1.8, 1.8, 7.5, 0.0}, {2.55, -0.25, 1.7, 0.6, 1.4, 7.2, 0.0}}, omgeving = {}}
 local SEG = {{-18.08, 0.99, 0.0, -6.64, -4.19, 0.0, 4.2}, {-6.64, -4.19, 0.0, -3.7, -4.27, 0.0, 4.2}, {-3.7, -4.27, 0.0, 3.43, -4.44, 0.0, 4.2}, {3.43, -4.44, 0.0, 11.05, 0.05, 0.0, 4.2}, {11.05, 0.05, 0.0, 13.36, 0.44, 0.0, 4.2}, {13.36, 0.44, 0.0, 18.63, -1.34, 0.0, 4.2}}
 local POLY = {{-17.37, 2.54}, {-16.42, 2.1}, {-15.1, 1.48}, {-13.53, 0.74}, {-11.83, -0.05}, {-10.11, -0.85}, {-8.48, -1.58}, {-7.09, -2.18}, {-6.04, -2.6}, {-5.4, -2.82}, {-5.1, -2.9}, {-5.18, -2.89}, {-5.48, -2.95}, {-5.48, -2.93}, {-5.04, -2.74}, {-4.4, -2.6}, {-3.66, -3.1}, {-2.84, -3.1}, {-2.0, -2.3}, {-1.14, -2.3}, {-0.26, -2.3}, {0.61, -2.3}, {1.45, -2.3}, {2.24, -2.3}, {2.95, -2.81}, {3.7, -2.53}, {4.6, -2.07}, {5.58, -1.48}, {6.6, -0.82}, {7.6, -0.13}, {8.56, 0.52}, {9.46, 1.11}, {10.24, 1.55}, {10.81, 1.84}, {11.21, 2.03}, {11.6, 2.2}, {12.15, 2.33}, {12.73, 2.32}, {13.1, 2.25}, {13.34, 2.18}, {13.73, 2.1}, {14.36, 1.95}, {15.11, 1.73}, {15.9, 1.46}, {16.71, 1.17}, {17.5, 0.89}, {18.2, 0.62}, {18.78, 0.41}, {19.2, 0.26}, {18.06, -2.94}, {17.62, -2.78}, {17.02, -2.56}, {16.32, -2.3}, {15.56, -2.02}, {14.8, -1.75}, {14.08, -1.51}, {13.47, -1.33}, {12.98, -1.22}, {12.58, -1.13}, {12.3, -1.06}, {12.28, -1.05}, {12.55, -1.05}, {12.74, -1.01}, {12.65, -1.05}, {12.32, -1.21}, {11.85, -1.44}, {11.23, -1.79}, {10.45, -2.31}, {9.52, -2.94}, {8.48, -3.65}, {7.39, -4.36}, {6.25, -5.04}, {5.09, -5.63}, {3.92, -6.07}, {2.74, -6.33}, {1.58, -6.43}, {0.47, -6.42}, {-0.59, -6.34}, {-1.56, -6.22}, {-2.44, -6.1}, {-3.18, -6.01}, {-3.74, -5.97}, {-4.02, -5.98}, {-4.02, -5.99}, {-3.99, -5.99}, {-4.32, -6.14}, {-5.02, -6.29}, {-5.71, -6.24}, {-6.39, -6.07}, {-7.24, -5.78}, {-8.4, -5.32}, {-9.86, -4.69}, {-11.52, -3.94}, {-13.26, -3.14}, {-14.98, -2.34}, {-16.55, -1.6}, {-17.86, -0.98}, {-18.79, -0.55}}
 local F = Vector3.new(0.098, 0, -0.995)
-local ORIGIN = CFrame.new(228.0, 7.7, 137.85) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
+local ORIGIN = CFrame.new(228.0, 2.15, 137.85) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
 local ZG = -1.9
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end
@@ -76,7 +76,7 @@ local function plaats(id, naam, pre, coll, org)
 end
 
 local mh, oh = plaats(HUIS, "Roodkapje", "RK", COLL.huisje)
-local PADO = ORIGIN - Vector3.new(0, 1.9 * S, 0)                               -- Daan: grindpad gewoon vlak op het maaiveld (Y 2)
+local PADO = ORIGIN - Vector3.new(0, 0.15, 0)                                   -- grindpad vlak op het maaiveld (Y 2)
 local mo, oo = plaats(OMG, "RoodkapjeOmgeving", "RO", COLL.omgeving, PADO)
 -- kaars achter het gevelraam flakkert licht (2016)
 for _, l in ipairs(mh.Lampen:GetChildren()) do
@@ -85,11 +85,11 @@ for _, l in ipairs(mh.Lampen:GetChildren()) do
 	elseif lp.Y / S > 1.5 and lp.Y / S < 2.2 then pl.Range = 10; pl.Brightness = 0.6 end   -- kamer achter de kijkramen
 end
 
--- terrein (Daan): overal vlak maaiveld (oppervlak Y 2), huisje staat er op volle hoogte op; vennetje (OSM 766787195)
+-- terrein: overal vlak maaiveld (oppervlak Y 2); vennetje (OSM 766787195)
 local T = workspace.Terrain; local oc = ORIGIN.Position
 T:FillBlock(CFrame.new(oc.X, 20, oc.Z), Vector3.new(170, 40, 170), Enum.Material.Air)
 T:FillBlock(CFrame.new(oc.X, -4, oc.Z), Vector3.new(170, 8, 170), Enum.Material.LeafyGrass)
-local vc = lokaal(-13.8, 8.8, ZG).Position
+local vc = lokaal(-13.8, 8.8, 0).Position
 T:FillCylinder(CFrame.new(vc.X, -4.5, vc.Z), 5, 3.6 * S, Enum.Material.Ground)
 T:FillCylinder(CFrame.new(vc.X, -0.6, vc.Z), 3.6, 3.25 * S, Enum.Material.Water)
 local nT = 0
