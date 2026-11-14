@@ -469,6 +469,11 @@ modelframe `ref/osm_model.json` (voorkant = lange noordoostzijde naar het pad = 
 - Bake rollen stuc/natuursteen/hout + nieuw `lei` (grijsbruin met veel mos) en `schors`. Plaatsen: `roblox/plaats_repelsteeltje.luau` (rook uit de
   schoorsteen), `roblox/terrein_groen_repelsteeltje.luau` (golvende bosgrond, rond huis en deur exact op maaiveld, 430 planten, 26 bomen).
 - Asset: huisje **77559737160973**.
+- Hekje (Daan: "je moet in het huis kunnen kijken"): volgens Repelreus/Repelensteel2024 staat het hek NIET voor het kijkvenster; links langs de
+  deurtuin tot de hoedpoot, rechts vanaf de stronk-hoek naar voren, krulletje aan het hekeinde. Keien alleen bij de hoeken, venster vrij.
+  Huisje nu **136042669383379** (textures opnieuw geüpload, zie `textures/asset_ids.txt`).
+- Pad: oude flagstone-plaat blijft (Daan: "het pad was goed"). Proef met losse flagstones (`build/03_pad.py`, `roblox/plaats_pad.luau`) afgekeurd;
+  paden doen we later. Echt: flagstones lopen tot tegen de gevel, ernaast herringbone-klinkers.
 - LES terrein: vlak maaiveld = voxellaag 0..4 LEEG (oppervlak Y 2). Ground vullen tot Y 2 maakt laag 0..4 half vol en tilt het oppervlak naar Y 4.
 
 ## Daarna (volgorde met Daan afgesproken)

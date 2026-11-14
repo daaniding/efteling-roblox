@@ -376,17 +376,23 @@ def build(master):
     put("tuin", "hout", btube([(0.45, 0, 0.42), (0.95, 0, 0.62)], 0.02, 5), M)
     put("tuin", "hout", btube([(X1 + 0.4, Y0 - 0.3, 0.0), (X1 + 0.15, Y0 - 0.25, 1.5)], 0.02, 5))           # hark tegen de muur
     put("tuin", "ijzer", bz(X1 + 0.02, X1 + 0.28, Y0 - 0.32, Y0 - 0.2, 1.45, 1.52))
-    for k in range(9):
-        x = RNG.uniform(X0 - 2.5, X1 + 1.5); y = RNG.uniform(Y0 - 1.6, Y0 - 0.6); s = RNG.uniform(0.15, 0.32)
+    for k in range(9):                                                                                         # keien alleen bij de hoeken (kijkvenster blijft vrij, Repelreus)
+        hx = X0 - 0.3 if k % 2 else X1 + 0.3; x = hx + RNG.uniform(-0.6, 0.6); y = RNG.uniform(Y0 - 0.9, Y0 - 0.1); s = RNG.uniform(0.15, 0.32)
         put("tuin", "natuursteen", ell((x, y, s * 0.3), (s * 1.3, s, s * 0.6), 8, 6))
-    HEK = [(X0 - 3.5, Y0 - 1.9), (X0 + 0.5, Y0 - 1.95), (X1 + 0.5, Y0 - 1.9), (X1 + 2.8, Y0 - 1.6)]                   # laag blauwgroen hekje (Repelreus)
-    for (a, b) in zip(HEK, HEK[1:]):
+    # laag blauwgroen hekje (Repelreus/Repelensteel2024): NIET voor het venster; links langs de deurtuin tot de hoedpoot, rechts vanaf de stronk-hoek
+    # naar voren. Bezoekers staan op het pad tot tegen het kijkvenster.
+    HEKKEN = [[(X0 - 4.2, Y0 - 1.9), (X0 - 1.6, Y0 - 1.75), (X0 - 0.15, Y0 - 0.35)],
+              [(X1 + 0.15, Y0 - 0.3), (X1 + 1.2, Y0 - 1.5), (X1 + 3.2, Y0 - 1.75)]]
+    for HEK in HEKKEN:
+      for (a, b) in zip(HEK, HEK[1:]):
         L = math.hypot(b[0] - a[0], b[1] - a[1]); Mh = Matrix.Translation((a[0], a[1], 0)) @ Matrix.Rotation(math.atan2(b[1] - a[1], b[0] - a[0]), 4, "Z")
         put("hek", "blauwgroen", btube([(0, 0, 0.62), (L, 0, 0.62)], 0.018, 6), Mh)
-        k = 0.0
-        while k <= L + 1e-3:
-            put("hek", "blauwgroen", btube([(k, 0, 0.0), (k, 0, 0.66)], 0.018, 6), Mh); k += 1.25
+        n = max(1, round(L / 1.25)); 
+        for i in range(n + 1):
+            put("hek", "blauwgroen", btube([(L * i / n, 0, 0.0), (L * i / n, 0, 0.66)], 0.018, 6), Mh)
         coll_box((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 0.45, L, 0.12, 0.9, math.degrees(math.atan2(b[1] - a[1], b[0] - a[0])))
+    for (ex, ey, d) in ((X0 - 0.15, Y0 - 0.35, 1), (X1 + 0.15, Y0 - 0.3, -1)):                                   # krul aan het hekeinde bij het huis
+        put("hek", "blauwgroen", btube([(ex + d * 0.09 * math.sin(t * 0.6), ey, 0.62 - 0.09 + 0.09 * math.cos(t * 0.6)) for t in range(11)], 0.016, 6))
     PAD = [(-14.0, -4.0), (-3.5, -3.7), (11.0, -3.6), (11.0, -6.9), (-3.5, -7.0), (-9.0, -8.6), (-14.0, -9.0)]
     pb = bmesh.new(); vv = [pb.verts.new((x, y, 0.04)) for x, y in PAD]; vb = [pb.verts.new((x, y, -0.12)) for x, y in PAD]
     pb.faces.new(vv); pb.faces.new(vb[::-1])

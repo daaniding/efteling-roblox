@@ -1,7 +1,7 @@
 -- Repelsteeltje (1998): huisje met boomstronk, tuintje, flagstone-pad, rook uit de schoorsteen. Gegenereerd door maak_plaatsscript.py.
 -- Modelframe: oorsprong = OSM-zwaartepunt 55424159, voorkant (lange zijde naar het pad) = -Y, x = noordwest, z = 0 maaiveld.
-local HUIS = 117899351879218
-local TEX = {hout = {99082309397853, 115019765819126}, lei = {131914434331664, 114556734739171}, natuursteen = {111335625044990, 83334889747680}, schors = {139396603556077, 121169761742180}, stuc = {115920716872165, 129410613250780}}
+local HUIS = 136042669383379
+local TEX = {hout = {121923152887379, 106224203767497}, lei = {91942260177324, 71477239170880}, natuursteen = {81084195886124, 105474408512549}, schors = {122462432683419, 128188436799664}, stuc = {131417926496725, 115507825444744}}
 local F = Vector3.new(0.533, 0, -0.846)
 local ORIGIN = CFrame.new(351.75, 2.0, -425.94) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -37,7 +37,7 @@ for _, p in ipairs(m:GetChildren()) do
 		p.Transparency = 1; p.CastShadow = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.Name = "Lamp"; p.Parent = lampen
 		local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 176, 96); pl.Range = 12; pl.Brightness = 1.2; pl.Shadows = true; pl.Parent = p
 	else
-		local tex = string.match(p.Name, "__TEX_([%w_]+)_%d+$"); local key = string.match(p.Name, "__MAT_([%a_]+)_%d+$")
+		local tex = string.match(p.Name, "__TEX_([%w_]+)_%d+$"); local key = string.match(p.Name, "__MAT_([%w_]-)_%d+$")
 		if tex and TEX[tex] then
 			p.Color = Color3.new(1, 1, 1); p.Material = Enum.Material.Plastic
 			local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex][1]

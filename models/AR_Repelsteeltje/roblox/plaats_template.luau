@@ -37,7 +37,7 @@ for _, p in ipairs(m:GetChildren()) do
 		p.Transparency = 1; p.CastShadow = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.Name = "Lamp"; p.Parent = lampen
 		local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 176, 96); pl.Range = 12; pl.Brightness = 1.2; pl.Shadows = true; pl.Parent = p
 	else
-		local tex = string.match(p.Name, "__TEX_([%w_]+)_%d+$"); local key = string.match(p.Name, "__MAT_([%a_]+)_%d+$")
+		local tex = string.match(p.Name, "__TEX_([%w_]+)_%d+$"); local key = string.match(p.Name, "__MAT_([%w_]-)_%d+$")
 		if tex and TEX[tex] then
 			p.Color = Color3.new(1, 1, 1); p.Material = Enum.Material.Plastic
 			local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. TEX[tex][1]
