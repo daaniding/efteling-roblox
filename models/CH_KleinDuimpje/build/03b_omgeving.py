@@ -30,12 +30,13 @@ BUITEN = WATER[:6]                                         # buitenrand van de g
 
 def steen(c, s, r, seed, mat="kalksteen", plat=0.7):
     """hoekige kalksteenbrok: ellipsoide met ruis, platte onderkant"""
-    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=1 if max(s) < 0.22 else 2, radius=1.0)
+    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2 if max(s) < 0.3 else 3, radius=1.0)
     for v in bm.verts:
         d = v.co.normalized(); k = 1 + 0.28 * noise.noise(d * 1.7 + Vector((seed, seed * 0.3, 0))) + 0.12 * noise.noise(d * 4.1 + Vector((0, seed, 1)))
         v.co = Vector((d.x * s[0], d.y * s[1], max(d.z * s[2] * plat, -0.1 * s[2]))) * k
     bmesh.ops.rotate(bm, verts=bm.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(r.uniform(0, math.tau), 3, "Z") @ Matrix.Rotation(r.uniform(-0.25, 0.25), 3, "X"))
     bmesh.ops.translate(bm, vec=c, verts=bm.verts)
+    for f in bm.faces: f.smooth = True
     put("rots", mat, bm)
 
 
@@ -56,6 +57,7 @@ def stronk(x, y, h, rad, seed, holte=False, part="stronk"):
         for j in range(ring): bm.faces.new((A[j], A[(j + 1) % ring], B[(j + 1) % ring], B[j]))
     bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1])
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    for f in bm.faces: f.smooth = True
     put(part, "schors", bm)
     coll_box(x, y, h / 2, rad * 2.2, rad * 2.2, h)
 
@@ -78,7 +80,7 @@ def build(master):
         s = r.uniform(0.09, 0.2) if r.random() < 0.8 else r.uniform(0.2, 0.32)
         z = (max(0.0, 0.32 * (1 - d * d)) if op else 0.0) + s * 0.2
         steen((x, y, z), (s * r.uniform(1.0, 1.5), s, s * r.uniform(0.7, 1.0)), r, k)
-    for k, (x, y, s) in enumerate([(3.4, 1.0, 0.8), (2.6, -0.6, 0.75), (1.4, 1.5, 0.85), (0.3, 1.2, 0.8), (-0.8, 1.6, 0.7), (-2.4, 0.9, 0.6), (1.6, -1.4, 0.55), (-1.4, -2.2, 0.6), (4.0, 0.0, 0.6)]):
+    for k, (x, y, s) in enumerate([(3.4, 1.0, 0.8), (2.6, -0.6, 0.75), (1.4, 1.5, 0.85), (0.3, 1.2, 0.8), (-0.8, 1.6, 0.7), (-2.4, 0.9, 0.6), (1.6, -1.4, 0.55), (-1.4, -2.2, 0.6), (4.0, 0.0, 0.6), (-5.2, -0.2, 0.75), (-4.0, 0.6, 0.7)]):
         steen((x, y, s * 0.35), (s * 1.3, s, s * 0.8), r, 100 + k, "natuursteen", 0.8)        # grote zwerfkeien (grijs) onder/achter de reus
     coll_box(cx, cy, 0.2, 6.5, 5.0, 0.4, 0)
     # ---- gracht: modderige bodem + wateroppervlak in de ring, oeverstenen langs de buitenrand ----
@@ -93,7 +95,7 @@ def build(master):
             steen((ax + (bx - ax) * t, ay + (by - ay) * t, -0.1), (s * 1.3, s, s * 0.8), r, int(k * 31 + ax * 7))
             k += r.uniform(0.35, 0.6)
     # ---- dode boomstronk achter het hoofd (Kduimpje_reus_zijaanzicht, Kleinduimpje-reus) ----
-    stronk(4.0, 1.1, 2.6, 0.34, 7)
+    stronk(3.6, 1.1, 2.6, 0.34, 7)
     # ---- praatstronk met koperen hoorn en perkament (Kleinduimpje-mei09, Sprookjereus) op het plein, links voor ----
     PX, PY = -3.2, -5.2
     stronk(PX, PY, 1.35, 0.38, 3, part="praatstronk")

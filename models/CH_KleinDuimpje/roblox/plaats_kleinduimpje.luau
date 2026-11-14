@@ -1,10 +1,10 @@
 -- Klein Duimpje (1998): slapende reus (build/03a_reus.py, gebakken in 04_bake_reus.py) op een rotseiland met gracht (build/03b_omgeving.py).
 -- Modelframe: oorsprong = OSM-punt Klein Duimpje (studs 435.33, -378.66), voorkant (rotsrand naar het plein, ZO) = -Y, x = lichaamsas (hoofd NO).
 -- OSM voorkant (0.43, -0.90) -> Roblox F = (0.43, 0, 0.90). Grond Y = 2. Gracht = terreinwater (zelfde look als De Zes Zwanen).
-local REUS = 118052864567342
-local OMG = 124180200669734
-local TEX = {lijf = 109002925862949, hoofd = 97456089053146}
-local TEXO = {kalksteen = {76818249518539}, natuursteen = {83025593121539, 103046195882958}, schors = {125096061636527, 131548344593770}}
+local REUS = 130052201031925
+local OMG = 106561478146188
+local TEX = {lijf = 102925293892709, hoofd = 109117147353858}
+local TEXO = {kalksteen = {101187793787894}, natuursteen = {100607201429225, 126766698446394}, schors = {137162260738690, 119851446553550}}
 local F = Vector3.new(0.43, 0, 0.90).Unit
 local ORIGIN = CFrame.new(435.33, 2.0, -378.66) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3

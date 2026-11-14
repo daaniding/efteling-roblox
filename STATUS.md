@@ -476,6 +476,21 @@ modelframe `ref/osm_model.json` (voorkant = lange noordoostzijde naar het pad = 
   terrein_groen_repelsteeltje.luau gelijk, terrein eronder vlak). Huisje nu **111707359870289**. Later: herringbone-klinkers ernaast.
 - LES terrein: vlak maaiveld = voxellaag 0..4 LEEG (oppervlak Y 2). Ground vullen tot Y 2 maakt laag 0..4 half vol en tilt het oppervlak naar Y 4.
 
+## Klein Duimpje (chat 9, 14 nov) — v2 in Studio, NOG NIET AF (Daan: realisme en detail ontbreken)
+Map `models/CH_KleinDuimpje/`. Bronnen: 33 Eftepedia-foto's, 9 Commons-foto's (`ref/commons/BRON.txt`, hoofdreferentie 4019765619 3840px),
+OSM eiland 55424075 + gracht 767716994 (`ref/osm_lokaal.json`, `ref/osm_model.json`). Geen bouwtekeningen (Eftelist heeft geen pagina), geen
+downloadbaar 3D-model (Sketchfab/MakerWorld/Creator Store gezocht). Roblox generate_mesh gaf een chibi-pop: afgekeurd.
+- Maat: reus ~8.5 m lang (Duimpje haalt de halve laarsschacht, past op het 8 m-eiland); Eftepedia's "vier meter" klopt niet met de foto's.
+- `build/03a_reus.py`: gesculpt uit gefuseerde volumes (voxel remesh) + plooien; houding naar de foto-overlay (`build/cam_match.py`, camera
+  -0.8,-15.5,1.3 lens 40 op `ref/front_4019.jpg`). Hoofd in profiel recht omhoog, open mond, donkere wigbaard over de borst, hangsnor,
+  veterlaars (achter) met haken/tong, omgeslagen kraag (voor), tas met gespen, rode bies aan de mouwen.
+- `build/03b_omgeving.py`: rotsbed (kalksteen + grijze zwerfkeien), gracht (terreinwater in Studio), stronk achter het hoofd, praatstronk met
+  hoorn, bordje. Bake: `04_bake_reus.py` (geschilderd: kleur x AO x blos/stof), `05_bake_omgeving.py`; export `09_export_*`; `upload.sh`.
+- Studio: `roblox/plaats_kleinduimpje.luau` (reus 0.6 m naar het hoofdeinde, gracht = terreinwater), `plaats_kleinduimpje_groen.luau`
+  (bosgrond, ~380 varens op het eiland, rododendrons/coniferen achter de gracht). Assets: zie `textures/asset_ids.txt`.
+- NOG TE DOEN: gezicht/handen/plooien veel fijner, rotsbed als grijze keienheuvel (nu te wit/plat), Duimpje-figuurtje bij de laars,
+  sprookjesboek op standaard (2017), herringbone-plein voor (paden later).
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

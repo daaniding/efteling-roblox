@@ -20,9 +20,9 @@ R = random.Random(1998)
 V = Vector
 
 # ---------------- kleuren (geschilderd polyester, foto's) ----------------
-RGB = {"huid": (226, 170, 140), "baard": (214, 216, 220), "haar": (170, 172, 176), "hemd": (222, 214, 172), "broek": (78, 104, 140),
-       "vest": (120, 70, 40), "laars": (128, 74, 46), "zool": (54, 36, 26), "riem": (70, 42, 24), "messing": (190, 150, 70),
-       "veter": (96, 60, 36), "rood": (170, 40, 36), "lip": (190, 110, 100), "wenkbrauw": (190, 192, 196), "nagel": (236, 196, 176)}
+RGB = {"huid": (232, 194, 166), "baard": (78, 78, 82), "haar": (124, 118, 112), "hemd": (232, 222, 194), "broek": (96, 116, 146), "binnen": (70, 24, 22),
+       "vest": (120, 70, 40), "laars": (150, 100, 86), "zool": (54, 36, 26), "riem": (70, 42, 24), "messing": (190, 150, 70),
+       "veter": (96, 60, 36), "rood": (150, 36, 36), "lip": (200, 120, 108), "wenkbrauw": (70, 68, 70), "nagel": (236, 196, 176)}
 MATS = {}
 def M(n):
     if n not in MATS:
@@ -103,16 +103,16 @@ def frame(f, u):
 SCHAAL = 1.0                                                     # foto: Duimpje (kleuter) haalt de halve laarsschacht; past op het OSM-eiland (8 m)
 LIFT = -0.12
 HIP_N, HIP_F = V((0.1, -0.45, 1.05)), V((0.1, 0.6, 1.05))
-KNEE_N, KNEE_F = V((-0.95, -0.75, 3.6)), V((-1.9, 0.55, 3.3))
-ANK_N, ANK_F = V((-1.25, -2.55, 0.85)), V((-3.6, 0.15, 1.55))
-TOE_N, TOE_F = V((-2.25, -3.0, 0.45)), V((-5.0, -0.3, 1.15))
-SH_N, SH_F = V((2.3, -1.1, 2.4)), V((2.35, 1.15, 2.5))
+KNEE_N, KNEE_F = V((-1.4, -0.75, 3.15)), V((-2.4, 0.55, 2.9))
+ANK_N, ANK_F = V((-1.75, -2.45, 0.85)), V((-4.4, 0.1, 1.4))
+TOE_N, TOE_F = V((-2.85, -2.9, 0.45)), V((-6.0, -0.3, 1.0))
+SH_N, SH_F = V((2.05, -1.1, 2.4)), V((2.1, 1.15, 2.5))
 EL_N, EL_F = V((1.6, -1.6, 1.5)), V((1.2, 1.2, 2.1))
 WR_N, WR_F = V((0.95, -1.5, 1.85)), V((1.45, 0.35, 2.75))
 HAND_N, HAND_F = V((0.6, -1.65, 1.85)), V((1.55, -0.2, 2.82))
-HEAD = V((2.95, 0.1, 3.5))
-FACE, HUP, HS = frame((0.05, -0.4, 0.92), (0.97, 0.0, -0.15))   # gezicht omhoog/naar het publiek, kruin naar +X (rust tegen de stronk)
-HK = 1.12                                                        # hoofd kleiner t.o.v. lijf/laarzen (foto)
+HEAD = V((2.5, 0.1, 3.2))
+FACE, HUP, HS = frame((0.05, -0.22, 0.97), (1.0, 0.0, -0.05))   # gezicht omhoog/naar het publiek, kruin naar +X (rust tegen de stronk)
+HK = 1.1                                                        # hoofd kleiner t.o.v. lijf/laarzen (foto)
 
 
 def hp(f, u, s):            # punt in het hoofdframe (hoofdmaten x HK)
@@ -133,70 +133,72 @@ def build(master):
     for c in ("LOW", "REF"): col(c)
     clear_owned()
 
-    # ===== huid: hoofd + nek + onderarmen + handen =====
-    rotH = Matrix((HS, FACE, HUP)).transposed()          # kolommen: x=zij, y=voor, z=kruin
-    skin = [ellh(HEAD + HUP * 0.05 * HK, (0.5, 0.52, 0.62), rotH),                     # schedel (kaal)
-            ellh(hp(0.22, -0.32, 0), (0.42, 0.36, 0.34), rotH),                    # kaak/onderkant (onder de baard)
-            ellh(hp(0.38, -0.12, 0.27), (0.17, 0.16, 0.17)), ellh(hp(0.38, -0.12, -0.27), (0.17, 0.16, 0.17)),   # wangen
-            ellh(hp(0.47, 0.13, 0), (0.33, 0.1, 0.07), rotH),                     # wenkbrauwboog
-            loft([(*hp(-0.15, -0.55, 0), 0.4), (*(HEAD - HUP * 0.85 + FACE * 0.05), 0.5), (*V((2.35, 0.05, 2.4)), 0.6)], 10, 20)]  # nek
-    for s in (1, -1):                                                              # grote oren
-        e = ellh(hp(-0.02, 0.0, s * 0.52), (0.06, 0.17, 0.26), rotH); skin.append(e)
-    # onderarmen (hemdsmouw opgestroopt tot net onder de elleboog)
-    for el, wr in ((EL_N, WR_N), (EL_F, WR_F)):
+    # ===== huid: hoofd + nek + onderarmen (profiel kijkt recht omhoog, kruin naar de stronk; close-up Commons 4019765619) =====
+    rotH = Matrix((HS, FACE, HUP)).transposed()          # kolommen: x=zij, y=voor (omhoog), z=kruin (+X)
+    skin = [ellh(HEAD + HUP * 0.06 * HK, (0.52, 0.5, 0.6), rotH),                    # kale schedel, lang naar de kruin
+            ellh(hp(0.14, -0.4, 0), (0.42, 0.36, 0.36), rotH),                    # kaak/kin (onder de baard)
+            ellh(hp(0.36, -0.13, 0.28), (0.19, 0.17, 0.18)), ellh(hp(0.36, -0.13, -0.28), (0.19, 0.17, 0.18)),   # bolle wangen
+            ellh(hp(0.45, 0.13, 0), (0.36, 0.12, 0.09), rotH),                    # wenkbrauwboog
+            ellh(hp(0.47, -0.3, 0), (0.22, 0.1, 0.09), rotH),                     # bovenlip-bult (onder de snor)
+            ellb(lerp(hp(-0.1, -0.45, 0), V((2.0, 0.05, 2.8)), 0.5), (0.4, 0.46, 0.34))]     # nek: een volume tussen kaak en borst
+    for s_ in (1, -1):                                                              # grote oren
+        skin.append(ellh(hp(-0.05, -0.02, s_ * 0.53), (0.07, 0.2, 0.28), rotH))
+    for el, wr in ((EL_N, WR_N), (EL_F, WR_F)):                                     # onderarmen (mouw opgestroopt)
         skin.append(loft([(*lerp(el, wr, 0.12), 0.26), (*lerp(el, wr, 0.55), 0.25), (*wr, 0.19)], 10, 16))
-    huid = fuse("GEO_huid", skin, 0.025, 6); tag(huid, "huid", "head")
-    # sculpt: oogkassen, neusbrug, rimpels in het voorhoofd, gesloten ogen (wallen)
-    for s in (1, -1):
-        push(huid, hp(0.47, 0.03, s * 0.19), 0.12, -0.035)
-        push(huid, hp(0.44, -0.06, s * 0.21), 0.08, 0.02)
-        push(huid, hp(-0.02, 0.0, s * 0.56), 0.12, -0.03)              # oorschelp hol
+    huid = fuse("GEO_huid", skin, 0.022, 6); tag(huid, "huid", "head")
+    for s_ in (1, -1):
+        push(huid, hp(0.47, 0.02, s_ * 0.2), 0.12, -0.04)                         # oogkassen
+        push(huid, hp(-0.05, -0.02, s_ * 0.6), 0.13, -0.05)                       # oorschelp hol
+        plooi(huid, hp(0.48, -0.04, s_ * 0.12), hp(0.45, -0.02, s_ * 0.3), 0.022, 0.018, 6)   # ooglidplooi
+        plooi(huid, hp(0.44, -0.18, s_ * 0.2), hp(0.36, -0.3, s_ * 0.34), 0.03, 0.02, 6)      # neus-lipplooi
     for k in range(3):
-        plooi(huid, hp(0.5, 0.22 + k * 0.07, -0.22), hp(0.5, 0.22 + k * 0.07, 0.22), 0.035, 0.012, 8)
-
-    # neus (dik en lang, naar boven), oogleden, lippen
-    neus = fuse("GEO_neus", [ellh(hp(0.62, -0.08, 0), (0.15, 0.2, 0.2), rotH), ellh(hp(0.56, 0.06, 0), (0.08, 0.1, 0.16), rotH),
-                             ellh(hp(0.56, -0.14, 0.11), (0.08, 0.09, 0.08)), ellh(hp(0.56, -0.14, -0.11), (0.08, 0.09, 0.08))], 0.018, 4)
+        plooi(huid, hp(0.5, 0.24 + k * 0.07, -0.24), hp(0.5, 0.24 + k * 0.07, 0.24), 0.03, 0.014, 8)   # voorhoofdrimpels
+    # grote neus die omhoog steekt, open snurkende mond met dikke onderlip
+    neus = fuse("GEO_neus", [loft([(*hp(0.47, 0.08, 0), 0.08), (*hp(0.6, -0.02, 0), 0.11), (*hp(0.7, -0.12, 0), 0.15)], 10, 16),
+                             ellh(hp(0.72, -0.14, 0), (0.16, 0.17, 0.16), rotH),
+                             ellh(hp(0.6, -0.21, 0.11), (0.09, 0.09, 0.08)), ellh(hp(0.6, -0.21, -0.11), (0.09, 0.09, 0.08))], 0.016, 4)
     tag(neus, "huid", "head")
-    for s in (1, -1):
-        push(neus, hp(0.6, -0.2, s * 0.08), 0.05, -0.03)                          # neusgaten
-        lid = ellh(hp(0.47, 0.03, s * 0.19), (0.11, 0.055, 0.07), rotH, 18, 10); lid.name = "GEO_ooglid"; tag(lid, "huid", "head"); shade_smooth(lid, 1.5)
-        wb = loft([(*hp(0.5, 0.15, s * 0.07), 0.04), (*hp(0.52, 0.19, s * 0.2), 0.055), (*hp(0.46, 0.2, s * 0.33), 0.035)], 10, 10, wobble=0.25, seed=s)
-        wb.name = "GEO_wenkbrauw"; tag(wb, "wenkbrauw", "head"); shade_smooth(wb, 1.5)
-    lip = loft([(*hp(0.5, -0.3, -0.12), 0.03), (*hp(0.53, -0.31, 0), 0.04), (*hp(0.5, -0.3, 0.12), 0.03)], 10, 10)
+    for s_ in (1, -1): push(neus, hp(0.63, -0.25, s_ * 0.07), 0.05, -0.035)
+    mond = ellh(hp(0.47, -0.41, 0), (0.15, 0.07, 0.08), rotH, 18, 10); mond.name = "GEO_mond"; tag(mond, "binnen", "head")
+    lip = loft([(*hp(0.48, -0.47, -0.15), 0.035), (*hp(0.55, -0.5, 0), 0.065), (*hp(0.48, -0.47, 0.15), 0.035)], 12, 12)
     lip.name = "GEO_lip"; tag(lip, "lip", "head"); shade_smooth(lip, 1.5)
-
-    # haar: grijze plukken boven de oren en achter op het hoofd
+    for s_ in (1, -1):
+        lid = ellh(hp(0.46, 0.02, s_ * 0.2), (0.11, 0.05, 0.065), rotH, 18, 10); lid.name = "GEO_ooglid"; tag(lid, "huid", "head"); shade_smooth(lid, 1.5)
+        wb = loft([(*hp(0.5, 0.15, s_ * 0.06), 0.05), (*hp(0.55, 0.2, s_ * 0.18), 0.07), (*hp(0.52, 0.22, s_ * 0.3), 0.06), (*hp(0.44, 0.17, s_ * 0.38), 0.03)],
+                  14, 12, wobble=0.35, seed=s_)
+        wb.name = "GEO_wenkbrauw"; tag(wb, "wenkbrauw", "head"); shade_smooth(wb, 1.5)
+    # grijsbruin haar boven en achter het oor
     haar = []
-    for s in (1, -1):
-        for k in range(7):
-            b = hp(-0.15 - k * 0.04, 0.15 - k * 0.06, s * (0.42 + 0.02 * k))
-            haar.append(loft([(*b, 0.07), (*(b + HS * s * 0.12 + FACE * R.uniform(-0.05, 0.08) + HUP * R.uniform(0.0, 0.1)), 0.05),
-                              (*(b + HS * s * 0.22 + HUP * R.uniform(-0.05, 0.12)), 0.012)], 8, 10, wobble=0.2, seed=k))
+    for s_ in (1, -1):
+        for k in range(8):
+            b = hp(-0.12 - k * 0.035, 0.12 - k * 0.05, s_ * (0.44 + 0.015 * k))
+            haar.append(loft([(*b, 0.07), (*(b + HS * s_ * 0.1 + FACE * R.uniform(-0.06, 0.06) + HUP * R.uniform(0.0, 0.08)), 0.05),
+                              (*(b + HS * s_ * 0.18 + HUP * R.uniform(-0.05, 0.1)), 0.012)], 8, 10, wobble=0.2, seed=k))
     hr = fuse("GEO_haar", haar, 0.02, 3); tag(hr, "haar", "head")
-
-    # baard: golvende strengen van de kaak over de borst (richting -X), snor met krullende punten
+    # donkere baard: wig van strengen van de kaak over de borst (naar -X), smaller naar de punt
     strengen = []
-    for k in range(40):
-        a = (k / 39 - 0.5) * 2.5                                       # rond de kaak
-        st = hp(0.28 + 0.12 * math.cos(a), -0.35, 0.4 * math.sin(a))
-        L = 0.8 + 0.35 * math.cos(a) + R.uniform(-0.12, 0.12)
-        d = V((-0.62, 0.0, -0.78)).normalized()
+    for k in range(60):
+        sv = (k / 59 - 0.5) * 0.9                                        # breedte over de kaak
+        st = hp(0.12 + 0.2 * (1 - abs(sv) / 0.45), -0.5 - 0.08 * abs(sv), sv)
+        L = 1.0 + 0.3 * (1 - abs(sv) / 0.45) + R.uniform(-0.1, 0.1)
         pts = []
-        for i in range(6):
-            t = i / 5; w = math.sin(t * 5.5 + k) * 0.06
-            p = st + d * L * t + HS * (w + math.sin(a) * 0.3 * t) + V((0, 0, 0.06 * math.sin(t * math.pi)))
-            pts.append((*p, 0.16 * (1 - t) ** 0.8 + 0.025))
-        strengen.append(loft(pts, 14, 10, wobble=0.15, seed=k))
-    bd = fuse("GEO_baard", strengen, 0.022, 4, 0.5); tag(bd, "baard", "head")
-    for k in range(10):                                                 # golfgroeven in de baard
-        a = (k / 9 - 0.5) * 2.0; st = hp(0.4, -0.45, 0.35 * math.sin(a))
-        plooi(bd, st, st - HUP * 0.75 + FACE * 0.1, 0.03, 0.018, 7)
+        for i in range(8):
+            t = i / 7; w = math.sin(t * 6.0 + k * 0.7) * 0.05
+            d = V((-0.75, 0.0, -0.25 - 0.75 * t)).normalized()           # eerst langs de kin, dan over de borst omlaag
+            p = st + V((-0.75, 0, -0.45)) * L * t + V((0, 0, -0.35 * t * t)) + HS * (w - sv * HK * 0.5 * t)
+            pts.append((*p, 0.15 * (1 - t) ** 0.65 + 0.025))
+        strengen.append(loft(pts, 18, 10, wobble=0.18, seed=k))
+    bd = fuse("GEO_baard", strengen, 0.02, 3, 0.45); tag(bd, "baard", "head")
+    for k in range(14):                                                 # diepe strenggroeven
+        sv = (k / 13 - 0.5) * 0.7; st = hp(0.22, -0.55, sv)
+        plooi(bd, st, st + V((-0.75, 0, -0.75)) * (1.0 - abs(sv)) + HS * (-sv * 0.5), 0.028, 0.03, 8)
+    # donkere hangsnor over de mondhoeken
     snor = []
-    for s in (1, -1):
-        snor.append(loft([(*hp(0.6, -0.24, s * 0.02), 0.08), (*hp(0.58, -0.29, s * 0.2), 0.09), (*hp(0.5, -0.3, s * 0.4), 0.07),
-                          (*hp(0.42, -0.2, s * 0.55), 0.04), (*hp(0.4, -0.06, s * 0.6), 0.015)], 16, 12, wobble=0.15, seed=s + 5))
+    for s_ in (1, -1):
+        snor.append(loft([(*hp(0.6, -0.27, s_ * 0.03), 0.085), (*hp(0.56, -0.33, s_ * 0.2), 0.09), (*hp(0.47, -0.42, s_ * 0.3), 0.075),
+                          (*hp(0.37, -0.55, s_ * 0.32), 0.05), (*hp(0.3, -0.66, s_ * 0.3), 0.018)], 16, 12, wobble=0.18, seed=s_ + 5))
     sn = fuse("GEO_snor", snor, 0.016, 3); tag(sn, "baard", "head")
+    for s_ in (1, -1): plooi(sn, hp(0.6, -0.3, s_ * 0.05), hp(0.36, -0.58, s_ * 0.31), 0.02, 0.02, 8)
 
     # handen: grote handpalm + worstvingers, ineengelegd op de buik
     def hand(wr, c, vinger_dir, side):
@@ -221,9 +223,10 @@ def build(master):
     for el, wr in ((EL_N, WR_N), (EL_F, WR_F)):                         # opgerolde manchet
         c = lerp(el, wr, 0.08); mo = loft([(*lerp(el, wr, -0.06), 0.33), (*lerp(el, wr, 0.12), 0.33)], 4, 20); mo.name = "GEO_manchet"; tag(mo, "hemd"); shade_smooth(mo, 1.2)
     for k in range(9):                                                   # plooien over buik en mouwen
-        x = 0.7 + k * 0.22; plooi(hm, (x, -0.9, 1.7), (x + 0.15, -0.2, 2.45), 0.05, 0.02, 6)
-    # kraag open met V-hals (lichte inkeping) en een rood sjaaltje onder de baard (foto: rode puntjes)
-    push(hm, V((2.85, -0.25, 2.25)), 0.25, -0.06)
+        x = 0.7 + k * 0.22; plooi(hm, (x, -0.95, 1.7), (x + 0.18, -0.2, 2.6), 0.06, 0.035, 7)
+    push(hm, V((2.45, -0.25, 3.0)), 0.3, -0.07)                          # open kraag
+    for el, wr in ((EL_N, WR_N), (EL_F, WR_F)):                          # rode rand aan de opgerolde mouw
+        b2 = loft([(*lerp(el, wr, 0.1), 0.345), (*lerp(el, wr, 0.15), 0.345)], 4, 22); b2.name = "GEO_bies"; tag(b2, "rood")
 
     # ===== riem met grote tas op de heup =====
     riem = loft([(*V((0.62, y, 1.2 + 0.72 * math.sqrt(max(0, 1 - (y / 1.03) ** 2)))), 0.06) for y in (-1.04, -0.9, -0.6, 0, 0.6, 0.9, 1.04)], 16, 8, flat=0.5)
@@ -234,33 +237,59 @@ def build(master):
     for dx in (-0.3, 0.3):
         g = ellb(V((0.45 + dx, -2.18, 1.15)), (0.08, 0.04, 0.08), None, 12, 8); g.name = "GEO_gesp"; tag(g, "messing")
         st = loft([(*V((0.45 + dx, -2.05, 1.55)), 0.05), (*V((0.45 + dx, -2.2, 1.2)), 0.05)], 4, 8, flat=0.35, up=V((0, 1, 0))); st.name = "GEO_tasriem"; tag(st, "riem")
-    sj = fuse("GEO_sjaal", [ellb(V((2.55, -0.15, 2.8)), (0.32, 0.45, 0.18)), ellb(V((2.35, -0.4, 2.7)), (0.26, 0.22, 0.1))], 0.02, 4); tag(sj, "rood")
 
     # ===== broek: zitvlak + dijen + schenen tot in de laars, wijd met plooien =====
     def been(hip, knee, ank):
         top = lerp(knee, ank, 0.42)
-        return loft([(*hip, 0.74), (*lerp(hip, knee, 0.55), 0.7), (*knee, 0.62), (*lerp(knee, ank, 0.25), 0.57), (*top, 0.55)], 18, 22)
+        return loft([(*hip, 0.7), (*lerp(hip, knee, 0.55), 0.64), (*knee, 0.55), (*lerp(knee, ank, 0.25), 0.48), (*top, 0.44)], 18, 22)
     br = fuse("GEO_broek", [ellb(V((0.2, 0.05, 1.05)), (0.95, 1.15, 0.72)), been(HIP_N, KNEE_N, ANK_N), been(HIP_F, KNEE_F, ANK_F)], 0.03, 8)
     tag(br, "broek")
     for knee, hip, ank in ((KNEE_N, HIP_N, ANK_N), (KNEE_F, HIP_F, ANK_F)):     # plooien bij de knie en over de dij
         for k in range(5):
-            a = lerp(knee, hip, 0.12 + k * 0.08); plooi(br, a + V((0, -0.5, 0)), a + V((0.15, 0.5, 0.15)), 0.06, 0.035, 6)
+            a = lerp(knee, hip, 0.12 + k * 0.08); plooi(br, a + V((0, -0.6, 0)), a + V((0.15, 0.6, 0.15)), 0.075, 0.05, 7)
         for k in range(3):
-            a = lerp(knee, ank, 0.1 + k * 0.08); plooi(br, a + V((0, -0.5, 0)), a + V((0.1, 0.5, 0.1)), 0.05, 0.03, 6)
+            a = lerp(knee, ank, 0.1 + k * 0.08); plooi(br, a + V((0, -0.6, 0)), a + V((0.1, 0.6, 0.1)), 0.065, 0.045, 7)
 
     # ===== laarzen: schacht met omgeslagen kraag, voet, zool met hak, veters =====
     def laars(knee, ank, toe, nm):
         top = lerp(knee, ank, 0.36)
         ax = (ank - knee).normalized(); fw = (toe - ank); fw.z = 0; fw.normalize()
-        parts = [loft([(*top, 0.66), (*lerp(top, ank, 0.4), 0.6), (*ank, 0.53), (*(ank - ax * 0.12), 0.52)], 12, 24),
-                 loft([(*(ank - ax * 0.25 - fw * 0.42), 0.36), (*(ank - ax * 0.3 - fw * 0.2), 0.48), (*(ank - ax * 0.32 + fw * 0.25), 0.5),
-                       (*(lerp(ank, toe, 0.55) + V((0, 0, -0.12))), 0.47), (*(lerp(ank, toe, 0.85) + V((0, 0, -0.1))), 0.42),
-                       (*(toe + fw * 0.12 + V((0, 0, 0.0))), 0.26)], 20, 24, flat=0.6)]
+        parts = [loft([(*top, 0.52), (*lerp(top, ank, 0.4), 0.48), (*ank, 0.43), (*(ank - ax * 0.12), 0.42)], 12, 24),
+                 loft([(*(ank - ax * 0.22 - fw * 0.36), 0.3), (*(ank - ax * 0.26 - fw * 0.16), 0.4), (*(ank - ax * 0.28 + fw * 0.22), 0.42),
+                       (*(lerp(ank, toe, 0.55) + V((0, 0, -0.1))), 0.4), (*(lerp(ank, toe, 0.85) + V((0, 0, -0.08))), 0.36),
+                       (*(toe + fw * 0.1 + V((0, 0, 0.0))), 0.22)], 20, 24, flat=0.62)]
         ob = fuse(nm, parts, 0.03, 6); tag(ob, "laars")
         for k in range(6):                                                # leren rimpels in de schacht en op de wreef
             a = lerp(top, ank, 0.25 + k * 0.12); s = ax.cross(V((0, 0, 1))).normalized() if abs(ax.z) < 0.95 else V((1, 0, 0))
-            plooi(ob, a + s * 0.55, a - s * 0.55 + ax * 0.08, 0.05, 0.03, 6)
-        kraag = loft([(*(top - ax * 0.26), 0.78), (*(top - ax * 0.05), 0.8), (*(top + ax * 0.14), 0.74)], 6, 28, wobble=0.16, seed=len(nm)); kraag.name = nm + "_kraag"; tag(kraag, "laars"); shade_smooth(kraag, 1.2)
+            plooi(ob, a + s * 0.52, a - s * 0.52 + ax * 0.1, 0.06, 0.05, 7)
+        veters = nm.endswith("achter")                                    # foto: verste laars = veterlaars met tong, voorste = omgeslagen kraag
+        if not veters:                                                    # zware omgeslagen leren kraag die over de schacht hangt
+            kraag = loft([(*(top - ax * 0.4), 0.6), (*(top - ax * 0.2), 0.64), (*(top + ax * 0.02), 0.62), (*(top + ax * 0.14), 0.56)], 10, 32, wobble=0.22, seed=len(nm))
+            kraag.name = nm + "_kraag"; tag(kraag, "laars"); shade_smooth(kraag, 1.2)
+            for k in range(7):                                            # hangende plooien in de kraag
+                ang = k / 7 * math.tau; s1 = ax.cross(V((0, 0, 1))).normalized(); s2 = ax.cross(s1)
+                d = s1 * math.cos(ang) + s2 * math.sin(ang)
+                plooi(kraag, top - ax * 0.38 + d * 0.66, top + ax * 0.1 + d * 0.64, 0.05, 0.045, 6)
+        else:
+            rand = loft([(*(top - ax * 0.05), 0.54), (*(top + ax * 0.08), 0.52)], 4, 28); rand.name = nm + "_rand"; tag(rand, "laars"); shade_smooth(rand, 1.2)
+        # neusstuk-naad en een rand (welt) boven de zool
+        vo = (toe - ank); vo.z = 0; vo.normalize(); sd = V((-vo.y, vo.x, 0))
+        cap = lerp(ank, toe, 0.62) + V((0, 0, -0.02))
+        plooi(ob, cap + sd * 0.4 + V((0, 0, -0.08)), cap + V((0, 0, 0.22)), 0.025, 0.02, 6); plooi(ob, cap - sd * 0.4 + V((0, 0, -0.08)), cap + V((0, 0, 0.22)), 0.025, 0.02, 6)
+        if veters:                                                        # vetersluiting naar het publiek: haken, kruisveter, tong
+            ld = (vo + V((0, -0.9, 0.5))); ld = (ld - ax * ld.dot(ax)).normalized(); lw = ax.cross(ld).normalized()
+            for k in range(7):
+                c = lerp(ank, top, 0.08 + k * 0.13) + ld * 0.44
+                for sg in (1, -1):
+                    h = loft([(*(c + lw * sg * 0.17 - ld * 0.02), 0.03), (*(c + lw * sg * 0.17 + ld * 0.05), 0.03)], 3, 8); h.name = nm + "_haak"; tag(h, "messing")
+                c2 = lerp(ank, top, 0.08 + (k + 1) * 0.13) + ld * 0.45
+                if k < 6:
+                    for sg in (1, -1):
+                        ve = loft([(*(c + lw * sg * 0.17 + ld * 0.04), 0.022), (*(lerp(c, c2, 0.5) + ld * 0.06), 0.024), (*(c2 - lw * sg * 0.17 + ld * 0.04), 0.022)], 8, 8)
+                        ve.name = nm + "_veter"; tag(ve, "veter")
+            tong = loft([(*(lerp(ank, top, 0.7) + ld * 0.38), 0.17), (*(top + ld * 0.4 - ax * 0.22), 0.19), (*(top + ld * 0.52 - ax * 0.38), 0.15)], 8, 16, flat=0.25, up=ld)
+            tong.name = nm + "_tong"; tag(tong, "laars"); shade_smooth(tong, 1.2)
+            plooi(ob, lerp(ank, top, 0.05) + ld * 0.4, top + ld * 0.4, 0.05, 0.035, 8)             # spleet van de sluiting
         # zool: onderkant van de voet plat slaan en daaronder een zool + hak met dezelfde omtrek
         s = V((-fw.y, fw.x, 0)); hiel = ank - fw * 0.45
         seg = [lerp(hiel, toe + fw * 0.2, t / 20) for t in range(21)]
@@ -279,12 +308,6 @@ def build(master):
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces); zo = new_mesh_object(nm + "_zool", bm, "LOW"); tag(zo, "zool")
             hak = loft([(*(hiel + fw * 0.05 + V((0, 0, zb - hiel.z - 0.1))), 0.3), (*(hiel + fw * 0.05 + V((0, 0, zb - hiel.z - 0.26))), 0.28)], 4, 16)
             hak.name = nm + "_hak"; tag(hak, "zool")
-        # veters: kruislingse veter over de schacht-voorkant
-        vo = (toe - ank); vo.z = 0; vo.normalize()
-        for k in range(5):
-            a = lerp(ank, top, 0.1 + k * 0.17) + vo * 0.45
-            ve = loft([(*(a + s * 0.14), 0.02), (*(a + V((0, 0, 0.0)) + vo * 0.03), 0.022), (*(a - s * 0.14 + ax * 0.1), 0.02)], 6, 6)
-            ve.name = nm + "_veter"; tag(ve, "veter")
     laars(KNEE_N, ANK_N, TOE_N, "GEO_laars_voor"); laars(KNEE_F, ANK_F, TOE_F, "GEO_laars_achter")
 
     for o in [o for o in bpy.data.objects if o.name.startswith("tmp")]: o.name = "GEO_deel"
