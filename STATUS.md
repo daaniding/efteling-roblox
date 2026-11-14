@@ -359,7 +359,7 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
   interieur. Concept-code voorportaal + knuppel klaar in `build/later_voorportaal_knuppel.py`, foto's in `ref/` (Knuppelenzak, Knuppeltje, Herbergfris2-5).
 - KLAAR volgens Daan (13 nov). Later: binnenkant (Herberginterieur-ontwerp + Herbergfris2-5: balkenplafond, haard, jongen aan tafel, waard), wandeltest.
 
-## De Zes Zwanen (chat 9, 13 nov) — v2 in Studio (buitenkant; interieur + Elisa later, zwanen statisch)
+## De Zes Zwanen (chat 9, 13-14 nov) — v3 in Studio (scene, wachtrij, botsing, belichting; zwanen/interieur later)
 Map `models/AR_ZesZwanen/`, brief `asset-brief.md`. Bronnen: 78 Eftepedia-plaatjes (`ref/eftepedia/`), Efteling-blog/pers (`ref/efteling_blog/`:
 zwaan zijaanzicht + 3D-model, staalskelet, bouwfeiten: toren 15 m, slot 350 m2, vijver 75.000 l). Echte bouwtekeningen niet openbaar (vergunningen/ride-databases
 nagezocht). Plattegrond = OSM: gebouw 961616753, vijvers 961616757/758/760, vaarbaan 837234781 (lus, tegen de klok in: in door de poort rechts, uit via de grot
@@ -372,10 +372,22 @@ links), rotsen 961616756 (eiland) / 961616759, controlehokje 961616755, pad 9616
   Bake `05_bake.py --pre ZK|ZO` met Poly Haven CC0: plastered_stone_wall (stuc), castle_wall_varriation (natuursteen), cliff_side (rots), clay_roof_tiles_02 (pannen).
   Sjerpen `build/02_sjerp.py` (rood/teal). Upload `build/upload.sh`, plaatsen `roblox/maak_plaatsscript.py` -> `plaats_zeszwanen.luau` (graaft terrein onder de vijvers,
   Ground onder pad/oevergrond), groen `roblox/plaats_zeszwanen_groen.luau` (76 bomen, ondergroei, asters langs het water, varens; kloont BomenBronV3/VVEchtePlanten).
-- Assets: kasteel **100541413989663**, omgeving **125064138686858**, zwaan **111482698984449** (ids in `textures/asset_ids.txt`). Screenshots `review/studio_v2_*.jpg`.
-- Schaal gecontroleerd met een 1.8 m testpop (SchaalPop): kasteel 16.1 m incl. rots onder water, zwaan 3.6 m.
-- NOG (Daan: "veel beter, gedetailleerder, op schaal"): stuc meer contrast/vlekken, zwanen fijner (veren-normalmap), Elisa + interieur later, bruggetje/beekje,
-  sprookjesboek, zwemvlies-afdrukken in het pad, wandeltest + fps-test.
+- v3 (14 nov, Daan: "zwanen voorlopig weg, scene eromheen echt, niet meer doorheen vallen, licht realistischer"):
+  - Zwanenboten uit Studio en uit het plaatsscript (de attractie zelf komt later). Interieurs en de vaarbeweging ook later.
+  - Stuc: scherpe afgebladderde plekken met bruingrijs metselwerk (stacked_stone_wall) + donkere breukrand, regenstrepen, vocht onderaan (05_bake rol stuc).
+  - Wachtrij naar D6z_vaart_wachtrij: lage Pieck-blauwe buisleuning met krullen i.p.v. sierhek op OSM 1255787244, oranje-bruine kalksteenbrokken langs de rij,
+    ingangsbord (groene paal, gouden bol), kade in rode klinkers, dichtgeklapte witte parasol, blauwgroene deur aan het hokje.
+  - Botsing: pad lag 1 stud boven het terrein zonder botsing (voeten zakten erin) en de vijverbodem botste niet (je viel in de kuil). Mesh-botsing
+    (PreciseConvexDecomposition) op de concave pad-/oeverplaat spande OVER het water (onzichtbare vloer, weggedrukt worden) -> nu 209 rasterblokken
+    (0.5 m cellen, samengevoegd) voor pad/oever/kade en vijverbodems; mesh-botsing alleen op rots/oeverstenen/stuc/natuursteen. Play-test: pad, wachtrij,
+    kade en oever Y 4.9 stabiel, vijvers: je staat op de bodem (waadt), niet meer weggedrukt.
+  - Export altijd via `build/export.sh` (met --extra: anders vallen botsblokken en lampen weg).
+  - Belichting voor het hele park: `park/belichting_schemer.luau` (zonsondergang 17.85, roze-violette sprookjeslucht via Atmosphere, geschilderde skybox
+    eruit, geen sterren, zachte wolken, zachtere schaduwen, Env-schalen 1, bloom/zonnestralen/dof licht, lantaarns 1.2/16).
+  - Maten nagemeten: hoogte 15.0 m = Efteling; vijver 227 m2 x 75 m3 = 33 cm diep (klopt). Kasteel 14.6 x 10.7 m tegen OSM 15.4 x 13.1: ~5% te smal en
+    de achteruitbouw (~2.5 m, binnenscene Elisa, achter de bomen) ontbreekt nog. Zwanen waarschijnlijk 10-15% te hoog (kop 2.1 m i.p.v. ~1.8 m boven water).
+- Assets v3: kasteel **123826992475315**, omgeving **99634573159616** (ids in `textures/asset_ids.txt`).
+- NOG: kasteel breder + achteruitbouw, zwanen terug (12% kleiner) en fijner, Elisa + interieur later, bruggetje/beekje, sprookjesboek, fps-test.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).

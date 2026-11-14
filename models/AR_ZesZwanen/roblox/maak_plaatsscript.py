@@ -45,7 +45,7 @@ def tex(pre):
             out.append(f"{n} = {{{v}{', ' + nm if nm else ''}}}")
     return "{" + ", ".join(out) + "}"
 src = open(D + "/roblox/plaats_template.luau").read()
-for k, v in {"@KASTEEL@": ids["MODEL_kasteel"], "@OMG@": ids["MODEL_omgeving"], "@ZWAAN@": ids["MODEL_zwaan"], "@TEXK@": tex("ZK_"), "@TEXO@": tex("ZO_"),
+for k, v in {"@KASTEEL@": ids["MODEL_kasteel"], "@OMG@": ids["MODEL_omgeving"], "@ZWAAN@": ids["MODEL_zwaan"], "@TEXK@": tex("ZK_"), "@TEXO@": tex("ZO_"), "@TEXZ@": tex("ZW_"),
              "@SJERP@": "{%s, %s}" % (ids["ZW_sjerp_rood"], ids["ZW_sjerp_teal"]), "@OX@": str(OX), "@OZ@": str(OZ), "@FX@": str(FX), "@FZ@": str(FZ),
              "@GRAAF@": ";".join(graaf), "@GROND@": ";".join(grond), "@ZWANEN@": json.dumps(ZW).replace("[", "{").replace("]", "}")}.items():
     src = src.replace(k, v)

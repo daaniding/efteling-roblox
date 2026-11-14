@@ -3,6 +3,7 @@
 local KASTEEL, OMG, ZWAAN = @KASTEEL@, @OMG@, @ZWAAN@
 local TEXK = @TEXK@
 local TEXO = @TEXO@
+local TEXZ = @TEXZ@
 local SJERP = @SJERP@
 local F = Vector3.new(@FX@, 0, @FZ@)
 local ORIGIN = CFrame.new(@OX@, 2.0, @OZ@) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
@@ -18,8 +19,11 @@ local M = {
 	creme = {Color3.fromRGB(230, 214, 178), "SmoothPlastic"}, dak = {Color3.fromRGB(40, 40, 44), "Slate"}, hekblauw = {Color3.fromRGB(72, 102, 106), "Metal"},
 	hout = {Color3.fromRGB(92, 58, 36), "Wood"}, zwaan = {Color3.fromRGB(238, 230, 210), "SmoothPlastic"}, snavel = {Color3.fromRGB(232, 112, 40), "SmoothPlastic"},
 	zwart = {Color3.fromRGB(16, 16, 16), "SmoothPlastic"}, oog = {Color3.fromRGB(8, 8, 8), "Glass"}, kuip = {Color3.fromRGB(128, 26, 24), "SmoothPlastic"}, kern = {Color3.fromRGB(30, 30, 30), "Rock"},
+	klinker = {Color3.fromRGB(110, 58, 44), "Brick"}, doek = {Color3.fromRGB(236, 232, 222), "Fabric"}, deurgroen = {Color3.fromRGB(56, 96, 96), "WoodPlanks"},
 }
 local GEEN_SCHADUW = {glasoranje = true, goud = true, donker = true}
+-- loopvlakken en massieve delen krijgen echte mesh-botsing (pad lag 1 stud boven het terrein: voeten zakten erin; vijverkuil: je viel erdoor)
+local MASSIEF = {oeversteen = true, rots = true, kern = true, steentjes = true, stuc = true, natuursteen = true}   -- pad/oever/bodem: rasterblokken (COLL_) i.p.v. mesh-botsing
 
 local function plaats(asset, naam, TEX)
 	local oud = workspace:FindFirstChild(naam); if oud then oud:Destroy() end
@@ -41,7 +45,7 @@ local function plaats(asset, naam, TEX)
 			if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.Box end
 		elseif string.match(p.Name, "^LAMP_") then
 			p.Transparency = 1; p.CastShadow = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.Name = "Lamp"; p.Parent = lampen
-			local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 196, 120); pl.Range = 16; pl.Brightness = 1.4; pl.Shadows = false; pl.Parent = p
+			local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 196, 120); pl.Range = 16; pl.Brightness = 1.2; pl.Shadows = false; pl.Parent = p
 		else
 			local tex = string.match(p.Name, "__TEX_([%w_]+)_%d+$"); local key = string.match(p.Name, "__MAT_([%a_]+)_%d+$")
 			if tex and TEX and TEX[tex] then
@@ -95,23 +99,11 @@ end
 
 local k, o1 = plaats(KASTEEL, "ZesZwanenKasteel", TEXK)
 local om, o2 = plaats(OMG, "ZesZwanenOmgeving", TEXO)
-local zw, o3 = plaats(ZWAAN, "ZesZwanenZwaan", nil)
-local map = workspace:FindFirstChild("ZesZwanenBoten"); if map then map:Destroy() end
-map = Instance.new("Model"); map.Name = "ZesZwanenBoten"; map.Parent = workspace
-for i, z in ipairs(@ZWANEN@) do
-	local c = zw:Clone(); c.Name = "Zwaan" .. i
-	local th = math.atan2(z[3], -z[4])
-	c:PivotTo(lokaal(z[1], z[2], WL) * CFrame.Angles(0, th, 0))
-	for _, p in ipairs(c:GetDescendants()) do
-		if p:IsA("BasePart") and p:GetAttribute("Sjerp") then
-			local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. SJERP[(i % 2) + 1]; sa.Parent = p
-		end
-	end
-	c.Parent = map
-end
-zw:Destroy()
+-- zwanenboten (de attractie zelf) staan er voorlopig niet in (Daan): alleen de scene eromheen
+local oudb = workspace:FindFirstChild("ZesZwanenBoten"); if oudb then oudb:Destroy() end
+local map = {GetChildren = function() return {} end}; local o3 = {}
 local ids = {}
-for _, t in ipairs({TEXK, TEXO}) do for _, v in pairs(t) do for _, id in ipairs(v) do local d = Instance.new("Decal"); d.Texture = "rbxassetid://" .. id; table.insert(ids, d) end end end
+for _, t in ipairs({TEXK, TEXO, TEXZ}) do for _, v in pairs(t) do for _, id in ipairs(v) do local d = Instance.new("Decal"); d.Texture = "rbxassetid://" .. id; table.insert(ids, d) end end end
 for _, id in ipairs(SJERP) do local d = Instance.new("Decal"); d.Texture = "rbxassetid://" .. id; table.insert(ids, d) end
 local ok = 0; game:GetService("ContentProvider"):PreloadAsync(ids, function(_, st) if st == Enum.AssetFetchStatus.Success then ok += 1 end end)
 local function onb(t) return #t > 0 and table.concat(t, ",") or "-" end

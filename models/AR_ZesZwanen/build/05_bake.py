@@ -18,7 +18,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(HERE))
 TEX = os.path.join(HERE, "textures"); os.makedirs(TEX, exist_ok=True)
 CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
-RGB = {"stuc": (208, 205, 196), "natuursteen": (190, 180, 160), "rots": (150, 148, 140), "pannen": (150, 80, 60), "leien": (120, 70, 50), "oeversteen": (196, 178, 150), "hout": (84, 78, 70)}
+RGB = {"stuc": (208, 205, 196), "natuursteen": (190, 180, 160), "rots": (150, 148, 140), "pannen": (150, 80, 60), "leien": (120, 70, 50), "oeversteen": (196, 178, 150), "hout": (84, 78, 70), "zwaan": (236, 228, 208)}
 
 
 
@@ -99,14 +99,37 @@ def build_material(name, role, img):
         if role == "ruine":
             col = mix(col, lin((96, 100, 70)), ramp(noise(1.6, 6, 0.6), (0, 0, 0, 1), (1, 1, 1, 1), 0.58, 0.7))                 # groen aanslag
         bump = (br.outputs["Fac"], 0.5)
-    elif role == "stuc":   # De Zes Zwanen: lichtgrijs stucwerk met donkere vlekken/doorschemerende steen (plastered_stone_wall als vlekkenmasker)
-        c_, h_ = foto("plastered_stone_wall", wallvec(), 0.45)
-        col = mix(col, ramp(h_, (0.72, 0.72, 0.7, 1), (1.12, 1.12, 1.1, 1), 0.05, 0.35), 1.0, "MULTIPLY")
-        col = mix(col, ramp(noise(0.6, 4), (0.85, 0.86, 0.84, 1), (1.05, 1.05, 1.04, 1)), 1.0, "MULTIPLY")
+    elif role == "stuc":   # De Zes Zwanen v3: licht grijsbeige stuc met SCHERP afgebladderde plekken (bruingrijs metselwerk eronder, donkere rand),
+        # regenstrepen omlaag en vocht onderaan (D6z_exterieur_totaal / Intro_zeszwanen: grote contrastrijke vlekken)
+        wv = wallvec()
+        def nvec(sx, sy, detail=6, rough=0.6):
+            mp = N.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (sx, sy, sx); L.new(wv, mp.inputs["Vector"])
+            n = N.new("ShaderNodeTexNoise"); n.inputs["Scale"].default_value = 1.0; n.inputs["Detail"].default_value = detail
+            n.inputs["Roughness"].default_value = rough; L.new(mp.outputs[0], n.inputs["Vector"]); return n.outputs["Fac"]
+        c_, h_ = foto("plastered_stone_wall", wv, 0.45)
+        col = mix(col, ramp(h_, (0.80, 0.80, 0.78, 1), (1.10, 1.10, 1.08, 1), 0.05, 0.4), 1.0, "MULTIPLY")
+        col = mix(col, ramp(noise(0.6, 4), (0.82, 0.82, 0.80, 1), (1.06, 1.06, 1.05, 1)), 1.0, "MULTIPLY")
+        fl = nvec(0.8, 0.8, 6, 0.62)                                                                           # afbladder-masker
+        mc, mh = foto("stacked_stone_wall", wv, 0.55)
+        steen = mix(mc, (0.78, 0.70, 0.62, 1), 1.0, "MULTIPLY")
+        col = mix(col, lin((96, 92, 84)), ramp(fl, (0, 0, 0, 1), (1, 1, 1, 1), 0.575, 0.585))                # donkere breukrand
+        col = mix(col, steen, ramp(fl, (0, 0, 0, 1), (1, 1, 1, 1), 0.592, 0.6))                              # metselwerk zichtbaar
+        st = nvec(7.0, 0.35, 5, 0.55)                                                                            # verticale regenstrepen
+        col = mix(col, ramp(st, (0.74, 0.74, 0.72, 1), (1, 1, 1, 1), 0.38, 0.62), 1.0, "MULTIPLY")
         zr = N.new("ShaderNodeMapRange"); L.new(sp.outputs["Z"], zr.inputs["Value"]); zr.inputs["From Min"].default_value = 4.5; zr.inputs["From Max"].default_value = 3.4
         mm2 = N.new("ShaderNodeMath"); mm2.operation = "MULTIPLY"; L.new(zr.outputs[0], mm2.inputs[0]); L.new(noise(2.5, 5), mm2.inputs[1])
-        col = mix(col, lin((120, 116, 104)), ramp(mm2.outputs[0], (0, 0, 0, 1), (0.6, 0.6, 0.6, 1), 0.25, 0.6))           # vocht onderaan (op de rots)
-        bump = (h_, 0.5)
+        col = mix(col, lin((112, 108, 96)), ramp(mm2.outputs[0], (0, 0, 0, 1), (0.75, 0.75, 0.75, 1), 0.25, 0.6))       # vocht onderaan (op de rots)
+        pm = ramp(fl, (1, 1, 1, 1), (0, 0, 0, 1), 0.575, 0.6)                                                  # plek ligt dieper dan het stuc
+        bw2 = N.new("ShaderNodeRGBToBW"); L.new(pm, bw2.inputs[0])
+        hh = N.new("ShaderNodeMath"); hh.operation = "MULTIPLY_ADD"; L.new(h_, hh.inputs[0]); hh.inputs[1].default_value = 0.35; L.new(bw2.outputs[0], hh.inputs[2])
+        bump = (hh.outputs[0], 0.8)
+    elif role == "zwaan":   # polyester zwanenboot: roomwit, zijdeglans; AO op korte afstand laat de veren-groeven donker lopen (D6z_zwaan_closeup)
+        col = mix(col, ramp(noise(1.2, 3), (0.95, 0.94, 0.92, 1), (1.03, 1.02, 1.0, 1)), 1.0, "MULTIPLY")
+        ao2 = N.new("ShaderNodeAmbientOcclusion"); ao2.samples = 24; ao2.inputs["Distance"].default_value = 0.06
+        col = mix(col, ramp(ao2.outputs["AO"], (0.52, 0.48, 0.42, 1), (1, 1, 1, 1), 0.0, 0.95), 1.0, "MULTIPLY")
+        zr = N.new("ShaderNodeMapRange"); L.new(sp.outputs["Z"], zr.inputs["Value"]); zr.inputs["From Min"].default_value = 0.25; zr.inputs["From Max"].default_value = 0.0
+        col = mix(col, lin((150, 150, 128)), ramp(zr.outputs[0], (0, 0, 0, 1), (0.55, 0.55, 0.55, 1)))            # groenig waterrandje
+        bump = (noise(60.0, 2), 0.05)
     elif role == "natuursteen":   # poortgebouw: grijs-beige natuursteenblokken (castle_wall_varriation)
         c_, h_ = foto("castle_wall_varriation", wallvec(), 0.42)
         col = mix(c_, (1.05, 1.02, 0.95, 1), 1.0, "MULTIPLY"); bump = (h_, 1.0)
@@ -202,7 +225,7 @@ for gname, role, ob in objs:
     bpy.context.view_layer.objects.active = ob; ob.select_set(True)
     switch(m, "EMIT"); bpy.ops.object.bake(type="EMIT", margin=6, use_clear=True)
     img.filepath_raw = os.path.join(TEX, "%s_%s_kleur.png" % (PRE, gname)); img.file_format = "PNG"; img.save()
-    if role in ("stuc", "leien", "pannen", "natuursteen", "rots", "oeversteen", "hout"):
+    if role in ("stuc", "leien", "pannen", "natuursteen", "rots", "oeversteen", "hout", "zwaan"):
         nimg = bpy.data.images.new("NRM_" + gname, RES, RES, alpha=False); nimg.colorspace_settings.name = "Non-Color"
         set_target(m, nimg); switch(m, "NORMAL"); sc.cycles.samples = 4
         bpy.ops.object.bake(type="NORMAL", normal_space="TANGENT", margin=6, use_clear=True); sc.cycles.samples = SAMPLES

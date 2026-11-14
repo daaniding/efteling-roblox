@@ -11,7 +11,7 @@ MATS = {"water": ((0.12, 0.18, 0.12, 1), 0.05), "bodem": ((0.1, 0.09, 0.07, 1), 
         "grond": ((0.22, 0.2, 0.13, 1), 0.95), "beton": ((0.42, 0.33, 0.26, 1), 0.9), "steentjes": ((0.72, 0.6, 0.36, 1), 0.9),
         "bordeaux": ((0.4, 0.06, 0.08, 1), 0.6), "creme": ((0.88, 0.82, 0.68, 1), 0.7), "dak": ((0.12, 0.12, 0.13, 1), 0.8),
         "hekblauw": ((0.28, 0.4, 0.42, 1), 0.5), "goud": ((0.8, 0.6, 0.2, 1), 0.3), "ijzer": ((0.05, 0.05, 0.05, 1), 0.45),
-        "glaslamp": ((0.95, 0.8, 0.5, 1), 0.2), "hout": ((0.36, 0.22, 0.13, 1), 0.7), "venster": ((0.05, 0.05, 0.05, 1), 0.3), "oeversteen": ((0.6, 0.52, 0.42, 1), 0.9), "kern": ((0.08, 0.08, 0.08, 1), 0.95)}
+        "glaslamp": ((0.95, 0.8, 0.5, 1), 0.2), "hout": ((0.36, 0.22, 0.13, 1), 0.7), "venster": ((0.05, 0.05, 0.05, 1), 0.3), "oeversteen": ((0.6, 0.52, 0.42, 1), 0.9), "klinker": ((0.36, 0.2, 0.15, 1), 0.85), "doek": ((0.92, 0.9, 0.85, 1), 0.8), "deurgroen": ((0.2, 0.36, 0.36, 1), 0.6), "kern": ((0.08, 0.08, 0.08, 1), 0.95)}
 O = {e["id"]: e for e in json.load(open(os.path.join(ROOT, "ref", "osm_model.json")))}
 def P(i): pts = [tuple(p) for p in O[i]["pts"]]; return pts[:-1] if pts[0] == pts[-1] else pts
 VIJVERS = [P("961616757"), P("961616758"), P("961616760")]
@@ -53,6 +53,61 @@ def hek(pts, h=1.0, part="hek", gat=None):
             put(part, "hekblauw", bz(x - 0.04, x + 0.04, -0.04, 0.04, 0.0, h + 0.05), M)
             put(part, "goud", ell((x, 0, h + 0.13), (0.055, 0.055, 0.055), 10, 6), M)
         coll_box((ax + bx) / 2, (ay + by) / 2, h / 2, L, 0.12, h, ang)
+
+
+def buisleuning(pts, h=0.95, part="leuning", krul=(True, True)):
+    """lage Pieck-blauwe buisleuning van de wachtrij (D6z_vaart_wachtrij, Zeszwanen-overzicht): ronde bovenbuis op palen ~1.5 m,
+    de uiteinden eindigen in een opgerolde krul"""
+    put(part, "hekblauw", btube([(x, y, h) for x, y in pts], 0.022, 8))
+    for (ax, ay), (bx, by) in zip(pts, pts[1:]):
+        L = math.hypot(bx - ax, by - ay); n = max(1, int(L / 1.5 + 0.5))
+        for k in range(n + 1):
+            t = k / n; x, y = ax + (bx - ax) * t, ay + (by - ay) * t
+            put(part, "hekblauw", btube([(x, y, 0.0), (x, y, h)], 0.02, 6))
+            put(part, "hekblauw", btube([(x, y, 0.0), (x, y, 0.06)], 0.04, 6))                                  # voetplaatje
+        coll_box((ax + bx) / 2, (ay + by) / 2, 0.6, L, 0.1, 1.2, math.degrees(math.atan2(by - ay, bx - ax)))
+    for i, (end, prev) in enumerate(((pts[0], pts[1]), (pts[-1], pts[-2]))):
+        if not krul[i]: continue
+        ex, ey = end; dx, dy = ex - prev[0], ey - prev[1]; d = math.hypot(dx, dy); dx, dy = dx / d, dy / d
+        sp = []
+        for k in range(22):                                                                                    # krul naar beneden
+            a = k / 21 * math.tau * 1.15; r = 0.16 * (1 - k / 26)
+            sp.append((ex + dx * r * math.sin(a), ey + dy * r * math.sin(a), h - r + r * math.cos(a)))
+        put(part, "hekblauw", btube(sp, 0.018, 6))
+
+
+def losse_stenen(pts, off, every=1.4, seed=1):
+    """oranje-bruine kalksteenbrokken langs de wachtrij (D6z_vaart_wachtrij), net naast de leuning"""
+    r = random.Random(seed)
+    for (ax, ay), (bx, by) in zip(pts, pts[1:]):
+        L = math.hypot(bx - ax, by - ay); nx, ny = -(by - ay) / L, (bx - ax) / L; k = r.uniform(0.2, every)
+        while k < L:
+            t = k / L; x, y = ax + (bx - ax) * t + nx * off, ay + (by - ay) * t + ny * off
+            s = r.uniform(0.16, 0.32)
+            st = bbox(s * r.uniform(1.1, 1.7), s, s * r.uniform(0.6, 0.9), 0, 0, 0, s * 0.3)
+            bmesh.ops.rotate(st, verts=st.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(r.uniform(0, math.tau), 3, "Z") @ Matrix.Rotation(r.uniform(-0.3, 0.3), 3, "X"))
+            bmesh.ops.translate(st, vec=(x, y, s * 0.25), verts=st.verts)
+            put("stenen", "oeversteen", st); k += r.uniform(every * 0.6, every * 1.5)
+
+
+def parasol(x, y):
+    """dichtgeklapte witte parasol op een ronde voet aan de kade (Zeszwanen-instappen-2023)"""
+    put("kade", "beton", blathe([(0, 0), (0.32, 0), (0.3, 0.08), (0.06, 0.12), (0, 0.12)], 16), TR(x, y, 0.06))
+    put("kade", "ijzer", btube([(x, y, 0.1), (x, y, 2.75)], 0.025, 6))
+    put("kade", "doek", blathe([(0, 0.95), (0.06, 0.95), (0.2, 1.35), (0.24, 1.9), (0.17, 2.45), (0.05, 2.62), (0, 2.66)], 10), TR(x, y, 0.06))
+    put("kade", "doek", ell((x + 0.2, y, 2.0), (0.09, 0.05, 0.35), 6, 6))                                      # losse plooi
+    coll_box(x, y, 1.3, 0.4, 0.4, 2.6)
+
+
+def bord(x, y, ang):
+    """ingangsbord: groene paal met gouden bol en een donker bord met het sprookje (D6z_zwaan_closeup links)"""
+    M = Matrix.Translation((x, y, 0)) @ Matrix.Rotation(math.radians(ang), 4, "Z")
+    put("bord", "hekblauw", bz(-0.06, 0.06, -0.06, 0.06, 0.0, 2.3), M)
+    put("bord", "goud", ell((0, 0, 2.38), (0.07, 0.07, 0.07), 10, 6), M)
+    put("bord", "venster", bz(-0.32, 0.32, -0.1, -0.07, 0.9, 2.05, 0.01), M)
+    put("bord", "goud", bz(-0.35, 0.35, -0.11, -0.065, 2.05, 2.1), M); put("bord", "goud", bz(-0.35, 0.35, -0.11, -0.065, 0.85, 0.9), M)
+    put("bord", "bordeaux", bz(-0.28, 0.28, -0.115, -0.1, 0.95, 1.12), M)                                    # naambordje onderaan
+    coll_box(x, y, 1.15, 0.3, 0.3, 2.3, ang)
 
 
 def lantaarn_paal(x, y, z0, h=3.0, kleur="ijzer"):
@@ -123,7 +178,8 @@ def build(master):
     lantaarn_paal(1.9, -5.7, 1.35, 2.6); lantaarn_paal(4.1, -6.3, 1.3, 2.6)                             # zwarte lantaarns op het eiland (foto)
     # ================= kade (instap) langs de zuidrand van de vijver =================
     KADE = [(-0.95, -13.14), (1.88, -12.9), (4.07, -13.27), (6.05, -12.52), (7.65, -11.13), (7.95, -11.5), (6.3, -12.95), (4.1, -13.75), (1.9, -13.4), (-0.95, -13.6)]
-    put("kade", "beton", plaat(KADE, -0.3, 0.06))
+    put("kade", "klinker", plaat(KADE, -0.3, 0.06))                                                       # rode klinkers (foto instappen)
+    parasol(5.6, -13.2)
     for (ax, ay), (bx, by) in zip(KADE[:5], KADE[1:5]):                                                 # natuurstenen kaderand
         L = math.hypot(bx - ax, by - ay); ang = math.degrees(math.atan2(by - ay, bx - ax))
         put("kade", "oeversteen", bz(0, L, -0.12, 0.12, -0.25, 0.1, 0.02), Matrix.Translation((ax, ay, 0)) @ Matrix.Rotation(math.radians(ang), 4, "Z"))
@@ -144,7 +200,7 @@ def build(master):
         put("hokje", "venster", bz(x0, x1, y0 - 0.02, y0 + 0.02, 1.15, 2.0), MH)
         put("hokje", "creme", bz(x0 - 0.06, x1 + 0.06, y0 - 0.05, y0 + 0.05, 1.08, 1.15), MH); put("hokje", "creme", bz(x0 - 0.06, x1 + 0.06, y0 - 0.05, y0 + 0.05, 2.0, 2.07), MH)
         for xm in ((x0 + x1) / 2,): put("hokje", "creme", bz(xm - 0.02, xm + 0.02, y0 - 0.04, y0 + 0.04, 1.15, 2.0), MH)
-    put("hokje", "hout", bz(-W2 - 0.03, -W2 + 0.02, -0.45, 0.45, 0.6, 2.25), MH)                       # deur zijkant
+    put("hokje", "deurgroen", bz(-W2 - 0.03, -W2 + 0.02, -0.45, 0.45, 0.6, 2.25), MH)                       # deur zijkant
     rp = [(-D2 - 0.35, 2.42), (0.0, 3.05), (D2 + 0.35, 2.42), (D2 + 0.35, 2.32), (0.0, 2.92), (-D2 - 0.35, 2.32)]
     put("hokje", "dak", prism_x(rp, -W2 - 0.35, W2 + 0.35), MH)
     for sd in (-1, 1):                                                                                 # geschulpte crème daklijst
@@ -155,7 +211,10 @@ def build(master):
     put("hokje", "creme", bz(-0.42, 0.42, -D2 - 0.07, -D2 - 0.04, 0.75, 1.0), MH)                      # bordje 'Koninklijke Garde'
     coll_box(hx, hy, 1.2, 2 * W2, 2 * D2, 2.4, ha)
     # ================= hekken: wachtrij (OSM) en langs de vijverrand bij de kade =================
-    hek(P("1255787244")[:6]); hek(P("1255787244")[6:])
+    Q = P("1255787244")                                                                                    # middenleuning wachtrij (in- en uitgang)
+    buisleuning(Q[:6]); buisleuning(Q[6:])
+    losse_stenen(Q[:6], 0.35, seed=4); losse_stenen(Q[6:], -0.35, seed=5)
+    bord(12.9, -7.2, 15)                                                                                   # ingangsbord bij het begin van de wachtrij
     hek([(-7.84, -16.83), (-6.61, -16.58), (-5.17, -15.7), (-3.85, -13.81), (-2.89, -13.55), (-0.95, -13.6)])
     # houten galgenlantaarn linksvoor (foto) en de OSM-lantaarn aan het begin van het pad
     for (gx, gy, ga) in ((-8.4, -15.2, 20), (-3.52, -23.88, -30)):
@@ -167,6 +226,38 @@ def build(master):
         put("lampen", "glaslamp", blathe([(0, 0.05), (0.095, 0.05), (0.095, 0.37), (0, 0.37)], 4), M @ Matrix.Translation((0.85, 0, 2.22)))
         p_ = M @ Vector((0.85, 0, 2.45)); LAMPS_.append([round(p_.x, 2), round(p_.y, 2), round(p_.z, 2)])
         coll_box(gx, gy, 1.6, 0.25, 0.25, 3.2)
+    # ================= loopvlak-botsing als raster (Studio's convex-decompositie van de concave pad-/oeverplaat spande over het water:
+    # onzichtbare vloer + weggedrukt worden). Rijen van 0.5 m cellen, per rij samengevoegd en daarna verticaal gelijke stroken samen. =================
+    C = 0.5; X0, X1, Y0, Y1 = -13.0, 22.0, -28.0, 9.0; nx, ny = int((X1 - X0) / C), int((Y1 - Y0) / C)
+    for soort in ("loop", "bodem"):
+        runs = {}
+        for j in range(ny):
+            cy = Y0 + (j + 0.5) * C; i = 0; rij = []
+            while i < nx:
+                def ok(ii):
+                    cx = X0 + (ii + 0.5) * C; nat = any(inside(cx, cy, v) for v in VIJVERS)
+                    if soort == "bodem": return nat
+                    if inside(cx, cy, KADE): return True
+                    if nat or inside(cx, cy, KASTEEL): return False
+                    return inside(cx, cy, PAD) or any(segdist(cx, cy, f) < 0.95 for f in VOETPADEN) or any(segdist(cx, cy, v + [v[0]]) < 1.45 for v in VIJVERS)
+                if ok(i):
+                    i0 = i
+                    while i < nx and ok(i): i += 1
+                    rij.append((i0, i))
+                else: i += 1
+            runs[j] = rij
+        open_ = {}
+        def sluit(key, j0, j1):
+            i0, i1 = key; z0, z1 = ((-0.3, 0.06) if soort == "loop" else (WL - 1.2, WL - 0.9))
+            coll_box(X0 + (i0 + i1) / 2 * C, Y0 + (j0 + j1) / 2 * C, (z0 + z1) / 2, (i1 - i0) * C, (j1 - j0) * C, z1 - z0)
+        for j in range(ny):
+            nu = set(runs[j])
+            for key in list(open_):
+                if key not in nu: sluit(key, open_.pop(key), j)
+            for key in nu:
+                if key not in open_: open_[key] = j
+        for key, j0 in open_.items(): sluit(key, j0, ny)
+    log("raster-botsing", len(COLL))
     for (part, mat), bm in PARTS.items():
         if len(bm.faces) == 0: continue
         ob = new_mesh_object(f"ZO_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])
