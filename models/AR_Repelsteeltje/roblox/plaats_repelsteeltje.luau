@@ -47,7 +47,7 @@ for _, p in ipairs(m:GetChildren()) do
 		elseif key and M[key] then
 			p.Color = M[key][1]; p.Material = Enum.Material[M[key][2]]
 			if key == "glasoranje" then p.Transparency = 0.2; p.CastShadow = false end
-			if key == "flagstone" then pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end) end
+			if key == "flagstone" then pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end); p.CFrame = p.CFrame + Vector3.new(0, 0.3, 0) end   -- net boven het terreinoppervlak
 		else table.insert(onbekend, p.Name) end
 	end
 end

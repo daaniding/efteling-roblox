@@ -39,6 +39,10 @@ for gx = -8, 9, 0.6 do for gy = -5, 6, 0.6 do
 	if segd(gx, gy, HUIS) < 1.4 or (gx < -2.3 and gx > -6.0 and gy > -2.0 and gy < 2.2) then
 		local p = (ORIGIN * CFrame.new(-gx * S, 0, gy * S)).Position; vlak[math.floor(p.X / 4) .. "," .. math.floor(p.Z / 4)] = true end end end
 for k in pairs(vlak) do local i, j = string.match(k, "(-?%d+),(-?%d+)"); T:FillBlock(CFrame.new(tonumber(i) * 4 + 2, 6, tonumber(j) * 4 + 2), Vector3.new(4, 12, 4), Enum.Material.Air) end
+-- 1c) onder het pad geen grassprieten: Grass/LeafyGrass -> Ground
+for x = -15, 12, 0.7 do for y = -10, -3, 0.7 do
+	if inside(x, y, PAD) then local p = (ORIGIN * CFrame.new(-x * S, 0, y * S)).Position; local X, Z = math.floor(p.X / 4) * 4, math.floor(p.Z / 4) * 4
+		for _, mt in ipairs({Enum.Material.Grass, Enum.Material.LeafyGrass}) do T:ReplaceMaterial(Region3.new(Vector3.new(X - 4, -8, Z - 4), Vector3.new(X + 8, 8, Z + 8)):ExpandToGrid(4), 4, mt, Enum.Material.Ground) end end end end
 -- 2) groen
 local R = Random.new(1812)
 local function U(a, b) return a + (b - a) * R:NextNumber() end
