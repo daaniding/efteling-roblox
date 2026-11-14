@@ -180,6 +180,9 @@ def build(master):
     KADE = [(-0.95, -13.14), (1.88, -12.9), (4.07, -13.27), (6.05, -12.52), (7.65, -11.13), (7.95, -11.5), (6.3, -12.95), (4.1, -13.75), (1.9, -13.4), (-0.95, -13.6)]
     put("kade", "klinker", plaat(KADE, -0.3, 0.06))                                                       # rode klinkers (foto instappen)
     parasol(5.6, -13.2)
+    # binnenplaats voor de wandelgang: rode klinkers (D6z_wandelingang_slot / landschap_ingang_slot), tegen de achterbouw van het kasteel
+    HOF = [(4.22, 6.57), (10.16, 6.33), (11.55, 4.59), (12.2, 2.2), (9.0, 1.9), (6.41, 1.58), (5.55, 3.02), (3.96, 3.13), (2.97, 4.14), (3.81, 5.47)]
+    put("kade", "klinker", plaat(HOF, -0.05, 0.08))
     for (ax, ay), (bx, by) in zip(KADE[:5], KADE[1:5]):                                                 # natuurstenen kaderand
         L = math.hypot(bx - ax, by - ay); ang = math.degrees(math.atan2(by - ay, bx - ax))
         put("kade", "oeversteen", bz(0, L, -0.12, 0.12, -0.25, 0.1, 0.02), Matrix.Translation((ax, ay, 0)) @ Matrix.Rotation(math.radians(ang), 4, "Z"))

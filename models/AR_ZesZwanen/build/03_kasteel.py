@@ -10,7 +10,7 @@ RNG = random.Random(2019)
 MATS = {"stuc": ((0.8, 0.79, 0.74, 1), 0.9), "natuursteen": ((0.62, 0.6, 0.55, 1), 0.9), "rots": ((0.5, 0.49, 0.45, 1), 0.95),
         "pannen": ((0.55, 0.26, 0.2, 1), 0.85), "leien": ((0.42, 0.27, 0.18, 1), 0.8), "hout": ((0.3, 0.24, 0.19, 1), 0.8),
         "venster": ((0.05, 0.05, 0.05, 1), 0.3), "glasoranje": ((1.0, 0.62, 0.25, 1), 0.2), "ijzer": ((0.05, 0.05, 0.05, 1), 0.45),
-        "goud": ((0.8, 0.6, 0.2, 1), 0.3), "glaslamp": ((0.95, 0.8, 0.5, 1), 0.2), "donker": ((0.02, 0.02, 0.02, 1), 0.9)}
+        "goud": ((0.8, 0.6, 0.2, 1), 0.3), "glaslamp": ((0.95, 0.8, 0.5, 1), 0.2), "donker": ((0.02, 0.02, 0.02, 1), 0.9), "groenhout": ((0.2, 0.29, 0.23, 1), 0.8), "lantaarnrood": ((0.55, 0.15, 0.1, 1), 0.6)}
 T = Vector((3.55, 1.25))                        # torenmidden (foto: toren rijst links-achter uit het poortgebouw)
 A = Vector((-2.95, -1.0)); ANG = 0.0            # linkervleugel: gevel evenwijdig aan de poortvoorzijde (foto: beide recht van voren), rechts tegen de toren
 MW = Matrix.Translation((A.x, A.y, 0)) @ Matrix.Rotation(math.radians(ANG), 4, "Z")
@@ -181,6 +181,76 @@ def build(master):
         a = math.radians(a); Mk = Matrix.Translation((T.x + 1.14 * math.cos(a), T.y + 1.14 * math.sin(a), 0)) @ Matrix.Rotation(a + math.pi / 2, 4, "Z")
         put("toren", "stuc", band(arch_pts(0, zz, 0.28, 0.6, 6), 0.06, -0.09, 0.06), Mk)
         put("toren", "stuc", bz(-0.22, 0.22, -0.14, 0.0, zz - 0.07, zz, 0.01), Mk)
+    # ================= ACHTERBOUW volgens de OSM-omtrek 961616753 (15.4 x 13.1 m; Efteling: 'slot 350 m2') =================
+    # rechts: gepleisterde kantelenmuur met natuurstenen pijlers, ingang wandelgang (houten afdak, rode lantaarns) en de lage uitgangspoort
+    # met gebogen pannenkap en bollen (D6z_wandelingang_slot, D6z_landschap_ingang_slot); links: lager blok bruine natuursteen met kantelen
+    # (D6z_ontwerp_aanzicht_links: kantelen ~4.8 m boven maaiveld, ervoor een lager blok). Binnenkant komt later (Daan).
+    def prisma(poly, z0, z1):
+        bm = bmesh.new(); b = [bm.verts.new((x, y, z0)) for x, y in poly]; t = [bm.verts.new((x, y, z1)) for x, y in poly]
+        n_ = len(poly); bm.faces.new(b[::-1]); bm.faces.new(t)
+        for i in range(n_): bm.faces.new((b[i], b[(i + 1) % n_], t[(i + 1) % n_], t[i]))
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bmesh.ops.triangulate(bm, faces=[f for f in bm.faces if len(f.verts) > 4], ngon_method="EAR_CLIP"); return bm
+    AR = [(6.41, 1.58), (5.55, 3.02), (3.96, 3.13), (2.97, 4.14), (3.81, 5.47), (4.22, 6.57), (1.63, 7.77), (-2.0, 4.83)]
+    AL = [(-2.0, 4.83), (-3.71, 6.86), (-8.27, 3.23), (-6.62, 1.19)]
+    put("achter", "stuc", organisch(prisma(AR + [(-1.0, 2.4), (2.3, 1.45)], -0.05, 4.0), 0.08, 3, 0.5, 0.03, 1.2, 0.1))
+    put("achter", "natuursteen", prisma(AL + [(-3.0, 2.4), (-1.0, 2.4)], -0.05, 3.3))
+    kantelen(AR, 4.35, "achter", "stuc"); kantelen(AL, 3.6, "achter", "natuursteen", boog=False)
+    for (x, y) in AR[:7]:                                                                                   # natuurstenen hoekpijlers
+        for i in range(10):
+            z = -0.05 + i * 0.45; lang = 0.66 if i % 2 else 0.46
+            put("achter", "natuursteen", bz(x - lang / 2, x + lang / 2, y - 0.3, y + 0.3, z, z + 0.42, 0.04))
+        put("achter", "natuursteen", bz(x - 0.36, x + 0.36, y - 0.36, y + 0.36, 4.45, 4.62, 0.03))
+    put("achter", "donker", prisma([(-4.6, 2.2), (-2.6, 2.2), (-2.6, 3.0), (-4.6, 3.0)], 0.0, 1.9)) if False else None
+    def wandframe(a, b, naar):
+        """matrix op het midden van muurstuk a-b, lokaal x langs de muur, lokaal -y naar buiten (richting punt 'naar')"""
+        mx, my = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2; ux, uy = b[0] - a[0], b[1] - a[1]; L = math.hypot(ux, uy)
+        nx, ny = uy / L, -ux / L
+        if (naar[0] - mx) * nx + (naar[1] - my) * ny < 0: nx, ny = -nx, -ny
+        return Matrix.Translation((mx, my, 0)) @ Matrix.Rotation(math.atan2(nx, -ny), 4, "Z"), L
+    # ingang wandelgang: donkere boogopening, houten afdak met pannen op gebogen schoren, twee rode lantaarns
+    Mi, _ = wandframe((3.96, 3.13), (2.97, 4.14), (7.0, 5.0))
+    put("achter", "donker", boutline(arch_pts(0, 0.0, 1.35, 2.35, 10), -0.04, 0.12), Mi)
+    put("achter", "natuursteen", band(arch_pts(0, 0.0, 1.35, 2.35, 10), 0.16, -0.1, 0.12), Mi)
+    put("achter", "hout", bz(-0.95, 0.95, -0.06, 0.0, 2.45, 3.25, 0.01), Mi)                                # groen-grijze planken boven de deur
+    put("achter", "pannen", prism_x([(0.0, 3.4), (-1.1, 2.7), (-1.1, 2.6), (0.0, 3.28)], -1.05, 1.05), Mi)
+    put("achter", "hout", prism_x([(0.0, 3.3), (-1.12, 2.62), (-1.12, 2.5), (0.0, 3.18)], -1.08, 1.08), Mi)
+    for sx in (-0.9, 0.9):
+        put("achter", "hout", btube([(sx, -0.05, 1.9), (sx, -0.5, 2.25), (sx, -0.95, 2.62)], 0.06, 6), Mi)
+        Ml2 = Mi @ Matrix.Translation((sx * 1.18, -0.28, 0))
+        put("achter", "ijzer", btube([(0, 0.28, 2.0), (0, 0.0, 2.0), (0, 0.0, 1.9)], 0.015, 5), Ml2)
+        put("achter", "lantaarnrood", blathe([(0, 1.45), (0.1, 1.48), (0.1, 1.8), (0.14, 1.82), (0.02, 1.92), (0, 1.93)], 6), Ml2)
+        put("achter", "glasoranje", blathe([(0, 1.5), (0.105, 1.5), (0.105, 1.78), (0, 1.78)], 6), Ml2)
+        p_ = Ml2 @ Vector((0, 0, 1.65)); LAMPS_.append([round(p_.x, 2), round(p_.y, 2), round(p_.z, 2)])
+    # uitgangspoort: lager gepleisterd portaal dat 0.7 m uitsteekt, boogopening, gebogen pannenkap, pijlers met stenen bollen
+    Mu, _ = wandframe((3.81, 5.47), (4.22, 6.57), (8.0, 5.5))
+    put("achter", "stuc", organisch(bz(-1.05, 1.05, -0.7, 0.05, -0.05, 2.75, 0.03), 0.04, 3, 0.4, 0.02, 1.0, 0.2), Mu)
+    put("achter", "donker", boutline(arch_pts(0, 0.0, 1.2, 2.2, 10), -0.74, 0.8), Mu)
+    put("achter", "stuc", band(arch_pts(0, 0.0, 1.2, 2.2, 10), 0.12, -0.78, 0.08), Mu)
+    put("achter", "pannen", prism_x([(0.0, 3.05), (-0.45, 2.92), (-0.8, 2.74), (-0.8, 2.66), (-0.45, 2.82), (0.0, 2.95)], -1.1, 1.1), Mu @ Matrix.Translation((0, -0.32, 0)))
+    for sx in (-1.25, 1.25):
+        put("achter", "stuc", bz(sx - 0.22, sx + 0.22, -0.78, -0.3, -0.05, 3.1, 0.03), Mu)
+        put("achter", "stuc", bz(sx - 0.27, sx + 0.27, -0.83, -0.25, 3.1, 3.22, 0.02), Mu)
+        put("achter", "stuc", ell((sx, -0.54, 3.42), (0.2, 0.2, 0.2), 12, 8), Mu)
+    # groene houten afscheiding achter de uitgang (backstage), 2.2 m
+    for (a, b) in (((4.5, 6.9), (7.6, 6.75)), ((7.6, 6.75), (10.0, 6.6))):
+        Mg, Lg = wandframe(a, b, (6.0, 3.0))
+        put("achter", "groenhout", bz(-Lg / 2, Lg / 2, -0.03, 0.03, 0.0, 2.2), Mg)
+        k = -Lg / 2
+        while k < Lg / 2:
+            put("achter", "groenhout", bz(k, k + 0.012, -0.045, -0.03, 0.05, 2.15), Mg); k += 0.14
+        for xx in (-Lg / 2, Lg / 2): put("achter", "groenhout", bz(xx - 0.05, xx + 0.05, -0.05, 0.05, 0.0, 2.3), Mg)
+        coll_box((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 1.1, Lg, 0.15, 2.2, math.degrees(math.atan2(b[1] - a[1], b[0] - a[0])))
+    # lantaarn op de pijler naast de ingang (foto)
+    lx, ly = 3.96, 3.13
+    put("achter", "ijzer", blathe([(0, 4.62), (0.06, 4.62), (0.05, 5.15), (0, 5.15)], 8), TR(lx, ly))
+    put("achter", "glaslamp", blathe([(0, 5.15), (0.11, 5.15), (0.15, 5.5), (0, 5.5)], 6), TR(lx, ly, 0, 30))
+    put("achter", "ijzer", blathe([(0, 5.48), (0.2, 5.5), (0.16, 5.58), (0.04, 5.72), (0, 5.75)], 6), TR(lx, ly, 0, 30))
+    LAMPS_.append([lx, ly, 5.35])
+    for poly in (AR, AL):                                                                                 # muren als botsblokken (geen mesh-botsing op concave vormen)
+        for a, b in zip(poly, poly[1:]):
+            coll_box((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 2.2, math.hypot(b[0] - a[0], b[1] - a[1]) + 0.3, 0.6, 4.4, math.degrees(math.atan2(b[1] - a[1], b[0] - a[0])))
+    coll_box(1.2, 4.6, 2.2, 4.0, 3.6, 4.4, 0); coll_box(-5.0, 3.6, 1.8, 3.4, 2.8, 3.6, 0)
     # ================= botsing rots/poort (grot en water niet beloopbaar) =================
     coll_box(4.6, -0.4, 1.7, 4.6, 4.0, 4.0)
     coll_box(-3.0, -1.0, 1.7, 6.5, 6.0, 4.0, ANG)

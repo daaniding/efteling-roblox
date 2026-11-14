@@ -19,11 +19,11 @@ local M = {
 	creme = {Color3.fromRGB(230, 214, 178), "SmoothPlastic"}, dak = {Color3.fromRGB(40, 40, 44), "Slate"}, hekblauw = {Color3.fromRGB(72, 102, 106), "Metal"},
 	hout = {Color3.fromRGB(92, 58, 36), "Wood"}, zwaan = {Color3.fromRGB(238, 230, 210), "SmoothPlastic"}, snavel = {Color3.fromRGB(232, 112, 40), "SmoothPlastic"},
 	zwart = {Color3.fromRGB(16, 16, 16), "SmoothPlastic"}, oog = {Color3.fromRGB(8, 8, 8), "Glass"}, kuip = {Color3.fromRGB(128, 26, 24), "SmoothPlastic"}, kern = {Color3.fromRGB(30, 30, 30), "Rock"},
-	klinker = {Color3.fromRGB(110, 58, 44), "Brick"}, doek = {Color3.fromRGB(236, 232, 222), "Fabric"}, deurgroen = {Color3.fromRGB(56, 96, 96), "WoodPlanks"},
+	klinker = {Color3.fromRGB(110, 58, 44), "Brick"}, groenhout = {Color3.fromRGB(52, 74, 60), "WoodPlanks"}, lantaarnrood = {Color3.fromRGB(150, 44, 30), "Metal"}, doek = {Color3.fromRGB(236, 232, 222), "Fabric"}, deurgroen = {Color3.fromRGB(56, 96, 96), "WoodPlanks"},
 }
 local GEEN_SCHADUW = {glasoranje = true, goud = true, donker = true}
 -- loopvlakken en massieve delen krijgen echte mesh-botsing (pad lag 1 stud boven het terrein: voeten zakten erin; vijverkuil: je viel erdoor)
-local MASSIEF = {oeversteen = true, rots = true, kern = true, steentjes = true, stuc = true, natuursteen = true}   -- pad/oever/bodem: rasterblokken (COLL_) i.p.v. mesh-botsing
+local MASSIEF = {oeversteen = true, rots = true, kern = true, steentjes = true}   -- stuc/natuursteen (concaaf kasteel): COLL_-blokken   -- pad/oever/bodem: rasterblokken (COLL_) i.p.v. mesh-botsing
 
 local function plaats(asset, naam, TEX)
 	local oud = workspace:FindFirstChild(naam); if oud then oud:Destroy() end
@@ -45,7 +45,9 @@ local function plaats(asset, naam, TEX)
 			if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.Box end
 		elseif string.match(p.Name, "^LAMP_") then
 			p.Transparency = 1; p.CastShadow = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.Name = "Lamp"; p.Parent = lampen
-			local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 196, 120); pl.Range = 16; pl.Brightness = 1.2; pl.Shadows = false; pl.Parent = p
+			local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 184, 104); pl.Range = 18; pl.Brightness = 1.6; pl.Shadows = true; pl.Parent = p
+				local sp = Instance.new("SpotLight"); sp.Face = Enum.NormalId.Bottom; sp.Angle = 120; sp.Range = 16; sp.Brightness = 2.2      -- warme lichtcirkel op het pad
+				sp.Color = Color3.fromRGB(255, 178, 96); sp.Shadows = true; sp.Parent = p
 		else
 			local tex = string.match(p.Name, "__TEX_([%w_]+)_%d+$"); local key = string.match(p.Name, "__MAT_([%a_]+)_%d+$")
 			if tex and TEX and TEX[tex] then
@@ -60,7 +62,7 @@ local function plaats(asset, naam, TEX)
 			elseif key and M[key] then
 				p.Color = M[key][1]; p.Material = Enum.Material[M[key][2]]
 				if GEEN_SCHADUW[key] then p.CastShadow = false end
-				if key == "water" then p.Transparency = 0.05; p.Reflectance = 0; p.CastShadow = false end   -- troebel, geen blauwe luchtspiegeling
+				if key == "water" then p.Transparency = 1; p.CastShadow = false end   -- terreinwater met spiegeling (park/sfeer/water_zeszwanen.luau)
 				if key == "glasoranje" then p.Transparency = 0.25 end
 			else table.insert(onbekend, p.Name) end
 		end
@@ -98,6 +100,12 @@ for c in string.gmatch("@GROND@", "[^;]+") do
 end
 
 local k, o1 = plaats(KASTEEL, "ZesZwanenKasteel", TEXK)
+-- warm licht dat uit de vleugelramen en torenvensters naar buiten valt (dagritme schakelt ze mee met de lantaarns)
+for i, w in ipairs({{-2.1, -1.45, 4.85}, {-0.9, -1.45, 4.85}, {0.3, -1.45, 4.85}, {1.5, -1.45, 4.85}, {3.0, 0.0, 6.2}, {3.4, -0.1, 7.7}}) do
+	local p = Instance.new("Part"); p.Name = "Raamlicht" .. i; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+	p.Transparency = 1; p.CastShadow = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.CFrame = lokaal(w[1], w[2], w[3]); p.Parent = k.Lampen
+	local l = Instance.new("PointLight"); l.Color = Color3.fromRGB(255, 170, 84); l.Range = 9; l.Brightness = 1.1; l.Shadows = false; l.Parent = p
+end
 local om, o2 = plaats(OMG, "ZesZwanenOmgeving", TEXO)
 -- zwanenboten (de attractie zelf) staan er voorlopig niet in (Daan): alleen de scene eromheen
 local oudb = workspace:FindFirstChild("ZesZwanenBoten"); if oudb then oudb:Destroy() end

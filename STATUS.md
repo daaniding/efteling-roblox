@@ -359,7 +359,7 @@ Map `models/AR_Herberg/`, brief `asset-brief.md`. Bronnen: ontwerptekening Knoet
   interieur. Concept-code voorportaal + knuppel klaar in `build/later_voorportaal_knuppel.py`, foto's in `ref/` (Knuppelenzak, Knuppeltje, Herbergfris2-5).
 - KLAAR volgens Daan (13 nov). Later: binnenkant (Herberginterieur-ontwerp + Herbergfris2-5: balkenplafond, haard, jongen aan tafel, waard), wandeltest.
 
-## De Zes Zwanen (chat 9, 13-14 nov) — v3 in Studio (scene, wachtrij, botsing, belichting; zwanen/interieur later)
+## De Zes Zwanen (chat 9, 13-14 nov) — v4 in Studio (achterbouw op OSM-maat, scene, wachtrij, botsing, sfeer/dagritme; zwanen/interieur later)
 Map `models/AR_ZesZwanen/`, brief `asset-brief.md`. Bronnen: 78 Eftepedia-plaatjes (`ref/eftepedia/`), Efteling-blog/pers (`ref/efteling_blog/`:
 zwaan zijaanzicht + 3D-model, staalskelet, bouwfeiten: toren 15 m, slot 350 m2, vijver 75.000 l). Echte bouwtekeningen niet openbaar (vergunningen/ride-databases
 nagezocht). Plattegrond = OSM: gebouw 961616753, vijvers 961616757/758/760, vaarbaan 837234781 (lus, tegen de klok in: in door de poort rechts, uit via de grot
@@ -387,7 +387,23 @@ links), rotsen 961616756 (eiland) / 961616759, controlehokje 961616755, pad 9616
   - Maten nagemeten: hoogte 15.0 m = Efteling; vijver 227 m2 x 75 m3 = 33 cm diep (klopt). Kasteel 14.6 x 10.7 m tegen OSM 15.4 x 13.1: ~5% te smal en
     de achteruitbouw (~2.5 m, binnenscene Elisa, achter de bomen) ontbreekt nog. Zwanen waarschijnlijk 10-15% te hoog (kop 2.1 m i.p.v. ~1.8 m boven water).
 - Assets v3: kasteel **123826992475315**, omgeving **99634573159616** (ids in `textures/asset_ids.txt`).
-- NOG: kasteel breder + achteruitbouw, zwanen terug (12% kleiner) en fijner, Elisa + interieur later, bruggetje/beekje, sprookjesboek, fps-test.
+- v4 (14 nov): ACHTERBOUW volgens de OSM-omtrek: rechts gepleisterde kantelenmuur met natuurstenen pijlers, ingang wandelgang (houten afdak,
+  rode lantaarns), lage uitgangspoort (gebogen pannenkap, bollen), groene houten afscheiding; links lager blok bruine natuursteen met kantelen
+  (D6z_wandelingang_slot, D6z_landschap_ingang_slot, D6z_ontwerp_aanzicht_links). Binnenplaats in rode klinkers. Gemeten in Studio: gebouw x -8.5..7.1
+  (15.6 m, OSM 15.4), achterkant y 8.1 (OSM 7.8), top 15.0 m. Muren als COLL-blokken (geen mesh-botsing op het concave kasteel).
+  Assets: kasteel **109146562516265**, omgeving **121393338574060**. Let op: verse uploads geven soms even HTTP 503 bij GetObjects (later opnieuw).
+- Belichting/sfeer (Daan: "vetter, realistisch en dromerig"), alles in `park/` en `park/sfeer/`:
+  - LightingStyle = Realistic + PrioritizeLightingQuality (stonden al aan; Technology mag een script niet zetten).
+  - `sfeer_sprookjesbos.luau`: gloed, warme kleur, zachte verte (DoF), zwevend sprookjesstof (gouden stofjes) en lage nevel (rbxasset-texturen).
+  - `sfeer/water_zeszwanen.luau`: spiegelend terreinwater in de vijvers (peil Y 0.95), waterplaat onzichtbaar; donker troebel (reflectie 0.18,
+    hoger werd melkig-beige van de lichte lucht). In het water zwem je nu (niet meer doorheen vallen).
+  - `sfeer/Dagritme.server.luau` (ServerScriptService.Dagritme): ochtend -> dag -> gouden uur -> roze zonsondergang -> blauw uur -> sterrennacht,
+    30 min per dag (attributen op Lighting: DagritmeAan, DagMinuten, StartTijd 17.0). Lantaarns + gloeiend glas aan in de schemering, sprookjesstof
+    wordt 's nachts vuurvliegjes, 18 lichtbundels (Beams) door de bosrand die de zon volgen.
+  - `sfeer/SfeerZones.client.luau` (StarterPlayerScripts.SfeerZones): onder het bladerdak donkerder/koeler/groener, open plekken warm (eigen
+    ColorCorrection "ZoneKleur").
+  - Lantaarns: PointLight + SpotLight naar beneden (lichtcirkel op het pad, schaduwen), raamlicht bij vleugel- en torenvensters (in het plaatsscript).
+- NOG: zwanen terug (12% kleiner) en fijner, Elisa + interieur later, bruggetje/beekje, sprookjesboek, fps-test met alle sfeer aan.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
