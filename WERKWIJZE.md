@@ -286,3 +286,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Terreinkolommen van 4 studs bollen ~0.5 m boven de berekende hoogte uit: een pad 10 cm boven terrein verdwijnt erin.
 - Kijkglas niet als Roblox Glass (spiegelt de roze lucht): SmoothPlastic met transparantie 0.93.
 - Studio-terrein in een gebied resetten: FillBlock Air boven Y 0 + LeafyGrass Y -8..0 (oppervlak Y 2), daarna planten opnieuw op het terrein zetten.
+- Terreinkolom ophogen met h meter: FillBlock van -8 tot h*3 (NIET tot 2 + h*3: dat rendert 2 studs te hoog en slokt paden op).
+- Na een terreinreset over een vierkant: dezelfde grassoort als de omgeving gebruiken, anders zie je een harde vierkante rand.
+- Terreinwater bleef in deze place niet staan (FillBlock/FillCylinder Water -> Ground). Dan een waterplaat (donkergroen SmoothPlastic) gebruiken.

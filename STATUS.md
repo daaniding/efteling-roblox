@@ -537,6 +537,9 @@ poortje 7161368031, lamp 7165020178, pad 1074487763, vennetje 766787195 (`build/
 - Daan (14 nov): eerst rotsblokmuren + dijk zoals de Efteling 2016 -> "ziet er niet uit", "moet niet deze hoogte", "huis staat in de grond".
   Daan stuurde de foto: "zelfde hoogte als echt, maar zonder de stenen". Nu: terrein overal vlak (Y 2), vloer kamer grootmoeder = maaiveld
   (ORIGIN Y 2.15), kijkramen 0.7 m boven het grindpad zoals op de foto; kelderdeur, houtgewelf en trap zitten onder de grond (blijven in het model).
+- Scène (Daan: "dan dus ff de scene"): terrein buiten de scène gewoon Grass, rond het huisje bosgrond (LeafyGrass) met rafelige rand en lichte
+  glooiing ver van pad/huis; vennetje = waterplaat (SmoothPlastic donkergroen, terreinwater blijft hier niet staan: FillBlock Water geeft Ground terug)
+  + riet/lissen/kroos/rimpels gekloond van KleinDuimpjeWater -> workspace.RoodkapjeWater. Planten weer op het terrein gezet (1956).
 - NOG: Roodkapje + Krakeeltje (figuren later), wolf/interieur (later), wegwijzer met reliëf (OSM 7165020183, 31 m oost), Play-wandeltest, place opslaan.
 
 ## Daarna (volgorde met Daan afgesproken)
