@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 exec(open(os.path.join(HERE, "..", "..", "AR_ZesZwanen", "build", "zz_helpers.py")).read())
 MATS = {"stuc": ((0.86, 0.84, 0.78, 1), 0.9), "pannen": ((0.5, 0.28, 0.2, 1), 0.85), "natuursteen": ((0.6, 0.58, 0.54, 1), 0.9),
         "hout": ((0.3, 0.32, 0.3, 1), 0.8), "venster": ((0.05, 0.05, 0.06, 1), 0.3), "glas": ((0.55, 0.5, 0.35, 1), 0.2),
-        "ijzer": ((0.06, 0.06, 0.06, 1), 0.5), "goud": ((0.8, 0.62, 0.22, 1), 0.3), "binnen": ((0.12, 0.1, 0.08, 1), 0.9)}
+        "ijzer": ((0.06, 0.06, 0.06, 1), 0.5), "goud": ((0.8, 0.62, 0.22, 1), 0.3), "binnen": ((0.12, 0.1, 0.08, 1), 0.9), "klimop": ((0.12, 0.22, 0.08, 1), 0.8), "lamp": ((1.0, 0.8, 0.5, 1), 0.3)}
 RNG = random.Random(1952)
 Z0 = 4.5                                     # kasteelvloer bovenop de rotsheuvel (Doornroosje-2024-15: kasteel ver boven de vijver)
 TORENS = [("t409", -7.10, 2.85, 1.40, 4.8, 2.5), ("t408", -3.75, 5.45, 1.45, 5.4, 2.7), ("t407", 0.05, 5.70, 1.55, 6.0, 2.9)]   # naam, x, y, r, romp, dak
@@ -38,6 +38,41 @@ def kegeldak(part, cx, cy, z0, r, h, flare=0.9, course=0.16, segs=28):
     put(part, "goud", ell((0.0, 0, 0.0), (0.05, 0.05, 0.05), 8, 6), M)
 
 
+def glasraam(part, M, w, h):
+    """rondboograam met glas-in-lood (amber) en ijzeren roeden, verdiept in de muur (Doornroosje_Ramen, -2024-07)"""
+    if w < 0.2:                                                                                  # smal schietgat: donker
+        put(part, "venster", boutline(arch_pts(0, 0, w, h, 8), -0.04, 0.1), M); return
+    put(part, "glas", boutline(arch_pts(0, 0, w, h, 8), -0.07, 0.04), M)
+    for k in range(1, 3): put(part, "ijzer", bz(-w / 2 + k * w / 3 - 0.012, -w / 2 + k * w / 3 + 0.012, -0.09, -0.07, 0.02, h - 0.05), M)
+    for k in range(1, 4): put(part, "ijzer", bz(-w / 2 + 0.02, w / 2 - 0.02, -0.09, -0.07, k * h / 4.2 - 0.012, k * h / 4.2 + 0.012), M)
+    put(part, "natuursteen", bz(-w / 2 - 0.08, w / 2 + 0.08, -0.12, 0.04, -0.07, 0.0, 0.01), M)        # vensterbank
+
+
+def klimop(cx, cy, r, z0, h, ang, spread, n=90, seed=1):
+    """klimop: plat bladtapijt tegen de torenvoet (losse blaadjes plat op het oppervlak, rafelige rand via ruis, dichter onderaan)"""
+    R_ = random.Random(seed); bm = bmesh.new(); N_ = n * 9
+    for _ in range(N_):
+        t = R_.random() ** 1.4; a = ang + R_.uniform(-spread, spread); z = z0 + h * t
+        edge = 0.55 + 0.45 * noise.noise(Vector((a * 2.2, z * 0.9, seed)))                       # rafelige omtrek
+        if abs(a - ang) / spread > edge * (1.05 - 0.55 * t) or R_.random() < 0.05: continue
+        nrm = Vector((math.cos(a), math.sin(a), 0)); rr = r + 0.03 + R_.uniform(0, 0.05)
+        c = Vector((cx, cy, 0)) + nrm * rr + Vector((0, 0, z))
+        lf = ell((0, 0, 0), (0.07 + R_.uniform(0, 0.04), 0.06 + R_.uniform(0, 0.03), 0.012), 6, 3)
+        rot = Matrix((nrm.cross(Vector((0, 0, 1))), Vector((0, 0, 1)), nrm)).transposed().to_4x4() @ Matrix.Rotation(R_.uniform(0, 6.28), 4, "Z") @ Matrix.Rotation(R_.uniform(-0.5, 0.5), 4, "X")
+        bmesh.ops.transform(lf, matrix=Matrix.Translation(c) @ rot, verts=lf.verts)
+        me = bpy.data.meshes.new("_lf"); lf.to_mesh(me); lf.free(); bm.from_mesh(me); bpy.data.meshes.remove(me)
+    for f in bm.faces: f.smooth = True
+    put("klimop", "klimop", bm)
+
+
+def wandlamp(M):
+    """zwarte smeedijzeren wandlantaarn op een arm (Doornroosje-2024-07)"""
+    put("lampen", "ijzer", btube([(0, 0, 0), (0, -0.35, 0.1), (0, -0.42, 0.0)], 0.025, 6), M)
+    put("lampen", "ijzer", blathe([(0, 0), (0.09, 0), (0.11, 0.05), (0.09, 0.3), (0.12, 0.33), (0.03, 0.42), (0, 0.45)], 6), M @ Matrix.Translation((0, -0.42, -0.4)))
+    put("lampen", "lamp", blathe([(0, 0.06), (0.08, 0.06), (0.085, 0.28), (0, 0.28)], 6), M @ Matrix.Translation((0, -0.42, -0.4)))
+    p_ = M @ Vector((0, -0.42, -0.25)); LAMPS_.append([round(p_.x, 3), round(p_.y, 3), round(p_.z, 3)])
+
+
 def toren(part, cx, cy, r, romp, dak):
     """ronde gestuukte toren: licht taps, plint, gootlijst, smalle schietgaten en een rondboograampje naar buiten"""
     R_ = random.Random(int(cx * 100))
@@ -54,7 +89,7 @@ def toren(part, cx, cy, r, romp, dak):
     for k, (a, zr, w, h) in enumerate(((1.2, 0.55, 0.38, 0.75), (2.4, 0.35, 0.12, 0.5), (0.2, 0.75, 0.12, 0.45), (3.6, 0.6, 0.12, 0.45))):
         ang = a + (cx * 0.3); ox, oy = math.cos(ang), math.sin(ang); z = Z0 + romp * zr
         M = Matrix.Translation((cx + ox * (r - 0.06), cy + oy * (r - 0.06), z)) @ Matrix.Rotation(ang - math.pi / 2, 4, "Z")
-        put(part, "venster", boutline(arch_pts(0, 0, w, h, 8), -0.04, 0.1), M)                        # raam/schietgat (donker, verdiept)
+        glasraam(part, M, w, h)
         put(part, "stuc", band(arch_pts(0, 0, w, h, 8), 0.06, -0.08, 0.08), M)                         # omlijsting
     coll_box(cx, cy, Z0 + romp / 2, r * 1.9, r * 1.9, romp)
 
@@ -66,7 +101,7 @@ def build(master):
     for n, (c, rr) in MATS.items(): material("MAT_" + n, c, rr)
     put("anker", "ijzer", bz(-0.01, 0.01, -0.01, 0.01, 0, 0.02))
     # ===== zaal (zuidblok): trapgevel west, pannendak oost-west, arcade met slaapkamer op het zuiden (Meting_1980, AanzichtKasteelBeneden) =====
-    X0, X1, Y0, Y1 = -3.6, 1.3, -7.05, -3.9; GOOT = Z0 + 2.6; NOK = Z0 + 4.4
+    X0, X1, Y0, Y1 = -3.6, 0.85, -7.05, -3.9; GOOT = Z0 + 2.6; NOK = Z0 + 4.4
     put("zaal", "stuc", bz(X0, X1, Y0, Y1, -0.6, GOOT))
     yc = (Y0 + Y1) / 2
     for xg, s in ((X0, -1), (X1, 1)):                                                                   # gevels: west trapgevel, oost puntgevel
@@ -92,7 +127,7 @@ def build(master):
         put("zaal", "natuursteen", blathe([(0, 0), (0.12, 0), (0.12, 0.08), (0.07, 0.12), (0.07, 1.05), (0.12, 1.12), (0.12, 1.2), (0, 1.2)], 12), TR(x, Y0 - 0.02, Z0 + 0.85))
     put("zaal", "natuursteen", bz(AX[0] - 0.7, AX[2] + 0.7, Y0 - 0.2, Y0 + 0.05, Z0 + 0.75, Z0 + 0.88, 0.02))   # vensterbank
     for x in (-3.0, 0.9):                                                                                    # kleine rondboogramen boven
-        put("zaal", "venster", boutline(arch_pts(x, Z0 + 2.2, 0.32, 0.6, 8), Y0 + 0.02, 0.08))
+        glasraam("zaal", Matrix.Translation((x, Y0 + 0.06, Z0 + 2.2)), 0.32, 0.6)
         put("zaal", "stuc", band(arch_pts(x, Z0 + 2.2, 0.32, 0.6, 8), 0.06, Y0 - 0.06, 0.08))
     put("zaal", "hout", boutline(arch_pts(-3.0, -0.0, 0.9, 1.6, 10), Y0 - 0.01, 0.08))                       # kelderdeur onder (Achterzijdedoonroosje)
     coll_box((X0 + X1) / 2, yc, (GOOT - 0.6) / 2, X1 - X0, Y1 - Y0, GOOT + 0.6)
@@ -115,8 +150,8 @@ def build(master):
     # ===== oostvleugel: vierkante toren met tentdak (links in het noordaanzicht) =====
     EX0, EX1, EY0, EY1 = 3.0, 5.4, 1.85, 4.25; EH = Z0 + 5.6
     put("oost", "stuc", bz(EX0, EX1, EY0, EY1, -0.6, EH))
-    put("oost", "stuc", bz(2.45, 5.4, 0.65, 1.95, -0.6, Z0 + 2.4))                                    # lagere aanbouw (rest van de OSM-vleugel)
-    tiled_roof("oost", (2.3, 5.55, 0.5, 2.1), (2.3, 5.55, 1.3, 1.3), Z0 + 2.35, Z0 + 3.3, hips=False)
+    put("oost", "stuc", bz(2.75, 5.4, 0.65, 1.95, -0.6, Z0 + 2.4))                                    # lagere aanbouw (rest van de OSM-vleugel), naast de trap
+    tiled_roof("oost", (2.75, 5.55, 0.5, 2.1), (2.75, 5.55, 1.3, 1.3), Z0 + 2.35, Z0 + 3.3, hips=False)
     put("oost", "stuc", bz(EX0 - 0.12, EX1 + 0.12, EY0 - 0.12, EY1 + 0.12, EH - 0.25, EH))               # gootlijst
     tiled_roof("oost", (EX0 - 0.35, EX1 + 0.35, EY0 - 0.35, EY1 + 0.35), ((EX0 + EX1) / 2,) * 2 + ((EY0 + EY1) / 2,) * 2, EH - 0.05, EH + 3.4)
     kegel_top = ((EX0 + EX1) / 2, (EY0 + EY1) / 2)
@@ -125,16 +160,23 @@ def build(master):
         for zz, (w, h) in ((Z0 + 2.6, (0.4, 0.8)), (Z0 + 4.3, (0.12, 0.5))):
             ang = math.atan2(nrm[1], nrm[0]) - math.pi / 2
             M = Matrix.Translation((x - nrm[0] * 0.05, y - nrm[1] * 0.05, zz)) @ Matrix.Rotation(ang, 4, "Z")
-            put("oost", "venster", boutline(arch_pts(0, 0, w, h, 8), -0.04, 0.1), M)
+            glasraam("oost", M, w, h)
             put("oost", "stuc", band(arch_pts(0, 0, w, h, 8), 0.06, -0.08, 0.08), M)
     coll_box((EX0 + EX1) / 2, (EY0 + EY1) / 2, (EH - 0.6) / 2, EX1 - EX0, EY1 - EY0, EH + 0.6)
     # verbindingsstuk tussen oostvleugel en zaal (OSM 166 midden) met poort (rondboog, AanzichtKasteelDoornroosje rechts)
-    put("oost", "stuc", bz(-0.36, 2.5, 0.6, 3.5, -0.6, Z0 + 3.4))
-    put("oost", "binnen", boutline(arch_pts(1.2, Z0, 1.3, 2.2, 10), 3.52, 0.12))
-    put("oost", "stuc", band(arch_pts(1.2, Z0, 1.3, 2.2, 10), 0.12, 3.44, 0.16))
-    kantelen([(-0.36, 3.5), (2.5, 3.5)], Z0 + 3.4, "oost", "stuc", d=0.45)
+    put("oost", "stuc", bz(0.4, 2.65, 1.95, 3.5, -0.6, Z0 + 3.4))                                  # poortgebouw boven de oosttrap
+    put("oost", "binnen", boutline(arch_pts(1.45, Z0, 1.5, 2.4, 10), 1.93, 0.25))                      # poort naar de binnenplaats (zuidkant)
+    put("oost", "stuc", band(arch_pts(1.45, Z0, 1.5, 2.4, 10), 0.14, 1.86, 0.18))
+    kantelen([(0.4, 1.95), (2.65, 1.95)], Z0 + 3.4, "oost", "stuc", d=0.45)
     # ===== ronde torens 407/408/409 met weergang ertussen (noordzijde, over de vijver) =====
     for nm, x, y, r, romp, dak in TORENS: toren("torens", x, y, r, romp, dak)
+    klimop(-7.10, 2.85, 1.42, Z0 - 0.3, 3.2, math.radians(110), 0.9, 110, 1)                         # klimop aan de vijverkant
+    klimop(-3.75, 5.45, 1.47, Z0 - 0.3, 2.4, math.radians(80), 0.7, 80, 2)
+    klimop(0.05, 5.70, 1.57, Z0 - 0.3, 1.8, math.radians(60), 0.6, 60, 3)
+    klimop(4.2, 4.3, 1.4, Z0 - 0.3, 3.6, math.radians(90), 0.5, 90, 4)
+    for x in (-3.3, 0.5):                                                                              # wandlampen naast de arcade
+        wandlamp(Matrix.Translation((x, Y0 - 0.02, Z0 + 2.3)))
+    wandlamp(Matrix.Translation((0.25, 1.9, Z0 + 2.6)) @ Matrix.Rotation(0, 4, "Z"))                     # naast de poort
     WALL = [(-7.1, 2.85), (-5.6, 4.6), (-3.75, 5.45), (-1.9, 6.0), (0.05, 5.7), (1.7, 4.6), (2.45, 4.0)]
     for (ax, ay), (bx, by) in zip(WALL, WALL[1:]):
         L = math.hypot(bx - ax, by - ay); nx, ny = (by - ay) / L, -(bx - ax) / L
@@ -153,7 +195,7 @@ def build(master):
         if len(bm.faces) == 0: continue
         ob = new_mesh_object(f"DR_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])
     out = os.path.join(ROOT, "exports"); os.makedirs(out, exist_ok=True)
-    json.dump({"colliders": COLL, "lamps": []}, open(os.path.join(out, "kasteel_extra.json"), "w"))
+    json.dump({"colliders": COLL, "lamps": LAMPS_}, open(os.path.join(out, "kasteel_extra.json"), "w"))
     save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "tris",
                              sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"))
 

@@ -7,7 +7,7 @@ from mathutils import Vector, Matrix, noise
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 exec(open(os.path.join(HERE, "..", "..", "AR_ZesZwanen", "build", "zz_helpers.py")).read())
 MATS = {"stuc": ((0.86, 0.84, 0.78, 1), 0.9), "pannen": ((0.5, 0.28, 0.2, 1), 0.85), "natuursteen": ((0.6, 0.58, 0.54, 1), 0.9),
-        "rots": ((0.55, 0.55, 0.52, 1), 0.95), "hout": ((0.3, 0.32, 0.3, 1), 0.8), "binnen": ((0.12, 0.1, 0.08, 1), 0.9), "ijzer": ((0.06, 0.06, 0.06, 1), 0.5)}
+        "rots": ((0.55, 0.55, 0.52, 1), 0.95), "kei": ((0.48, 0.48, 0.47, 1), 0.9), "muur": ((0.8, 0.77, 0.69, 1), 0.9), "dekst": ((0.72, 0.7, 0.64, 1), 0.9), "lamp": ((1.0, 0.8, 0.5, 1), 0.3), "wapenrood": ((0.55, 0.08, 0.06, 1), 0.5), "goud": ((0.8, 0.62, 0.22, 1), 0.3), "hout": ((0.3, 0.32, 0.3, 1), 0.8), "binnen": ((0.12, 0.1, 0.08, 1), 0.9), "ijzer": ((0.06, 0.06, 0.06, 1), 0.5)}
 Z0 = 4.5
 OSM = json.load(open(os.path.join(ROOT, "ref", "osm_lokaal.json")))
 def way(i): return next(w for w in OSM["ways"] if w["id"] == i)["pts"]
@@ -23,23 +23,75 @@ def resample(pts, step):
     return out
 
 
-def trap(pts, z_a, z_b, breed=2.0, part="trap"):
-    """trap langs een polylijn: treden van ~0.34 m diep, hoogte lineair van z_a naar z_b, muurtjes aan weerszijden"""
-    P = resample(pts, 0.34); n = len(P) - 1; R = random.Random(len(pts))
-    lz = []
-    for i in range(n):
-        (ax, ay), (bx, by) = P[i], P[i + 1]
-        z = z_a + (z_b - z_a) * (i + 0.5) / n
-        dx, dy = bx - ax, by - ay; L = math.hypot(dx, dy) or 1e-6; ux, uy = dx / L, dy / L; nx, ny = -uy, ux
-        cx, cy = (ax + bx) / 2, (ay + by) / 2
-        M = Matrix.Translation((cx, cy, 0)) @ Matrix.Rotation(math.atan2(uy, ux), 4, "Z")
-        put(part, "natuursteen", bz(-L / 2 - 0.02, L / 2 + 0.02, -breed / 2, breed / 2, min(z_a, z_b) - 0.4, z + R.uniform(-0.01, 0.01), 0.02), M)
-        for s in (-1, 1):                                                                       # lage muurtjes (Doornroosje_2026_Trap_Omhoog)
-            put(part, "stuc", bz(-L / 2 - 0.03, L / 2 + 0.03, s * breed / 2 - (0.0 if s > 0 else 0.35), s * breed / 2 + (0.35 if s > 0 else 0.0), min(z_a, z_b) - 0.4, z + 0.65, 0.04), M)
-        lz.append((cx, cy, z, math.atan2(uy, ux), L))
-    for cx, cy, z, a, L in lz[::3]:                                                             # botsing: per 3 treden een schuin blok
-        coll_box(cx, cy, z - 0.2, L * 3.2, breed, 0.4, math.degrees(a))
-    return lz
+def trap(pts, z_a, z_b, breed=2.0, part="trap", lantaarns=True):
+    """echt pad (Doornroosje_2026_Trap_*, Doornroosje_Trap_2022): doorlopend grijs keienpad met brede treden en lage optreden (~0.14 m),
+    lage crème muurtjes (~0.75 m) die de helling glad volgen met een onregelmatige rij dekstenen, lantaarnpalen langs de route."""
+    P = resample(pts, 0.2); R = random.Random(len(pts) * 7)
+    S_ = [0.0]
+    for (ax, ay), (bx, by) in zip(P, P[1:]): S_.append(S_[-1] + math.hypot(bx - ax, by - ay))
+    Ltot = S_[-1]; rise = z_b - z_a; nstep = max(1, int(abs(rise) / 0.14)); tread = Ltot / nstep
+    def zpad(s): return z_a + rise * min(nstep, math.floor(s / tread + 1e-6)) / nstep          # trapjes
+    def zglad(s): return z_a + rise * s / Ltot                                                  # muurtop volgt glad
+    def frame(i):
+        j0, j1 = max(i - 1, 0), min(i + 1, len(P) - 1)
+        dx, dy = P[j1][0] - P[j0][0], P[j1][1] - P[j0][1]; L = math.hypot(dx, dy) or 1e-6
+        return dx / L, dy / L, -dy / L, dx / L
+    # loopvlak: per segment een vierkant op traphoogte + optrede waar de hoogte springt
+    bm = bmesh.new(); prev = None
+    for i in range(len(P)):
+        ux, uy, nx, ny = frame(i); x, y = P[i]; z = zpad(S_[i]) + R.uniform(-0.006, 0.006)
+        w = breed / 2 + R.uniform(-0.03, 0.03)
+        l = bm.verts.new((x - nx * w, y - ny * w, z)); r_ = bm.verts.new((x + nx * w, y + ny * w, z))
+        if prev:
+            pl, pr, pz = prev
+            if abs(pz - z) > 0.02:                                                              # optrede
+                l2 = bm.verts.new((l.co.x, l.co.y, pz)); r2 = bm.verts.new((r_.co.x, r_.co.y, pz))
+                bm.faces.new((pl, pr, r2, l2)); bm.faces.new((l2, r2, r_, l))
+            else: bm.faces.new((pl, pr, r_, l))
+        prev = (l, r_, z)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    for f in bm.faces:
+        if f.normal.z < 0: f.normal_flip()
+    so = bmesh.ops.extrude_face_region(bm, geom=bm.faces[:])                                   # dikte: plaat van 0.5 m
+    bmesh.ops.translate(bm, vec=(0, 0, -0.5), verts=[v for v in so["geom"] if isinstance(v, bmesh.types.BMVert)])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    put(part, "kei", bm)
+    # muurtjes: buitenkant tot ver onder het maaiveld, bovenkant glad op +0.75, dekstenen onregelmatig
+    for sgn in (-1, 1):
+        wb = bmesh.new(); rings = []
+        for i in range(0, len(P), 2):
+            ux, uy, nx, ny = frame(i); x, y = P[i]; zt = zglad(S_[i]) + 0.72 + 0.04 * math.sin(i * 0.7)
+            zi = min(zpad(S_[i]), zglad(S_[i])) - 0.6
+            a_ = (x + sgn * nx * (breed / 2 - 0.02), y + sgn * ny * (breed / 2 - 0.02)); b_ = (x + sgn * nx * (breed / 2 + 0.38), y + sgn * ny * (breed / 2 + 0.38))
+            rings.append([wb.verts.new((a_[0], a_[1], zi)), wb.verts.new((a_[0], a_[1], zt)), wb.verts.new((b_[0], b_[1], zt)), wb.verts.new((b_[0], b_[1], zi - 1.4))])
+        for A, B in zip(rings, rings[1:]):
+            for k in range(4): wb.faces.new((A[k], A[(k + 1) % 4], B[(k + 1) % 4], B[k]))
+        wb.faces.new(rings[0][::-1]); wb.faces.new(rings[-1])
+        bmesh.ops.recalc_face_normals(wb, faces=wb.faces); put(part, "muur", wb)
+        s_ = R.uniform(0, 0.4)
+        while s_ < Ltot - 0.3:                                                                   # dekstenen: brokken van 0.35-0.7 m, ongelijk hoog
+            i = min(range(len(S_)), key=lambda k: abs(S_[k] - s_)); ux, uy, nx, ny = frame(i); x, y = P[i]
+            ln = R.uniform(0.35, 0.7); hh = R.uniform(0.1, 0.24); zt = zglad(s_) + 0.72
+            M = Matrix.Translation((x + sgn * nx * (breed / 2 + 0.18), y + sgn * ny * (breed / 2 + 0.18), zt + hh / 2 - 0.02)) @ Matrix.Rotation(math.atan2(uy, ux) + R.uniform(-0.08, 0.08), 4, "Z")
+            st = bbox(ln, 0.46 + R.uniform(-0.04, 0.06), hh, 0, 0, 0, min(ln, hh) * 0.35)
+            for v in st.verts: v.co += Vector((R.uniform(-0.03, 0.03), R.uniform(-0.03, 0.03), R.uniform(-0.025, 0.025)))
+            for f in st.faces: f.smooth = True
+            put(part, "dekst", st, M); s_ += ln + R.uniform(0.0, 0.05)
+    # botsing: schuine blokken langs de loopvlakken + muren
+    for i in range(0, len(P) - 3, 3):
+        ux, uy, nx, ny = frame(i); x, y = P[i]; s0 = S_[i]
+        coll_box(x, y, zpad(s0) - 0.25, 0.8, breed, 0.5, math.degrees(math.atan2(uy, ux)))
+        for sgn in (-1, 1): coll_box(x + sgn * nx * (breed / 2 + 0.18), y + sgn * ny * (breed / 2 + 0.18), zglad(s0) + 0.1, 0.8, 0.4, 1.6, math.degrees(math.atan2(uy, ux)))
+    if lantaarns:                                                                               # zwarte lantaarnpalen (Doornroosje_Trap_2022)
+        s_ = 3.0
+        while s_ < Ltot - 1:
+            i = min(range(len(S_)), key=lambda k: abs(S_[k] - s_)); ux, uy, nx, ny = frame(i); x, y = P[i]
+            px, py, pz = x - nx * (breed / 2 + 0.75), y - ny * (breed / 2 + 0.75), zglad(s_) - 0.3
+            put(part, "ijzer", btube([(px, py, pz), (px, py, pz + 2.6)], 0.045, 8))
+            put(part, "ijzer", blathe([(0, 0), (0.1, 0), (0.12, 0.05), (0.1, 0.32), (0.13, 0.35), (0.04, 0.45), (0, 0.48)], 6), TR(px, py, pz + 2.55))
+            put(part, "lamp", blathe([(0, 0.06), (0.09, 0.06), (0.095, 0.3), (0, 0.3)], 6), TR(px, py, pz + 2.55))
+            LAMPS_.append([round(px, 3), round(py, 3), round(pz + 2.75, 3)])
+            s_ += 8.5
 
 
 def poortgebouw(poly, part, hoog=3.2, nok=1.6):
@@ -62,6 +114,12 @@ def poortgebouw(poly, part, hoog=3.2, nok=1.6):
     for s in (-1, 1):                                                                           # gevels onder het zadeldak
         put(part, "stuc", prism_x([(-W / 2, z0 + hoog), (W / 2, z0 + hoog), (0, z0 + hoog + nok - 0.1)], s * L / 2 - 0.3, s * L / 2), M)
     bm_ = bmesh.new(); bmesh.ops.transform  # (placeholder for clarity)
+    for s in (-1, 1):                                                                           # wapenschilden naast de boog (Doornroosje_2026_Poortje, Doornroosjewapen)
+        for sx in (-1, 1):
+            Mw = Mr @ Matrix.Translation((sx * (min(1.6, W * 0.6) / 2 + 0.38), s * (L / 2 + 0.03), z0 + 1.9))
+            sch = [(-0.22, 0.25), (0.22, 0.25), (0.22, -0.05), (0.0, -0.3), (-0.22, -0.05)]
+            put(part, "wapenrood", boutline(sch, -0.02 if s > 0 else 0.0, 0.04), Mw)
+            put(part, "goud", boutline([(x * 0.55, y * 0.55 + 0.03) for x, y in sch], -0.045 if s > 0 else 0.025, 0.02), Mw)
     coll_box(c.x, c.y, z0 + hoog / 2, L, W, hoog, math.degrees(ang))
 
 
@@ -78,11 +136,8 @@ def build(master):
     west = way("763240412"); oost = way("55340094")
     trap(west, 0.4, Z0, 2.0, "trap_w")
     trap(oost, Z0, 0.0, 2.2, "trap_o")
-    # terraspad op kasteelhoogte (natuursteenplaveisel) om de westkant van het kasteel
-    for (ax, ay), (bx, by) in zip(way("763240411"), way("763240411")[1:]):
-        L = math.hypot(bx - ax, by - ay); M = Matrix.Translation(((ax + bx) / 2, (ay + by) / 2, 0)) @ Matrix.Rotation(math.atan2(by - ay, bx - ax), 4, "Z")
-        put("terras", "natuursteen", bz(-L / 2 - 0.4, L / 2 + 0.4, -1.0, 1.0, Z0 - 0.5, Z0 + 0.04, 0.02), M)
-        coll_box((ax + bx) / 2, (ay + by) / 2, Z0 - 0.2, L + 0.8, 2.0, 0.5, math.degrees(math.atan2(by - ay, bx - ax)))
+    # terraspad op kasteelhoogte: vlak keienpad met muurtjes
+    trap(way("763240411"), Z0, Z0 + 0.001, 2.0, "terras", lantaarns=False)
     # poortgebouwen
     poortgebouw(way("763240414")[:-1], "poort414")
     poortgebouw(way("763240415")[:-1], "poort415", hoog=3.0, nok=1.4)
@@ -96,7 +151,7 @@ def build(master):
         if len(bm.faces) == 0: continue
         ob = new_mesh_object(f"DO_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])
     out = os.path.join(ROOT, "exports"); os.makedirs(out, exist_ok=True)
-    json.dump({"colliders": COLL, "lamps": []}, open(os.path.join(out, "omgeving_extra.json"), "w"))
+    json.dump({"colliders": COLL, "lamps": LAMPS_}, open(os.path.join(out, "omgeving_extra.json"), "w"))
     save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "tris",
                              sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"))
 

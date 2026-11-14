@@ -1,16 +1,18 @@
 -- Doornroosje (Anton Pieck, 1952): kasteel (build/03_kasteel.py) en omgeving (build/03_omgeving.py: trappen, terras, poortgebouwen, rotswand).
 -- Modelframe = OSM-assen (x oost, y noord), oorsprong = zwaartepunt OSM 55423166 = studs (362.96, -262.92). Blender (x,y,z) komt binnen als
 -- (-x, z, y) * S; 180 graden draaien geeft (x, z, -y) = OSM-oost/noord. Draai daarna roblox/terrein_doornroosje.luau.
-local KASTEEL = 137979210036647
-local OMG = 72634104204963
-local TEXK = {stuc = {108737724417200, 104832233541932}, pannen = {99030305531539, 115687093839594}, natuursteen = {113837878968995, 96342548054244}, hout = {95444821324615, 139506160174223}}
-local TEXO = {natuursteen = {91479890265743, 122623927306763}, stuc = {74007823516947, 135806906918804}, pannen = {93175459464111, 120991762495924}, rots = {111040836053859, 118989078565245}}
+local KASTEEL = 72662319855699
+local OMG = 81500410436295
+local TEXK = {stuc = {77110781107423, 128120219253424}, pannen = {101795661533503, 119097044281865}, natuursteen = {87356248662327, 129593775568038}, hout = {127262555803237, 139506160174223}}
+local TEXO = {natuursteen = {91479890265743, 122623927306763}, stuc = {127706923842439, 91768953229023}, pannen = {82422996216148, 120991762495924}, rots = {137203545511570, 118989078565245}}
 local ORIGIN = CFrame.new(362.96, 2.0, -262.92) * CFrame.Angles(0, math.pi, 0)
 local S = 3
 local M = {venster = {Color3.fromRGB(14, 14, 16), "Glass"}, glas = {Color3.fromRGB(150, 130, 80), "Glass"}, ijzer = {Color3.fromRGB(20, 20, 20), "Metal"},
 	goud = {Color3.fromRGB(214, 166, 60), "Metal"}, binnen = {Color3.fromRGB(26, 20, 16), "SmoothPlastic"}, hout = {Color3.fromRGB(70, 78, 72), "WoodPlanks"},
 	stuc = {Color3.fromRGB(222, 216, 200), "Plastic"}, pannen = {Color3.fromRGB(130, 72, 52), "Slate"}, natuursteen = {Color3.fromRGB(150, 146, 136), "Slate"},
-	rots = {Color3.fromRGB(140, 140, 132), "Rock"}}
+	rots = {Color3.fromRGB(140, 140, 132), "Rock"},
+	kei = {Color3.fromRGB(128, 130, 132), "Slate"}, muur = {Color3.fromRGB(206, 198, 178), "Limestone"}, dekst = {Color3.fromRGB(184, 178, 162), "Limestone"},
+	klimop = {Color3.fromRGB(40, 66, 30), "Grass"}, lamp = {Color3.fromRGB(255, 196, 120), "Neon"}, wapenrood = {Color3.fromRGB(150, 24, 20), "SmoothPlastic"}}
 local function laad(id, naam, texmap)
 	local oud = workspace:FindFirstChild(naam); if oud then oud:Destroy() end
 	local m = Instance.new("Model"); m.Name = naam
@@ -25,6 +27,11 @@ local function laad(id, naam, texmap)
 	for _, p in ipairs(m:GetChildren()) do
 		if not p:IsA("BasePart") then continue end
 		p.Anchored = true; p.CanTouch = false; p.CanCollide = false; p.CanQuery = false
+		if string.match(p.Name, "^LAMP_") then                                              -- lantaarns: warm licht met schaduw
+			p.Transparency = 1; p.CastShadow = false; p.Size = Vector3.new(0.2, 0.2, 0.2); p.Name = "Lamp"
+			local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 180, 110); pl.Range = 14; pl.Brightness = 1.3; pl.Shadows = true; pl.Parent = p
+			continue
+		end
 		if string.match(p.Name, "^COLL_") then
 			p.Transparency = 1; p.CanCollide = true; p.CanQuery = true; p.CastShadow = false; p.Parent = bots
 			if p:IsA("MeshPart") then p.CollisionFidelity = Enum.CollisionFidelity.Box end
