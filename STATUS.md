@@ -410,6 +410,25 @@ links), rotsen 961616756 (eiland) / 961616759, controlehokje 961616755, pad 9616
   ("No asset content representation found ... do_not_fallback_to_baseline"), vanzelf over na herstart/ander netwerk.
 - NOG: zwanen terug (12% kleiner) en fijner, Elisa + interieur later, bruggetje/beekje, sprookjesboek.
 
+## De Nieuwe Kleren van de Keizer (chat 9, 14 nov) — v1 in Studio (decor + paleistuin; figuren/schimmenspel later, statisch)
+Map `models/AR_KlerenKeizer/`, brief `asset-brief.md`. **Echte bouwtekeningen gevonden** op Eftelist (`ref/tekeningen/`, bron in BRON.txt):
+plattegrond met maten in mm (vijver 20000x2500, hekwerk 21365, voorbak 1770/1200/1770), aanzichten met peilen (muur 2850+P, koepel 3050+P,
+hagen 1800/3000+P, pad 600-P, vijverbodem 900-P), poortdetail; plus maquette en 33 Eftepedia-foto's (`ref/eftepedia/`). OSM: `build/01_osm_lokaal.py`.
+- Modelframe: oorsprong = midden lange vijver (OSM lokaal (1.2, 4.37) t.o.v. attractievlak 50911607), voorkant naar de bezoekers (noord) = -Y,
+  z 0 = bezoekerspad, decorpeil 0.6. Roblox-oorsprong studs (-48.81, 2, -401.85), F (0.116, 0, -0.993). Controle: OSM-muur 767716987 valt op y 11.2
+  (tekening 11.3), koepel OSM 591202406 ~1 m van de tekening.
+- `build/03_decor.py`: middenpoort 1.93 x 4.4 m met doorgang 1.07 x 3.5 en grote kuif, medaillonpijlers (oeil-de-boeuf + guirlande), schuine
+  nispijlers met kuif en fonteintje, achtermuur met paneelvelden en urnpijlers, lakei- & poorthuizen (kruisplattegrond), gouden poort,
+  linkerfonteinbak met voluten, achthoekige theekoepel (vensters met roedes + vitrage, blauwe glazen koepel met ribben, gouden theepot),
+  voorbak met 8 postamenten + overloop, lange vijver met zwarte rand. `03_omgeving.py`: gazon op decorpeil met glooiing, hagen (1.15 voor
+  de muur, 3.0 achter, 1.8 zij/pad), bolstruiken, lichte rijvloer, laag zwart hekwerk met insprong, klinkerplein, 4 groene bankjes.
+- Bake rol `pleister` (strak roomwit paleisstuc) in `05_bake.py --pre KD`. Keten: 03_decor/03_omgeving -> 05_bake -> `build/export.sh` ->
+  `build/upload.sh` -> `python3 roblox/maak_plaatsscript.py` -> `roblox/plaats_klerenkeizer.luau` (fonteinen als ParticleEmitter-stralen,
+  haagtextuur, Ground onder het decor).
+- Assets: decor **129960133990936**, omgeving **119903777125541**, pleister 134788731347178/136901809327662.
+- NOG: ornamenten fijner (kuif/cartouches meer rococo), figuren (keizer, lakeien, hofdames, kleermakers) en schimmenspel later,
+  sprookjesboek, beige visgraat-bestrating i.p.v. rode klinkers, wandeltest/fps.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

@@ -260,3 +260,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Groen genereren in Luau zelf** (polygonen + zelfde regels) i.p.v. een lange lijst plakken: 8 KB in plaats van 15 KB en geen kopieerfouten.
 - **Vanaf de voorkant bekeken leek de zwaan een gans:** hals slanker (0.24 -> 0.105), kleinere kop/snavel, platte maskers; altijd ook een vooraanzicht renderen.
 - **Ondergrond:** alleen onder het water terrein weggraven (4-stud cellen) en een oeverring van 1.45 m mesh erover; paden als OSM-vlak (geen rasterkartels).
+
+## Lessen De Nieuwe Kleren van de Keizer (14 nov)
+- **Eftelist.nl heeft per attractie soms echte bouwtekeningen** (sectie "Bouwtekeningen", documenten.eftelist.nl/<attractie>/tekeningen/):
+  plattegrond met maten in mm en aanzichten met peilen. Eerst daar zoeken voor je maten uit foto's haalt. Schaal = bekende maat (vijver) in px.
+- Meterraster over de plattegrond leggen (`review/plan_raster.jpg`) en alle elementen in modelcoordinaten aflezen; daarna controleren tegen OSM.
+- Hulpfuncties die onderdelen met een matrix M plaatsen moeten M aan ELKE put meegeven (kuif/oeil zweefden eerst los op de oorsprong).
+- Artist impressions (dnkgroot) kunnen gespiegeld zijn: de plattegrond en foto's bepalen links/rechts.
