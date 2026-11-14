@@ -273,3 +273,14 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   die op een foto moeten lijken. Echte foto->3D (Tripo/Hunyuan3D/Meshy) loopt via de MCP for Blender-addon (`generate_3d image=...`) en vraagt een
   eigen API-sleutel in de addon (nu alle generators "off"). Zonder sleutel: zelf sculpten in Blender naar de foto-overlay (`build/03a_reus.py`).
 - Eftepedia-lemma noemt de maat: "vier meter lange reus" -> eerst het lemma op maten doorzoeken voor je schat.
+
+## Lessen Roodkapje (14 nov)
+- **Daan: "gewoon blueprints en je komt er wel"**: Eftepedia-lemma's hebben vaak Pieck-werktekeningen (aanzichten/plattegrond 1:100). Geen maatlijnen:
+  schaal via BAG-breedte + een maat op de tekening ('180'). Oude tekeningen kunnen GESPIEGELD zijn; OSM-punten (trap, poortje, lamp) beslissen.
+  Hoogtes van een herbouw (2016) uit de foto, niet uit de schets van 1959.
+- **Geen dijken/rotsmuren of hoogteverschillen voor paden** zonder het eerst te vragen: Daan wil paden "gewoon normaal zoals bij elke" = licht grind
+  vlak op het maaiveld, en het huis niet "in de grond". Ook al is het in de Efteling een hellingpad: eerst vragen voordat je terrein ophoogt.
+- Losse padstrook altijd als DICHTE plaat met de bovenkant gecontroleerd omhoog (open strook kwam omgedraaid binnen = onzichtbaar van boven).
+- Terreinkolommen van 4 studs bollen ~0.5 m boven de berekende hoogte uit: een pad 10 cm boven terrein verdwijnt erin.
+- Kijkglas niet als Roblox Glass (spiegelt de roze lucht): SmoothPlastic met transparantie 0.93.
+- Studio-terrein in een gebied resetten: FillBlock Air boven Y 0 + LeafyGrass Y -8..0 (oppervlak Y 2), daarna planten opnieuw op het terrein zetten.

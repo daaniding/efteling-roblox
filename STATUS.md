@@ -517,6 +517,28 @@ studs (362.96, -262.92); Roblox: ORIGIN met 180 graden draaiing). Eftelist heeft
 - NOG TE DOEN: waterval naast de westtrap, kraaien/wachter/koks (figuren later), plein/paden rondom later.
 - LES: raycasts raken alleen onderdelen met CanQuery = true (geplaatste meshes staan uit): voor planten op een mesh tijdelijk aanzetten.
 
+## Roodkapje (chat 10, 14 nov) — v1 in Studio (huisje + vlak grindpad + bos + vennetje; figuren/interieur later)
+Map `models/AR_Roodkapje/`. Bronnen: 96 Eftepedia-plaatjes (`ref/eftepedia/`) met bouwtekeningen: `Aanzichten_Roodkapje.jpeg` (4 aanzichten +
+plattegrond + doorsnede 1:100, ~30 px/m, GESPIEGELD t.o.v. de bouw; maat '180' = pad boven de kelder), `Zijaanzicht_Roodkapje_2016.png`
+(bordes, kelderdeur + houtgewelf, trap), `RK-plattegrond.jpg` (interieur 1:20). OSM 50911608 (BAG 4.7 x 6.1), bordes-pad 766787193, trap 766787194,
+poortje 7161368031, lamp 7165020178, pad 1074487763, vennetje 766787195 (`build/01_osm_lokaal.py` -> `ref/osm_lokaal.json`, `review/osm.png`).
+- Frame: oorsprong = midden BAG = studs (228.0, 137.85), -Y = voorkant (noord, naar het pad), +X = west, F (0.098, 0, -0.995).
+  Huisje: z 0 = vloer kamer grootmoeder = Roblox Y 7.7; onderkant huis/kelder z -1.9 = maaiveld Y 2.
+- `build/03_huisje.py`: stucmuren, 3 kijkramen tussen 4 bolle okerzuilen + bloemenband + dikke balk (2016), overstek 1.1 m met vakwerkgevel en
+  raam met kaarslicht, brede windveren + houten spits (top 7.1 m, foto 2016 is hoger/spitser dan de schets uit 1959: foto aangehouden), dak in
+  bruine schubben, klokgevel met venster + windwijzer boven de Pieckblauwe voordeur (stenen omlijsting, afdakje, bel), bordes met oranjerode tegels,
+  leuning met krullen, poortje, kelderdeur + houtgewelf met brandhout, trap naar achter (OSM), vogelhuisje van Krakeeltje op klimoppaal,
+  gietijzeren hoeklamp, ronde toren met kegeldak + windwijzer, schoorsteen met zinken pijp, platte dakkapel ("oog").
+  Camera-overlay op Grootmoedershuisje_herbouwd: `build/cam.sh <tag> 0,-15,1.5,30 -21 8 -0.07,0.06`. Review: `build/review.py` (+ sheet.py).
+- `build/03_omgeving.py`: alleen nog het grindpad (3.4 m, vloeiende OSM-as, dichte plaat 12 cm). Bake `05_bake.py --pre RK` (stuc zonder
+  afbladderplekken, bruine dakschubben). Export `build/export.sh`, upload `build/upload.sh`, plaatsen `roblox/maak_plaatsscript.py` ->
+  `roblox/plaats_roodkapje.luau`; bos `roblox/plaats_roodkapje_groen.luau` (RoodkapjeGroen, 1961 planten, 58 bomen; in Wind-MAPPEN, Roodkapje in LantaarnsDagNacht).
+- Assets: huisje **137968515638209** (88k tris), pad **77138895088158**; texturen in `models/AR_Roodkapje/textures/asset_ids.txt`.
+- Daan (14 nov): eerst rotsblokmuren + dijk zoals de Efteling 2016 -> "ziet er niet uit", "moet niet deze hoogte", "huis staat in de grond".
+  Nu: terrein overal vlak (Y 2), huisje op volle hoogte op het maaiveld, grindpad vlak op het maaiveld (Y 2). GEVOLG: kijkramen ~2.6 m en het
+  bordespoortje 1.9 m boven het pad -> met Daan beslissen (kijkplatformpje/trapje of anders).
+- NOG: Roodkapje + Krakeeltje (figuren later), wolf/interieur (later), wegwijzer met reliëf (OSM 7165020183, 31 m oost), Play-wandeltest, place opslaan.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
