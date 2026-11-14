@@ -542,6 +542,21 @@ poortje 7161368031, lamp 7165020178, pad 1074487763, vennetje 766787195 (`build/
   + riet/lissen/kroos/rimpels gekloond van KleinDuimpjeWater -> workspace.RoodkapjeWater. Planten weer op het terrein gezet (1956).
 - NOG: Roodkapje + Krakeeltje (figuren later), wolf/interieur (later), wegwijzer met reliëf (OSM 7165020183, 31 m oost), Play-wandeltest, place opslaan.
 
+## Pinokkio (chat 10, 14 nov) — v1 in Studio (werkplaats, poort, nis, haventje met Monstervis, plein, bos); verbeteren later (Daan)
+Map `models/AR_Pinokkio/`. Bronnen: 61 Eftepedia-plaatjes (`ref/eftepedia/`, o.a. Pinokkio_ontwerp_huisje = vooraanzicht, Pinokkiowerkplaats,
+Pinokkiototaal, Pinokkio_monstervis_rjj, Monstervis-achter, Pinokkiohelevis), OSM 405610268 (bottega), 405610269 (nis), 405610270 (vijver),
+766787185/186 (hekken), 766787189 (muur), 405610267 (plein), node Monstervis (`build/01_osm_lokaal.py` -> `ref/osm_lokaal.json`).
+- Frame: oorsprong = zwaartepunt BAG 405610268 = studs (149.16, 182.31), -Y = voorkant (NNW, naar het plein), F (-0.364, 0, -0.931), z 0 = maaiveld (Y 2).
+  OSM -> model: X = -0.931*ox - 0.364*oy ; Y = 0.364*ox - 0.931*oy.
+- `build/03_decor.py` (PK_decor): bottega (stuc, boogramen, dubbele deur met CHIUSO-bordje, zijdeur met uithangbord, luifel op 4 gesneden
+  uilenkolommen met booguilen, naambord met echte letters, golvend pannendak met opkrullende randen, blauwgroene dakkapel, schoorsteen,
+  windwijzer), muur + groene poort op de OSM-dienstingang, nis met dakje en 7 tonnen, touwnet-hekken (OSM), kademuurtje, boei, meerpaal, grindplein.
+  `build/03_vis.py` (PK_vis): Monstervis (kop met open bek, lippen, haaktanden, gele ogen, 13 tentakels, schubben via voronoi, stekelige
+  rugvinnen, krulstaart met waaiervin) + waterplaat in de vorm van de OSM-vijver (terrein eronder uitgegraven).
+- Bake `05_bake.py --pre PK`, `build/export.sh`, `build/upload.sh`; plaatsen `roblox/plaats_pinokkio.luau`, bos `roblox/plaats_pinokkio_groen.luau`
+  (PinokkioGroen, 2536 planten, 70 bomen, riet/lissen langs de oever; in Wind-MAPPEN). Assets: decor **78091187202022**, vis **107964315615239**.
+- NOG (later): Vos en Kat, muizen/interieur werkplaats, boei-banden mooier, fijnere vis (kleurverloop), Play-wandeltest, place opslaan.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
