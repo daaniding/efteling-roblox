@@ -557,6 +557,14 @@ Pinokkiototaal, Pinokkio_monstervis_rjj, Monstervis-achter, Pinokkiohelevis), OS
   (PinokkioGroen, 2536 planten, 70 bomen, riet/lissen langs de oever; in Wind-MAPPEN). Assets: decor **78091187202022**, vis **107964315615239**.
 - NOG (later): Vos en Kat, muizen/interieur werkplaats, boei-banden mooier, fijnere vis (kleurverloop), Play-wandeltest, place opslaan.
 
+## De Rode Schoentjes (chat 10, 14 nov) — v1 in Studio (verbeteren later)
+Map `models/AR_RodeSchoentjes/`. Bronnen: 27 Eftepedia-plaatjes (Boekloc_RodeSchoentjes = hoofdfoto, Intro, Karen2016, Ontwerp_muurschildering),
+OSM 50911610 (7.45 x 4.96 m incl. rots), pad 405848924. `build/03_loggia.py`: open loggia (2 rondbogen op 3 gele zuilen, laag pannendak met
+groene boeiboord en klossen), muurschildering (eigen getekende textuur `build/mural.py`, vrij naar Pieck), kaarsen op krularmen, kroonluchter,
+verhoogde dansvloer met geruite glastegels en zigzagrand, 2 rode schoentjes, groen hekje met medaillon, bakstenen vloer, kunstrots links/achter
+(rotsblokken) met 2 schildjes met Franse lelie, sprookjesboek, grindpleintje. Model **130309942322628**, zie `roblox/README_studio.md`.
+- NOG (later): rots achter hoger dan het dak (zoals Boekloc), muurschildering mooier, dansende schoentjes (animatie later).
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
