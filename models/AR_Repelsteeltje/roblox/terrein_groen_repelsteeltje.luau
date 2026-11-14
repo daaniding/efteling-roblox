@@ -4,7 +4,8 @@ local F = Vector3.new(0.533, 0, -0.846)
 local ORIGIN = CFrame.new(351.75, 2.0, -425.94) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
 local HUIS = {{-2.6, -2.15}, {3.75, -2.15}, {3.75, 2.45}, {-2.6, 2.45}}
-local PAD = {{-14.0, -4.0}, {-3.5, -3.7}, {11.0, -3.6}, {11.0, -6.9}, {-3.5, -7.0}, {-9.0, -8.6}, {-14.0, -9.0}}
+local PAD = {{-14.0, -4.0}, {-3.93, -3.68}, {-2.43, -2.18}, {-2.03, -1.93}, {3.19, -1.93}, {3.59, -2.13}, {4.69, -3.38}, {5.49, -3.62}, {11.0, -3.6},   -- flagstones tot tegen het kijkvenster
+	 {11.0, -6.9}, {-3.5, -7.0}, {-9.0, -8.6}, {-14.0, -9.0}}
 local function inside(x, y, p) local c = false; local j = #p
 	for i = 1, #p do local a, b = p[i], p[j]; if ((a[2] > y) ~= (b[2] > y)) and (x < (b[1] - a[1]) * (y - a[2]) / (b[2] - a[2]) + a[1]) then c = not c end; j = i end
 	return c end

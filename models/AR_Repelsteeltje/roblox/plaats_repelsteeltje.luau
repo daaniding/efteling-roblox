@@ -1,7 +1,7 @@
 -- Repelsteeltje (1998): huisje met boomstronk, tuintje, flagstone-pad, rook uit de schoorsteen. Gegenereerd door maak_plaatsscript.py.
 -- Modelframe: oorsprong = OSM-zwaartepunt 55424159, voorkant (lange zijde naar het pad) = -Y, x = noordwest, z = 0 maaiveld.
-local HUIS = 136042669383379
-local TEX = {hout = {121923152887379, 106224203767497}, lei = {91942260177324, 71477239170880}, natuursteen = {81084195886124, 105474408512549}, schors = {122462432683419, 128188436799664}, stuc = {131417926496725, 115507825444744}}
+local HUIS = 111707359870289
+local TEX = {hout = {115939977089041, 106224203767497}, lei = {91942260177324, 71477239170880}, natuursteen = {106777235641545, 95364787317386}, schors = {115780146089898, 95874503816582}, stuc = {105838231328882, 115507825444744}}
 local F = Vector3.new(0.533, 0, -0.846)
 local ORIGIN = CFrame.new(351.75, 2.0, -425.94) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3

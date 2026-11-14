@@ -393,13 +393,14 @@ def build(master):
         coll_box((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, 0.45, L, 0.12, 0.9, math.degrees(math.atan2(b[1] - a[1], b[0] - a[0])))
     for (ex, ey, d) in ((X0 - 0.15, Y0 - 0.35, 1), (X1 + 0.15, Y0 - 0.3, -1)):                                   # krul aan het hekeinde bij het huis
         put("hek", "blauwgroen", btube([(ex + d * 0.09 * math.sin(t * 0.6), ey, 0.62 - 0.09 + 0.09 * math.cos(t * 0.6)) for t in range(11)], 0.016, 6))
-    PAD = [(-14.0, -4.0), (-3.5, -3.7), (11.0, -3.6), (11.0, -6.9), (-3.5, -7.0), (-9.0, -8.6), (-14.0, -9.0)]
+    PAD = [(-14.0, -4.0), (X0 - 1.6, -3.68), (X0 - 0.1, Y0 - 0.3), (X0 + 0.3, Y0 - 0.05), (X1 - 0.3, Y0 - 0.05), (X1 + 0.1, Y0 - 0.25),   # flagstones lopen tussen
+           (X1 + 1.2, Y0 - 1.5), (X1 + 2.0, -3.62), (11.0, -3.6), (11.0, -6.9), (-3.5, -7.0), (-9.0, -8.6), (-14.0, -9.0)]                # de hekeinden tot tegen het kijkvenster (Repelreus)
     pb = bmesh.new(); vv = [pb.verts.new((x, y, 0.04)) for x, y in PAD]; vb = [pb.verts.new((x, y, -0.12)) for x, y in PAD]
     pb.faces.new(vv); pb.faces.new(vb[::-1])
     for i in range(len(PAD)): pb.faces.new((vv[i], vb[i], vb[(i + 1) % len(PAD)], vv[(i + 1) % len(PAD)]))
     bmesh.ops.recalc_face_normals(pb, faces=pb.faces); bmesh.ops.triangulate(pb, faces=[f for f in pb.faces if len(f.verts) > 4], ngon_method="EAR_CLIP")
     put("pad", "flagstone", pb)
-    coll_box(-1.5, -5.4, -0.04, 25.0, 3.4, 0.2, 0); coll_box(-11.5, -6.5, -0.04, 5.0, 5.0, 0.2, 0)
+    coll_box(-1.5, -5.4, -0.04, 25.0, 3.4, 0.2, 0); coll_box((X0 + X1) / 2, (Y0 - 0.05 - 3.65) / 2, -0.04, X1 - X0 + 0.6, 3.65 - 0.05 + Y0, 0.2, 0); coll_box(-11.5, -6.5, -0.04, 5.0, 5.0, 0.2, 0)
     MB = TR(X0 - 3.0, Y0 - 1.5, 0, 160)                                                                       # sprookjesboek (Boekloc: voor het huisje)
     put("boek", "ijzer", btube([(0, 0, 0.03), (0, 0, 0.85)], 0.03, 6), MB)
     for a in (0, 120, 240):

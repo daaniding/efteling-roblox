@@ -471,9 +471,9 @@ modelframe `ref/osm_model.json` (voorkant = lange noordoostzijde naar het pad = 
 - Asset: huisje **77559737160973**.
 - Hekje (Daan: "je moet in het huis kunnen kijken"): volgens Repelreus/Repelensteel2024 staat het hek NIET voor het kijkvenster; links langs de
   deurtuin tot de hoedpoot, rechts vanaf de stronk-hoek naar voren, krulletje aan het hekeinde. Keien alleen bij de hoeken, venster vrij.
-  Huisje nu **136042669383379** (textures opnieuw geüpload, zie `textures/asset_ids.txt`).
 - Pad: oude flagstone-plaat blijft (Daan: "het pad was goed"). Proef met losse flagstones (`build/03_pad.py`, `roblox/plaats_pad.luau`) afgekeurd;
-  paden doen we later. Echt: flagstones lopen tot tegen de gevel, ernaast herringbone-klinkers.
+  paden doen we later. Wel: de flagstone-plaat loopt nu tussen de hekeinden door tot tegen het kijkvenster (PAD-polygoon in 03_huisje.py en
+  terrein_groen_repelsteeltje.luau gelijk, terrein eronder vlak). Huisje nu **111707359870289**. Later: herringbone-klinkers ernaast.
 - LES terrein: vlak maaiveld = voxellaag 0..4 LEEG (oppervlak Y 2). Ground vullen tot Y 2 maakt laag 0..4 half vol en tilt het oppervlak naar Y 4.
 
 ## Daarna (volgorde met Daan afgesproken)
