@@ -496,6 +496,22 @@ downloadbaar 3D-model (Sketchfab/MakerWorld/Creator Store gezocht). Roblox gener
   in `apply_plooien`; losse push-punten gaven putjes). NOG TE DOEN (later met Daan): gezicht en laarzen fijner, herringbone-plein voor (paden later).
 - LES bake: 05_bake haalde onderkanten bij z<0.1 weg (voor paden) -> gaten in schuine losse stenen; voor stenen `dead = []`.
 
+## Doornroosje (chat 9, 14 nov) — v1 in Studio (buitenkant; figuren/interieur later)
+Map `models/AR_Doornroosje/`, brief `asset-brief.md`. 158 Eftepedia-foto's met ontwerptekeningen van Anton Pieck (aanzichten, plattegrond-
+schetsen), luchtfoto en meetlatfoto; OSM (`ref/osm_lokaal.json`, frame = OSM-assen x oost / y noord, oorsprong zwaartepunt 55423166 =
+studs (362.96, -262.92); Roblox: ORIGIN met 180 graden draaiing). Eftelist heeft geen pagina.
+- `build/03_kasteel.py`: zaal met trapgevel + arcade (zuid), binnenplaats met kantelen, slanke vierkante toren met tentdak + lagere aanbouw,
+  ronde torens 407/408/409 + binnenplaatstoren met uitlopende kegeldaken van pannenrijen en gouden windvanen. Kasteelvloer Z0 = 4.5 m
+  (rotsheuvel boven de vijver). Stuc via `organisch()` (voxel 0.04, bobbels, decimate) + bollend/scheef torenprofiel (Daan: "lelijk" bij
+  strakke cilinders). Overlay: noordfoto `ref/noord_2024_15.jpg` en luchtfoto `ref/lucht.jpg` (`build/cam_match.py`).
+- `build/03_omgeving.py`: beide trappen (OSM steps) met muurtjes, terraspad, poortgebouwen 414/415, rotswand aan de vijverkant.
+- Bake `05_bake.py` (Zes Zwanen-rollen; stuc met weinig afbladderplekken, groenige vochtrand), export `09_export_roblox.py`, `upload.sh`.
+- Studio: `roblox/plaats_doornroosje.luau`, `roblox/terrein_doornroosje.luau` (heuvel tot Z0, grond onder de trappen, vijver uit OSM als
+  terreinwater, rots aan de vijverkant), `roblox/plaats_doornroosje_groen.luau` (~650 planten + 34 bomen; daarna nog ~800 rododendrons/
+  varens op de noordhelling, de rotswand en de rotshelling, direct in Studio). Assets: zie `textures/asset_ids.txt`.
+- NOG TE DOEN: kantelen op de weergang scherper, klimop op torens, waterval, kraaien/wachter/koks (figuren later), plein/paden later.
+- LES: raycasts raken alleen onderdelen met CanQuery = true (geplaatste meshes staan uit): voor planten op een mesh tijdelijk aanzetten.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
