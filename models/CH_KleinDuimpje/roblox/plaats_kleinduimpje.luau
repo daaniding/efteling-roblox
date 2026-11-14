@@ -1,10 +1,10 @@
 -- Klein Duimpje (1998): slapende reus (build/03a_reus.py, gebakken in 04_bake_reus.py) op een rotseiland met gracht (build/03b_omgeving.py).
 -- Modelframe: oorsprong = OSM-punt Klein Duimpje (studs 435.33, -378.66), voorkant (rotsrand naar het plein, ZO) = -Y, x = lichaamsas (hoofd NO).
 -- OSM voorkant (0.43, -0.90) -> Roblox F = (0.43, 0, 0.90). Grond Y = 2. Gracht = terreinwater (zelfde look als De Zes Zwanen).
-local REUS = 130052201031925
-local OMG = 106561478146188
-local TEX = {lijf = 102925293892709, hoofd = 109117147353858}
-local TEXO = {kalksteen = {101187793787894}, natuursteen = {100607201429225, 126766698446394}, schors = {137162260738690, 119851446553550}}
+local REUS = 75712834799016
+local OMG = 83383369999125
+local TEX = {lijf = 87267730912346, hoofd = 115552673978978}
+local TEXO = {kalksteen = {113999760443983}, natuursteen = {140580235739008, 130612249519196}, schors = {120872467580648, 124352254927046}, hout = {106557651418244, 134618783912829}}
 local F = Vector3.new(0.43, 0, 0.90).Unit
 local ORIGIN = CFrame.new(435.33, 2.0, -378.66) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -13,7 +13,9 @@ local M = {
 	messing = {Color3.fromRGB(196, 156, 76), "Metal"}, koper = {Color3.fromRGB(184, 128, 64), "Metal"}, papier = {Color3.fromRGB(232, 220, 186), "Fabric"},
 	ijzer = {Color3.fromRGB(24, 24, 24), "Metal"}, bordgroen = {Color3.fromRGB(32, 76, 52), "WoodPlanks"}, binnen = {Color3.fromRGB(14, 10, 8), "SmoothPlastic"},
 	water = {Color3.fromRGB(30, 40, 26), "SmoothPlastic"}, modder = {Color3.fromRGB(40, 32, 24), "Ground"}, hout = {Color3.fromRGB(70, 50, 34), "Wood"},
-	kalksteen = {Color3.fromRGB(196, 186, 168), "Limestone"}, natuursteen = {Color3.fromRGB(150, 146, 136), "Slate"}, schors = {Color3.fromRGB(92, 76, 60), "Wood"},
+	kalksteen = {Color3.fromRGB(150, 148, 140), "Limestone"}, natuursteen = {Color3.fromRGB(120, 124, 126), "Slate"}, schors = {Color3.fromRGB(92, 76, 60), "Wood"},
+	huid = {Color3.fromRGB(226, 182, 156), "SmoothPlastic"}, blond = {Color3.fromRGB(176, 150, 108), "Fabric"}, hemd = {Color3.fromRGB(226, 214, 170), "Fabric"},
+	blauw = {Color3.fromRGB(96, 120, 160), "Fabric"}, rood = {Color3.fromRGB(130, 32, 36), "Fabric"},
 }
 
 local function laad(id, naam)
@@ -41,10 +43,13 @@ local function kleur(m, texmap)
 			continue
 		end
 		local tex = string.match(p.Name, "__TEX_([%w_]-)_%d+$"); local key = string.match(p.Name, "__MAT_([%w_]-)_%d+$")
-		if tex and texmap[tex] then
+		if tex == "kalksteen" then                                  -- kleine stenen: Roblox-steenmateriaal (900 stenen op 1 atlas gaf witte vlakken + zwarte naden)
+			p.Material = Enum.Material.Slate; p.Color = Color3.fromRGB(122, 120, 114)
+		elseif tex and texmap[tex] then
 			p.Color = Color3.new(1, 1, 1); p.Material = Enum.Material.SmoothPlastic
 			local sa = Instance.new("SurfaceAppearance"); sa.ColorMap = "rbxassetid://" .. texmap[tex][1]
 			if texmap[tex][2] then sa.NormalMap = "rbxassetid://" .. texmap[tex][2] end
+			if tex == "natuursteen" then sa.Color = Color3.fromRGB(176, 186, 198) end   -- zwerfkeien grijsblauw (foto), geen nieuwe bake
 			sa.Parent = p
 			pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end)
 		elseif key and M[key] then
@@ -64,6 +69,9 @@ for _, p in ipairs(reus:GetChildren()) do if p:IsA("MeshPart") then p.CanCollide
 local omg = laad(OMG, "KleinDuimpjeOmgeving")
 local bots, o2 = kleur(omg, TEXO)
 reus.WorldPivot = ORIGIN * CFrame.new(-0.6 * S, 0, 0); omg.WorldPivot = ORIGIN
+for _, p in ipairs(omg:GetChildren()) do   -- Duimpje schuift mee met de reus (staat bij de veters van de verste laars)
+	if p:IsA("BasePart") and string.find(p.Name, "duimpje") then p.CFrame = ORIGIN * CFrame.new(-0.6 * S, 0, 0) * ORIGIN:Inverse() * p.CFrame end
+end
 
 -- 2) gracht: terrein onder het OSM-waterpolygoon weg en terreinwater erin (oppervlak ~0.33 m onder het maaiveld)
 local WATER = {{-3.31, -3.47}, {-6.26, -2.46}, {-4.72, 3.22}, {0.21, 5.82}, {5.61, 3.90}, {7.59, -1.95}, {4.16, -2.14}, {3.37, 2.00}, {0.40, 3.42}, {-2.96, 1.56}}   -- ref/osm_model.json (ring om het eiland)

@@ -38,9 +38,9 @@ local L = {}
 for _ = 1, 2600 do                                                         -- varens: dicht op het eiland en in het voorbed
 	local x, y = U(-6.5, 6), U(-5.6, 3.6)
 	local op = inside(x, y, EILAND); local vb = voorbed(x, y)
-	if (op and R:NextNumber() < 0.5) or (vb and R:NextNumber() < 0.16) then
+	if (op and R:NextNumber() < 0.5) or (vb and y > -3.2 and R:NextNumber() < 0.16) then   -- voorbed vrij: zicht op de reus vanaf het plein
 		local s = {"PH_fern_02_0", "PH_fern_02_2", "PH_fern_02_3", "varen1"}
-		table.insert(L, {s[R:NextInteger(1, #s)], x, y, U(3.2, 4.8), true}) end
+		table.insert(L, {s[R:NextInteger(1, #s)], x, y, y < -1.5 and U(1.6, 2.4) or U(2.2, 3.2), true}) end
 end
 for _ = 1, 1400 do                                                         -- achter de gracht: rododendrons, taxus, coniferen
 	local x, y = U(-10, 11), U(2.5, 11)

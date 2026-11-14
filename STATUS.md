@@ -488,8 +488,13 @@ downloadbaar 3D-model (Sketchfab/MakerWorld/Creator Store gezocht). Roblox gener
   hoorn, bordje. Bake: `04_bake_reus.py` (geschilderd: kleur x AO x blos/stof), `05_bake_omgeving.py`; export `09_export_*`; `upload.sh`.
 - Studio: `roblox/plaats_kleinduimpje.luau` (reus 0.6 m naar het hoofdeinde, gracht = terreinwater), `plaats_kleinduimpje_groen.luau`
   (bosgrond, ~380 varens op het eiland, rododendrons/coniferen achter de gracht). Assets: zie `textures/asset_ids.txt`.
-- NOG TE DOEN: gezicht/handen/plooien veel fijner, rotsbed als grijze keienheuvel (nu te wit/plat), Duimpje-figuurtje bij de laars,
-  sprookjesboek op standaard (2017), herringbone-plein voor (paden later).
+- v3 scène (Daan: "reus verbeteren we later, ga verder met de scène"): keienheuvel van grijsblauwe zwerfkeien onder de reus en onder de
+  verste laars aan de grachtrand, grijze kalksteenrand (Roblox Slate; 900 stenen op één atlas gaf witte vlakken + zwarte naden), Duimpje
+  bij de veters, sprookjesboek op een lessenaar (2017), praatstronk links voor; gracht met kroos + rimpels en riet/gele lissen langs de
+  buitenrand (`roblox/plaats_kleinduimpje_water.luau`); varens alleen op het eiland, voorbed vrij voor het zicht.
+- Reus: handen met kootjes/knokkels/nagels, plooien nu als doorlopende groeven (lijn op het oppervlak geprojecteerd, numpy-afstandsveld
+  in `apply_plooien`; losse push-punten gaven putjes). NOG TE DOEN (later met Daan): gezicht en laarzen fijner, herringbone-plein voor (paden later).
+- LES bake: 05_bake haalde onderkanten bij z<0.1 weg (voor paden) -> gaten in schuine losse stenen; voor stenen `dead = []`.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).

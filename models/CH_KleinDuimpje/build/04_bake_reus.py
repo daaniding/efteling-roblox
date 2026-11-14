@@ -21,7 +21,7 @@ CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
 # Studio-kleuren (sRGB 0-255) = doelkleur na de bake (getemperd, zie roblox/plaats_langnek.luau)
 RGB = {"huid": (232, 194, 166), "lip": (200, 120, 108), "baard": (78, 78, 82), "haar": (124, 118, 112), "wenkbrauw": (70, 68, 70),
        "hemd": (232, 222, 194), "broek": (96, 116, 146), "laars": (150, 100, 86), "zool": (70, 48, 38), "riem": (96, 62, 44), "vest": (128, 84, 62),
-       "veter": (110, 70, 50), "rood": (150, 36, 36), "messing": (196, 156, 76), "binnen": (70, 24, 22)}
+       "veter": (110, 70, 50), "rood": (150, 36, 36), "messing": (196, 156, 76), "binnen": (70, 24, 22), "nagel": (150, 108, 100)}
 FLAT = {"MAT_messing"}
 STOF = {"hemd", "broek", "rood"}
 CAPS = {"GEO_broek": 14000, "GEO_hemd": 12000, "GEO_huid": 12000, "GEO_baard": 9000, "GEO_laars_voor": 7000, "GEO_laars_achter": 7000,

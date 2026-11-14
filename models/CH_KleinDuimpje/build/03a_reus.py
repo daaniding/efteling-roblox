@@ -22,7 +22,7 @@ V = Vector
 # ---------------- kleuren (geschilderd polyester, foto's) ----------------
 RGB = {"huid": (232, 194, 166), "baard": (78, 78, 82), "haar": (124, 118, 112), "hemd": (232, 222, 194), "broek": (96, 116, 146), "binnen": (70, 24, 22),
        "vest": (120, 70, 40), "laars": (150, 100, 86), "zool": (54, 36, 26), "riem": (70, 42, 24), "messing": (190, 150, 70),
-       "veter": (96, 60, 36), "rood": (150, 36, 36), "lip": (200, 120, 108), "wenkbrauw": (70, 68, 70), "nagel": (236, 196, 176)}
+       "veter": (96, 60, 36), "rood": (150, 36, 36), "lip": (200, 120, 108), "wenkbrauw": (70, 68, 70), "nagel": (150, 108, 100)}
 MATS = {}
 def M(n):
     if n not in MATS:
@@ -88,10 +88,45 @@ def fuse(name, parts, voxel, it=8, fac=0.6):
     shade_smooth(ob, math.radians(80)); return ob
 
 
+_BVH = {}
+PLOOI = {}
+
+
 def plooi(ob, a, b, r, diep, n=6):
-    """plooigroef langs lijn a->b (reeks pushes naar binnen)"""
-    a, b = V(a), V(b)
-    for i in range(n + 1): push(ob, a + (b - a) * (i / n), r, -diep)
+    """plooigroef langs a->b: lijn eerst op het oppervlak geprojecteerd, toegepast in apply_plooien (doorlopende groef, geen putjes)"""
+    from mathutils.bvhtree import BVHTree
+    if ob.name not in _BVH:
+        bm = bmesh.new(); bm.from_mesh(ob.data); _BVH[ob.name] = BVHTree.FromBMesh(bm); bm.free()
+    bvh = _BVH[ob.name]; a, b = V(a), V(b)
+    m = max(3, int((b - a).length / (r * 0.5)) + 1)
+    pts = []
+    for i in range(m + 1):
+        q = bvh.find_nearest(a + (b - a) * (i / m))[0]
+        if q is not None: pts.append(tuple(q))
+    if len(pts) >= 2: PLOOI.setdefault(ob.name, []).append((pts, r, diep))
+
+
+def apply_plooien(ob):
+    import numpy as np
+    folds = PLOOI.pop(ob.name, []); _BVH.pop(ob.name, None)
+    if not folds: return
+    me = ob.data; n = len(me.vertices)
+    co = np.empty(n * 3, dtype=np.float64); me.vertices.foreach_get("co", co); co = co.reshape(n, 3)
+    nr = np.empty(n * 3, dtype=np.float64); me.vertices.foreach_get("normal", nr); nr = nr.reshape(n, 3)
+    disp = np.zeros(n)
+    for pts, r, diep in folds:
+        P = np.array(pts); lo = P.min(0) - r; hi = P.max(0) + r
+        idx = np.where(np.all((co >= lo) & (co <= hi), axis=1))[0]
+        if len(idx) == 0: continue
+        c = co[idx]; dmin = np.full(len(idx), 1e9); tpos = np.zeros(len(idx)); L = len(P) - 1
+        for k in range(L):
+            A, B = P[k], P[k + 1]; AB = B - A; l2 = max(AB @ AB, 1e-12)
+            t = np.clip(((c - A) @ AB) / l2, 0, 1); d = np.linalg.norm(c - (A + t[:, None] * AB), axis=1)
+            better = d < dmin; dmin[better] = d[better]; tpos[better] = (k + t[better]) / L
+        w = np.clip(1 - (dmin / r) ** 2, 0, 1) ** 2 * np.sqrt(np.clip(np.sin(np.pi * tpos), 0, 1))
+        disp[idx] = np.maximum(disp[idx], w * diep)
+    co -= nr * disp[:, None]
+    me.vertices.foreach_set("co", co.ravel()); me.update()
 
 
 def frame(f, u):
@@ -200,19 +235,35 @@ def build(master):
     sn = fuse("GEO_snor", snor, 0.016, 3); tag(sn, "baard", "head")
     for s_ in (1, -1): plooi(sn, hp(0.6, -0.3, s_ * 0.05), hp(0.36, -0.58, s_ * 0.31), 0.02, 0.02, 8)
 
-    # handen: grote handpalm + worstvingers, ineengelegd op de buik
-    def hand(wr, c, vinger_dir, side):
-        parts = [ellb(c, (0.22, 0.17, 0.09), Matrix.Rotation(math.atan2(vinger_dir.y, vinger_dir.x), 3, "Z"))]
-        sd = V((-vinger_dir.y, vinger_dir.x, 0)).normalized()
-        for i in range(4):
-            b = c + vinger_dir * 0.16 + sd * (i - 1.5) * 0.085
-            parts.append(loft([(*b, 0.05), (*(b + vinger_dir * 0.13 + V((0, 0, -0.02))), 0.046), (*(b + vinger_dir * 0.2 + V((0, 0, -0.1))), 0.04)], 8, 10))
-        tb = c - vinger_dir * 0.05 + sd * side * 0.17
-        parts.append(loft([(*tb, 0.055), (*(tb + vinger_dir * 0.14 + sd * side * 0.05), 0.045)], 8, 10))
-        parts.append(loft([(*wr, 0.19), (*c, 0.15)], 6, 14))
+    # handen (close-up): brede handpalm, vingers in drie kootjes met knokkels, donkere nagels; voor = over de tasklep, achter = vuist op de borst
+    nagels = []
+    def hand(wr, c, fd, side, krul):
+        fd = fd.normalized(); up = V((0, 0, 1)); sd = fd.cross(up).normalized() * side; up = sd.cross(fd).normalized() * side
+        rot = Matrix((sd, fd, up)).transposed()
+        parts = [ellb(c, (0.2, 0.22, 0.085), rot), loft([(*wr, 0.18), (*(c - fd * 0.12), 0.15)], 6, 14)]
+        for i, (off, ln) in enumerate(((-0.13, 0.9), (-0.045, 1.0), (0.045, 0.97), (0.125, 0.8))):
+            b0 = c + fd * 0.19 + sd * off + up * 0.01
+            parts.append(ellb(b0 + up * 0.03, (0.05, 0.05, 0.04)))                                   # knokkel
+            pts = [b0]; d = fd.copy(); p = b0
+            for k, L in enumerate((0.15, 0.1, 0.08)):
+                ang = krul * (k + 1) * 0.55
+                d = (fd * math.cos(ang) - up * math.sin(ang)).normalized()
+                p = p + d * L * ln; pts.append(p)
+            rr = (0.055, 0.05, 0.045, 0.04)
+            parts.append(loft([(*q, rr[j]) for j, q in enumerate(pts)], 12, 12))
+            nn = d.cross(sd).normalized()
+            if nn.dot(up) < 0: nn = -nn
+            ng = ellb(pts[-1] - d * 0.025 + nn * 0.03, (0.034, 0.045, 0.012), Matrix((sd, d, nn)).transposed(), 12, 8); nagels.append(ng)
+        tb = c - fd * 0.04 - sd * 0.19
+        tp = [tb, tb + fd * 0.12 - sd * 0.06 + up * 0.02, tb + fd * 0.22 - sd * 0.02 + up * 0.0]
+        parts.append(loft([(*tp[0], 0.065), (*tp[1], 0.055), (*tp[2], 0.045)], 10, 12))
         return parts
-    hparts = hand(WR_N, HAND_N, V((-0.2, -1.0, 0)).normalized(), -1) + hand(WR_F, HAND_F, V((0.15, -1.0, 0)).normalized(), 1)
-    hd = fuse("GEO_handen", hparts, 0.02, 4); tag(hd, "huid")
+    hparts = hand(WR_N, HAND_N, V((-0.15, -1.0, -0.25)), -1, 0.75) + hand(WR_F, HAND_F, V((0.1, -1.0, 0.15)), 1, 1.35)
+    hd = fuse("GEO_handen", hparts, 0.018, 3); tag(hd, "huid")
+    for k in range(4): pass
+    ng = join_meshes("GEO_nagels", nagels, "LOW")
+    for o in nagels: bpy.data.objects.remove(o, do_unlink=True)
+    tag(ng, "nagel"); shade_smooth(ng, 1.5)
 
     # ===== hemd: borst + buik + mouwen tot de elleboog =====
     hemd = [ellb(V((1.95, 0.05, 2.05)), (0.9, 1.12, 0.85)), ellb(V((1.3, -0.02, 1.62)), (1.08, 1.05, 1.0)),
@@ -222,8 +273,19 @@ def build(master):
     hm = fuse("GEO_hemd", hemd, 0.03, 8); tag(hm, "hemd")
     for el, wr in ((EL_N, WR_N), (EL_F, WR_F)):                         # opgerolde manchet
         c = lerp(el, wr, 0.08); mo = loft([(*lerp(el, wr, -0.06), 0.33), (*lerp(el, wr, 0.12), 0.33)], 4, 20); mo.name = "GEO_manchet"; tag(mo, "hemd"); shade_smooth(mo, 1.2)
-    for k in range(9):                                                   # plooien over buik en mouwen
-        x = 0.7 + k * 0.22; plooi(hm, (x, -0.95, 1.7), (x + 0.18, -0.2, 2.6), 0.06, 0.035, 7)
+    for k in range(11):                                                  # diagonale plooien over buik en flank (trekken naar de oksel)
+        x = 0.55 + k * 0.17; plooi(hm, (x, -1.0, 1.6), (x + 0.45, -0.15, 2.65), 0.07, 0.05, 9)
+    for k in range(5):                                                   # plooien aan de verre kant en onder de borst
+        x = 0.8 + k * 0.3; plooi(hm, (x, 0.3, 2.55), (x + 0.3, 1.0, 1.9), 0.065, 0.045, 8)
+    for sh, el in ((SH_N, EL_N), (SH_F, EL_F)):                          # pofmouw: schuine ringplooien rond de bovenarm
+        ax_ = (el - sh).normalized(); s1 = ax_.cross(V((0, 0, 1))).normalized(); s2 = ax_.cross(s1)
+        for k in range(4):
+            c = lerp(sh, el, 0.25 + k * 0.18)
+            for j in range(6):
+                t0, t1 = j / 6 * math.tau, (j + 0.8) / 6 * math.tau
+                q1 = c + (s1 * math.cos(t0) + s2 * math.sin(t0)) * 0.4 + ax_ * 0.1 * math.cos(t0)
+                q2 = c + (s1 * math.cos(t1) + s2 * math.sin(t1)) * 0.4 + ax_ * 0.1 * math.cos(t1)
+                plooi(hm, q1, q2, 0.06, 0.05, 3)
     push(hm, V((2.45, -0.25, 3.0)), 0.3, -0.07)                          # open kraag
     for el, wr in ((EL_N, WR_N), (EL_F, WR_F)):                          # rode rand aan de opgerolde mouw
         b2 = loft([(*lerp(el, wr, 0.1), 0.345), (*lerp(el, wr, 0.15), 0.345)], 4, 22); b2.name = "GEO_bies"; tag(b2, "rood")
@@ -246,7 +308,8 @@ def build(master):
     tag(br, "broek")
     for knee, hip, ank in ((KNEE_N, HIP_N, ANK_N), (KNEE_F, HIP_F, ANK_F)):     # plooien bij de knie en over de dij
         for k in range(5):
-            a = lerp(knee, hip, 0.12 + k * 0.08); plooi(br, a + V((0, -0.6, 0)), a + V((0.15, 0.6, 0.15)), 0.075, 0.05, 7)
+            a = lerp(knee, hip, 0.1 + k * 0.09 + R.uniform(-0.03, 0.03)); tw = V((R.uniform(-0.2, 0.25), 0, R.uniform(-0.1, 0.2)))
+            plooi(br, a + V((0, -0.6, 0)) - tw, a + V((0.15, 0.6, 0.15)) + tw, R.uniform(0.06, 0.09), R.uniform(0.035, 0.06), 7)
         for k in range(3):
             a = lerp(knee, ank, 0.1 + k * 0.08); plooi(br, a + V((0, -0.6, 0)), a + V((0.1, 0.6, 0.1)), 0.065, 0.045, 7)
 
@@ -259,9 +322,11 @@ def build(master):
                        (*(lerp(ank, toe, 0.55) + V((0, 0, -0.1))), 0.4), (*(lerp(ank, toe, 0.85) + V((0, 0, -0.08))), 0.36),
                        (*(toe + fw * 0.1 + V((0, 0, 0.0))), 0.22)], 20, 24, flat=0.62)]
         ob = fuse(nm, parts, 0.03, 6); tag(ob, "laars")
-        for k in range(6):                                                # leren rimpels in de schacht en op de wreef
-            a = lerp(top, ank, 0.25 + k * 0.12); s = ax.cross(V((0, 0, 1))).normalized() if abs(ax.z) < 0.95 else V((1, 0, 0))
-            plooi(ob, a + s * 0.52, a - s * 0.52 + ax * 0.1, 0.06, 0.05, 7)
+        s1 = ax.cross(V((0, 0, 1))).normalized() if abs(ax.z) < 0.95 else V((1, 0, 0)); s2 = ax.cross(s1).normalized()
+        for k in range(7):                                                # gekreukte leren schacht: scheve boogrimpels rond de schacht
+            c = lerp(top, ank, 0.18 + k * 0.11 + R.uniform(-0.03, 0.03)); t0 = R.uniform(-0.6, 0.6); sp = R.uniform(1.6, 2.6); tilt = R.uniform(-0.12, 0.12)
+            arc = [c + (s1 * math.cos(t0 + sp * u) + s2 * math.sin(t0 + sp * u)) * 0.75 + ax * tilt * math.sin(sp * u * 2) for u in (i / 8 for i in range(9))]
+            for q1, q2 in zip(arc, arc[1:]): plooi(ob, q1, q2, 0.09, 0.1, 2)
         veters = nm.endswith("achter")                                    # foto: verste laars = veterlaars met tong, voorste = omgeslagen kraag
         if not veters:                                                    # zware omgeslagen leren kraag die over de schacht hangt
             kraag = loft([(*(top - ax * 0.4), 0.6), (*(top - ax * 0.2), 0.64), (*(top + ax * 0.02), 0.62), (*(top + ax * 0.14), 0.56)], 10, 32, wobble=0.22, seed=len(nm))
@@ -292,9 +357,9 @@ def build(master):
             plooi(ob, lerp(ank, top, 0.05) + ld * 0.4, top + ld * 0.4, 0.05, 0.035, 8)             # spleet van de sluiting
         # zool: onderkant van de voet plat slaan en daaronder een zool + hak met dezelfde omtrek
         s = V((-fw.y, fw.x, 0)); hiel = ank - fw * 0.45
-        seg = [lerp(hiel, toe + fw * 0.2, t / 20) for t in range(21)]
-        me = ob.data; vs = [v for v in me.vertices if min((v.co - q).length for q in seg) < 0.62]
-        zb = min(v.co.z for v in vs) + 0.06
+        seg = [lerp(hiel, toe + fw * 0.2, t / 20) for t in range(21)] if not nm.endswith("achter") else []   # liggende laars: geen platte zool
+        me = ob.data; vs = [v for v in me.vertices if min((v.co - q).length for q in seg) < 0.62] if seg else []
+        zb = (min(v.co.z for v in vs) + 0.06) if vs else 0
         bodem = []
         for v in vs:
             if v.co.z < zb: v.co.z = zb; bodem.append(v.co.copy())
@@ -310,6 +375,7 @@ def build(master):
             hak.name = nm + "_hak"; tag(hak, "zool")
     laars(KNEE_N, ANK_N, TOE_N, "GEO_laars_voor"); laars(KNEE_F, ANK_F, TOE_F, "GEO_laars_achter")
 
+    for o in [o for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"]: apply_plooien(o)
     for o in [o for o in bpy.data.objects if o.name.startswith("tmp")]: o.name = "GEO_deel"
     for o in [o for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"]:
         o.data.transform(Matrix.Translation((0, 0, LIFT)) @ Matrix.Scale(SCHAAL, 4))

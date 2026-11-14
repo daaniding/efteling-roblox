@@ -10,7 +10,8 @@ exec(open(os.path.join(HERE, "..", "..", "AR_ZesZwanen", "build", "zz_helpers.py
 MATS = {"natuursteen": ((0.62, 0.6, 0.55, 1), 0.85), "kalksteen": ((0.72, 0.68, 0.6, 1), 0.9), "schors": ((0.36, 0.3, 0.24, 1), 0.9),
         "hout": ((0.28, 0.2, 0.14, 1), 0.8), "koper": ((0.72, 0.5, 0.25, 1), 0.35), "papier": ((0.9, 0.85, 0.7, 1), 0.7),
         "water": ((0.12, 0.16, 0.1, 1), 0.1), "modder": ((0.16, 0.13, 0.1, 1), 0.95), "ijzer": ((0.08, 0.08, 0.08, 1), 0.5),
-        "bordgroen": ((0.12, 0.3, 0.2, 1), 0.6), "binnen": ((0.05, 0.03, 0.02, 1), 0.9)}
+        "bordgroen": ((0.12, 0.3, 0.2, 1), 0.6), "binnen": ((0.05, 0.03, 0.02, 1), 0.9),
+        "huid": ((0.85, 0.66, 0.55, 1), 0.6), "blond": ((0.62, 0.52, 0.36, 1), 0.7), "hemd": ((0.86, 0.8, 0.6, 1), 0.8), "blauw": ((0.3, 0.42, 0.6, 1), 0.7), "rood": ((0.5, 0.1, 0.12, 1), 0.7)}
 N = Vector((0.43, -0.90)).normalized()                    # voorkant (OSM oost/noord)
 XA = Vector((-N.y, N.x))
 OSM = json.load(open(os.path.join(ROOT, "ref", "osm_lokaal.json")))
@@ -33,9 +34,10 @@ def steen(c, s, r, seed, mat="kalksteen", plat=0.7):
     bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2 if max(s) < 0.3 else 3, radius=1.0)
     for v in bm.verts:
         d = v.co.normalized(); k = 1 + 0.28 * noise.noise(d * 1.7 + Vector((seed, seed * 0.3, 0))) + 0.12 * noise.noise(d * 4.1 + Vector((0, seed, 1)))
-        v.co = Vector((d.x * s[0], d.y * s[1], max(d.z * s[2] * plat, -0.1 * s[2]))) * k
+        v.co = Vector((d.x * s[0], d.y * s[1], d.z * s[2] * (plat if d.z > 0 else 0.3))) * k   # platte onderkant zonder vouw (geen omgeklapte vlakken)
     bmesh.ops.rotate(bm, verts=bm.verts, cent=(0, 0, 0), matrix=Matrix.Rotation(r.uniform(0, math.tau), 3, "Z") @ Matrix.Rotation(r.uniform(-0.25, 0.25), 3, "X"))
     bmesh.ops.translate(bm, vec=c, verts=bm.verts)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     for f in bm.faces: f.smooth = True
     put("rots", mat, bm)
 
@@ -72,16 +74,22 @@ def build(master):
     # ---- eiland: gestapelde rotsbrokken, hoger in het midden (bed onder de reus), lager naar de randen ----
     put("anker", "ijzer", bz(-0.01, 0.01, -0.01, 0.01, 0, 0.02))
     cx = sum(p[0] for p in EILAND) / len(EILAND); cy = sum(p[1] for p in EILAND) / len(EILAND)
-    for k in range(1400):                                                    # rotsbed van kleine kalksteenbrokken (vuist tot hoofd)
+    # keienheuvel onder de reus: ronde grijsblauwe zwerfkeien in twee lagen (Commons 4019765619 / 2011 / Kleinduimpje-reus)
+    RUG = [(-1.2, -0.6), (0.4, 0.3), (1.6, 0.3), (2.6, 0.5), (-0.4, 1.0), (1.0, 1.3), (-2.4, 0.4), (-3.6, 0.2), (3.4, 0.9)]
+    for k in range(95):
+        bx, by = RUG[k % len(RUG)]; x, y = bx + r.uniform(-1.0, 1.0), by + r.uniform(-1.1, 1.1)
+        if not (inside(x, y, EILAND) or inside(x + 0.6, y, EILAND)): continue
+        s = r.uniform(0.38, 0.75); laag = 0 if k < 60 else 1
+        steen((x, y, s * 0.3 + laag * 0.35), (s * r.uniform(1.1, 1.5), s * r.uniform(0.9, 1.2), s * 0.8), r, 300 + k, "natuursteen", 0.85)
+    for k, (x, y, sz) in enumerate([(-4.7, -0.4, 0.75), (-5.3, 0.25, 0.65), (-4.2, 0.5, 0.6), (-5.6, -0.9, 0.55)]):   # keien onder de verste laars (aan de grachtrand)
+        steen((x, y, sz * 0.1), (sz * 1.3, sz * 1.1, sz * 0.9), r, 500 + k, "natuursteen", 0.95)
+    # rand van grijze kalksteenblokken voor het eiland en langs het plein (kleiner, hoekiger)
+    for k in range(900):
         x, y = r.uniform(min(xs), max(xs)), r.uniform(min(ys) - 2.5, max(ys))
         op = inside(x, y, EILAND); voor = y < cy and not inside(x, y, WATER) and y > min(ys) - 2.2 and min(xs) + 0.5 < x < max(xs) - 0.5
-        if not (op or voor): continue
-        d = math.hypot((x - cx) / 3.2, (y - cy) / 2.6)
-        s = r.uniform(0.09, 0.2) if r.random() < 0.8 else r.uniform(0.2, 0.32)
-        z = (max(0.0, 0.32 * (1 - d * d)) if op else 0.0) + s * 0.2
-        steen((x, y, z), (s * r.uniform(1.0, 1.5), s, s * r.uniform(0.7, 1.0)), r, k)
-    for k, (x, y, s) in enumerate([(3.4, 1.0, 0.8), (2.6, -0.6, 0.75), (1.4, 1.5, 0.85), (0.3, 1.2, 0.8), (-0.8, 1.6, 0.7), (-2.4, 0.9, 0.6), (1.6, -1.4, 0.55), (-1.4, -2.2, 0.6), (4.0, 0.0, 0.6), (-5.2, -0.2, 0.75), (-4.0, 0.6, 0.7)]):
-        steen((x, y, s * 0.35), (s * 1.3, s, s * 0.8), r, 100 + k, "natuursteen", 0.8)        # grote zwerfkeien (grijs) onder/achter de reus
+        if voor or (op and r.random() < 0.25):
+            s = r.uniform(0.1, 0.24) if r.random() < 0.7 else r.uniform(0.24, 0.4)
+            steen((x, y, s * 0.2), (s * r.uniform(1.0, 1.6), s, s * r.uniform(0.6, 0.9)), r, k)
     coll_box(cx, cy, 0.2, 6.5, 5.0, 0.4, 0)
     # ---- gracht: modderige bodem + wateroppervlak in de ring, oeverstenen langs de buitenrand ----
     def vlak(poly, z, mat, part):
@@ -97,7 +105,7 @@ def build(master):
     # ---- dode boomstronk achter het hoofd (Kduimpje_reus_zijaanzicht, Kleinduimpje-reus) ----
     stronk(3.6, 1.1, 2.6, 0.34, 7)
     # ---- praatstronk met koperen hoorn en perkament (Kleinduimpje-mei09, Sprookjereus) op het plein, links voor ----
-    PX, PY = -3.2, -5.2
+    PX, PY = -6.2, -5.0
     stronk(PX, PY, 1.35, 0.38, 3, part="praatstronk")
     M = Matrix.Translation((PX, PY - 0.36, 0.6)) @ Matrix.Rotation(math.radians(90), 4, "X")
     put("praatstronk", "koper", blathe([(0.17, 0.0), (0.2, 0.0), (0.24, 0.12), (0.2, 0.14), (0.16, 0.06)], 20), M)      # hoornmond
@@ -105,11 +113,39 @@ def build(master):
     Mp = Matrix.Translation((PX, PY - 0.3, 1.05)) @ Matrix.Rotation(math.radians(-12), 4, "X")
     put("praatstronk", "papier", bz(-0.42, 0.42, -0.1, -0.06, -0.16, 0.16, 0.01), Mp)                                       # perkament
     for sx in (-1, 1): put("praatstronk", "papier", btube([(sx * 0.42, -0.08, -0.17), (sx * 0.42, -0.08, 0.17)], 0.035, 8), Mp)
-    # ---- bordje op een standaard voor de rotsrand (Boekloc) ----
-    MB = Matrix.Translation((-5.0, -3.4, 0)) @ Matrix.Rotation(math.radians(8), 4, "Z")
-    put("bord", "ijzer", btube([(0, 0, 0), (0, 0, 0.8)], 0.03, 8), MB)
-    put("bord", "bordgroen", bz(-0.32, 0.32, -0.04, 0.0, 0.75, 1.05, 0.01), MB @ Matrix.Rotation(math.radians(-35), 4, "X"))
-    put("bord", "papier", bz(-0.28, 0.28, -0.05, -0.04, 0.78, 1.02, 0.005), MB @ Matrix.Rotation(math.radians(-35), 4, "X"))
+    # ---- sprookjesboek op een houten lessenaar voor de rotsrand (Klein_Duimpje_Efteling_2017) ----
+    MB = Matrix.Translation((-3.4, -4.6, 0)) @ Matrix.Rotation(math.radians(6), 4, "Z")
+    for sx in (-0.35, 0.35):
+        put("boek", "hout", bz(sx - 0.05, sx + 0.05, -0.05, 0.05, 0.0, 0.85, 0.01), MB)
+    put("boek", "hout", bz(-0.42, 0.42, -0.06, 0.06, 0.3, 0.38, 0.01), MB)
+    MT = MB @ Matrix.Translation((0, 0, 0.88)) @ Matrix.Rotation(math.radians(-28), 4, "X")
+    put("boek", "hout", bz(-0.55, 0.55, -0.38, 0.38, -0.05, 0.0, 0.01), MT)
+    for sg in (-1, 1):                                                       # twee bladzijden, licht bol
+        bm = bmesh.new(); pts = []
+        for i in range(9):
+            u = i / 8; x = sg * (0.02 + 0.5 * u); z = 0.02 + 0.05 * math.sin(u * math.pi) * (1 - u * 0.4)
+            pts.append((x, z))
+        lo = [bm.verts.new((x, -0.35, z)) for x, z in pts]; hi = [bm.verts.new((x, 0.35, z)) for x, z in pts]
+        for i in range(8): bm.faces.new((lo[i], lo[i + 1], hi[i + 1], hi[i]) if sg > 0 else (lo[i + 1], lo[i], hi[i], hi[i + 1]))
+        so = bmesh.ops.extrude_face_region(bm, geom=bm.faces[:]); bmesh.ops.translate(bm, vec=(0, 0, -0.03), verts=[v for v in so["geom"] if isinstance(v, bmesh.types.BMVert)])
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces); put("boek", "papier", bm, MT)
+    put("boek", "rood", bz(-0.56, 0.56, -0.39, 0.39, -0.08, -0.05, 0.005), MT)
+    coll_box(-3.4, -4.6, 0.5, 1.2, 0.8, 1.0, 6)
+    # ---- Klein Duimpje: kleuter (~1.05 m) die bij de veters van de laars omhoog reikt (Klein_Duimpje_Efteling.jpg/png) ----
+    MD = Matrix.Translation((-2.3, -1.35, 0.28)) @ Matrix.Rotation(math.radians(150), 4, "Z")
+    for sx in (-0.07, 0.07):
+        put("duimpje", "hemd", btube([(sx, 0, 0.06), (sx, 0, 0.36)], 0.045, 8), MD)
+        put("duimpje", "hout", ell((sx, 0.04, 0.04), (0.06, 0.1, 0.045), 10, 6), MD)
+    put("duimpje", "rood", blathe([(0.0, 0.32), (0.2, 0.32), (0.16, 0.5), (0.0, 0.52)], 16), MD)
+    put("duimpje", "hemd", ell((0, 0, 0.66), (0.15, 0.12, 0.2), 14, 10), MD)
+    put("duimpje", "blauw", ell((0, 0, 0.8), (0.17, 0.14, 0.06), 14, 6), MD)
+    put("duimpje", "huid", ell((0, 0, 0.94), (0.1, 0.1, 0.11), 14, 10), MD)
+    put("duimpje", "blond", ell((0, -0.03, 0.9), (0.115, 0.1, 0.14), 14, 10), MD)
+    put("duimpje", "blauw", blathe([(0.0, 0.98), (0.11, 0.98), (0.04, 1.2), (0.0, 1.22)], 14), MD @ Matrix.Rotation(math.radians(-25), 4, "X"))
+    for sx in (-1, 1):
+        put("duimpje", "hemd", btube([(sx * 0.13, 0.0, 0.78), (sx * 0.16, 0.1, 0.98), (sx * 0.14, 0.16, 1.12)], 0.035, 8), MD)
+        put("duimpje", "rood", btube([(sx * 0.14, 0.15, 1.1), (sx * 0.14, 0.17, 1.15)], 0.04, 8), MD)
+        put("duimpje", "huid", ell((sx * 0.14, 0.18, 1.2), (0.035, 0.03, 0.05), 8, 6), MD)
     for (part, mat), bm in PARTS.items():
         if len(bm.faces) == 0: continue
         ob = new_mesh_object(f"KD_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])

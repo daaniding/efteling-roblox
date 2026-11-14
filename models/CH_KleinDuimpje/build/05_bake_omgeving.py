@@ -19,7 +19,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(HERE))
 TEX = os.path.join(HERE, "textures"); os.makedirs(TEX, exist_ok=True)
 CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
-RGB = {"kalksteen": (206, 196, 176), "stuc": (208, 205, 196), "natuursteen": (190, 180, 160), "rots": (150, 148, 140), "pannen": (150, 80, 60), "leien": (120, 70, 50), "oeversteen": (196, 178, 150), "hout": (84, 78, 70), "zwaan": (236, 228, 208), "lei": (96, 88, 80), "schors": (110, 84, 60)}
+RGB = {"kalksteen": (150, 148, 140), "stuc": (208, 205, 196), "natuursteen": (120, 124, 126), "rots": (150, 148, 140), "pannen": (150, 80, 60), "leien": (120, 70, 50), "oeversteen": (196, 178, 150), "hout": (84, 78, 70), "zwaan": (236, 228, 208), "lei": (96, 88, 80), "schors": (110, 84, 60)}
 
 
 
@@ -214,7 +214,7 @@ for o in list(forms.all_objects):
     mn = o.data.materials[0].name.replace("MAT_", "")
     if mn not in RGB: continue
     srcs.append(o); bm = world_bm(o); bm.normal_update()
-    dead = [f for f in bm.faces if f.normal.z < -0.5 and f.calc_center_median().z < 0.1]
+    dead = []                                                       # losse stenen: geen onderkanten weghalen (gaten in schuine stenen)
     # leien: onderkant van het overstek BEWAREN (van dichtbij onder de dakrand keek je anders door het dak heen)
     bmesh.ops.delete(bm, geom=list(set(dead)), context="FACES")
     add(mn, mn, bm)
