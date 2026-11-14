@@ -449,7 +449,11 @@ modelframe in `ref/osm_model.json`: x = west, y = zuid, gevelrichting 13.5 grade
   donkerder/bemost via TINT (vergelijking met Meisjezij: onze pannen waren te oranje-roze). Planten: `roblox/plaats_zwavelstokjes_groen.luau`
   (gras/riet + asters langs het vijvertje, varens/heesters voor de keermuur en op de heuvelrand, rododendrons bij trap en oprit, 40 bomen
   naast/achter het stadje, niet in het zicht vanaf het pad). Asset v2: stadje **109477760100605**.
-- NOG: binnenkant later; gaanderij lager/kleiner zoals Meisjezij.
+- v2 geplaatst (14 nov) + terrein met hoogteverschillen (Daan): `roblox/terrein_zwavelstokjes.luau` laat de kunstheuvel aan zijkanten/achter
+  zacht uitlopen (5.5 m), golvende bosgrond (noise 0.3-0.6 m), oevers naar het vijvertje, paden vlak met vloeiende aansluiting, voorkant laag
+  (keermuur zichtbaar), voet van de trap vrij. 545 planten -> 318 na opschonen (planten landden op torendaken: raycast nu alleen op terrein,
+  heuvel en paden; poort/oprit/uitgang/trap vrij). 'riet' bestaat niet als sjabloon. Wandeltest: oprit -> poort (0.92 m) en trap af OK.
+- NOG: binnenkant later; gaanderij lager/kleiner zoals Meisjezij; riet-sjabloon maken.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).

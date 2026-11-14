@@ -62,9 +62,14 @@ end
 local oud = workspace:FindFirstChild("ZwavelstokjesGroen"); if oud then oud:Destroy() end
 local map = Instance.new("Folder"); map.Name = "ZwavelstokjesGroen"
 local rp = RaycastParams.new(); rp.FilterType = Enum.RaycastFilterType.Include
-rp.FilterDescendantsInstances = {workspace.Terrain, workspace:FindFirstChild("ZwavelstokjesStadje")}
+local grond = {workspace.Terrain}                                                   -- alleen op terrein, heuvel en paden (niet op daken/torens)
+for _, p in ipairs(workspace.ZwavelstokjesStadje:GetChildren()) do if p:IsA("BasePart") and (string.find(p.Name, "MAT_grond") or string.find(p.Name, "MAT_klinker")) then table.insert(grond, p) end end
+rp.FilterDescendantsInstances = grond
+local VRIJ = {{-10.96, -3.28, 2.2}, {-12.4, -4.2, 1.6}, {8.9, 1.5, 1.6}, {8.9, -0.5, 1.4}}   -- poort, oprit, uitgang, trap vrijhouden
 local n, mis = 0, {}
 for i, p in ipairs(L) do
+	local blok = false; for _, v in ipairs(VRIJ) do if (p[2] - v[1]) ^ 2 + (p[3] - v[2]) ^ 2 < v[3] ^ 2 then blok = true end end
+	if blok then continue end
 	local t = bron(p[1])
 	if not t then mis[p[1]] = true; continue end
 	local c = t:Clone()
