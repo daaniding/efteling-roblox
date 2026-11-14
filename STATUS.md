@@ -455,6 +455,22 @@ modelframe in `ref/osm_model.json`: x = west, y = zuid, gevelrichting 13.5 grade
   heuvel en paden; poort/oprit/uitgang/trap vrij). 'riet' bestaat niet als sjabloon. Wandeltest: oprit -> poort (0.92 m) en trap af OK.
 - NOG: binnenkant later; gaanderij lager/kleiner zoals Meisjezij; riet-sjabloon maken.
 
+## Repelsteeltje (chat 9, 14 nov) — v1 in Studio (buitenkant; lakei/Repelsteeltje en interieur later)
+Map `models/AR_Repelsteeltje/`, brief `asset-brief.md`. Geen bouwtekeningen (Eftelist heeft geen pagina); 24 Eftepedia-foto's, OSM 55424159 (5.8 x 4.1 m),
+modelframe `ref/osm_model.json` (voorkant = lange noordoostzijde naar het pad = -Y, x = noordwest). Roblox-oorsprong (351.75, 2, -425.94), F (0.533, 0, -0.846).
+- Camera-overlay op Repelsteeltje_exterieur (`build/cam.sh`, camera rechtsvoor op de hoek: -0.43,-11.6,1.5 lens 28 yaw 34): goot 2.5, nok 4.6, stronk tot
+  6.0, schoorsteen 5.0 + pijp; venster links van het midden.
+- `build/03_huisje.py` (Daan: "te weinig detail", "stronken in het dak", "verhogingen in het dak"): losse leitjes in verspringende rijen (lei/lei2) op
+  een dak dat opzwelt over elke wortel en rond de stronk (`dakbult`), wortels precies op het leienoppervlak (`dakz`) en langs de keienhoeken omlaag,
+  stronk met schorsgroeven + kraag op het dak + jaarringenschijf, gebogen houten hoed (laag eind links), rondboogdeur van planken met hengsels,
+  klopring, natuurstenen omlijsting en stoepsteen, rond raampje met stenen bloem, kijkvenster 2x 3x3 ruitjes + gordijn, luiken van planken met
+  Z-schoor, hengsels en hartje, losse keien op de hoeken, stenen plint, afgevallen stuc met verdiept metselwerk (6 plekken), sporenkoppen,
+  windveer, nokvorst, klimop, houtstapel, emmer, bolderkar, hark, blauwgroen hekje, flagstone-pad, sprookjesboek. ~97k tris.
+- Bake rollen stuc/natuursteen/hout + nieuw `lei` (grijsbruin met veel mos) en `schors`. Plaatsen: `roblox/plaats_repelsteeltje.luau` (rook uit de
+  schoorsteen), `roblox/terrein_groen_repelsteeltje.luau` (golvende bosgrond, rond huis en deur exact op maaiveld, 430 planten, 26 bomen).
+- Asset: huisje **77559737160973**.
+- LES terrein: vlak maaiveld = voxellaag 0..4 LEEG (oppervlak Y 2). Ground vullen tot Y 2 maakt laag 0..4 half vol en tilt het oppervlak naar Y 4.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
