@@ -267,3 +267,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Meterraster over de plattegrond leggen (`review/plan_raster.jpg`) en alle elementen in modelcoordinaten aflezen; daarna controleren tegen OSM.
 - Hulpfuncties die onderdelen met een matrix M plaatsen moeten M aan ELKE put meegeven (kuif/oeil zweefden eerst los op de oorsprong).
 - Artist impressions (dnkgroot) kunnen gespiegeld zijn: de plattegrond en foto's bepalen links/rechts.
+
+## Lessen Klein Duimpje (14 nov)
+- **Roblox generate_mesh is alleen tekst en geeft ALTIJD chibi/cartoon** (reus: "dit is zo lelijk, het moet realistisch"). Niet gebruiken voor figuren
+  die op een foto moeten lijken. Echte foto->3D (Tripo/Hunyuan3D/Meshy) loopt via de MCP for Blender-addon (`generate_3d image=...`) en vraagt een
+  eigen API-sleutel in de addon (nu alle generators "off"). Zonder sleutel: zelf sculpten in Blender naar de foto-overlay (`build/03a_reus.py`).
+- Eftepedia-lemma noemt de maat: "vier meter lange reus" -> eerst het lemma op maten doorzoeken voor je schat.
