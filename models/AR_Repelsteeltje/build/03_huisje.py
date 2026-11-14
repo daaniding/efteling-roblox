@@ -56,6 +56,15 @@ WORT_XY = [(TXg - 0.7, TYg - 0.65, X0 + 0.55, Y0 - OVRg + 0.05), (TXg + 0.7, TYg
 def wortel_xy(i, t):
     x0, y0, x1, y1 = WORT_XY[i]
     return x0 + (x1 - x0) * t + (0.25 * math.sin(t * 5.0) * (1 - t) if i < 4 else 0.0), y0 + (y1 - y0) * t
+HOOD_CP = [((Y0 + Y1) - y_, z_) for (y_, z_) in [(Y0 - 0.55, 1.25), (Y0 - 0.25, 2.65), (Y0 + 0.5, 3.85), ((Y0 + Y1) / 2 - 0.3, 4.7), ((Y0 + Y1) / 2 + 0.6, 4.9), (Y1 - 0.4, 4.4), (Y1 + 0.2, 3.3)]][::-1]
+def hoodz(y):
+    pts = sorted(HOOD_CP)
+    if y <= pts[0][0] or y >= pts[-1][0]: return None
+    for (ya, za), (yb, zb) in zip(pts, pts[1:]):
+        if ya <= y <= yb: return za + (zb - za) * (y - ya) / (yb - ya)
+def basisz(y):
+    ys = Y0 - OVRg if y < (Y0 + Y1) / 2 else Y1 + OVRg
+    t = max(0.0, min(1.0, (y - ys) / ((Y0 + Y1) / 2 - ys))); return EAVE - 0.2 + (RIDGE - 0.02 - (EAVE - 0.2)) * t
 def dakbult(x, y):
     """extra hoogte van het dakvlak: bult langs elke wortel (smaller/lager naar de goot), heuvel rond de stronk, lichte golving"""
     h = 0.0
@@ -67,6 +76,10 @@ def dakbult(x, y):
         amp = (0.24 if i < 4 else 0.14) * (1 - 0.6 * bt); wid = (0.42 if i < 4 else 0.3) * (1 - 0.35 * bt)
         h = max(h, amp * math.exp(-(best / wid) ** 2))
     ds = math.hypot(x - TXg, y - TYg); h = max(h, 0.42 * math.exp(-(max(0.0, ds - 0.9) / 0.65) ** 2))
+    hz = hoodz(y)                                                                                     # links loopt het dak op naar de hoed (exterieur)
+    if hz is not None and x < X0 + 1.6:
+        f = max(0.0, min(1.0, (X0 + 1.6 - x) / 1.45)); f = f * f * (3 - 2 * f)
+        h = max(h, (hz - 0.12 - basisz(y)) * f)
     return h + 0.045 * math.sin(x * 1.7 + y * 0.9) * math.sin(y * 2.3 - x * 0.4)
 
 def build(master):
@@ -127,24 +140,73 @@ def build(master):
                     put("dak", "mos", ell(c + d_ - nrm * 0.02, (rng.uniform(0.18, 0.4), rng.uniform(0.14, 0.3), 0.07), 10, 6))
     put("dak", "lei", btube([(X0 + 0.15, YC, RIDGE + 0.02), (X1 + over, YC, RIDGE + 0.02)], 0.08, 8))     # nokvorst
     # ================= gebogen houten hoed boven de deurgevel (bouw-1998-01) =================
-    C = [((Y0 + Y1) - y_, z_) for (y_, z_) in [(Y0 - 0.55, 1.25), (Y0 - 0.25, 2.65), (Y0 + 0.5, 3.85), (YC - 0.3, 4.7), (YC + 0.6, 4.9), (Y1 - 0.4, 4.4), (Y1 + 0.2, 3.3)]][::-1]   # laag eind links voor wie naar de deur kijkt (bouw-01)
-    hood = bmesh.new(); rows = []
-    for (cy_, cz_) in C:
-        rows.append([hood.verts.new((xx, cy_, cz_)) for xx in (X0 - 0.75, X0 + 0.35)])
-    inner = []
-    for i, (cy_, cz_) in enumerate(C):
-        a = Vector(C[max(i - 1, 0)]); b = Vector(C[min(i + 1, len(C) - 1)]); t = (b - a).normalized(); nn = Vector((t.y, -t.x))
-        inner.append([hood.verts.new((xx, cy_ + nn.x * 0.2, cz_ + nn.y * 0.2)) for xx in (X0 - 0.75, X0 + 0.35)])
+    # vloeiende curve (Catmull-Rom door de controlepunten), laag eind links voor wie naar de deur kijkt (bouw-01)
+    CP = [((Y0 + Y1) - y_, z_) for (y_, z_) in [(Y0 - 0.55, 1.25), (Y0 - 0.25, 2.65), (Y0 + 0.5, 3.85), (YC - 0.3, 4.7), (YC + 0.6, 4.9), (Y1 - 0.4, 4.4), (Y1 + 0.2, 3.3)]][::-1]
+    def cr(p0, p1, p2, p3, t):
+        return tuple(0.5 * ((2 * p1[k]) + (-p0[k] + p2[k]) * t + (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t * t + (-p0[k] + 3 * p1[k] - 3 * p2[k] + p3[k]) * t ** 3) for k in range(2))
+    ext = [CP[0]] + CP + [CP[-1]]; C = []
+    for i in range(1, len(ext) - 2):
+        for k in range(8): C.append(cr(ext[i - 1], ext[i], ext[i + 1], ext[i + 2], k / 8))
+    C.append(CP[-1])
+    def nrm_at(i):
+        a_ = Vector(C[max(i - 1, 0)]); b_ = Vector(C[min(i + 1, len(C) - 1)]); t = (b_ - a_).normalized(); return Vector((-t.y, t.x)) if False else Vector((t.y, -t.x))
+    XA, XB = X0 - 0.78, X0 + 0.32
+    nb = 6; bw = (XB - XA) / nb
+    for j in range(nb):                                                                                  # gebogen planken (onderkant zichtbaar, voegen ertussen)
+        xa, xb = XA + j * bw + 0.012, XA + (j + 1) * bw - 0.012
+        hood = bmesh.new(); top_ = []; bot_ = []
+        for i, (cy_, cz_) in enumerate(C):
+            nn = nrm_at(i)
+            top_.append((hood.verts.new((xa, cy_, cz_)), hood.verts.new((xb, cy_, cz_))))
+            bot_.append((hood.verts.new((xa, cy_ + nn.x * 0.07, cz_ + nn.y * 0.07)), hood.verts.new((xb, cy_ + nn.x * 0.07, cz_ + nn.y * 0.07))))
+        for i in range(len(C) - 1):
+            hood.faces.new((top_[i][0], top_[i + 1][0], top_[i + 1][1], top_[i][1])); hood.faces.new((bot_[i][1], bot_[i + 1][1], bot_[i + 1][0], bot_[i][0]))
+            hood.faces.new((top_[i][0], bot_[i][0], bot_[i + 1][0], top_[i + 1][0])); hood.faces.new((top_[i][1], top_[i + 1][1], bot_[i + 1][1], bot_[i][1]))
+        for i in (0, len(C) - 1): hood.faces.new((top_[i][0], top_[i][1], bot_[i][1], bot_[i][0]))
+        bmesh.ops.recalc_face_normals(hood, faces=hood.faces); put("hoed", "hout", hood)
+    put("hoed", "hout", btube([(XA - 0.04, cy_, cz_) for (cy_, cz_) in C], 0.1, 10))                    # dikke afgeronde windveer langs de rand (bouw-01)
+    put("hoed", "hout", btube([(XB + 0.02, cy_, cz_) for (cy_, cz_) in C[2:-2]], 0.06, 8))
+    top_i = max(range(len(C)), key=lambda i: C[i][1]); ty_, tz_ = C[top_i]                                # uitstekende balkkop bij de top (bouw-01)
+    put("hoed", "hout", btube([(XA - 0.35, ty_ + 0.35, tz_ + 0.12), (XA + 0.2, ty_ + 0.05, tz_ - 0.05), (XB, ty_ - 0.15, tz_ - 0.15)], 0.12, 8))
+    rng2 = random.Random(11)                                                                             # leitjes over de hoed (het dak loopt erover door)
+    acc_s = 0.0
     for i in range(len(C) - 1):
-        hood.faces.new((rows[i][0], rows[i + 1][0], rows[i + 1][1], rows[i][1]))
-        hood.faces.new((inner[i][1], inner[i + 1][1], inner[i + 1][0], inner[i][0]))
-        hood.faces.new((rows[i][0], inner[i][0], inner[i + 1][0], rows[i + 1][0]))
-        hood.faces.new((rows[i][1], rows[i + 1][1], inner[i + 1][1], inner[i][1]))
-    for i in (0, len(C) - 1): hood.faces.new((rows[i][0], rows[i][1], inner[i][1], inner[i][0]))
-    bmesh.ops.recalc_face_normals(hood, faces=hood.faces); put("hoed", "hout", hood)
-    put("hoed", "hout", btube([(X0 - 0.95, Y1 + 0.2, 4.6), (X0 - 0.4, Y1 - 0.5, 4.3), (X0 + 0.3, Y1 - 0.9, 4.0)], 0.13, 8))     # uitstekende balkkop
-    gw = [(Y0 + 0.12, EAVE - 0.05), (Y0 + 0.4, 3.6), (YC, 4.5), (Y1 - 0.5, 4.1), (Y1 - 0.12, EAVE - 0.05)]                           # gevelveld onder de hoed
-    put("muren", "stuc", organisch(prism_x(gw, X0 - 0.05, X0 + 0.25), 0.06, 3, 0.5, 0.03, 1.0, 0.2))
+        seg = math.hypot(C[i + 1][0] - C[i][0], C[i + 1][1] - C[i][1]); acc_s += seg
+        if acc_s < 0.15: continue
+        acc_s = 0.0
+        cy_, cz_ = C[i]; nn = nrm_at(i); tdir = Vector((C[i + 1][0] - cy_, C[i + 1][1] - cz_)).normalized()
+        xx = XA + 0.05 + (0.08 if i % 2 else 0.0)
+        while xx < XB - 0.08:
+            w = rng2.uniform(0.16, 0.22)
+            sl = bmesh.new(); bmesh.ops.create_cube(sl, size=1.0); bmesh.ops.scale(sl, vec=(w - 0.015, 0.25, 0.02), verts=sl.verts)
+            ey = Vector((0, tdir.x, tdir.y)); ez = Vector((0, -nn.x, -nn.y)); ex = Vector((1, 0, 0))
+            basis = Matrix(((ex.x, ey.x, ez.x, 0), (ex.y, ey.y, ez.y, 0), (ex.z, ey.z, ez.z, 0), (0, 0, 0, 1)))
+            cpos = Vector((xx + w / 2, cy_, cz_)) + ez * 0.03
+            bmesh.ops.transform(sl, matrix=Matrix.Translation(cpos) @ basis @ Matrix.Rotation(math.radians(rng2.uniform(-5, 5)), 4, "Z"), verts=sl.verts)
+            put("dak", "lei" if rng2.random() < 0.8 else "lei2", sl); xx += w
+    # gevelveld dat precies tot onder de hoed doorloopt (geen kier tussen muur en hoed)
+    def onder(i): nn = nrm_at(i); return (C[i][0] + nn.x * 0.06, C[i][1] + nn.y * 0.06)
+    lo = [onder(i) for i in range(len(C))]
+    binnen = sorted([p_ for p_ in lo if Y0 + 0.08 < p_[0] < Y1 - 0.08])
+    def curvez(y):
+        q = sorted(lo)
+        for (ya, za), (yb, zb) in zip(q, q[1:]):
+            if ya <= y <= yb: return za + (zb - za) * (y - ya) / max(yb - ya, 1e-6)
+        return EAVE
+    gw = [(Y0 + 0.08, EAVE - 0.3), (Y0 + 0.08, curvez(Y0 + 0.08))] + binnen + [(Y1 - 0.08, curvez(Y1 - 0.08)), (Y1 - 0.08, EAVE - 0.3)]
+    gb_ = prism_x(gw, X0 - 0.06, X0 + 0.3); bmesh.ops.triangulate(gb_, faces=[f for f in gb_.faces if len(f.verts) > 4], ngon_method="EAR_CLIP")
+    put("muren", "stuc", organisch(gb_, 0.05, 2, 0.4, 0.02, 1.0, 0.25))
+    for kant in (0, 1):                                                                                   # steunberen onder de lage hoedpoten (bouw-01: stuc + keien tot de grond)
+        poot = [p_ for p_ in lo if (p_[0] <= Y0 + 0.12 if kant == 0 else p_[0] >= Y1 - 0.12)]
+        if len(poot) < 2: continue
+        poot = sorted(poot)
+        yin = Y0 + 0.12 if kant == 0 else Y1 - 0.12
+        poly = ([(poot[0][0], 0.0)] + poot + [(yin, 0.0)]) if kant == 0 else ([(yin, 0.0)] + poot + [(poot[-1][0], 0.0)])
+        sb = prism_x(poly, XA + 0.12, X0 + 0.35); bmesh.ops.triangulate(sb, faces=[f for f in sb.faces if len(f.verts) > 4], ngon_method="EAR_CLIP")
+        put("muren", "stuc", organisch(sb, 0.06, 3, 0.5, 0.04, 1.2, 0.25))
+        ym = sum(p_[0] for p_ in poot) / len(poot)
+        put("keien", "natuursteen", keien((XA + X0) / 2 + 0.1, ym, -0.1, min(1.4, max(p_[1] for p_ in poot) - 0.3), 0.7, seed=50 + kant))
+        coll_box((XA + X0) / 2 + 0.1, ym, 1.0, X0 + 0.35 - XA - 0.12, max(0.4, abs(poot[-1][0] - poot[0][0])), 2.0)
     # deur (rondboog) + rond raampje met stenen bloem
     Md = Matrix.Translation((X0 + 0.02, YC, 0)) @ Matrix.Rotation(math.radians(90), 4, "Z")
     put("deur", "venster", boutline(arch_pts(0, -0.02, 0.9, 1.95, 10), -0.12, 0.1), Md)                 # donkere dagkant
