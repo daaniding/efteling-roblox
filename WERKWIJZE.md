@@ -289,3 +289,12 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Terreinkolom ophogen met h meter: FillBlock van -8 tot h*3 (NIET tot 2 + h*3: dat rendert 2 studs te hoog en slokt paden op).
 - Na een terreinreset over een vierkant: dezelfde grassoort als de omgeving gebruiken, anders zie je een harde vierkante rand.
 - Terreinwater bleef in deze place niet staan (FillBlock/FillCylinder Water -> Ground). Dan een waterplaat (donkergroen SmoothPlastic) gebruiken.
+
+## Lessen Rode Schoentjes v2 (14 nov) — Daan: "kijk goed hoe het eruit ziet, gebruik je skills"
+- **Altijd de skill blender-image-to-3d volgen**: eerst de fotocamera nadoen en een klei-overlay naast de foto (gate), pas daarna bakken/uploaden.
+  Zonder overlay maakte ik de loggia te breed/laag, met platte bogen en een rotsklomp i.p.v. een muur.
+- **Minstens 2 hoeken bekijken** (vooraanzicht + schuin): pas met het vooraanzicht was duidelijk waar de schildering zit (achterwand), dat er
+  4 zuilen zijn en dat de voorboog een brede lage segmentboog is. Eén schuine foto is dubbelzinnig (wat zie je door welke boog?).
+- **Kunstrots-muren van de Efteling zijn vaak gewoon rechte muren van grote liggende blokken** (Daan: "een rechte muur van steen, het is niet
+  zo lastig", "hij loopt gewoon door"): `steenwand()` in `AR_RodeSchoentjes/build/03_loggia.py` (lagen 0.6-0.9 m, blokken 1.2-2.2 m,
+  verspringende voegen, kleine afschuining, getrapte bovenrand). Geen L-vormen of klompen verzinnen.

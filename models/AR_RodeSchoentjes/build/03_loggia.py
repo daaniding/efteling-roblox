@@ -14,8 +14,8 @@ MATS = {"stuc": ((0.85, 0.8, 0.68, 1), 0.9), "zuil": ((0.82, 0.72, 0.48, 1), 0.7
         "zigzagdonker": ((0.18, 0.12, 0.2, 1), 0.6), "creme": ((0.9, 0.86, 0.74, 1), 0.7), "ijzer": ((0.05, 0.05, 0.05, 1), 0.45), "kaars": ((0.95, 0.93, 0.85, 1), 0.6),
         "vlam": ((1.0, 0.7, 0.3, 1), 0.2), "rood": ((0.7, 0.08, 0.06, 1), 0.4), "goud": ((0.8, 0.6, 0.2, 1), 0.3), "hout": ((0.3, 0.2, 0.12, 1), 0.8),
         "papier": ((0.92, 0.86, 0.7, 1), 0.9), "grind": ((0.86, 0.83, 0.76, 1), 0.95)}
-LX0, LX1, LY0, LY1 = -0.15, 3.45, -2.3, 0.55       # loggia (rechts in de OSM-vorm)
-HC = 2.3; HA = 3.05; EAVE = 3.45; TOP = 3.85
+LX0, LX1, LY0, LY1 = 0.0, 3.6, -2.1, 0.5           # loggia 3.6 breed x 2.6 diep (Rode-Schoentjes-weg: brede lage voorboog ~3.2 m tussen de zuilen)
+HC = 2.45; HA = 3.35; EAVE = 3.8; TOP = 4.15        # segmentbogen: kapiteel 2.45, kruin voor 3.35 (vooraanzicht)
 
 
 def mural_png(path):
@@ -55,14 +55,13 @@ def build(master):
     w = bmesh.new()
     def addb(b_):
         me_ = bpy.data.meshes.new("_t"); b_.to_mesh(me_); b_.free(); w.from_mesh(me_); bpy.data.meshes.remove(me_)
-    addb(bz(LX0 - 0.15, LX1 + 0.15, LY1, LY1 + 0.35, -0.05, EAVE))                                    # achterwand
-    addb(bz(LX0 - 0.35, LX0 + 0.0, LY0 - 0.15, LY1 + 0.35, -0.05, EAVE))                              # linkerwand (tegen de rots)
+    addb(bz(LX0 - 0.15, LX1 + 0.15, LY1, LY1 + 0.3, -0.05, EAVE))                                     # achterwand met de schildering (Rode-Schoentjes-weg)
     # bogenwanden boven de zuilen: voor (langs x) en rechts (langs y), boog uitgespaard
-    def boogwand(xa, xb, y0, y1, langs_x=True):
+    def boogwand(xa, xb, y0, y1, langs_x=True, rise=0.9):
         pts = []
-        span = (xb - xa); r_ = span / 2
+        c = (xb - xa); R = (c * c / 4 + rise * rise) / (2 * rise); mid = (xa + xb) / 2
         for i in range(17):
-            a = math.pi * i / 16; pts.append((xa + r_ - r_ * math.cos(a), HC + r_ * 0.62 * math.sin(a)))
+            x = xa + c * i / 16; pts.append((x, HC + rise - R + math.sqrt(max(0.0, R * R - (x - mid) ** 2))))
         poly = [(xa, HC), (xa, EAVE), (xb, EAVE), (xb, HC)] + pts[::-1][1:-1]
         bm = bmesh.new(); a_ = [bm.verts.new((x, y0, z)) for x, z in poly]; b_ = [bm.verts.new((x, y1, z)) for x, z in poly]
         bm.faces.new(a_[::-1]); bm.faces.new(b_)
@@ -70,15 +69,18 @@ def build(master):
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         if not langs_x: bmesh.ops.transform(bm, matrix=Matrix.Translation((LX1, 0, 0)) @ Matrix.Rotation(math.radians(90), 4, "Z") @ Matrix.Translation((-0, 0, 0)), verts=bm.verts)
         return bm
-    addb(boogwand(LX0 + 0.12, LX1 - 0.12, LY0 - 0.15, LY0 + 0.15))
-    rb = boogwand(LY0 + 0.12, LY1 - 0.12, -0.15, 0.15)                                                 # rechterzijde: in x-z gebouwd, draaien naar y-z
-    for v in rb.verts: x, y, z = v.co; v.co = Vector((LX1 + y, x, z))
+    addb(boogwand(LX0 + 0.32, LX1 - 0.32, LY0 - 0.15, LY0 + 0.15))
+    rb = boogwand(LY0 + 0.32, LY1 - 0.32, -0.15, 0.15, rise=0.75)                                                 # rechterzijde: in x-z gebouwd, draaien naar y-z
+    for v in rb.verts: x, y, z = v.co; v.co = Vector((LX1 - 0.16 + y, x, z))                          # zijboog RECHTS (Boekloc, negentig-2)
     addb(rb)
+    lb = boogwand(LY0 + 0.32, LY1 - 0.32, -0.15, 0.15, rise=0.75)                                     # ook links een boog (vooraanzicht: 4 zuilen)
+    for v in lb.verts: x, y, z = v.co; v.co = Vector((LX0 + 0.16 + y, x, z))
+    addb(lb)
     put("loggia", "stuc", organisch(w, 0.04, 2, 0.4, 0.015, 1.5, 0.2))
-    coll_box(LX0 - 0.15, (LY0 + LY1) / 2, 1.7, 0.4, LY1 - LY0 + 0.5, 3.4); coll_box((LX0 + LX1) / 2, LY1 + 0.17, 1.7, LX1 - LX0, 0.35, 3.4)
+    coll_box((LX0 + LX1) / 2, LY1 + 0.15, 1.7, LX1 - LX0, 0.3, 3.4)
     # zuilen (gele, Toscaans): voor links, voor rechts (hoek), achter rechts
-    prof = [(0, 0), (0.2, 0), (0.2, 0.12), (0.15, 0.18), (0.13, 0.3), (0.12, HC - 0.3), (0.13, HC - 0.22), (0.18, HC - 0.12), (0.2, HC), (0, HC)]
-    for (x, y) in ((LX0 + 0.12, LY0), (LX1, LY0), (LX1, LY1 - 0.12)):
+    prof = [(0, 0), (0.24, 0), (0.24, 0.16), (0.19, 0.22), (0.16, 0.34), (0.15, HC - 0.32), (0.16, HC - 0.24), (0.22, HC - 0.12), (0.24, HC), (0, HC)]
+    for (x, y) in ((LX0 + 0.16, LY0), (LX1 - 0.16, LY0), (LX1 - 0.16, LY1 - 0.16), (LX0 + 0.16, LY1 - 0.16)):
         put("zuilen", "zuil", blathe(prof, 14), TR(x, y, 0)); put("zuilen", "zuil", bz(x - 0.24, x + 0.24, y - 0.24, y + 0.24, HC - 0.02, HC + 0.12, 0.01))
         coll_box(x, y, HC / 2, 0.4, 0.4, HC)
     # dak: laag schilddak met pannen, groene boeiboord met klossen (Boekloc)
@@ -97,7 +99,7 @@ def build(master):
     # ---------- vloer, dansvloer, hekje ----------
     put("vloer", "baksteen", bz(LX0 - 0.3, LX1 + 0.35, LY0 - 0.35, LY1, 0.0, 0.08))
     for k in range(18): x = LX0 - 0.3 + k * 0.22; put("vloer", "creme", bz(x - 0.006, x + 0.006, LY0 - 0.35, LY1, 0.08, 0.083))
-    dx0, dx1, dy0, dy1, dh = 0.45, 2.85, -1.6, 0.05, 0.9
+    dx0, dx1, dy0, dy1, dh = LX0 + 0.62, LX1 - 0.62, LY0 + 0.85, LY1 - 0.3, 0.9
     put("dansvloer", "creme", bz(dx0, dx1, dy0, dy1, 0.08, dh - 0.05))
     n = 14                                                                                            # zigzagrand
     for side in range(4):
@@ -125,8 +127,8 @@ def build(master):
         put("schoentjes", "rood", btube([(0.08, 0, 0.0), (0.09, 0, 0.09)], 0.012, 5), Ms)
         put("schoentjes", "rood", ell((-0.04, 0, 0.08), (0.04, 0.03, 0.03), 8, 6), Ms)
     coll_box((dx0 + dx1) / 2, (dy0 + dy1) / 2, dh / 2, dx1 - dx0, dy1 - dy0, dh)
-    hx0, hx1, hy0, hy1, hh = dx0 - 0.45, dx1 + 0.45, dy0 - 0.45, LY1 - 0.05, 1.0                      # groen hekje rond de dansvloer
-    for (a, b) in (((hx0, hy1), (hx0, hy0)), ((hx0, hy0), (hx1, hy0)), ((hx1, hy0), (hx1, hy1))):
+    hx0, hx1, hy0, hy1, hh = dx0 - 0.3, dx1 + 0.3, dy0 - 0.35, LY1 - 0.05, 1.0                      # groen hekje rond de dansvloer
+    for (a, b) in (((hx0, hy1), (hx0, hy0)), ((hx0, hy0), (hx1, hy0)), ((hx1, hy0), (hx1, hy1))):                 # muur sluit de achterkant
         A, B = Vector(a), Vector(b); L = (B - A).length; k = int(L / 0.11)
         for i in range(k + 1):
             p = A.lerp(B, i / k); put("hek", "groen", btube([(p.x, p.y, 0.08), (p.x, p.y, hh)], 0.012, 4))
@@ -140,18 +142,18 @@ def build(master):
     try: mural_png(tex)
     except ImportError: pass                                                                         # PIL ontbreekt in Blender: build/mural.py maakt hem
     mb = bmesh.new(); uv = mb.loops.layers.uv.new()
-    q = [(LX0 + 0.25, LY1 - 0.01, 0.95), (LX1 - 0.25, LY1 - 0.01, 0.95), (LX1 - 0.25, LY1 - 0.01, 2.95), (LX0 + 0.25, LY1 - 0.01, 2.95)]
+    q = [(LX0 + 0.3, LY1 - 0.01, 0.95), (LX1 - 0.3, LY1 - 0.01, 0.95), (LX1 - 0.3, LY1 - 0.01, 3.3), (LX0 + 0.3, LY1 - 0.01, 3.3)]
     f = mb.faces.new([mb.verts.new(p) for p in q])
     for l_, (u, v) in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))): l_[uv].uv = (u, v)
     bmesh.ops.recalc_face_normals(mb, faces=mb.faces); mb.normal_update()
     if f.normal.y > 0: f.normal_flip()
     mob = new_mesh_object("BAKE_mural", mb, "FORMS")
     for s in (-1, 1):                                                                               # kaarsen op krularmen
-        x = (LX0 + LX1) / 2 + s * 1.15
+        x = (LX0 + LX1) / 2 + s * 0.85
         put("kaarsen", "ijzer", btube([(x, LY1, 1.55), (x, LY1 - 0.18, 1.55), (x - s * 0.06, LY1 - 0.25, 1.6), (x, LY1 - 0.28, 1.66)], 0.015, 5))
         put("kaarsen", "kaars", btube([(x, LY1 - 0.18, 1.58), (x, LY1 - 0.18, 1.86)], 0.025, 8)); put("kaarsen", "vlam", ell((x, LY1 - 0.18, 1.9), (0.015, 0.015, 0.035), 6, 4))
         LAMPS_.append([round(x, 2), LY1 - 0.25, 1.95])
-    cx, cy = (LX0 + LX1) / 2 + 0.6, (LY0 + LY1) / 2 + 0.6
+    cx, cy = (LX0 + LX1) / 2 + 0.55, (LY0 + LY1) / 2 + 0.55
     put("kaarsen", "ijzer", btube([(cx, cy, HA + 0.2), (cx, cy, 2.55)], 0.012, 5))
     put("kaarsen", "ijzer", blathe([(0.22, 0.0), (0.24, 0.02), (0.05, 0.05), (0, 0.05)], 12), TR(cx, cy, 2.5))
     for k in range(5):
@@ -159,24 +161,48 @@ def build(master):
         put("kaarsen", "kaars", btube([(px, py, 2.52), (px, py, 2.66)], 0.016, 6)); put("kaarsen", "vlam", ell((px, py, 2.69), (0.01, 0.01, 0.025), 6, 4))
     LAMPS_.append([round(cx, 2), round(cy, 2), 2.6])
     # ---------- kunstrots links en achter (gestapelde blokken) met schildjes met Franse lelie ----------
-    poly = [(-3.74, -2.1), (-0.5, -2.45), (-0.4, 0.95), (3.8, 0.95), (3.7, 2.48), (-3.74, 2.48)]
-    blok, kern = rotsblokken(poly, 4.6, front_edges=[0, 1, 2, 3], seed=53, slope=2.2, voet=1.2, maat=1.15)
-    put("rots", "rots", blok); put("rots", "rots", kern)
-    coll_box(-2.1, 0.2, 2.0, 3.3, 4.6, 4.0); coll_box(1.7, 1.75, 2.0, 4.2, 1.5, 4.0)
-    for (x, y, rot) in ((-0.62, -1.2, -90), (3.9, 0.92, 0)):                                         # schildjes (luidsprekers)
+    # links + achter de achterwand (steekt boven het dak uit); rechts verder weg en lager, zichtbaar door de zijboog (Boekloc; rechts buiten OSM = inferred)
+    # stenen muur (Daan: "gewoon een rechte muur van steen"): grote liggende blokken in lagen, verspringende voegen, getrapte bovenrand.
+    # L-vorm: links langs de voorkant, als linkerwand van de loggia naar achter, en achter de loggia (boven het dak uit) - Boekloc
+    rr = random.Random(53)
+    def steenwand(a, b, d, hoogte, seed):
+        """rechte wand van a naar b (voorvlak), dikte d naar achter; hoogte(t) = max hoogte op positie t (0..1)"""
+        r = random.Random(seed); A, B = Vector(a), Vector(b); L = (B - A).length; u = (B - A).normalized(); n = Vector((-u.y, u.x))   # n = achter
+        out = bmesh.new(); z = 0.0; rij = 0
+        while True:
+            hz = r.uniform(0.62, 0.92); t = -r.uniform(0, 0.6) if rij % 2 else 0.0; any_ = False
+            while t < L:
+                w = r.uniform(1.2, 2.2); t0, t1 = max(0.0, t), min(L, t + w)
+                hm = hoogte(((t0 + t1) / 2) / L)
+                if z + hz * 0.5 < hm:
+                    uit = r.uniform(-0.06, 0.1)
+                    bb = bz(t0 + 0.025, t1 - 0.025, -uit, d, z + 0.025, z + hz - 0.025, 0.05)
+                    for v in bb.verts: v.co += Vector((r.uniform(-0.03, 0.03), r.uniform(-0.03, 0.03), r.uniform(-0.03, 0.03)))
+                    M_ = Matrix(((u.x, n.x, 0, A.x), (u.y, n.y, 0, A.y), (0, 0, 1, 0), (0, 0, 0, 1)))
+                    bmesh.ops.transform(bb, matrix=M_, verts=bb.verts)
+                    me_ = bpy.data.meshes.new("_t"); bb.to_mesh(me_); bb.free(); out.from_mesh(me_); bpy.data.meshes.remove(me_); any_ = True
+                t += w
+            z += hz; rij += 1
+            if not any_ or z > 6: break
+        kern = bz(0.15, L - 0.15, 0.25, d - 0.1, 0, 0.5, 0); M_ = Matrix(((u.x, n.x, 0, A.x), (u.y, n.y, 0, A.y), (0, 0, 1, 0), (0, 0, 0, 1)))
+        return out
+    prof = lambda t: 2.4 + 2.6 * min(1.0, t / 0.55) - 0.9 * max(0.0, (t - 0.82) / 0.18)                    # links laag, achter de loggia boven het dak, rechts iets lager
+    put("rots", "rots", organisch(steenwand((-3.74, LY1 + 0.3), (5.2, LY1 + 0.3), 1.2, prof, 53), 0.035, 1, 0.4, 0.035, 0.45, 0.25))
+    coll_box(0.73, LY1 + 0.9, 2.2, 8.94, 1.2, 4.4)
+    for (x, y, rot) in ((-0.7, LY1 + 0.25, 0), (4.2, LY1 + 0.25, 0)):                                         # schildjes (luidsprekers)
         M_ = TR(x, y, 1.95, rot)
         sh = [(-0.2, 0.2), (0.2, 0.2), (0.2, -0.05), (0.0, -0.25), (-0.2, -0.05)]
         put("schild", "rood", boutline(sh, -0.05, 0.05), M_); put("schild", "goud", band(sh + [sh[0]], 0.03, -0.07, 0.05), M_)
         put("schild", "goud", ell((0, -0.08, 0.02), (0.05, 0.02, 0.12), 8, 6), M_)
         for s in (-1, 1): put("schild", "goud", ell((s * 0.07, -0.08, 0.04), (0.06, 0.02, 0.035), 8, 6), M_)
     # sprookjesboek op smeedijzeren standaard links voor de rots (Boekloc)
-    MB = TR(-1.1, -2.85, 0, 10)
+    MB = TR(-1.1, -0.9, 0, 10)
     put("boek", "ijzer", btube([(-0.25, 0, 0), (-0.25, 0, 0.8)], 0.025, 6), MB); put("boek", "ijzer", btube([(0.25, 0, 0), (0.25, 0, 0.8)], 0.025, 6), MB)
     put("boek", "ijzer", btube([(-0.25, 0, 0.4), (0, 0, 0.55), (0.25, 0, 0.4)], 0.015, 5), MB)
     MBk = MB @ TR(0, 0, 0.84) @ Matrix.Rotation(math.radians(-25), 4, "X")
     put("boek", "hout", bz(-0.42, 0.42, -0.26, 0.26, -0.03, 0.0, 0.01), MBk)
     for sx in (-1, 1): put("boek", "papier", bz(0.02 if sx > 0 else -0.4, 0.4 if sx > 0 else -0.02, -0.24, 0.24, 0.0, 0.035, 0.008), MBk)
-    coll_box(-1.1, -2.85, 0.5, 0.7, 0.4, 1.0, 10)
+    coll_box(-1.1, -0.9, 0.5, 0.7, 0.4, 1.0, 10)
     # pleintje voor de loggia in licht grind (OSM-pad 405848924 loopt erlangs)
     pl = [(-4.5, -2.6), (5.5, -2.6), (6.8, -6.2), (-4.5, -6.0)]
     bm = bmesh.new(); t_ = [bm.verts.new((x, y, 0.1)) for x, y in pl]; b_ = [bm.verts.new((x, y, -0.02)) for x, y in pl]

@@ -563,7 +563,12 @@ OSM 50911610 (7.45 x 4.96 m incl. rots), pad 405848924. `build/03_loggia.py`: op
 groene boeiboord en klossen), muurschildering (eigen getekende textuur `build/mural.py`, vrij naar Pieck), kaarsen op krularmen, kroonluchter,
 verhoogde dansvloer met geruite glastegels en zigzagrand, 2 rode schoentjes, groen hekje met medaillon, bakstenen vloer, kunstrots links/achter
 (rotsblokken) met 2 schildjes met Franse lelie, sprookjesboek, grindpleintje. Model **130309942322628**, zie `roblox/README_studio.md`.
-- NOG (later): rots achter hoger dan het dak (zoals Boekloc), muurschildering mooier, dansende schoentjes (animatie later).
+- v2 (Daan: "kijk goed", "gebruik je skills", "rechte muur van steen die gewoon doorloopt", "zoek een andere hoek"): volgens blender-image-to-3d
+  met fotocamera-overlays op 2 foto's (`build/cam.sh`, FOTO=voor.jpg = Rode-Schoentjes-weg vooraanzicht; Boekloc schuin): loggia 3.6 x 2.6 m,
+  4 zuilen 2.45 m, brede lage segmentboog voor (kruin 3.35) + segmentbogen links/rechts, schildering + kaarsen op de ACHTERwand, rechte stenen
+  muur van grote vlakke blokken in lagen achter de loggia, doorlopend van links (laag) tot rechts, boven het dak uit. Model **93932368061369**.
+  Vergelijkbladen `review/d3/compare_clay.jpg` (voor) en `review/d4/compare_clay.jpg` (schuin).
+- NOG (later): muurschildering mooier, kruisgewelf binnen, dansende schoentjes (animatie later).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
