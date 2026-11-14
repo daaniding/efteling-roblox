@@ -11,9 +11,9 @@ local M = {
 	ijzer = {Color3.fromRGB(20, 20, 20), "Metal"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, water = {Color3.fromRGB(30, 40, 32), "Glass"},
 	bodem = {Color3.fromRGB(20, 18, 14), "Mud"}, leien = {Color3.fromRGB(80, 72, 66), "Slate"}, venster = {Color3.fromRGB(16, 16, 18), "SmoothPlastic"},
 	dakplat = {Color3.fromRGB(50, 50, 50), "Slate"}, grond = {Color3.fromRGB(64, 78, 40), "Grass"}, klinker = {Color3.fromRGB(150, 104, 86), "Brick"},
-	stuc = {Color3.fromRGB(220, 216, 206), "Plastic"}, pannen = {Color3.fromRGB(150, 80, 60), "Plastic"}, natuursteen = {Color3.fromRGB(150, 146, 136), "Plastic"},
+	stuc = {Color3.fromRGB(220, 216, 206), "Plastic"}, papier = {Color3.fromRGB(236, 222, 186), "Fabric"}, bankgroen = {Color3.fromRGB(52, 84, 62), "WoodPlanks"}, pannen = {Color3.fromRGB(150, 80, 60), "Plastic"}, natuursteen = {Color3.fromRGB(150, 146, 136), "Plastic"},
 }
-local TINT = {stuc = Color3.fromRGB(232, 230, 222), natuursteen = Color3.fromRGB(200, 196, 186)}
+local TINT = {stuc = Color3.fromRGB(232, 230, 222), natuursteen = Color3.fromRGB(170, 166, 158), pannen = Color3.fromRGB(150, 118, 100)}   -- daken donkerder/bemost (Meisjezij)
 local objs = game:GetObjects("rbxassetid://" .. STADJE)
 local oud = workspace:FindFirstChild("ZwavelstokjesStadje"); if oud then oud:Destroy() end
 local m = Instance.new("Model"); m.Name = "ZwavelstokjesStadje"

@@ -445,8 +445,11 @@ modelframe in `ref/osm_model.json`: x = west, y = zuid, gevelrichting 13.5 grade
 - Bake (rollen stuc = afgebladderd met baksteen, pannen, natuursteen, hout; `--pre MZ`), `build/export.sh`, `build/upload.sh`,
   `roblox/maak_plaatsscript.py` -> `plaats_zwavelstokjes.luau` (spiegelend terreinwater in het vijvertje, Ground onder het geheel).
 - Asset: stadje **133813796196568** (texturen in textures/asset_ids.txt).
-- NOG: planten (riet/gras aan de vijver, varens, rododendrons zoals Meisjezij), sprookjesboek bij de oprit, bankje (OSM), lantaarns,
-  maten fijnstellen tegen de foto's (camera-overlay), binnenkant later.
+- v2 (klaar, nog plaatsen zodra Studio open is): sprookjesboek aan de voet van de oprit (Boekloc), 2 groene bankjes (OSM bench), daken
+  donkerder/bemost via TINT (vergelijking met Meisjezij: onze pannen waren te oranje-roze). Planten: `roblox/plaats_zwavelstokjes_groen.luau`
+  (gras/riet + asters langs het vijvertje, varens/heesters voor de keermuur en op de heuvelrand, rododendrons bij trap en oprit, 40 bomen
+  naast/achter het stadje, niet in het zicht vanaf het pad). Asset v2: stadje **109477760100605**.
+- NOG: binnenkant later; gaanderij lager/kleiner zoals Meisjezij.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).

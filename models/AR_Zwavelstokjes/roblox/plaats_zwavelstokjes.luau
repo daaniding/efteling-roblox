@@ -1,7 +1,7 @@
 -- Het Meisje met de Zwavelstokjes (2004): stadje op de heuvel, keermuur, vijvertje, oprit, paden. Gegenereerd door maak_plaatsscript.py.
 -- Modelframe: oorsprong = OSM-zwaartepunt 279667968, voorkant (naar de vijver) = -Y, x = west, z = 0 pad, heuvel 0.9 m.
-local STADJE = 133813796196568
-local TEX = {hout = {101823719224567, 82807733470303}, natuursteen = {94605572791758, 133772970869755}, pannen = {104689176841489, 101379020484007}, stuc = {122068806327767, 113640333137991}}
+local STADJE = 109477760100605
+local TEX = {hout = {127769715177035, 82915495522992}, natuursteen = {103096245653752, 77090865881032}, pannen = {104689176841489, 101379020484007}, stuc = {113555964705578, 114726726348833}}
 local F = Vector3.new(-0.233, 0, -0.972)
 local ORIGIN = CFrame.new(120.36, 2.0, -466.71) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
@@ -11,9 +11,9 @@ local M = {
 	ijzer = {Color3.fromRGB(20, 20, 20), "Metal"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, water = {Color3.fromRGB(30, 40, 32), "Glass"},
 	bodem = {Color3.fromRGB(20, 18, 14), "Mud"}, leien = {Color3.fromRGB(80, 72, 66), "Slate"}, venster = {Color3.fromRGB(16, 16, 18), "SmoothPlastic"},
 	dakplat = {Color3.fromRGB(50, 50, 50), "Slate"}, grond = {Color3.fromRGB(64, 78, 40), "Grass"}, klinker = {Color3.fromRGB(150, 104, 86), "Brick"},
-	stuc = {Color3.fromRGB(220, 216, 206), "Plastic"}, pannen = {Color3.fromRGB(150, 80, 60), "Plastic"}, natuursteen = {Color3.fromRGB(150, 146, 136), "Plastic"},
+	stuc = {Color3.fromRGB(220, 216, 206), "Plastic"}, papier = {Color3.fromRGB(236, 222, 186), "Fabric"}, bankgroen = {Color3.fromRGB(52, 84, 62), "WoodPlanks"}, pannen = {Color3.fromRGB(150, 80, 60), "Plastic"}, natuursteen = {Color3.fromRGB(150, 146, 136), "Plastic"},
 }
-local TINT = {stuc = Color3.fromRGB(232, 230, 222), natuursteen = Color3.fromRGB(200, 196, 186)}
+local TINT = {stuc = Color3.fromRGB(232, 230, 222), natuursteen = Color3.fromRGB(170, 166, 158), pannen = Color3.fromRGB(150, 118, 100)}   -- daken donkerder/bemost (Meisjezij)
 local objs = game:GetObjects("rbxassetid://" .. STADJE)
 local oud = workspace:FindFirstChild("ZwavelstokjesStadje"); if oud then oud:Destroy() end
 local m = Instance.new("Model"); m.Name = "ZwavelstokjesStadje"

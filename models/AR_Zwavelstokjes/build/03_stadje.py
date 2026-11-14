@@ -11,7 +11,7 @@ MATS = {"stuc": ((0.86, 0.84, 0.8, 1), 0.9), "pannen": ((0.55, 0.26, 0.2, 1), 0.
         "hout": ((0.25, 0.17, 0.11, 1), 0.8), "donker": ((0.03, 0.03, 0.03, 1), 0.9), "glasoranje": ((1.0, 0.62, 0.25, 1), 0.2),
         "ijzer": ((0.05, 0.05, 0.05, 1), 0.45), "goud": ((0.8, 0.6, 0.2, 1), 0.3), "water": ((0.1, 0.13, 0.1, 1), 0.05),
         "bodem": ((0.08, 0.07, 0.05, 1), 0.9), "leien": ((0.3, 0.27, 0.25, 1), 0.85), "venster": ((0.05, 0.05, 0.05, 1), 0.3),
-        "dakplat": ((0.2, 0.2, 0.2, 1), 0.9), "grond": ((0.22, 0.2, 0.13, 1), 0.95), "klinker": ((0.5, 0.36, 0.28, 1), 0.9)}
+        "dakplat": ((0.2, 0.2, 0.2, 1), 0.9), "grond": ((0.22, 0.2, 0.13, 1), 0.95), "klinker": ((0.5, 0.36, 0.28, 1), 0.9), "papier": ((0.92, 0.86, 0.7, 1), 0.9), "bankgroen": ((0.2, 0.32, 0.24, 1), 0.7)}
 HM = 0.9
 
 
@@ -201,6 +201,23 @@ def build(master):
         put("pad", "klinker", prisma(poly, -0.1, 0.04))
         xs = [p[0] for p in poly]; ys = [p[1] for p in poly]
         coll_box((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, -0.08, max(xs) - min(xs), max(ys) - min(ys), 0.24)
+    # ================= sprookjesboek aan de voet van de oprit (Boekloc_Zwavelstokjes) en bankjes (OSM bench, Zwavelstokjes4b: groen) =================
+    MB = TR(-13.6, -6.9, 0, 35)
+    put("boek", "ijzer", btube([(0, 0, 0.03), (0, 0, 0.9)], 0.03, 6), MB)
+    for a in (0, 120, 240):
+        ca, sa_ = math.cos(math.radians(a)), math.sin(math.radians(a))
+        put("boek", "ijzer", btube([(0, 0, 0.25), (0.18 * ca, 0.18 * sa_, 0.08), (0.24 * ca, 0.24 * sa_, 0.0)], 0.018, 5), MB)
+    MBk = MB @ TR(0, 0, 0.92) @ Matrix.Rotation(math.radians(-28), 4, "X")
+    put("boek", "hout", bz(-0.42, 0.42, -0.3, 0.3, -0.03, 0.0, 0.01), MBk)
+    for sx in (-1, 1): put("boek", "papier", bz(sx * 0.02 if sx > 0 else -0.4, 0.4 if sx > 0 else -0.02, -0.27, 0.27, 0.0, 0.035, 0.008), MBk)
+    coll_box(-13.6, -6.9, 0.5, 0.6, 0.6, 1.0, 35)
+    for (bx, by) in ((5.44, -7.06), (2.6, -7.0)):
+        M = TR(bx, by, 0, 180)
+        for sx in (-0.75, 0.75):
+            put("bankjes", "ijzer", bz(sx - 0.03, sx + 0.03, -0.25, 0.25, 0.0, 0.44), M)
+        for i in range(4): put("bankjes", "bankgroen", bz(-0.9, 0.9, -0.24 + i * 0.12, -0.15 + i * 0.12, 0.42, 0.46, 0.005), M)
+        put("bankjes", "natuursteen", bz(-0.95, 0.95, -0.3, 0.3, -0.05, 0.02), M)
+        coll_box(bx, by, 0.25, 1.9, 0.6, 0.5, 0)
     # wegschrijven
     for (part, mat), bm in PARTS.items():
         if len(bm.faces) == 0: continue
