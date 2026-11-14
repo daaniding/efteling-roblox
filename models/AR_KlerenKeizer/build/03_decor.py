@@ -71,6 +71,48 @@ def kuif(M, x, z, w=1.2, h=1.0, y=-0.12, part="ornament"):
     put(part, "ornament", bz(x - w * 0.5, x + w * 0.5, y - 0.08, y + 0.08, z - 0.04, z + 0.04, 0.01), M)
 
 
+def kuif2(M, x, z, w=1.2, h=1.0, y=-0.12, part="ornament", kroon=False, guirlande=True):
+    """rococo-bekroning v2 (Intro_nieuwekleren, Kleermakers): gebeeldhouwd -> bollen langs spiralen + cartouche, samengesmolten met
+    voxel-remesh (organisch) tot vloeiende acanthuskrullen; goud medaillon met bloem, optioneel gouden kroon en gouden guirlande eronder."""
+    acc = bmesh.new()
+    def add(bm):
+        me = bpy.data.meshes.new("_k"); bm.to_mesh(me); bm.free(); acc.from_mesh(me); bpy.data.meshes.remove(me)
+    def spiraal(cx, cz, r, sx, turns, d0, d1, tilt=0.0, n=18):
+        for i in range(n):
+            t = i / (n - 1); a = math.pi * 0.5 + sx * t * turns * math.tau + tilt; rr = r * (1 - 0.75 * t); d = d0 + (d1 - d0) * t
+            add(ell((x + cx - sx * rr * math.cos(a), y, z + cz + rr * math.sin(a)), (d, d * 0.9, d), 8, 6))
+    add(bz(x - w * 0.5, x + w * 0.5, y - 0.1, y + 0.1, z - 0.05, z + 0.06))                                     # voet
+    add(ell((x, y, z + h * 0.46), (w * 0.2, 0.1, h * 0.3), 16, 10))                                                # cartouche
+    for i in range(22):                                                                                           # dikke lijst om de cartouche
+        a = i * math.tau / 22; add(ell((x + w * 0.22 * math.cos(a), y - 0.05, z + h * 0.46 + h * 0.33 * math.sin(a)), (0.05, 0.05, 0.05), 6, 4))
+    for sx in (-1, 1):
+        spiraal(sx * w * 0.38, h * 0.3, w * 0.2, -sx, 1.25, 0.085, 0.03)                                         # grote C-krul onder
+        spiraal(sx * w * 0.22, h * 0.82, w * 0.12, sx, 1.1, 0.06, 0.025)                                         # S-krul boven
+        for k in range(7):                                                                                        # bladlobben langs de rand
+            t = k / 6; add(ell((x + sx * (w * 0.5 - t * w * 0.25), y, z + 0.06 + t * h * 0.25), (0.06, 0.05, 0.04), 6, 4))
+    for k in range(5):                                                                                            # schelp/waaier bovenop
+        a = math.radians(55 + k * 17.5); add(ell((x + 0.12 * math.cos(a), y, z + h * 0.86 + 0.12 * math.sin(a)), (0.035, 0.04, 0.11), 6, 5))
+    put(part, "ornament", organisch(acc, 0.028, 3, 0.55, 0.004, 3.0, 0.18), M)
+    put(part, "goud", ell((x, y - 0.1, z + h * 0.46), (w * 0.12, 0.035, h * 0.18), 14, 8), M)                    # gouden medaillon
+    put(part, "goud", btube([(x + w * 0.13 * math.cos(a), y - 0.12, z + h * 0.46 + h * 0.2 * math.sin(a)) for a in [i * math.tau / 20 for i in range(21)]], 0.012, 5), M)
+    put(part, "ornament", ell((x, y - 0.13, z + h * 0.48), (0.035, 0.02, 0.05), 6, 4), M)                        # bloempje
+    if kroon:                                                                                                     # gouden kroon (Intro: op de nispijler)
+        kz = z + h + 0.05
+        put(part, "goud", blathe([(0, kz), (0.15, kz), (0.17, kz + 0.06), (0.13, kz + 0.1), (0.15, kz + 0.2), (0, kz + 0.16)], 14), M @ Matrix.Translation((x, y, 0)))
+        for k in range(8):
+            a = k * math.tau / 8; put(part, "goud", ell((x + 0.15 * math.cos(a), y + 0.15 * math.sin(a), kz + 0.24), (0.025, 0.025, 0.04), 6, 4), M)
+        put(part, "goud", ell((x, y, kz + 0.3), (0.04, 0.04, 0.05), 8, 6), M)
+    if guirlande:                                                                                                 # gouden guirlande met kwasten onder de bekroning
+        gz = z - 0.35
+        for sx in (-1, 1):
+            pts = [(x + sx * (0.05 + t * w * 0.38), y - 0.04, gz + 0.22 - 0.22 * math.sin(math.pi * t)) for t in [i / 10 for i in range(11)]]
+            put(part, "goud", btube(pts, 0.035, 6), M)
+            put(part, "goud", ell((x + sx * w * 0.43, y - 0.04, gz + 0.2), (0.05, 0.04, 0.05), 6, 4), M)
+            put(part, "goud", ell((x + sx * w * 0.43, y - 0.04, gz - 0.02), (0.025, 0.025, 0.12), 6, 4), M)
+        put(part, "goud", ell((x, y - 0.05, gz + 0.22), (0.06, 0.045, 0.06), 6, 4), M)
+        put(part, "goud", ell((x, y - 0.05, gz - 0.05), (0.03, 0.03, 0.15), 6, 4), M)
+
+
 def oeil(M, x, z, r=0.26, y=-0.22, part="ornament"):
     """oeil-de-boeuf: ronde lijst met donker hart en gouden guirlande eronder (DNKvdK-bouw, Hofdames)"""
     ring = [(x + r * math.cos(a), y, z + r * 1.08 * math.sin(a)) for a in [i * math.tau / 24 for i in range(25)]]
@@ -96,7 +138,7 @@ def pijler(cx, cy, rz, w, d, h, part="pijlers", nis=False, kap=True, kuif_h=0.0)
         put(part, "ornament", bz(-nw / 2 - 0.1, nw / 2 + 0.1, -d / 2 - 0.12, -d / 2 + 0.02, 0.36, 0.5, 0.01), M)          # bakje
         FONT.append(list((M @ Vector((0, -d / 2 - 0.05, 0.5))).to_tuple(3)) + [0.9])
     if kap: urnkap(cx, cy, Z0 + h, s=min(w, d) * 0.9, rz=rz, part=part)
-    if kuif_h: kuif(M, 0, h + 0.02, w * 1.15, kuif_h, y=-0.02)
+    if kuif_h: kuif2(M, 0, h + 0.02, w * 1.15, kuif_h, y=-0.02, kroon=True)
     coll_box(cx, cy, Z0 + h / 2, w + 0.1, d + 0.1, h, rz)
 
 
@@ -138,9 +180,9 @@ def build(master):
         krul(Mg, sx * (W2 + 0.1), H - 1.2, 0.32, sx=-sx, turns=1.3, y=-0.3, dik=0.06)                                   # voluut tegen de pijler
     put("poort", "ornament", bz(-W2 - 0.1, W2 + 0.1, -0.58, 0.5, H - 0.3, H - 0.12, 0.01), Mg)                          # hoofdgestel
     put("poort", "ornament", bz(-W2 - 0.14, W2 + 0.14, -0.62, 0.54, H - 0.12, H, 0.01), Mg)
-    kuif(Mg, 0, H + 0.02, 2.0, 1.25, y=-0.25)                                                                           # grote bekroning
+    kuif2(Mg, 0, H + 0.02, 2.2, 1.45, y=-0.25, guirlande=False)                                                          # grote bekroning
     put("poort", "ornament", bz(-0.4, 0.4, -0.58, -0.5, OH + 0.25, H - 0.38, 0.01), Mg)                                 # veld boven de boog
-    kuif(Mg, 0, OH + 0.3, 0.75, 0.5, y=-0.62)
+    kuif2(Mg, 0, OH + 0.3, 0.8, 0.55, y=-0.62, guirlande=False)
     coll_box(GX - 0.8, GY, Z0 + H / 2, 0.45, 0.9, H, 0); coll_box(GX + 0.8, GY, Z0 + H / 2, 0.45, 0.9, H, 0)
     # medaillonpijlers naast de poort (lager, oeil-de-boeuf met guirlande, krul tegen de poort)
     for sx in (-1, 1):
@@ -271,14 +313,14 @@ def build(master):
         n = len(poly); bm.faces.new(b[::-1]); bm.faces.new(t)
         for i in range(n): bm.faces.new((b[i], b[(i + 1) % n], t[(i + 1) % n], t[i]))
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces); return bm
-    put("vijver", "water", plaatv(VIJVER, Z0 - 0.2, Z0 - 0.16))
+    put("vijver", "water", plaatv(VIJVER, Z0 - 0.12, Z0 - 0.08))
     put("vijver", "bodem", plaatv(VIJVER, Z0 - 1.5, Z0 - 1.45))
     n = len(VIJVER)
     for i in range(n):                                                                                                 # zwarte vijverrand (foto: strakke donkere kant)
         a, b = VIJVER[i], VIJVER[(i + 1) % n]
         M, L, ang = M_seg(a, b, 0)
         put("vijver", "bodem", bz(-0.01, L + 0.01, 0.0, 0.1, Z0 - 1.5, Z0 + 0.02), M)
-    for x in (-8.1, 8.0): FONT.append([x, 0.0, Z0 - 0.16, 1.6])
+    for x in (-8.1, 8.0): FONT.append([x, 0.0, Z0 - 0.08, 1.6])
     # wegschrijven
     for (part, mat), bm in PARTS.items():
         if len(bm.faces) == 0: continue

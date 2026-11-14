@@ -10,7 +10,7 @@ exec(open(os.path.join(HERE, "..", "..", "AR_ZesZwanen", "build", "zz_helpers.py
 RNG = random.Random(1837)
 MATS = {"gras": ((0.2, 0.32, 0.12, 1), 0.95), "haag": ((0.1, 0.22, 0.08, 1), 0.9), "tegels": ((0.78, 0.74, 0.66, 1), 0.9),
         "klinker": ((0.55, 0.42, 0.34, 1), 0.9), "ijzer": ((0.04, 0.04, 0.04, 1), 0.45), "hout": ((0.22, 0.34, 0.24, 1), 0.7),
-        "beton": ((0.6, 0.58, 0.54, 1), 0.9), "aarde": ((0.25, 0.2, 0.14, 1), 0.95), "goud": ((0.82, 0.62, 0.22, 1), 0.3)}
+        "beton": ((0.6, 0.58, 0.54, 1), 0.9), "aarde": ((0.25, 0.2, 0.14, 1), 0.95), "goud": ((0.82, 0.62, 0.22, 1), 0.3), "boekband": ((0.4, 0.22, 0.12, 1), 0.7), "papier": ((0.92, 0.86, 0.7, 1), 0.9)}
 Z0 = 0.6
 FENCE = [(-12.0, -4.1), (-3.2, -4.1), (-2.7, -3.45), (-2.1, -2.9), (2.1, -2.9), (2.7, -3.45), (3.2, -4.1), (12.0, -4.1)]
 
@@ -63,7 +63,7 @@ def build(master):
     # ================= bestrating waar de figuren rijden (licht, DNKvdK-bouw) =================
     put("rijvloer", "tegels", plaat([(-7.0, 5.3), (7.2, 5.3), (7.2, 8.4), (6.6, 9.0), (2.6, 9.3), (-2.6, 9.3), (-6.6, 9.0), (-7.0, 8.4)], Z0 - 0.05, Z0 + 0.012))
     # ================= hagen =================
-    haag((-5.4, 4.95), (5.6, 4.95), 1.15, 0.65)                                     # voor de muur (Keizer_vooraanzicht)
+    haag((-5.4, 4.95), (5.6, 4.95), 1.7, 0.75)                                      # voor de muur: verbergt de rijbaan van de figuren (Kleermakers/Intro)
     haag((-8.6, 12.4), (8.8, 12.4), 3.0, 0.9)                                       # achter: beplanting in bakken 3000+P
     haag((-16.8, 3.9), (-7.8, 3.9), 1.8); haag((10.6, 3.9), (20.0, 3.9), 1.8)       # zijhagen tbv wegnemen zicht (decorpeil)
     haag((-17.7, -4.75), (-6.0, -4.75), 1.8, z=0.0); haag((6.0, -4.75), (17.5, -4.75), 1.8, z=0.0)   # langs het pad (OSM 8780/8781)
@@ -98,6 +98,27 @@ def build(master):
         for i in range(4): put("bankjes", "hout", bz(-0.9, 0.9, -0.24 + i * 0.12, -0.15 + i * 0.12, 0.42, 0.46, 0.005), M)
         for i in range(3): put("bankjes", "hout", bz(-0.9, 0.9, 0.24, 0.27, 0.55 + i * 0.12, 0.64 + i * 0.12, 0.005), M)
         coll_box(x, -9.65, 0.45, 1.9, 0.6, 0.9, 0)
+    # lage haag achter het hekwerk op de zijstukken (Boekloc: hagen langs het pad, het gras-talud is niet te zien)
+    haag((-12.0, -3.75), (-3.3, -3.75), 0.95, 0.55, z=0.0); haag((3.3, -3.75), (12.0, -3.75), 0.95, 0.55, z=0.0)
+    # sprookjesboek bij de ingang vanaf het Meisje met de Zwavelstokjes (Boekloc: links voor de hoge haag, smeedijzeren standaard)
+    MB = TR(-9.6, -5.45, 0, -20)
+    put("boek", "ijzer", btube([(0, 0, 0.03), (0, 0, 0.9)], 0.03, 6), MB)
+    for a in (0, 120, 240):
+        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+        put("boek", "ijzer", btube([(0, 0, 0.25), (0.18 * ca, 0.18 * sa, 0.08), (0.24 * ca, 0.24 * sa, 0.0)], 0.018, 5), MB)
+    for sx in (-1, 1): put("boek", "ijzer", btube([(0, 0, 0.55), (sx * 0.12, 0, 0.62), (sx * 0.08, 0, 0.72), (0, 0, 0.7)], 0.012, 5), MB)
+    MBk = MB @ TR(0, 0, 0.92) @ Matrix.Rotation(math.radians(-28), 4, "X")
+    put("boek", "boekband", bz(-0.42, 0.42, -0.3, 0.3, -0.03, 0.0, 0.01), MBk)
+    for sx in (-1, 1):
+        bm = bmesh.new(); vs = []
+        for i in range(9):
+            t = i / 8; xx = sx * (0.02 + 0.38 * t); zz = 0.055 * math.sin(math.pi * (0.15 + 0.85 * t)) * (1 - 0.3 * t)
+            vs.append((bm.verts.new((xx, -0.27, zz)), bm.verts.new((xx, 0.27, zz))))
+        for (a1, b1), (a2, b2) in zip(vs, vs[1:]): bm.faces.new((a1, a2, b2, b1) if sx > 0 else (a1, b1, b2, a2))
+        r_ = bmesh.ops.extrude_face_region(bm, geom=bm.faces[:]); vv = [g for g in r_["geom"] if isinstance(g, bmesh.types.BMVert)]
+        bmesh.ops.translate(bm, vec=(0, 0, -0.03), verts=vv); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        put("boek", "papier", bm, MBk)
+    coll_box(-9.6, -5.45, 0.5, 0.6, 0.6, 1.0, -20)
     for (part, mat), bm in PARTS.items():
         if len(bm.faces) == 0: continue
         ob = new_mesh_object(f"KO_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])

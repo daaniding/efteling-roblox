@@ -8,12 +8,12 @@ local ORIGIN = CFrame.new(@OX@, 2.0, @OZ@) * CFrame.Angles(0, math.atan2(-F.X, -
 local S = 3
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end
 local M = {
-	ornament = {Color3.fromRGB(244, 240, 228), "SmoothPlastic"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, koepelglas = {Color3.fromRGB(120, 146, 196), "Glass"},
+	ornament = {Color3.fromRGB(244, 240, 228), "SmoothPlastic"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, koepelglas = {Color3.fromRGB(132, 150, 176), "Glass"},
 	venster = {Color3.fromRGB(28, 32, 40), "Glass"}, raamhout = {Color3.fromRGB(240, 236, 224), "SmoothPlastic"}, gordijn = {Color3.fromRGB(226, 218, 190), "Fabric"},
 	water = {Color3.fromRGB(24, 32, 28), "Glass"}, bodem = {Color3.fromRGB(14, 14, 14), "SmoothPlastic"}, ijzer = {Color3.fromRGB(18, 18, 18), "Metal"},
 	glaslamp = {Color3.fromRGB(255, 226, 170), "Glass"}, donker = {Color3.fromRGB(10, 10, 10), "SmoothPlastic"}, pleister = {Color3.fromRGB(236, 228, 208), "Plastic"},
-	gras = {Color3.fromRGB(84, 120, 52), "Grass"}, tegels = {Color3.fromRGB(206, 196, 176), "Concrete"}, klinker = {Color3.fromRGB(150, 112, 92), "Brick"},
-	hout = {Color3.fromRGB(56, 88, 62), "WoodPlanks"}, beton = {Color3.fromRGB(160, 156, 148), "Concrete"}, aarde = {Color3.fromRGB(70, 56, 40), "Ground"},
+	gras = {Color3.fromRGB(84, 120, 52), "Grass"}, tegels = {Color3.fromRGB(206, 196, 176), "Concrete"}, klinker = {Color3.fromRGB(214, 200, 176), "Cobblestone"},
+	hout = {Color3.fromRGB(56, 88, 62), "WoodPlanks"}, beton = {Color3.fromRGB(160, 156, 148), "Concrete"}, aarde = {Color3.fromRGB(70, 56, 40), "Ground"}, boekband = {Color3.fromRGB(96, 52, 30), "Leather"}, papier = {Color3.fromRGB(236, 222, 186), "Fabric"},
 }
 local function plaats(asset, naam, TEX)
 	local objs = game:GetObjects("rbxassetid://" .. asset)
@@ -55,6 +55,7 @@ local function plaats(asset, naam, TEX)
 				if key == "koepelglas" then p.Transparency = 0.15; p.Reflectance = 0.35 end
 				if key == "venster" then p.Reflectance = 0.2 end
 				if key == "gras" or key == "klinker" or key == "tegels" then pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end) end
+				if key == "klinker" and game.MaterialService:FindFirstChild("EftelingKlinkers") then p.MaterialVariant = "EftelingKlinkers" end   -- beige visgraat (Boekloc)
 			else table.insert(onbekend, p.Name) end
 		end
 	end

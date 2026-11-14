@@ -426,8 +426,13 @@ hagen 1800/3000+P, pad 600-P, vijverbodem 900-P), poortdetail; plus maquette en 
   `build/upload.sh` -> `python3 roblox/maak_plaatsscript.py` -> `roblox/plaats_klerenkeizer.luau` (fonteinen als ParticleEmitter-stralen,
   haagtextuur, Ground onder het decor).
 - Assets: decor **129960133990936**, omgeving **119903777125541**, pleister 134788731347178/136901809327662.
-- NOG: ornamenten fijner (kuif/cartouches meer rococo), figuren (keizer, lakeien, hofdames, kleermakers) en schimmenspel later,
-  sprookjesboek, beige visgraat-bestrating i.p.v. rode klinkers, wandeltest/fps.
+- v2 (14 nov, Daan: "refine"): kuiven gebeeldhouwd (`kuif2`: bollen langs spiralen + cartouche, samengesmolten met organisch() tot acanthus-
+  krullen) met gouden medaillon, gouden kronen op de nispijlers en gouden guirlandes met kwasten (Intro_nieuwekleren/Kleermakers); haag voor de
+  muur 1.7 m (verbergt de rijbaan zoals op de foto's); lage haag achter het hekwerk op de zijstukken; vijverwater hoger; visgraat-klinkers
+  (MaterialVariant EftelingKlinkers); grijzer koepelglas; sprookjesboek op smeedijzeren standaard bij de ingang (Boekloc).
+  Wandeltest in Play: plein links/midden/rechts Y 4.8 stabiel, lopen naar het decor stopt bij het hekwerk (y -3.1).
+  Assets v2: decor **126400976252556**, omgeving **128394215565121**. upload.sh probeert nu 3x (Open Cloud gaf af en toe een lege respons).
+- NOG: figuren (keizer, lakeien, hofdames, kleermakers) en schimmenspel later; klinkers zijn rood-bruin (variant), foto is beige.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).

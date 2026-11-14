@@ -1,19 +1,19 @@
 -- De Nieuwe Kleren van de Keizer (2012): decor (paleismuur, poort, theekoepel, voorbak, vijver) + paleistuin. Gegenereerd door maak_plaatsscript.py.
 -- Modelframe: oorsprong = midden lange vijver, voorkant (naar de bezoekers) = -Y, z = 0 bezoekerspad, decorpeil 0.6 m.
-local DECOR, OMG = 129960133990936, 119903777125541
-local TEXD = {pleister = {134788731347178, 136901809327662}}
+local DECOR, OMG = 126400976252556, 128394215565121
+local TEXD = {pleister = {80279594059020, 136901809327662}}
 local HAAG = {73997585762296, 114509386598524}      -- haagtextuur (Herautenplein/Villa Volta)
 local F = Vector3.new(0.116, 0, -0.993)
 local ORIGIN = CFrame.new(-48.81, 2.0, -401.85) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end
 local M = {
-	ornament = {Color3.fromRGB(244, 240, 228), "SmoothPlastic"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, koepelglas = {Color3.fromRGB(120, 146, 196), "Glass"},
+	ornament = {Color3.fromRGB(244, 240, 228), "SmoothPlastic"}, goud = {Color3.fromRGB(214, 168, 72), "Metal"}, koepelglas = {Color3.fromRGB(132, 150, 176), "Glass"},
 	venster = {Color3.fromRGB(28, 32, 40), "Glass"}, raamhout = {Color3.fromRGB(240, 236, 224), "SmoothPlastic"}, gordijn = {Color3.fromRGB(226, 218, 190), "Fabric"},
 	water = {Color3.fromRGB(24, 32, 28), "Glass"}, bodem = {Color3.fromRGB(14, 14, 14), "SmoothPlastic"}, ijzer = {Color3.fromRGB(18, 18, 18), "Metal"},
 	glaslamp = {Color3.fromRGB(255, 226, 170), "Glass"}, donker = {Color3.fromRGB(10, 10, 10), "SmoothPlastic"}, pleister = {Color3.fromRGB(236, 228, 208), "Plastic"},
-	gras = {Color3.fromRGB(84, 120, 52), "Grass"}, tegels = {Color3.fromRGB(206, 196, 176), "Concrete"}, klinker = {Color3.fromRGB(150, 112, 92), "Brick"},
-	hout = {Color3.fromRGB(56, 88, 62), "WoodPlanks"}, beton = {Color3.fromRGB(160, 156, 148), "Concrete"}, aarde = {Color3.fromRGB(70, 56, 40), "Ground"},
+	gras = {Color3.fromRGB(84, 120, 52), "Grass"}, tegels = {Color3.fromRGB(206, 196, 176), "Concrete"}, klinker = {Color3.fromRGB(214, 200, 176), "Cobblestone"},
+	hout = {Color3.fromRGB(56, 88, 62), "WoodPlanks"}, beton = {Color3.fromRGB(160, 156, 148), "Concrete"}, aarde = {Color3.fromRGB(70, 56, 40), "Ground"}, boekband = {Color3.fromRGB(96, 52, 30), "Leather"}, papier = {Color3.fromRGB(236, 222, 186), "Fabric"},
 }
 local function plaats(asset, naam, TEX)
 	local objs = game:GetObjects("rbxassetid://" .. asset)
@@ -55,6 +55,7 @@ local function plaats(asset, naam, TEX)
 				if key == "koepelglas" then p.Transparency = 0.15; p.Reflectance = 0.35 end
 				if key == "venster" then p.Reflectance = 0.2 end
 				if key == "gras" or key == "klinker" or key == "tegels" then pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end) end
+				if key == "klinker" and game.MaterialService:FindFirstChild("EftelingKlinkers") then p.MaterialVariant = "EftelingKlinkers" end   -- beige visgraat (Boekloc)
 			else table.insert(onbekend, p.Name) end
 		end
 	end
@@ -85,7 +86,7 @@ local d, o1 = plaats(DECOR, "KlerenKeizerDecor", TEXD)
 local om, o2 = plaats(OMG, "KlerenKeizerOmgeving", nil)
 -- fonteinen: waterstralen (hoogte in m), zachte nevel aan de voet
 local fm = Instance.new("Folder"); fm.Name = "Fonteinen"; fm.Parent = d
-for i, f in ipairs({{-2.953, 9.138, 1.1, 0.9}, {3.153, 9.138, 1.1, 0.9}, {-6.6, 2.7, 1.2, 1.2}, {0.03, 2.2, 1.02, 1.4}, {-8.1, 0.0, 0.43999999999999995, 1.6}, {8.0, 0.0, 0.43999999999999995, 1.6}}) do
+for i, f in ipairs({{-2.953, 9.138, 1.1, 0.9}, {3.153, 9.138, 1.1, 0.9}, {-6.6, 2.7, 1.2, 1.2}, {0.03, 2.2, 1.02, 1.4}, {-8.1, 0.0, 0.52, 1.6}, {8.0, 0.0, 0.52, 1.6}}) do
 	local p = Instance.new("Part"); p.Name = "Fontein" .. i; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
 	p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3); p.CFrame = lokaal(f[1], f[2], f[3]); p.Parent = fm
 	local h = f[4] * S; local g = workspace.Gravity; local v = math.sqrt(2 * g * h)
