@@ -403,7 +403,12 @@ links), rotsen 961616756 (eiland) / 961616759, controlehokje 961616755, pad 9616
   - `sfeer/SfeerZones.client.luau` (StarterPlayerScripts.SfeerZones): onder het bladerdak donkerder/koeler/groener, open plekken warm (eigen
     ColorCorrection "ZoneKleur").
   - Lantaarns: PointLight + SpotLight naar beneden (lichtcirkel op het pad, schaduwen), raamlicht bij vleugel- en torenvensters (in het plaatsscript).
-- NOG: zwanen terug (12% kleiner) en fijner, Elisa + interieur later, bruggetje/beekje, sprookjesboek, fps-test met alle sfeer aan.
+- Fps-test (Play in Studio, Studio op de achtergrond bestuurd via MCP): 12 fps, en dat blijft 10-12 met lampschaduwen, lampen, stof/nevel,
+  dof/bloom/zonnestralen en zonschaduw UIT -> de sfeer kost niets meetbaars; de lage fps komt van de rest (28.6k instances, hele park, 5.6 GB,
+  Studio niet op de voorgrond). Daan zelf meten met Shift+F5 met Studio op de voorgrond.
+- Het rode vlak naast het hokje was de achtergebleven SchaalPop (testpop) -> verwijderd. Studio-texturen wit = Roblox/Studio-laadprobleem
+  ("No asset content representation found ... do_not_fallback_to_baseline"), vanzelf over na herstart/ander netwerk.
+- NOG: zwanen terug (12% kleiner) en fijner, Elisa + interieur later, bruggetje/beekje, sprookjesboek.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
