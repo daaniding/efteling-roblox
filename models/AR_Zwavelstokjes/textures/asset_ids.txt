@@ -1,0 +1,9 @@
+MODEL_stadje 133813796196568
+MZ_hout_kleur 101823719224567
+MZ_hout_normaal 82807733470303
+MZ_natuursteen_kleur 94605572791758
+MZ_natuursteen_normaal 133772970869755
+MZ_pannen_kleur 104689176841489
+MZ_pannen_normaal 101379020484007
+MZ_stuc_kleur 122068806327767
+MZ_stuc_normaal 113640333137991

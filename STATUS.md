@@ -434,6 +434,20 @@ hagen 1800/3000+P, pad 600-P, vijverbodem 900-P), poortdetail; plus maquette en 
   Assets v2: decor **126400976252556**, omgeving **128394215565121**. upload.sh probeert nu 3x (Open Cloud gaf af en toe een lege respons).
 - NOG: figuren (keizer, lakeien, hofdames, kleermakers) en schimmenspel later; klinkers zijn rood-bruin (variant), foto is beige.
 
+## Het Meisje met de Zwavelstokjes (chat 9, 14 nov) — v1 in Studio (buitenkant; binnen/diorama/show later)
+Map `models/AR_Zwavelstokjes/`, brief `asset-brief.md`. Bronnen: 43 Eftepedia-foto's (`ref/eftepedia/`: Maquette_Mmdzs = indeling van boven,
+Meisjezij, Zwavelstokjes4b, Mmdz_bouw_stucwerk), Eftelist-ontwerpschetsen (`ref/tekeningen/`, geen maatvoering), OSM 279667968 (`build/01_osm_lokaal.py`,
+modelframe in `ref/osm_model.json`: x = west, y = zuid, gevelrichting 13.5 graden). Roblox-oorsprong studs (120.36, 2, -466.71), F (-0.233, 0, -0.972).
+- `build/03_stadje.py`: heuvel 0.9 m met natuurstenen keermuur, vijvertje (OSM 767716993) met stenen, oprit met lage gebogen stucmuurtjes, poort
+  tussen twee ronde torentjes (getande lijst, kegeldak), hoge ronde toren, kantelentorentje, gaanderij met 3 rondbogen op zuiltjes, middenblok
+  met kantelen en spitsboogramen, grote topgevel met blinde spitsboog en twee torentjes op consoles, rechtervleugel + uitgang met trap (OSM exit),
+  hoge kantelenmuur achter met hoektorens (verbergt de loods van de Indische Waterlelies), klinkerpaden. 55k tris.
+- Bake (rollen stuc = afgebladderd met baksteen, pannen, natuursteen, hout; `--pre MZ`), `build/export.sh`, `build/upload.sh`,
+  `roblox/maak_plaatsscript.py` -> `plaats_zwavelstokjes.luau` (spiegelend terreinwater in het vijvertje, Ground onder het geheel).
+- Asset: stadje **133813796196568** (texturen in textures/asset_ids.txt).
+- NOG: planten (riet/gras aan de vijver, varens, rododendrons zoals Meisjezij), sprookjesboek bij de oprit, bankje (OSM), lantaarns,
+  maten fijnstellen tegen de foto's (camera-overlay), binnenkant later.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
