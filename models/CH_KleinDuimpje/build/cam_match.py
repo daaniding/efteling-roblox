@@ -20,6 +20,12 @@ def blender_main(a):
     pitch = math.radians(float(a[a.index("--pitch") + 1])) if "--pitch" in a else math.radians(13.3)
     bpy.ops.wm.open_mainfile(filepath=master)
     sc = bpy.context.scene
+    if "--append" in a:                      # tweede master erbij (omgeving), collectie FORMS
+        ap = a[a.index("--append") + 1]
+        with bpy.data.libraries.load(ap, link=False) as (src, dst):
+            dst.objects = [n for n in src.objects]
+        for o in dst.objects:
+            if o is not None and o.type == "MESH": sc.collection.objects.link(o)
     for c in bpy.data.collections:
         lc = bpy.context.view_layer.layer_collection.children.get(c.name)
         if lc is not None:

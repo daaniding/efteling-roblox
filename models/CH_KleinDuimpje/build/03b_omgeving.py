@@ -30,7 +30,7 @@ BUITEN = WATER[:6]                                         # buitenrand van de g
 
 def steen(c, s, r, seed, mat="kalksteen", plat=0.7):
     """hoekige kalksteenbrok: ellipsoide met ruis, platte onderkant"""
-    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0)
+    bm = bmesh.new(); bmesh.ops.create_icosphere(bm, subdivisions=1 if max(s) < 0.22 else 2, radius=1.0)
     for v in bm.verts:
         d = v.co.normalized(); k = 1 + 0.28 * noise.noise(d * 1.7 + Vector((seed, seed * 0.3, 0))) + 0.12 * noise.noise(d * 4.1 + Vector((0, seed, 1)))
         v.co = Vector((d.x * s[0], d.y * s[1], max(d.z * s[2] * plat, -0.1 * s[2]))) * k
@@ -70,17 +70,17 @@ def build(master):
     # ---- eiland: gestapelde rotsbrokken, hoger in het midden (bed onder de reus), lager naar de randen ----
     put("anker", "ijzer", bz(-0.01, 0.01, -0.01, 0.01, 0, 0.02))
     cx = sum(p[0] for p in EILAND) / len(EILAND); cy = sum(p[1] for p in EILAND) / len(EILAND)
-    for k in range(260):
+    for k in range(1400):                                                    # rotsbed van kleine kalksteenbrokken (vuist tot hoofd)
         x, y = r.uniform(min(xs), max(xs)), r.uniform(min(ys) - 2.5, max(ys))
         op = inside(x, y, EILAND); voor = y < cy and not inside(x, y, WATER) and y > min(ys) - 2.2 and min(xs) + 0.5 < x < max(xs) - 0.5
         if not (op or voor): continue
         d = math.hypot((x - cx) / 3.2, (y - cy) / 2.6)
-        s = r.uniform(0.25, 0.55) if op else r.uniform(0.18, 0.38)
-        z = (max(0.0, 0.55 * (1 - d)) if op else 0.0) + s * 0.25
+        s = r.uniform(0.09, 0.2) if r.random() < 0.8 else r.uniform(0.2, 0.32)
+        z = (max(0.0, 0.32 * (1 - d * d)) if op else 0.0) + s * 0.2
         steen((x, y, z), (s * r.uniform(1.0, 1.5), s, s * r.uniform(0.7, 1.0)), r, k)
-    for k, (x, y, s) in enumerate([(2.6, 0.9, 0.9), (1.4, 1.6, 0.8), (-0.6, 1.5, 0.75), (2.9, -0.4, 0.7), (-2.0, 0.9, 0.6), (0.6, 0.4, 1.0)]):
+    for k, (x, y, s) in enumerate([(3.4, 1.0, 0.8), (2.6, -0.6, 0.75), (1.4, 1.5, 0.85), (0.3, 1.2, 0.8), (-0.8, 1.6, 0.7), (-2.4, 0.9, 0.6), (1.6, -1.4, 0.55), (-1.4, -2.2, 0.6), (4.0, 0.0, 0.6)]):
         steen((x, y, s * 0.35), (s * 1.3, s, s * 0.8), r, 100 + k, "natuursteen", 0.8)        # grote zwerfkeien (grijs) onder/achter de reus
-    coll_box(cx, cy, 0.3, 6.5, 5.0, 0.6, 0)
+    coll_box(cx, cy, 0.2, 6.5, 5.0, 0.4, 0)
     # ---- gracht: modderige bodem + wateroppervlak in de ring, oeverstenen langs de buitenrand ----
     def vlak(poly, z, mat, part):
         bm = bmesh.new(); vv = [bm.verts.new((x, y, z)) for x, y in poly]; bm.faces.new(vv)
@@ -93,7 +93,7 @@ def build(master):
             steen((ax + (bx - ax) * t, ay + (by - ay) * t, -0.1), (s * 1.3, s, s * 0.8), r, int(k * 31 + ax * 7))
             k += r.uniform(0.35, 0.6)
     # ---- dode boomstronk achter het hoofd (Kduimpje_reus_zijaanzicht, Kleinduimpje-reus) ----
-    stronk(3.2, 1.3, 2.4, 0.32, 7)
+    stronk(4.0, 1.1, 2.6, 0.34, 7)
     # ---- praatstronk met koperen hoorn en perkament (Kleinduimpje-mei09, Sprookjereus) op het plein, links voor ----
     PX, PY = -3.2, -5.2
     stronk(PX, PY, 1.35, 0.38, 3, part="praatstronk")
@@ -104,7 +104,7 @@ def build(master):
     put("praatstronk", "papier", bz(-0.42, 0.42, -0.1, -0.06, -0.16, 0.16, 0.01), Mp)                                       # perkament
     for sx in (-1, 1): put("praatstronk", "papier", btube([(sx * 0.42, -0.08, -0.17), (sx * 0.42, -0.08, 0.17)], 0.035, 8), Mp)
     # ---- bordje op een standaard voor de rotsrand (Boekloc) ----
-    MB = Matrix.Translation((-1.2, -4.2, 0)) @ Matrix.Rotation(math.radians(8), 4, "Z")
+    MB = Matrix.Translation((-5.0, -3.4, 0)) @ Matrix.Rotation(math.radians(8), 4, "Z")
     put("bord", "ijzer", btube([(0, 0, 0), (0, 0, 0.8)], 0.03, 8), MB)
     put("bord", "bordgroen", bz(-0.32, 0.32, -0.04, 0.0, 0.75, 1.05, 0.01), MB @ Matrix.Rotation(math.radians(-35), 4, "X"))
     put("bord", "papier", bz(-0.28, 0.28, -0.05, -0.04, 0.78, 1.02, 0.005), MB @ Matrix.Rotation(math.radians(-35), 4, "X"))
