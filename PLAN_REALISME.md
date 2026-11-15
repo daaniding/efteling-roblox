@@ -50,6 +50,40 @@ Eén bestaand "inventaris"-bestand van de Efteling is niet openbaar. Wel te comb
 - **Video-frames**: wat er onder de bomen staat (varens, hulst, keien, bordjes, hekjes) per stuk pad.
 Resultaat: één kaartlaag per soort (boom/struik/haag/lantaarn/bank/bak/kei/pad-verharding) in studs, als data-PNG.
 
+### Waar loopt welk pad (OSM, `reference/padkaart_sprookjesbos.png`)
+- Alle paden staan in OSM (729 footways, 277 pedestrian), inclusief verharding. In het Sprookjesbos: **hoofdlus en
+  bijna alle paden = klinkers (paving_stones)**, **kasseien (sett)** op een paar zijpaadjes (Doornroosje, Roodkapje ->
+  Pinokkio, Zwavelstokjes, Kikkerkoning-tuin, Kabouterdorp), **hout** bij bruggetjes, beton/grijs bij De Zes Zwanen.
+- Let op: op de foto bij Klein Duimpje lijkt het hoofdpad glad grijsbruin. Luchtfoto + video-frames beslissen
+  welk klinkerverband/kleur het echt is (OSM zegt alleen "klinkers").
+- Correctie op Fase D hieronder: hoofdpad = klinkers volgens OSM, niet asfalt; nog checken op beeld.
+
+### Hoeveel bomen?
+- OSM heeft in het Sprookjesbos maar **~11 losse bomen** getekend; het bos zelf is niet als bosvlak getagd.
+- De sprookjes zelf liggen binnen ~4 ha; met het bos eromheen is het Sprookjesbos grofweg **8-10 ha**.
+- Oud loofbos/parkbos: ~150-250 grote bomen per ha -> **ruwweg 1.200-2.500 echte bomen**. AHN geeft het exacte
+  aantal, met plek, hoogte en kroonbreedte.
+- In Roblox niet allemaal vol: de paden liggen zo dicht op elkaar dat bijna elke boom ergens van een pad te zien is,
+  dus winst zit vooral in **wat onder en achter** zit: volle boom (stam + kroon) alleen waar je de stam ziet
+  (schatting 600-1.000), de rest **alleen kroon** (lichte LOD) + plantenwanden ertussen. Ondergroei alleen in de
+  strook langs het pad.
+
+## Skills die helpen (gezocht 15 nov)
+Al geïnstalleerd en direct bruikbaar:
+- **roblox-3d-model**: foto -> high-poly mesh (Hi3DGen via Hugging Face) -> Blender decimate/UV/normal bake ->
+  Roblox MeshPart. Bedoeld voor tekst->concept->3D, maar je kunt een **echte foto** als input geven. Kandidaat voor
+  de figuren (reus, vis, draak). Eén per keer; HF-voorwaarden nog checken. Kaggle staat uit (skill zegt dat zelf).
+- **blender-environment-kits**: terrein uit hoogtekaart (AHN!) + planten verspreiden op helling/hoogte/masker.
+- **reference-look-calibration**: kleur/licht/verzadiging meten tegen de echte foto (tegen "te fel / te grijs").
+- **blender-texture-baking** + **blender-game-optimization**: scan/AI-mesh naar Roblox-budget, LOD's voor bomen.
+- **blender-lighting**: licht in de review-renders lijkt dan op Roblox-licht.
+- **multiview-fit-loop / reference-to-3d**: vorm passen aan meerdere foto's tegelijk.
+Online gevonden (nog niet geïnstalleerd, eerst bekijken voor installeren):
+- **roblox-lighting** (skills.sh, tabooharmony/roblox-brain): Lighting, Atmosphere, tijd van de dag, post-processing.
+- **create-3d-scene** (agent-almanac): Blender-scène via bpy met PBR-materialen, licht en camera.
+Geen kant-en-klare skill gevonden die Roblox + realistisch licht + Blender samen doet -> onze eigen
+"efteling-sprookje"-skill (Fase C) bundelt deze.
+
 ## Fase A: fundament voor het hele Sprookjesbos (eenmalig)
 1. Gebied bepalen uit `reference/data/efteling_osm.xml`.
 2. **PDOK-luchtfoto 7,5 cm/px**: alle paden, randen, perken overtrekken (vervangt de scheve OSM-lijnen).
