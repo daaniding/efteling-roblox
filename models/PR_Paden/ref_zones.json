@@ -241,5 +241,38 @@
     ]
    ]
   }
- }
+ },
+ "uitsparingen": [
+  {
+   "naam": "Doornroosje kasteel",
+   "poly": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       112.5,
+       80.8
+      ],
+      [
+       126.3,
+       80.8
+      ],
+      [
+       126.3,
+       95.0
+      ],
+      [
+       112.5,
+       95.0
+      ],
+      [
+       112.5,
+       80.8
+      ]
+     ]
+    ]
+   },
+   "bron": "DoornroosjeKasteel (v1, Studio X 335..381, Z -287..-240), iets ingekort: binnen de kasteelmuren heeft het model een eigen vloer; het pad eindigt bij het kasteel."
+  }
+ ]
 }

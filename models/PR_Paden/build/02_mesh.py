@@ -14,11 +14,12 @@ from PIL import Image, ImageDraw
 from scipy import ndimage
 D = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); R = os.path.dirname(os.path.dirname(D))
 sys.path.insert(0, os.path.join(R, 'tools')); import veld
+import heuvels; _veld_ahn = veld.maaiveld_studs; veld.maaiveld_studs = heuvels.pas_toe(veld.maaiveld_studs)   # pad over v1-heuvels (Doornroosje, Zwavelstokjes), niet erdoorheen
 
 BAND, FRINGE, CELL, TEGEL = 0.22, 0.8, 1.0, 24.0
 TOP = {'klinker': 0.18, 'grijs': 0.18, 'keitjes': 0.18, 'platen': 0.18, 'kassei': 0.18, 'asfalt': 0.15, 'kantsteen': 0.22, 'waaier': 0.18, 'roze': 0.18, 'plavuis': 0.18}   # studs boven het maaiveld
 PERIODE = {'klinker': 2.0, 'grijs': 2.0, 'keitjes': 1.8, 'platen': 2.0, 'kassei': 1.8, 'asfalt': 3.0, 'kantsteen': 2.0, 'rand': 2.4, 'waaier': 1.2, 'roze': 2.0, 'plavuis': 2.0}
-SKIRT = 0.9 / 3   # m omlaag langs de buitenrand
+SKIRT = 1.8 / 3   # m omlaag langs de buitenrand (1,8 stud: dekt de marge tussen terrein en pad, zie tools/studio/paden_terrein_bij.luau)
 
 d = json.load(open(os.path.join(D, 'ref_paden.json')))
 VL = {k: shape(g).buffer(0).simplify(0.08).buffer(0) for k, g in d['vlakken'].items()}
@@ -81,7 +82,12 @@ for _ronde in range(40):
     vlak = brug.buffer(bw, cap_style=1).buffer(0.3, join_style=2).buffer(-0.3, join_style=2)
     U = unary_union([U, vlak, g]).buffer(0.05).buffer(-0.05)
     print('los stuk aangesloten', round(g.area, 1), 'm2 bij', np.round(g.representative_point().coords[0], 1), 'brug', round(brug.length, 1), 'm')
-U = zonder_gaatjes(U.simplify(0.08).buffer(0))   # omtrek weer eenvoudig (anders veel te veel driehoeken in kantsteen/rand)
+U = zonder_gaatjes(U.simplify(0.08).buffer(0))
+_us = [{'naam': u['naam'], 'geom': shape(u['poly'])} for u in json.load(open(os.path.join(D, 'ref_zones.json'))).get('uitsparingen', [])]
+for us in _us:   # na de samenhang: hier eindigt het pad bij een attractie
+    gu = us['geom']; U = U.difference(gu).buffer(0)
+    for k in list(VL): VL[k] = VL[k].difference(gu).buffer(0)
+    _d = sorted(list(U.geoms) if hasattr(U, 'geoms') else [U], key=lambda g: -g.area); U = unary_union([q_ for q_ in _d if q_ is _d[0] or q_.area >= 150.0]); print('uitsparing', us['naam'])   # restjes los van het net weg   # omtrek weer eenvoudig (anders veel te veel driehoeken in kantsteen/rand)
 # typevlakken mee laten groeien tot U (anders kale plekjes in de gedichte naden)
 rest = U.difference(unary_union(list(VL.values())))
 VL['klinker'] = unary_union([VL.get('klinker', Polygon()), rest]).intersection(U).buffer(0)

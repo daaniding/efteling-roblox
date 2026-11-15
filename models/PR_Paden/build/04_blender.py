@@ -7,6 +7,9 @@ import numpy as np
 from mathutils import Vector
 D = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); R = os.path.dirname(os.path.dirname(D))
 sys.path.insert(0, os.path.join(R, 'tools')); import veld
+try:
+    import heuvels; veld.maaiveld_studs = heuvels.pas_toe(veld.maaiveld_studs)   # hulpterrein met de v1-heuvels (Doornroosje, Zwavelstokjes)
+except ImportError: pass   # Blender heeft geen scipy: hulpterrein dan alleen AHN (de padhoogtes komen uit 02_mesh)
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 T = os.path.join(D, 'textures')
 
