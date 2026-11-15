@@ -514,6 +514,50 @@ Bijna elk sprookje heeft water. Uit de foto's (Langnek, Klein Duimpje, Doornroos
 ## Volgorde
 Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos.
 
+## PRESTATIES: HOE HET NIET GAAT LAGGEN
+Huidige metingen zijn al krap (Langnek 43-54 fps in Studio op deze Mac). Met een heel bos erbij moet prestatie
+vanaf het begin in de werkwijze zitten, niet achteraf.
+**Doel**: 60 fps op een gemiddelde laptop, speelbaar (30+) op telefoon/tablet. Testen op deze Mac (A18 Pro, 8 GB =
+goede "zwakke" testmachine) + Studio Device Simulator (telefoon).
+
+**1. Weinig unieke assets, veel hergebruik**
+- Roblox tekent dezelfde MeshPart (zelfde MeshId + zelfde SurfaceAppearance) veel goedkoper als hij vaak voorkomt
+  (instancing). Dus: een kit van ~10-15 boomvarianten, ~20 struikvarianten, ~15 stenen, herhaald met draaiing/
+  schaal/tint (tint via SurfaceAppearance.Color, geen nieuwe textuur).
+- Texturen delen: gedeelde materialen (schors, blad, steen, klinker) en atlassen i.p.v. per object eigen 1024-kaarten.
+  Texturegeheugen is op telefoons de eerste grens.
+
+**2. Detail alleen waar je kijkt (LOD + zichtafstand)**
+- Elke asset 3 LOD's; eigen LOD-wissel per afstand (en/of Roblox SLIM testen) zodat je niet ziet dat hij wisselt.
+- Client-culling per tag (zoals Roblox' Duvall Drive): klein detail (stenen, varens, bladhopen) weg na ~60-100 studs,
+  struiken na ~200, bomen worden "alleen kruin" ver weg. Interieurs alleen binnen ~50 studs (later).
+- Achter plantenwanden/buiten het Sprookjesbos: alleen kruinen (zie zichtzone).
+- StreamingEnabled met Model-streaming voor grote delen; attracties als "persistent" waar nodig. Testen wat beter is.
+
+**3. Bladeren: grootste valkuil**
+- Bladkaarten met transparantie = veel "overdraw" (pixels die vaak getekend worden). Dus: alpha-cutout i.p.v.
+  half-doorzichtig, niet te veel lagen kaarten over elkaar, kruin van ver als dichte vorm met weinig kaarten.
+- Varens/gras alleen in de strook langs het pad.
+
+**4. Schaduw en licht**
+- CastShadow uit op alles kleins (varens, stenen < 1 m, bladhopen, gras) en op alles dat al in schaduw staat.
+- Maximaal een handvol schaduw-gevende lampen tegelijk in beeld; lantaarns zonder schaduw.
+
+**5. Botsing en fysica**
+- Decoratie: CanCollide/CanTouch/CanQuery uit, CollisionFidelity Box; botsing alleen via eenvoudige onzichtbare
+  COLL_-blokken en de botsrand langs het pad. Alles Anchored. Geen unions.
+
+**6. Scripts en effecten**
+- Wind alleen voor planten dicht bij de camera (BulkMoveTo, zoals nu), lage update-frequentie verder weg.
+- Particles (blaadjes, stofjes) laag aantal, alleen rond de speler. Draaiende/bewegende dingen in LocalScripts.
+
+**7. Budget per traject + meten na elke stap**
+- Per traject een budget (bv. max driehoeken en aantal unieke meshes in beeld); script telt het vóór plaatsen.
+- Na elke scène: fps-test in Play (met/zonder), `rbx-scene-analysis` (wat kost geheugen/render), `rbx-perf-profiling`
+  (MicroProfiler: waar zit de piek), Device Simulator telefoon. Zakt het onder het doel -> eerst oplossen, dan verder.
+- Grafische kwaliteit van de speler: bij lage instelling automatisch minder detail (minder varens/struiken, kortere
+  zichtafstand) via een eigen kwaliteitsschakelaar.
+
 ## BOUWVOLGORDE NA DE V1'S (buiten naar binnen, grof naar fijn)
 Regel: eerst wat de plek van al het andere bepaalt (grond, hoogte, paden, water), dan wat erop komt. Anders moet
 elke attractie opnieuw geplaatst/aangesloten worden als het terrein verandert.
