@@ -206,13 +206,16 @@ def build(master):
     for sx in (-1, 1): put("boek", "papier", bz(0.02 if sx > 0 else -0.4, 0.4 if sx > 0 else -0.02, -0.24, 0.24, 0.0, 0.035, 0.008), MBk)
     coll_box(-1.1, -0.9, 0.5, 0.7, 0.4, 1.0, 10)
     # pleintje voor de loggia in licht grind (OSM-pad 405848924 loopt erlangs)
-    pl = [(-4.5, -2.6), (5.5, -2.6), (6.8, -6.2), (-4.5, -6.0)]
+    # plein loopt ook links en rechts langs de loggia door tot de muur, zodat je aan de zijrailingen kunt staan (Daan; Rode-Schoentjes-weg + Boekloc)
+    pl = [(-4.5, -6.0), (6.8, -6.2), (7.3, -3.5), (7.3, LY1 + 0.28), (LX1 + 0.35, LY1 + 0.28), (LX1 + 0.35, LY0 - 0.35),
+          (LX0 - 0.3, LY0 - 0.35), (LX0 - 0.3, LY1 + 0.28), (-4.5, LY1 + 0.28)]
     bm = bmesh.new(); t_ = [bm.verts.new((x, y, 0.1)) for x, y in pl]; b_ = [bm.verts.new((x, y, -0.02)) for x, y in pl]
-    bm.faces.new(t_); bm.faces.new(b_[::-1])
-    for i in range(4): bm.faces.new((t_[i], b_[i], b_[(i + 1) % 4], t_[(i + 1) % 4]))
+    ft = bm.faces.new(t_); fb = bm.faces.new(b_[::-1]); N = len(pl)
+    for i in range(N): bm.faces.new((t_[i], b_[i], b_[(i + 1) % N], t_[(i + 1) % N]))
+    bmesh.ops.triangulate(bm, faces=[ft, fb])
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.normal_update()
-    if bm.faces[0].normal.z < 0:
-        for f_ in bm.faces: f_.normal_flip()
+    for f_ in bm.faces:
+        if abs(f_.normal.z) > 0.5 and (f_.calc_center_median().z > 0.04) != (f_.normal.z > 0): f_.normal_flip()
     put("plein", "grind", bm)
     # voetpad (OSM 405848924) langs de loggia: links aansluitend op het Pinokkio-plein (PLEIN-hoek 8.09,-7.49 in Pinokkio-frame),
     # rechts door tot de splitsing richting De Prinses op de Erwt (21.58,-20.06). Breedte 3.2 m, iets lager dan het pleintje.
