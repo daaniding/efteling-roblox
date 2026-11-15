@@ -619,6 +619,9 @@ Papegaai_totaal = ontwerp met gebogen hek, jaren-50 foto's), OSM 55423808 (plant
   stenen, gebogen groene leuning, strook licht grind tot het pad. Klei-overlay: `build/cam.sh <tag> 0,-3.9,1.7,35 0 13 0,0 clay 36 1000x1000`.
 - Bake `05_bake.py --pre PA`, export `exports/PA_papegaai.fbx`, `zsh -ic build/upload.sh`; plaatsen `roblox/plaats_papegaai.luau`, groen
   `roblox/plaats_papegaai_groen.luau` (SprekendePapegaaiGroen: 2380 planten, 55 bomen; in Wind-MAPPEN). Asset **136319841903954** (13k tris). Place opgeslagen (v199).
+- v2 (Daan: "erachter zit een muur aan planten"): dichte plantenwand achter en naast de muur + groenbulten tegen de pijlers + struiken rechts naast de
+  leuning (`roblox/plaats_papegaai_plantenwand.luau`, na het groenscript; zicht vanaf het pad linksvoor vrij), klimop 3x dichter, grind nu een strook tussen
+  leuning en pad i.p.v. een achthoek (oude kale grond weer gras). Asset **89594139123073**. Screenshot `review/studio_v2_plantenwand.jpg`.
 - NOG (later): ara mooier (veren, kop), dak/consoles fijner, nis-stuc met afgebladderde randen (foto), herringbone-pad, wandeltest.
 
 ## Daarna (volgorde met Daan afgesproken)

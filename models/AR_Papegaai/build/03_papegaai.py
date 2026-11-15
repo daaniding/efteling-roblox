@@ -95,9 +95,10 @@ def build(master):
     put("bord", "rood", bz(-0.27, 0.27, -0.035, -0.025, -0.13, -0.11), Mb); put("bord", "rood", bz(-0.27, 0.27, -0.035, -0.025, 0.11, 0.13), Mb)
     # ---------- klimop op de pijlers en de dakrand (eind60, 1973) ----------
     kb = bmesh.new()
-    for _ in range(1800):
-        side = rr.choice((-1, 1)); x = side * rr.uniform(W / 2 - PIJ - 0.1, W / 2 + 0.05); z = rr.uniform(0.0, EAVE - 0.1)
-        if rr.random() < 0.35: y = WY - 0.03; n = Vector((0, -1, 0))
+    for _ in range(5200):                                                                       # dik in de klimop (eind60, 1973): pijlers, zijkanten, onderkant voorgevel
+        side = rr.choice((-1, 1)); x = side * rr.uniform(W / 2 - PIJ - 0.15, W / 2 + 0.05); z = rr.uniform(0.0, EAVE - 0.1) ** 1.0 if rr.random() < 0.6 else rr.uniform(0.0, 1.4)
+        if rr.random() < 0.15: x = rr.uniform(-W / 2, W / 2); z = rr.uniform(0.0, 0.45)
+        if rr.random() < 0.5: y = WY - 0.03; n = Vector((0, -1, 0))
         else: y = WY + rr.uniform(0, 0.75); x = side * (W / 2 + 0.03); n = Vector((side, 0, 0))
         c = Vector((x, y, z)) + n * 0.02; t = n.cross(Vector((0, 0, 1))).normalized(); u = Vector((0, 0, 1)); s_ = rr.uniform(0.05, 0.09); a = rr.uniform(0, math.tau)
         t2 = t * math.cos(a) + u * math.sin(a); u2 = -t * math.sin(a) + u * math.cos(a)
@@ -131,7 +132,9 @@ def build(master):
     pl = [(-4.6, -1.2), (-3.4, 0.6), (-2.3, 1.4)] + [((RV + 0.35) * math.cos(math.radians(a)), (RV + 0.35) * math.sin(math.radians(a))) for a in range(196, 345, 8)] + [(2.6, 1.6), (3.9, 0.4), (4.2, -2.6), (2.0, -4.6), (-0.6, -4.9), (-3.0, -3.6)]
     pl = [pl[0], pl[1], pl[2]] + pl[3:]
     # dichte plaat: buitenrand met een gat voor het vak -> als ring van vierhoeken tussen vak-boog en buitenrand is lastig; eenvoudig: hele plaat, vak ligt er 2 cm boven
-    bm = bmesh.new(); outer = [(-4.4, 1.6), (-3.0, 2.2), (3.0, 2.2), (4.4, 1.6), (4.6, -2.6), (2.2, -4.7), (-0.6, -5.0), (-3.2, -3.8), (-4.8, -1.4)]
+    bm = bmesh.new()
+    # strook tussen de leuning en de binnenrand van het pad 405848924 (bezoekers staan op het pad, direct tegen de leuning; eind60)
+    outer = [(2.95 * math.cos(math.radians(a_)), 2.95 * math.sin(math.radians(a_))) for a_ in range(340, 199, -10)] + [(-3.4, -1.2), (-3.2, -3.8), (1.1, -4.65), (3.2, -5.2), (3.4, -1.3)]
     t_ = [bm.verts.new((x, y, 0.06)) for x, y in outer]; b_ = [bm.verts.new((x, y, -0.06)) for x, y in outer]
     ft = bm.faces.new(t_); fb_ = bm.faces.new(b_[::-1])
     for i in range(len(outer)): bm.faces.new((t_[i], b_[i], b_[(i + 1) % len(outer)], t_[(i + 1) % len(outer)]))
