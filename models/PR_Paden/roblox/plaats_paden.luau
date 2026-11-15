@@ -43,11 +43,21 @@ if hp then
 		if p:IsA("MeshPart") and (p.Name:find("MAT_plavuis") or p.Name:find("MAT_kassei") or p.Name:find("MAT_bodem")) then p:SetAttribute("Herkomst", p:GetFullName()); p.Parent = bak end
 	end
 end
--- Sneeuwwitje-omgeving: v1-bestrating, band en aarde lagen over de nieuwe paden (rond plein Herautenplein) -> ook naar ServerStorage
-local so = workspace:FindFirstChild("SneeuwwitjeOmgeving")
-if so then
-	for _, naam in ipairs({"static__MAT_aarde_0", "static__MAT_klinker_0", "static__MAT_band_0"}) do
-		local p = so:FindFirstChild(naam); if p then p:SetAttribute("Herkomst", p:GetFullName()); p.Parent = bak end
-	end
+-- Paden die bij de v1-assets hoorden: ze liggen (grotendeels) op de nieuwe paden en staken erdoorheen -> ServerStorage (terug te zetten via attribuut Herkomst).
+-- Gekozen op materiaal (pad) en overlap >= 25% met de nieuwe paden; vijverbodems, water, siergrind en delen naast de paden blijven staan.
+local ASSETPADEN = {
+	"SneeuwwitjeOmgeving.static__MAT_aarde_0", "SneeuwwitjeOmgeving.static__MAT_klinker_0", "SneeuwwitjeOmgeving.static__MAT_band_0",
+	"Assepoester.static__MAT_vloer_0", "AssepoesterOmgeving.static__MAT_band_0", "AssepoesterOmgeving.static__MAT_klinker_0",
+	"Ezeltje.static__MAT_ijssel_0", "HansEnGrietjeOmgeving.static__MAT_aarde_0", "HansEnGrietjeOmgeving.static__MAT_snoeppad_0",
+	"KlerenKeizerOmgeving.static__MAT_klinker_0", "KlerenKeizerOmgeving.static__MAT_tegels_0", "Langnek.static__MAT_klinker_0",
+	"Pinokkio.static__MAT_flagstone_0", "PrinsesOpDeErwtPlein.static__MAT_aarde_0", "PrinsesOpDeErwtPlein.static__MAT_grind_0",
+	"PrinsesOpDeErwtPlein.static__MAT_tegelwit_0", "PrinsesOpDeErwtPlein.static__MAT_tegelzwart_0", "RepelsteeltjeHuisje.static__MAT_flagstone_0",
+	"RodeSchoentjes.static__MAT_grind_0", "Sneeuwwitje.static__MAT_pad_0", "SprekendePapegaai.static__MAT_grind_0", "SprookjesboomOmgeving.band_0",
+	"VliegendeFakir.static__MAT_grind_0", "VrouwHolle.static__MAT_grind_0", "ZesZwanenOmgeving.static__MAT_klinker_0",
+	"ZevenGeitjes.static__MAT_grind_0", "ZwavelstokjesStadje.static__MAT_klinker_0"}
+for _, pad in ipairs(ASSETPADEN) do
+	local mdl, nm = pad:match("^(.-)%.(.+)$")
+	local p = workspace:FindFirstChild(mdl) and workspace[mdl]:FindFirstChild(nm, true)
+	if p then p:SetAttribute("Herkomst", p:GetFullName()); p.Parent = bak end
 end
 return n .. " paddelen geplaatst"

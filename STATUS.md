@@ -876,3 +876,9 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Platen op het Trollenkoningplein weer weg (rechte snijlijn); daar loopt de grijze visgraat door.
 - Gevolg: het pad langs Zevengeitjes is nu ook grijs (loopt zonder kruising door in de grijze lus), het hoofdpad door Kabouterdorp is roodbruin met keitjes op de zijpaden/pleintjes.
 - Studio: MODEL 129106712042227, 447 delen met textuur. Place nog niet opgeslagen.
+
+### Ronde 3d (15 nov 2026): paden van de v1-assets weg
+- Daan: bij de assets zat al pad, dat gaf de fouten. Alle v1-delen gemeten (631 platte delen in het Sprookjesbos): welk deel ligt op de plek van een nieuw pad. Op materiaal geselecteerd (klinker, grind, flagstone, tegels, ijsselsteen, vloer, band, snoeppad, aarde) en overlap >= 25%.
+- 24 asset-paden (plus eerder 4: Herautenplein.MAT_bodem en Sneeuwwitje-omgeving aarde/klinker/band) staan nu in ServerStorage.V1PadVervangen met attribuut Herkomst; plaats_paden.luau verplaatst ze bij een nieuwe plaatsing ook.
+- Bewust blijven staan: vijver-/podiumbodems, water en modder, siergrind Chinese tuin, Villa Volta, Sneeuwwitje-vloer, delen die naast de paden liggen (bv. grindpleintje voor de Trollenkoning-boom, Kogeloog- en Roodkapje-tegels, Kleine Zeemeermin-grind).
+- Place nog niet opgeslagen.
