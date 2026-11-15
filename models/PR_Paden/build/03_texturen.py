@@ -144,6 +144,9 @@ opslaan('grijs', K, H, R, 4.0)
 # keitjes: lichte grijswitte keitjes ~10 cm (Kabouterdorp), onregelmatige rijen
 K, H, R = stenen(1024, 1024, 1.8, 1.8, 0.12, 0.15, 0.008, 0.03, [(186, 182, 174), (196, 192, 184), (172, 168, 162), (204, 198, 188), (164, 160, 156), (180, 174, 164)], 41, bol=1.0, onregelmatig=0.7)
 opslaan('keitjes', K, H, R, 5.0)
+# platen: lichtgrijze betonplaten 40 x 40 cm, fijne voeg (Trollenkoningplein, video 35:00-35:10)
+K, H, R = stenen(1024, 1024, 2.0, 2.0, 0.4, 0.4, 0.004, 0.006, [(150, 152, 150), (158, 159, 156), (142, 145, 144), (164, 164, 160), (146, 147, 146)], 91, bol=0.25)
+opslaan('platen', K, H, R, 2.0)
 # oud halfsteens (niet meer in gebruik als klinker)
 # klinker: 20 x 6,7 cm, rijen haaks op het pad (y = langs het pad), periode 2 m
 PAL_KL = [(128, 124, 122), (138, 133, 130), (118, 114, 113), (150, 145, 140), (165, 158, 150), (104, 100, 100), (132, 118, 108), (142, 136, 136)]
@@ -190,6 +193,7 @@ K, H, R = waaier(1024, 1.2, 0.1, 0.012, [(128, 124, 118), (140, 134, 126), (116,
 opslaan('waaier', K, H, R, 4.5)
 # roze: roze-rode plein-klinkers (Herautenplein rond), in ringen gelegd via radiale UV; 20 x 10 cm, periode 2 m
 K, H, R = stenen(1024, 1024, 2.0, 2.0, 0.1, 0.2, 0.006, 0.012, [(168, 118, 108), (178, 128, 116), (156, 108, 100), (186, 140, 126), (160, 120, 112), (146, 100, 94)], 71, bol=0.7)
+K = (K * 0.7 + K.mean(2, keepdims=True) * 0.3) * np.array([0.92, 0.88, 0.88])   # video 76:45: roodbruin, minder roze
 opslaan('roze', K, H, R, 3.5)
 # plavuis: lichte natuursteen-platen 40 x 40 cm (rond de fontein), periode 2 m
 K, H, R = stenen(1024, 1024, 2.0, 2.0, 0.4, 0.4, 0.008, 0.01, [(190, 184, 172), (198, 192, 180), (182, 176, 166), (205, 198, 186)], 81, bol=0.4)

@@ -56,7 +56,7 @@
   {
    "naam": "Kabouterdorp_keitjes",
    "type": "keitjes",
-   "uv": "veld",
+   "uv": "recht",
    "alleen": [
     "klinker",
     "kassei"
@@ -68,7 +68,26 @@
     46,
     0
    ],
-   "bron": "video 8:05 en 13:35: lichte grijswitte keitjes in Kabouterdorp"
+   "bron": "video 8:05 en 13:35: lichte grijswitte keitjes in Kabouterdorp; recht gelegd (rijen haaks op het hoofdpad), geen ringen",
+   "hoek": 90
+  },
+  {
+   "naam": "Trollenkoningplein",
+   "type": "platen",
+   "uv": "recht",
+   "hoek": 0,
+   "alleen": [
+    "grijs",
+    "klinker"
+   ],
+   "rect": [
+    17,
+    -14.5,
+    18,
+    9,
+    0
+   ],
+   "bron": "video 35:00-35:10: lichtgrijze betonplaten voor de Trollenkoning-boom; het aanlooppad is grijze visgraat (34:55)"
   },
   {
    "naam": "Herautenplein_rond_omgeving",
@@ -119,7 +138,18 @@
     54.5
    ],
    "cirkel": 12.5,
-   "bron": "luchtfoto (roze cirkel) + Eftepedia Herautenplein99"
+   "bron": "luchtfoto (roze cirkel) + Eftepedia Herautenplein99; video 76:45-77:10: roodbruine klinkers in ringen"
+  },
+  {
+   "naam": "Herautenplein_sokkel",
+   "type": "kassei",
+   "uv": "radiaal",
+   "centrum": [
+    -11.5,
+    54.5
+   ],
+   "cirkel": 2.5,
+   "bron": "video 76:55: cirkel grijze kasseien rond de sokkel midden op het ronde plein"
   }
  ]
 }

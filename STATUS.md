@@ -861,3 +861,11 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - 02_mesh.py: zones kunnen `alleen` (welke soorten ze vervangen) en `uv: veld` (verband blijft het pad volgen).
 - Studio: MODEL 80732356672347, 448 delen met textuur (klinker 99, grijs 33, keitjes 5, kassei 17, waaier 8, roze 3, plavuis 4, asfalt 18). Place nog niet opgeslagen.
 - Nog open: Trollenkoningplein lijkt in de video grote grijze platen (nu grijze visgraat); bij Assepoester/Zes Zwanen staat een roodbruin plein met kasseirand (video 77:10) dat nu BGT-asfalt is; ronde verbredingen in Kabouterdorp tonen zichtbare ringen.
+
+### Ronde 3b (15 nov 2026): de drie open plekken
+- Trollenkoningplein: nieuwe textuur `platen` (lichtgrijze betonplaten 40 x 40 cm, video 35:00-35:10) op het BGT-plein ten zuiden van de boom, randen haaks op de padmonden.
+- Rond plein Herautenplein: de "Assepoester-plek" uit video 77:10 bleek dit plein te zijn (Kikkerkoning-fontein erachter). Roodbruine ringen klopten al; roze textuur bruiner gemaakt en een cirkel grijze kasseien (r 2,5 m) rond de sokkel toegevoegd (76:55). Asfalt bij Assepoester/Zes Zwanen klopt wel (video 77:45-78:15).
+- Kabouterdorp-keitjes nu recht gelegd (hoek 90), geen ringen meer.
+- In Studio lagen v1-delen over de nieuwe paden en staken erdoorheen (beige vlakken op het ronde plein): Herautenplein.MAT_bodem, SneeuwwitjeOmgeving.MAT_aarde/MAT_klinker/MAT_band -> ServerStorage.V1PadVervangen (attribuut Herkomst, terug te zetten). plaats_paden.luau doet dit nu ook.
+- Studio: MODEL 93309456015457, 451 delen met textuur. Place nog niet opgeslagen.
+- Open (stap 5): voor de Trollenkoning-boom ligt nog het beige v1-pleintje van TrollenkoningPlein met een strook gras tot het platenplein; in het echt staat de boom aan het platenplein.

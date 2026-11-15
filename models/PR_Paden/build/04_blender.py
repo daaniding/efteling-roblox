@@ -34,7 +34,7 @@ def materiaal(naam, alfa=False):
     return m
 
 
-MATS = {k: materiaal(k, k == 'rand') for k in ('klinker', 'grijs', 'keitjes', 'kassei', 'asfalt', 'kantsteen', 'rand', 'waaier', 'roze', 'plavuis')}
+MATS = {k: materiaal(k, k == 'rand') for k in ('klinker', 'grijs', 'keitjes', 'platen', 'kassei', 'asfalt', 'kantsteen', 'rand', 'waaier', 'roze', 'plavuis')}
 data = json.load(open(os.path.join(D, 'exports', 'paden_mesh.json')))
 ntri = 0
 for naam, st in data.items():
