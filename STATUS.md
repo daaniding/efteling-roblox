@@ -839,3 +839,16 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   bruggetjes, trappen, keien i.p.v. kantsteen, kleurverschillen, roze Herautenplein) volgt uit video-frames per traject (stap 4, yt-dlp/ffmpeg
   vragen). Kabouterdorp-tonnetje staat op het pad (v1-plaatsing, stap 5). Herautenplein: lappendeken v1-plavuis + nieuw pad (stap 5).
   Place nog niet opgeslagen na de paden.
+
+### Paden, ronde 2 (15 nov avond) — Daan: "echt alsof je het zelf legt; nu gaat het vaak mis bij rondjes"
+- Legwijze per soort stuk (stratenmaker): doorlopend verband langs elk pad (OSM-stukken samengevoegd), langste pad gaat door
+  kruisingen (zijpad sluit aan met snijlijn langs de rand van het hoofdpad), **verbredingen** (halve breedte > 1,9 m) herkend:
+  rond -> ringen om het middelpunt (18 stuks), anders recht langs de lange as (38). Geen wervelingen meer.
+- **Zones** (`models/PR_Paden/ref_zones.json`, per plek soort + richting + bron): Herautenplein = grijze kasseien in waaierverband
+  (lanen + rond het plein), roze klinkers in ringen (rond plein), lichte platen rond de fontein (luchtfoto + Eftepedia-foto's).
+  Oude v1-bestrating Herautenplein (plavuis/kassei) -> ServerStorage.V1PadVervangen.
+- Naden tussen BGT-vlakken tot 1 m gesloten. Controle: bovenaanzicht-atlas van het hele net (`review/atlas_*.jpg`, 48 vakken van 40 m).
+- Studio: model 117439322924252, 431 delen. Place nog opslaan.
+- NOG: terrein onder de net gesloten naadjes (< 1 m) is niet verlaagd (kan hier en daar door het pad prikken: controleren);
+  soort bestrating per traject uit de video (yt-dlp/ffmpeg staan in `.venv-video`, video "Alone in the Efteling Fairy Tale Forest"
+  2:23 u -> 1.724 frames elke 5 s in de scratchpad; `tools/video_frames.py`); kasseizones nu alleen waar OSM surface=sett zegt.

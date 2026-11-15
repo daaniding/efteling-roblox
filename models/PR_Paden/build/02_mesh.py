@@ -22,7 +22,7 @@ SKIRT = 0.9 / 3   # m omlaag langs de buitenrand
 
 d = json.load(open(os.path.join(D, 'ref_paden.json')))
 VL = {k: shape(g).buffer(0).simplify(0.08).buffer(0) for k, g in d['vlakken'].items()}
-U = unary_union(list(VL.values())).buffer(0.2, join_style=2).buffer(-0.2, join_style=2).buffer(0)   # naden tussen BGT-vlakken dicht
+U = unary_union(list(VL.values())).buffer(0.5, join_style=2).buffer(-0.5, join_style=2).buffer(0)   # naden tussen BGT-vlakken dicht
 def zonder_gaatjes(g, min_opp=6.0):
     out = []
     for pg in ([g] if isinstance(g, Polygon) else list(g.geoms)):
@@ -194,6 +194,20 @@ for k in range(1, n2 + 1):
             if 0 <= ny < H2 and 0 <= nx < W2 and M2[ny, nx] and SG[ny, nx] == 0:
                 SG[ny, nx] = 1 if TX0[ny, nx] * tx + TY0[ny, nx] * ty >= 0 else -1; dq_.append((ny, nx))
 FX = TX0 * SG; FY = TY0 * SG
+# --- verbredingen: alles wat duidelijk breder is dan een pad (halve breedte > 1,9 m): rond -> ringen om het middelpunt, anders recht
+VB = ndimage.binary_dilation(DIN2 > 1.9, iterations=int(2.0 / RS2)) & M2
+VLAB, nvb = ndimage.label(VB); VINFO = {}
+for k in range(1, nvb + 1):
+    sel = VLAB == k; A = sel.sum() * RS2 * RS2
+    if A < 6: VLAB[sel] = 0; continue
+    per = (sel ^ ndimage.binary_erosion(sel)).sum() * RS2
+    rond = 4 * math.pi * A / (per * per + 1e-9)
+    yy, xx = np.nonzero(sel); px_ = minx + xx * RS2; py_ = maxy - yy * RS2
+    cx, cy = px_.mean(), py_.mean()
+    ev, evec = np.linalg.eigh(np.cov(np.vstack([px_ - cx, py_ - cy]))); ax = evec[:, np.argmax(ev)]
+    lang = math.sqrt(max(ev) / (min(ev) + 1e-9))
+    VINFO[k] = {'rond': bool(rond > 0.7 and lang < 1.35 and A < 900), 'c': (cx, cy), 'a': math.atan2(ax[1], ax[0]), 'A': A}
+print('verbredingen', len(VINFO), 'waarvan rond', sum(v['rond'] for v in VINFO.values()))
 idx = -np.ones((H2, W2), int); idx[M2] = np.arange(M2.sum()); N2 = int(M2.sum())
 def poisson(gx, gy):
     rows, cols, vals, b = [], [], [], []; r = 0
@@ -287,8 +301,8 @@ for mat, geom in SURF.items():
         pts = shapely.points(C)
         # 1) pleinen (breed): recht verband langs de lange as van het plein
         ci_ = np.clip(((C[:, 0] - minx) / RS2).astype(int), 0, W2 - 1); ri_ = np.clip(((maxy - C[:, 1]) / RS2).astype(int), 0, H2 - 1)
-        plein = heeft[ri_, ci_] & (DIN2[ri_, ci_] > 2.0)
-        own = np.full(len(T), -1); own[plein] = -2
+        vb = VLAB[ri_, ci_]
+        own = np.full(len(T), -1); own[vb > 0] = -2
         # 2) hoofdpad eerst: langste doorlopende paden claimen hun padbreedte, zijpaden krijgen wat overblijft
         for li in sorted(range(len(LIJN)), key=lambda k: -LIJN[k]['L']):
             vrij = np.where(own == -1)[0]
@@ -301,8 +315,14 @@ for mat, geom in SURF.items():
         for li in np.unique(own):
             sel = np.where(own == li)[0]; si = np.repeat(sel * 3, 3) + np.tile([0, 1, 2], len(sel)); ps = P[si]
             if li == -2:
-                th = 0.5 * np.arctan2(PS[ri_[sel], ci_[sel]], PC[ri_[sel], ci_[sel]]); a = np.repeat(th, 3)
-                u[si] = ps[:, 0] * np.cos(a) + ps[:, 1] * np.sin(a); v[si] = -ps[:, 0] * np.sin(a) + ps[:, 1] * np.cos(a)
+                for k in np.unique(vb[sel]):
+                    s2 = sel[vb[sel] == k]; si2 = np.repeat(s2 * 3, 3) + np.tile([0, 1, 2], len(s2)); p2 = P[si2]; inf = VINFO[int(k)]
+                    if inf['rond']:
+                        dx = p2[:, 0] - inf['c'][0]; dy_ = p2[:, 1] - inf['c'][1]; r = np.hypot(dx, dy_); th = np.arctan2(dy_, dx)
+                        th3 = th.reshape(-1, 3); spr = th3.max(1) - th3.min(1) > np.pi; th3[spr] = np.where(th3[spr] < 0, th3[spr] + 2 * np.pi, th3[spr])
+                        u[si2] = r; v[si2] = th3.reshape(-1) * np.maximum(r, 0.6)
+                    else:
+                        a = inf['a']; u[si2] = p2[:, 0] * math.cos(a) + p2[:, 1] * math.sin(a); v[si2] = -p2[:, 0] * math.sin(a) + p2[:, 1] * math.cos(a)
             elif li >= 0:
                 uu, vv = lijn_uv(int(li), ps); u[si] = uu; v[si] = vv
         zi = np.full(len(T), -1)
