@@ -186,6 +186,27 @@ Geen kant-en-klare skill gevonden die Roblox + realistisch licht + Blender samen
 - Bocht na bocht: je ziet nooit ver vooruit. Het volgende sprookje verschijnt pas om de hoek.
 - Exacte loop: luchtfoto (Fase A) is leidend; kasseien/flagstone als gebakken textuur met normal map (CC0-scan als basis).
 
+### Paden echt maken in Blender (Daan: verharding ziet er nu het minst realistisch uit)
+Geen terreinmateriaal of tegelende textuur meer voor paden. Elk pad wordt in Blender gebouwd:
+1. **Referentie per padtype**: close-up frames/foto's van elk type (klinkers hoofdpad, kasseien zijpaden,
+   flagstone pleintjes, houten bruggetjes): steenmaat, kleurmenging, verband (keperverband/halfsteens/waaier),
+   voegbreedte en -vulling, slijtage. Maatstok: schoen/bezoeker of bekende klinkermaat (~21x10,5 cm).
+2. **Padvorm**: middellijn + breedte uit luchtfoto/OSM als curve, op AHN-hoogte, licht bol (afwatering), randen
+   iets lager; bochten vloeiend.
+3. **Stenen als echte geometrie** (Geometry Nodes/bpy): elke klinker/kassei apart, **verband volgt de bocht van
+   het pad** (kasseien in bogen/waaiers, klinkers mee de bocht in), per steen kleine afwijking in maat, hoogte,
+   draaiing, afgeronde/afgesleten randen, enkele scheve of gebroken stenen, kleurvariatie per steen.
+4. **Voegen**: zand/aarde, mos en grassprietjes in de voegen (meer aan de randen, minder in de looplijn), blad en
+   naalden erin.
+5. **Slijtage en vuil**: donkerder en gladder in de looplijn, vuil en algen aan de schaduwkant, natte plekken,
+   kauwgom-/vlekjes zeer spaarzaam, putdeksels/afvoerroosters waar OSM/foto ze toont.
+6. **Rand**: opsluitband alleen waar de foto die toont; anders randkeien (kit) en de overgangsstrook naar bosgrond.
+7. **Naar Roblox**: hoge versie (alle stenen) **bakken** naar kleur + normal + roughness + AO op een lage padstrook
+   (UV's volgen het pad, dus het patroon loopt mee met de bocht, geen tegelherhaling). Pad in stukken van ~10-20 m,
+   1024 px per stuk (± 1-2 px per mm-voeg: scherp genoeg). Dicht bij pleintjes eventueel echte reliëf-stenen als mesh.
+8. **Keuring**: render op ooghoogte naast een video-frame van hetzelfde stuk pad (kleur, steengrootte, verband,
+   voegen, slijtage) + bovenaanzicht naast de luchtfoto; in Studio van dichtbij en van ver (geen moiré/glinstering).
+
 ### Natuur: alleen bouwen wat je ziet
 - Je kunt niet het bos in: **onzichtbare botsrand langs elk pad** (achter de keienrand). Dan geldt:
   1. **Strook 0-5 m van het pad**: maximaal detail. Echte plantscans, varens, ondergroei, bosgrond met blad, wortels,
