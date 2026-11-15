@@ -305,6 +305,14 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Bos: de strook langs ALLE paden waarvan je de attractie ziet vrijhouden (ook het aanlooppad van de vorige attractie), anders sta je op het
   fotostandpunt in de struiken.
 
+## Lessen Papegaai + Raponsje (15 nov)
+- **Een ontwerptekening (Ton van de Ven / Pieck) is vaak vrijwel orthografisch:** gebruik hem als blueprint. Schaal uit een bekende totaalmaat (lemma: "10.01 m
+  incl. windvaan") en render de klei-overlay met een orthografisch nagedaan camera (afstand 300 m, lens ~1000 mm): de silhouetten vallen dan direct over elkaar.
+- **Bij kleine taferelen achter het muurtje/de toren hoort een dichte plantenwand** (Daan, Papegaai): het bosscript houdt rond de attractie te veel afstand;
+  zet achter en naast het object expliciet een rij grote rododendrons/taxussen, maar houd het zicht vanaf het pad vrij (struiken tussen pad en object weg).
+- Foto gaat voor lemmatekst (Papegaai: lemma "leien dakje", foto rode pannen).
+- Zsh: een leeg zoekpatroon (`rm -f x*` zonder treffers) breekt een `&&`-keten af; controleer na zo'n keten of alle stappen (STATUS!) zijn uitgevoerd.
+
 ## Lessen De Trollenkoning (15 nov) — Daan: "ziet er niet uit maar voor nu prima, als de scene klopt is het goed; later finetunen"
 - Prioriteit bij een nieuwe attractie: de SCENE moet kloppen (plek, richting, wat waar staat); mooiheid/finetunen mag later.
 - Richting van een attractie zonder gebouw (boom/rots): uit de padligging (de holte kijkt naar het plein tussen de paden) en controleren met

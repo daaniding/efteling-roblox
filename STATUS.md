@@ -624,6 +624,19 @@ Papegaai_totaal = ontwerp met gebogen hek, jaren-50 foto's), OSM 55423808 (plant
   leuning en pad i.p.v. een achthoek (oude kale grond weer gras). Asset **89594139123073**. Screenshot `review/studio_v2_plantenwand.jpg`.
 - NOG (later): ara mooier (veren, kop), dak/consoles fijner, nis-stuc met afgebladderde randen (foto), herringbone-pad, wandeltest.
 
+## Raponsje (chat 11, 15 nov) — v1 in Studio (toren + vijvertje + bos; figuren Raponsje/heks later, finetunen later)
+Map `models/AR_Raponsje/`, brief `asset-brief.md`. Bronnen: 16 Eftepedia-plaatjes; **Tvdv_raponsje = ontwerptekening (vrijwel orthografisch, 98 px/m)** als
+blueprint, lemma: toren precies 10.01 m incl. windvaan. OSM 55423664 (toren r ~1.9), 766787183 (vijvertje), pad 405848924 (zuid), sluiproute 55340110.
+- Frame: oorsprong = midden 55423664 = studs (252.09, 25.68); model = OSM-assen (X oost, Y noord), -Y = zuid (raam naar het pad); Roblox F = (0, 0, 1).
+- `build/03_toren.py` (RA_master, een asset): achtkantige gegroefde stucschacht (2.33 -> 2.25 m, tot 5.9) met spitsboogfries en baksteenplekken, overkragende
+  vakwerkverdieping 6.2-7.4 (raam met glas-in-lood boogje, plank, open luik, haak), spanendak tot 8.6, bol 9.1, windvaan (vogel + pijl) tot 10.01, vlecht tot ~1.9 m,
+  rotsige sokkel + stucen ruinemuur, klimopranken met blad alleen langs de ranken, vijvertje (water + modder) met keienrand en blauwgroene buisleuning,
+  sprookjesboek, grindstrook tot het pad. Klei-overlay op de tekening: `build/cam.sh <tag> 0,-300,5.0,1059 0 0 0,0 clay 36 666x1000` (orthografisch nagedaan).
+- Bake `05_bake.py --pre RA`, export `exports/RA_toren.fbx`, `zsh -ic build/upload.sh`, plaatsen `roblox/plaats_raponsje.luau` (vijver zacht uitgegraven met
+  FillBall), groen `roblox/plaats_raponsje_groen.luau` (RaponsjeGroen 1927 planten, 55 bomen; Papegaai-gebied overgeslagen; daarna 42 planten tussen pad en voet weg
+  zodat vijver/leuning zichtbaar zijn zoals Boekloc). Asset **138467979361401** (24k tris). Screenshot `review/studio_v1.jpg`.
+- NOG (later): figuren Raponsje (in het raam) en de heks (aan de vlecht), klimopblad groter/zichtbaarder, vakwerkvakken strakker, wandeltest.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
