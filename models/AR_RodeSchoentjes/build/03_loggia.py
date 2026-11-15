@@ -99,9 +99,10 @@ def build(master):
     # ---------- vloer, dansvloer, hekje ----------
     put("vloer", "baksteen", bz(LX0 - 0.3, LX1 + 0.35, LY0 - 0.35, LY1, 0.0, 0.08))
     for k in range(18): x = LX0 - 0.3 + k * 0.22; put("vloer", "creme", bz(x - 0.006, x + 0.006, LY0 - 0.35, LY1, 0.08, 0.083))
-    dx0, dx1, dy0, dy1, dh = LX0 + 0.62, LX1 - 0.62, LY0 + 0.85, LY1 - 0.3, 0.9
+    # Rode-Schoentjes-weg.jpg: kist ~1.5 m breed midden in de loggia, rondom ~0.6 m bakstenen looppad binnen het hekje (bezoekers staan naast de dansvloer)
+    dx0, dx1, dy0, dy1, dh = 1.05, 2.55, LY0 + 0.85, LY1 - 0.3, 0.9
     put("dansvloer", "creme", bz(dx0, dx1, dy0, dy1, 0.08, dh - 0.05))
-    n = 14                                                                                            # zigzagrand
+    n = 9                                                                                             # zigzagrand
     for side in range(4):
         for k in range(n):
             if side < 2:
@@ -116,7 +117,7 @@ def build(master):
             bmesh.ops.translate(bm2, vec=off, verts=[g for g in r_["geom"] if isinstance(g, bmesh.types.BMVert)]); bmesh.ops.recalc_face_normals(bm2, faces=bm2.faces)
             put("dansvloer", "zigzagdonker", bm2)
     put("dansvloer", "creme", bz(dx0 - 0.06, dx1 + 0.06, dy0 - 0.06, dy1 + 0.06, dh - 0.08, dh - 0.02, 0.01))
-    gx, gy = 12, 8                                                                                    # geruite glazen dansvloer
+    gx, gy = 8, 8                                                                                     # geruite glazen dansvloer
     for i in range(gx):
         for j in range(gy):
             xa = dx0 + (dx1 - dx0) * i / gx; ya = dy0 + (dy1 - dy0) * j / gy
@@ -127,7 +128,7 @@ def build(master):
         put("schoentjes", "rood", btube([(0.08, 0, 0.0), (0.09, 0, 0.09)], 0.012, 5), Ms)
         put("schoentjes", "rood", ell((-0.04, 0, 0.08), (0.04, 0.03, 0.03), 8, 6), Ms)
     coll_box((dx0 + dx1) / 2, (dy0 + dy1) / 2, dh / 2, dx1 - dx0, dy1 - dy0, dh)
-    hx0, hx1, hy0, hy1, hh = dx0 - 0.3, dx1 + 0.3, dy0 - 0.35, LY1 - 0.05, 1.0                      # groen hekje rond de dansvloer
+    hx0, hx1, hy0, hy1, hh = 0.42, 3.18, LY0 + 0.15, LY1 - 0.05, 1.0                                 # groen hekje langs de zuilen (Rode-Schoentjes-weg), looppad erbinnen
     for (a, b) in (((hx0, hy1), (hx0, hy0)), ((hx0, hy0), (hx1, hy0)), ((hx1, hy0), (hx1, hy1))):                 # muur sluit de achterkant
         A, B = Vector(a), Vector(b); L = (B - A).length; k = int(L / 0.11)
         for i in range(k + 1):
@@ -136,7 +137,7 @@ def build(master):
         for i in range(int(L / 1.0) + 1):
             p = A.lerp(B, min(1, i / max(1, int(L / 1.0)))); put("hek", "groen", btube([(p.x, p.y, 0.08), (p.x, p.y, hh + 0.05)], 0.03, 6))
         mid = (A + B) / 2; coll_box(mid.x, mid.y, 0.55, max(0.1, abs(B.x - A.x)), max(0.1, abs(B.y - A.y)), 1.1)
-    put("hek", "groen", ell(((dx0 + dx1) / 2, hy0 - 0.02, 0.6), (0.13, 0.02, 0.13), 10, 8)); put("hek", "goud", ell(((dx0 + dx1) / 2, hy0 - 0.03, 0.6), (0.09, 0.01, 0.09), 10, 8))
+    put("hek", "groen", ell(((dx0 + dx1) / 2, dy0 - 0.02, 0.5), (0.13, 0.02, 0.13), 10, 8)); put("hek", "goud", ell(((dx0 + dx1) / 2, dy0 - 0.03, 0.5), (0.09, 0.01, 0.09), 10, 8))
     # ---------- muurschildering, kaarsen, kroonluchter ----------
     tex = os.path.join(ROOT, "textures", "RD_mural_kleur.png"); os.makedirs(os.path.dirname(tex), exist_ok=True)
     try: mural_png(tex)
