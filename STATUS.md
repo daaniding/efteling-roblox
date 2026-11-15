@@ -570,6 +570,28 @@ verhoogde dansvloer met geruite glastegels en zigzagrand, 2 rode schoentjes, gro
   Vergelijkbladen `review/d3/compare_clay.jpg` (voor) en `review/d4/compare_clay.jpg` (schuin).
 - NOG (later): muurschildering mooier, kruisgewelf binnen, dansende schoentjes (animatie later).
 
+## De Prinses op de Erwt (chat 11, 15 nov) — v1 in Studio (huisje + pleintje + bos; interieur/Adinda/matrassen later)
+Map `models/AR_PrinsesErwt/`, brief `asset-brief.md`. Bronnen: 61 Eftepedia-plaatjes (`ref/eftepedia/`, contactblad `review/contact.jpg`), ontwerp-vooraanzicht
+Sander de Bruijn (`Theekoepeltje.jpeg`, onderste helft), OSM 1406396369 (5.44 x 4.89 m incl. pijler), border 1406396363, paden 1406396370/68, 6 banken.
+Echte bouwtekeningen niet openbaar (geen Eftelist-pagina, geen vergunning online).
+- Frame: oorsprong = midden OSM-vorm = studs (-4.23, 41.58); -Y = voorkant (NO, naar het pad + border), -X = ZO (kijkraam), +X = blinde zijgevel (NW);
+  OSM -> model: X = -0.851*ox + 0.524*oy ; Y = -0.524*ox - 0.851*oy. Roblox F = (0.524, 0, -0.851), grond Y 2.
+- Maten uit OPGELOSTE fotocamera's (`build/solve_cam.py`: camera uit OSM-grondpunten, hoogtes terugrekenen) + man van 1.78 m bij de deur (Aanloop):
+  voorgevel 4.62 m + pijler 0.75 = OSM-breedte; kroonlijst 5.5, nok 7.95, klokgeveltop 8.7, spits 10.3; deur 2.33 x 4.1 (spitse segmentboog);
+  kijkraam 2.0 x 2.56 (4 x 5 ruiten) vanaf 1.14 m; pijler 0.85 x 1.3, verspringing 4.15 met koperen kap, schoorsteen tot 8.0 + hert-windvaan.
+  Pleintje.jpg: `cam.sh <tag> -0.38,-17.01,1.55,8.8 -63.3 8.5`; Exterieur: `FOTO=exterieur.jpg cam.sh <tag> 0.15,-24.15,3.47,23.6 -48.4 3.1 0,0 clay 13.2 733x1100`.
+- Delen: `build/03_huis.py` (PE_huis_master) en `build/04_omgeving.py` (PE_omgeving_master: grindplein, stucmuurtjes met kap + hekje, kwartronde
+  oplopende aansluiting, 3 bakstenen pijlers met knopbol, 4 Pieckbankjes, border met bakstenen rand, schaakbordtegels voor raam en deur, groen
+  kastje met lantaarn, sprookjesboek + buisleuning). Review samen: `build/combo.py` -> review/combo.blend (zelfde OWNER_TAG: altijd aparte masters).
+- Bake `build/05_bake.py --pre PE|PO` (stuc per gevelrichting V/L/R/A met haarscheurtjes, natuursteen, koper, baksteen), export `build/export.sh huis|omgeving`,
+  upload `zsh -ic build/upload.sh`, plaatsen `python3 roblox/maak_plaatsscript.py` -> `roblox/plaats_prinseserwt.luau`; bos `roblox/plaats_prinseserwt_groen.luau`.
+- Assets: huis **139451136573282** (8.6k tris), plein **120932882084389** (7.2k); texturen in `textures/asset_ids.txt`.
+- Studio: PrinsesOpDeErwt, PrinsesOpDeErwtPlein, PrinsesOpDeErwtGroen (2127 planten, 55 bomen; zicht vanaf de paden vrij; in Wind-MAPPEN).
+  Ground onder het plein, layout-label weg, spawn op het plein (OudeCFrame bewaard). Wandeltest Play: plein, hekje, bankjes, achter de pijler: OK,
+  Y stabiel 4.7. Fps 14-15 op het plein en elders (Studio op de achtergrond). Screenshots `review/studio_v1_*.jpg`. Place nog NIET opgeslagen.
+- NOG (later): interieur (hemelbed met 8 matrassen, Adinda, kaptafel, lampetkan; door de glasdeuren + kijkraam), klokgevel-voluten voller
+  (dikkere krullen/consoles zoals Kamerheer), herringbone-paden (later, met de paden), hotelhek/poort (buiten 15 m), meubilair (lantaarns) later.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

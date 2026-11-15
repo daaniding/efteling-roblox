@@ -290,6 +290,21 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Na een terreinreset over een vierkant: dezelfde grassoort als de omgeving gebruiken, anders zie je een harde vierkante rand.
 - Terreinwater bleef in deze place niet staan (FillBlock/FillCylinder Water -> Ground). Dan een waterplaat (donkergroen SmoothPlastic) gebruiken.
 
+## Lessen De Prinses op de Erwt (15 nov) — Daan: "vooral blueprints kunnen helpen"
+- **Geen blueprints? Dan de fotocamera oplossen** (`AR_PrinsesErwt/build/solve_cam.py`): 3-4 grondhoeken uit de OSM-plattegrond (+ bekende raamhoeken)
+  -> least_squares op positie/yaw/pitch (en lens vrij!), daarna elke hoogte terugrekenen langs een verticale lijn. Restfout < 10 px = betrouwbaar.
+  Twee foto's + een mens bij de deur moeten hetzelfde zeggen; hier bleek het huisje 25% hoger dan uit het ontwerp geschat (kroonlijst 5.5 i.p.v. 4.4).
+- **EXIF-brandpunt kan liegen** (Exterieur: EXIF 8.8 mm, opgelost 23.6 mm = ingezoomd/uitgesneden): laat de lens vrij in de oplossing.
+- **OSM-footprint is de buitenomtrek incl. uitstekende delen** (schoorsteenpijler): voorgevel = OSM-breedte min pijler.
+- **Plaats van muurtjes/pijlers in de scene**: niet via grondpunten bij de horizon (6 px = 2 m fout), maar door een kandidaatlijn (y vast) te projecteren
+  en de x-pixels te vergelijken (hekje, bank, pijler vallen dan op hun plek).
+- Twee bouwscripts met dezelfde OWNER_TAG (template) wissen elkaars objecten: elk deel een eigen master, samen bekijken via een combo-bestand.
+- Twee stucvlakken op hetzelfde vlak in één bakegroep -> grijze driehoek in de bake: gevelpaneel 2 cm voor de romp zetten.
+- Donkere nis-/raamvlakken VOOR het gevelvlak leggen (achter = onzichtbaar, nis bleef wit).
+- Glas met Reflectance spiegelt de roze lucht als rood: venster Reflectance 0, donker blauwgrijs.
+- Bos: de strook langs ALLE paden waarvan je de attractie ziet vrijhouden (ook het aanlooppad van de vorige attractie), anders sta je op het
+  fotostandpunt in de struiken.
+
 ## Lessen Rode Schoentjes v2 (14 nov) — Daan: "kijk goed hoe het eruit ziet, gebruik je skills"
 - **Altijd de skill blender-image-to-3d volgen**: eerst de fotocamera nadoen en een klei-overlay naast de foto (gate), pas daarna bakken/uploaden.
   Zonder overlay maakte ik de loggia te breed/laag, met platte bogen en een rotsklomp i.p.v. een muur.
