@@ -62,6 +62,9 @@ if _sett:
     ks = sz.difference(unary_union(hulp)).buffer(-0.1).buffer(0.1) if hulp else sz
     allp = unary_union([VL.get('klinker', Polygon()), VL.get('kassei', Polygon())])
     VL['kassei'] = ks.intersection(allp).buffer(0); VL['klinker'] = allp.difference(VL['kassei']).buffer(0)
+# eenheid (ref_zones.json): alle padvlakken krijgen hetzelfde soort bestrating; alleen zones (het rondje) wijken af
+_een = json.load(open(os.path.join(D, 'ref_zones.json'))).get('eenheid')
+if _een: VL = {_een: unary_union(list(VL.values())).buffer(0)}
 SURF = {k: v.intersection(Ui).buffer(0) for k, v in VL.items()}
 # --- zones (ref_zones.json): per plek een ander soort bestrating + eigen verbandrichting
 from shapely import affinity

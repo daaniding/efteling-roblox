@@ -888,3 +888,8 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Trollenkoningplein: het v1-grindpleintje is vervangen door een extra bestraat vlak (ref_zones.json 'extra_vlakken', vorm uit Studio) met lichtgrijze platen (video 35:00); de grasstrook tot het pad is gedicht, alleen strookjes die aan het plein grenzen, en het bestaande pad blijft grijze visgraat (pleinrand langs de padrand). TrollenkoningPlein.MAT_grind_0 -> V1PadVervangen.
 - Studio: MODEL 132138991118243, 451 delen met textuur (speltest gestopt om in Edit te plaatsen). Place nog niet opgeslagen.
 - Nog open: ronde verbredingen en het roze rondplein houden wat uitrekking (ringen); niet in Studio op screenshot gecontroleerd (capture reageerde niet), wel in Blender.
+
+### Ronde 3f (15 nov 2026): overal dezelfde visgraat
+- Daan: overal de gelegde steentjes, alleen het oranje rondje bij het plein niet. Nu: alle padvlakken grijze visgraatklinkers (`eenheid: grijs` in ref_zones.json, 02_mesh.py voegt alle soorten samen), ook waar eerder asfalt, kasseien, keitjes, waaier, platen (fontein, Trollenkoningplein) en de Herautentuin lagen. Alleen het rondje op het Herautenplein (roze ringen + kasseicirkel rond de sokkel) wijkt af.
+- De video-indeling (rood/grijs, kasseien, keitjes, waaier) staat nog in git-geschiedenis en de bouwcode (per_pad-zones, texturen) als het ooit terug moet.
+- Studio: MODEL 73836082264416, 395 delen met textuur. Niet op screenshot gecontroleerd in Studio (capture reageerde niet), wel in Blender. Place nog niet opgeslagen.
