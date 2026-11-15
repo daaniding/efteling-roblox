@@ -161,9 +161,8 @@ def build(master):
         put("kaarsen", "kaars", btube([(px, py, 2.52), (px, py, 2.66)], 0.016, 6)); put("kaarsen", "vlam", ell((px, py, 2.69), (0.01, 0.01, 0.025), 6, 4))
     LAMPS_.append([round(cx, 2), round(cy, 2), 2.6])
     # ---------- kunstrots links en achter (gestapelde blokken) met schildjes met Franse lelie ----------
-    # links + achter de achterwand (steekt boven het dak uit); rechts verder weg en lager, zichtbaar door de zijboog (Boekloc; rechts buiten OSM = inferred)
+    # rechte muur achter de loggia, symmetrisch: links en rechts even laag, in het midden boven het dak uit (Boekloc + Daan)
     # stenen muur (Daan: "gewoon een rechte muur van steen"): grote liggende blokken in lagen, verspringende voegen, getrapte bovenrand.
-    # L-vorm: links langs de voorkant, als linkerwand van de loggia naar achter, en achter de loggia (boven het dak uit) - Boekloc
     rr = random.Random(53)
     def steenwand(a, b, d, hoogte, seed):
         """rechte wand van a naar b (voorvlak), dikte d naar achter; hoogte(t) = max hoogte op positie t (0..1)"""
@@ -186,10 +185,12 @@ def build(master):
             if not any_ or z > 6: break
         kern = bz(0.15, L - 0.15, 0.25, d - 0.1, 0, 0.5, 0); M_ = Matrix(((u.x, n.x, 0, A.x), (u.y, n.y, 0, A.y), (0, 0, 1, 0), (0, 0, 0, 1)))
         return out
-    prof = lambda t: 2.4 + 2.6 * min(1.0, t / 0.55) - 0.9 * max(0.0, (t - 0.82) / 0.18)                    # links laag, achter de loggia boven het dak, rechts iets lager
-    put("rots", "rots", organisch(steenwand((-3.74, LY1 + 0.3), (5.2, LY1 + 0.3), 1.2, prof, 53), 0.035, 1, 0.4, 0.035, 0.45, 0.25))
-    coll_box(0.73, LY1 + 0.9, 2.2, 8.94, 1.2, 4.4)
-    for (x, y, rot) in ((-0.7, LY1 + 0.25, 0), (4.2, LY1 + 0.25, 0)):                                         # schildjes (luidsprekers)
+    # symmetrisch rond het midden van de loggia (Daan: "de muur is symmetrisch, rechts loopt hij hetzelfde af als links")
+    MX = (LX0 + LX1) / 2; HALF = MX + 3.74                                                                      # linkereind -3.74 (Boekloc) -> rechtereind gespiegeld
+    prof = lambda t: 2.4 + 2.6 * min(1.0, min(t, 1.0 - t) / 0.42)                                               # laag aan beide uiteinden, achter de loggia boven het dak
+    put("rots", "rots", organisch(steenwand((MX - HALF, LY1 + 0.3), (MX + HALF, LY1 + 0.3), 1.2, prof, 53), 0.035, 1, 0.4, 0.035, 0.45, 0.25))
+    coll_box(MX, LY1 + 0.9, 2.2, 2 * HALF, 1.2, 4.4)
+    for (x, y, rot) in ((MX - 2.5, LY1 + 0.25, 0), (MX + 2.5, LY1 + 0.25, 0)):                                         # schildjes (luidsprekers)
         M_ = TR(x, y, 1.95, rot)
         sh = [(-0.2, 0.2), (0.2, 0.2), (0.2, -0.05), (0.0, -0.25), (-0.2, -0.05)]
         put("schild", "rood", boutline(sh, -0.05, 0.05), M_); put("schild", "goud", band(sh + [sh[0]], 0.03, -0.07, 0.05), M_)
