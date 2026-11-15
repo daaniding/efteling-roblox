@@ -207,6 +207,43 @@ Geen kant-en-klare skill gevonden die Roblox + realistisch licht + Blender samen
 - **Overgangen**: elk gebied heeft zijn eigen sfeer; de poort/brug ertussen is de overgang.
 - **Details op ooghoogte**: waar je dichtbij komt (bordjes, hekjes, stenen) moet het het mooist zijn.
 
+## Nog meer realisme (brainstorm 15 nov)
+- **Ouderdom/slijtage**: mos en groene aanslag noordkant/onderkant muren, regenstrepen onder dakranden, verbleekte
+  verf, afgebladderde hoekjes, roest op hekken, donkere looplijn midden op paden, blad in hoeken. Niets perfect recht.
+- **Grondcontact**: AO-randje + vuil waar alles de grond raakt, pollen gras/mos tegen de voet, nooit zweven/prikken.
+- **Geen herhaling**: kleurvariatie per tegel/plant, vlekken/blad/vocht-decals over grote vlakken.
+- **Bewegend licht**: bewegende bladschaduw op het pad, stofjes in lichtbundels, nevel tussen boomlagen.
+- **Geluid**: voetstappen per ondergrond (klinkers, kasseien, hol hout, grind), bos-galm (SoundService reverb),
+  eenden, wind. Echte Efteling-muziek mag niet geüpload worden (auteursrecht): eigen muziek in die sfeer.
+- **Efteling-huisstijl als set**: exacte kleuren (Efteling-groen), lettertype bordjes, lantaarn-, bank- en
+  prullenbakmodel één keer perfect, overal hergebruiken.
+- **Leven**: eenden, opvliegende vogel, vlinders/libellen bij water, stromend water met schuim (geen NPC-bezoekers).
+- **Lucht/horizon**: Hollandse lucht, nergens een lege rand, één seizoen (zomer).
+- **Prestaties = realisme**: geen haperingen of LOD-popping.
+- **Wandeltest naast een YouTube-wandeling**: zelfde route in Roblox lopen, om de paar seconden frames naast elkaar.
+  Belangrijkste keuring in de skill.
+
+## Hoe andere Roblox-pretparken en realistische games het doen (onderzoek 15 nov)
+- **Bestaande pretpark-recreaties** (Disney Parks Roblox, een fan-"Efteling Theme Park", diverse Disney/Universal-
+  parken): bouwen uit referentiefoto's en online plaatjes, met een team incl. een vaste "reference consultant".
+  Geen enkele beschrijft metingen (AHN/luchtfoto/scans). Met meetdata + scans + foto-keuring zit dit project
+  boven wat er nu bestaat; de "reference consultant"-rol = onze elementenlijst + keuring.
+- **Realistische Roblox-showcases** (DevForum "Basics of Realism", Roblox' eigen Mystery of Duvall Drive):
+  alles MeshParts (geen parts/unions), naadloze texturen max 1024, <10k driehoeken per mesh, "alles wat geluid
+  moet maken, maakt geluid", eigen client-culling i.p.v. alleen StreamingEnabled: detail-objecten getagd met een
+  zichtafstand (klein 200, groot 400 studs), interieurs pas tonen binnen ~50 studs, bomen = helft van de driehoeken
+  -> boom-LOD's nodig, CastShadow uit op kleine dingen en dingen in de schaduw, alles verankerd, draaiende dingen
+  in LocalScripts. Elk model een PrimaryPart.
+- **Nieuw van Roblox (dec 2025): SLIM** maakt automatisch lichte versies (samenvoegen + LOD) van objecten per apparaat;
+  later ook "hiërarchisch" voor groepen zoals bossen. Testen op de bomen/planten-modellen voordat we zelf LOD's bouwen.
+- **Officiële Environmental Art-voorbeeldplaces** van Roblox (Construct Your World, asset-bibliotheek,
+  Optimize Your Experience): gratis te openen in Studio om te zien hoe Roblox zelf terrein, licht en materialen opzet.
+- Betaalde realistische bos-maps (BuiltByBit) bestaan; niet nodig, wel goede vergelijking voor sfeer en fps.
+Bronnen: devforum.roblox.com/t/the-basics-of-realism-mastering-immersion/1435459,
+devforum.roblox.com/t/optimizing-roblox-without-streamingenabled-the-mystery-of-duvall-drive/2060659,
+gamesbeat.com (SLIM, 5 dec 2025), create.roblox.com/docs/tutorials/curriculums/environmental-art/construct-your-world,
+devforum.roblox.com/t/disney-parks-roblox-development-credits/1516766, roblox.com/games/9695230318.
+
 ## Volgorde
 Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
