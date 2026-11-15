@@ -692,9 +692,25 @@ lemma. OSM gebouw 55423662 (8.45 x 7.45 m, uitsparing NW), voetpad 397496612/397
   achter de tuin, rododendrons achter moeder geit, meteen gesnoeid op padafstand; in Wind-MAPPEN). Screenshots `review/studio_v1.jpg`, `studio_v1_west.jpg`.
 - NOG (later): figuren (moeder geit, wolf in rokkostuum, geitjes binnen), interieur (woonkamer met klok, slaapkamer), gezicht fijner (Avond), stuc groenig verweerd.
 
+## Vrouw Holle (chat 11, 15 nov) — v1 in Studio (huisje + voortuin + put; Vrouw Holle-figuur/kussen/sneeuw en dia's in de put later)
+Map `models/AR_VrouwHolle/`. Bronnen: 61 Eftepedia-plaatjes (Boekloc = bezoekersgevel met tuintje, Vrouwholletotaal, Huisje-holle-2010, Holleput,
+Sprookjesmuseum = noordgevel met dubbele deur, VrouwHollestenen = boogstenen met gezichtjes, herbouw 2022), lemma. OSM huis 1109001371, put 55424650,
+paden 1001200259/1116332898 (lus om het huis), 1054471996/1074489754 (lus om de put).
+- Frame: oorsprong = zwaartepunt 1109001371 = studs (2.73, -90.69); model = OSM -6.8 graden; -Y = zuid (bezoekersgevel, put op (10.15, -20.4));
+  Roblox F = (0.1184, 0, 0.993).
+- `build/03_holle.py` (VH_master): steil rietdak (nok 5.7, overstek 0.9) met rietrollen over de windveren en nokrol, wit stuc met bolle hoeksteunen,
+  bezoekersgevel met twee boogdeurtjes (natuursteen boogstenen, 3 loerende gezichtjes per deur), raam met bloembak, open luikenraam, spoor van goud en pek,
+  noordgevel met dubbele boogdeur + rond raampje, aanbouw oost met dwarsdakje, schoorsteen, haan op de nok, voortuintje (laag bakstenen muurtje,
+  smeedijzeren hekje + poortje, emmer met mattenklopper, modderbed met tulpen), put (baksteen, natuurstenen rand, stalen kijkrooster, houten pannendak op
+  twee staanders met schoren, heksen-windvanen, groene projectorkist), 3 grindvlakken (huis, rond putpleintje, verbindingsstrook), sprookjesboek. 55k tris.
+- Bake `--pre VH` (stuc per gevel, riet, baksteen), export `exports/VH_holle.fbx`, plaatsen `roblox/plaats_holle.luau` (labels "Vrouw Holle" + "De Put van
+  Vrouw Holle" weg), groen `roblox/plaats_holle_groen.luau` (VrouwHolleGroen ~1400, rododendronkrans om het putpleintje, tulpen in de voortuin, gesnoeid;
+  Herautenplein/Trollenkoning/Ezeltje vrij; in Wind-MAPPEN). Screenshots `review/studio_v1.jpg`, `studio_v1_put.jpg`.
+- NOG (later): Vrouw Holle met kussen in het luikenraam + sneeuw (animatie), dia-voorstelling in de put, gevels organischer (bolle Pieck-vormen).
+
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Vrouw Holle, Kleine Boodschap, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
-Volgende op de route na de Zeven Geitjes: Hans en Grietje (al v1) -> Vrouw Holle.
+Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Kleine Boodschap, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
+Volgende op de route na Vrouw Holle: Kleine Boodschap (OSM-node 55-ish m west, bij de Herberg).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
