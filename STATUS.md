@@ -610,6 +610,17 @@ Map `models/AR_Trollenkoning/`, brief `asset-brief.md`. Bronnen: 36 Eftepedia-pl
 - NOG (finetunen later, Daan): schors/zwammen realistischer (kleur, detail), trol + uiltje in de holte (figuren later), herringbone-paden, Muzikale Paddenstoel 7
   staat er al (niet van ons), camera-oplossing op de schuine foto's klopte niet (zwamhoogtes vs frontale foto) -> plaatsing wijzersteen/boek op foto-verhoudingen.
 
+## De Sprekende Papegaai / Het Stoute Prinsesje (chat 11, 15 nov) — v1 in Studio (scene; finetunen later)
+Map `models/AR_Papegaai/`, brief `asset-brief.md`. Bronnen: 15 Eftepedia-plaatjes (Intro_papegaai = frontaal, eind60/70 schuin met mensen,
+Papegaai_totaal = ontwerp met gebogen hek, jaren-50 foto's), OSM 55423808 (plantvak/hek r 2.7), pad 405848924. Dak = rode pannen (foto), niet leien (lemma).
+- Frame: oorsprong = midden 55423808 = studs (177.51, 28.92); -Y = naar het pad (ZW); OSM -> model: X = 0.8*ox - 0.6*oy ; Y = 0.6*ox + 0.8*oy; F = (-0.6, 0, 0.8).
+- `build/03_papegaai.py` (PA_master, een asset): bakstenen muur 3.2 x 3.4 m met pijlers, rondboognis (wit stuc) tot 3.2 m, pannendak ~30 graden met 0.75 overstek
+  op zware gebogen consoles, knoestige tak, ara (lijf organisch, opgeheven vleugels, lange staart, rood oog) schuin zoals Intro, bordje, klimop, plantvak met
+  stenen, gebogen groene leuning, strook licht grind tot het pad. Klei-overlay: `build/cam.sh <tag> 0,-3.9,1.7,35 0 13 0,0 clay 36 1000x1000`.
+- Bake `05_bake.py --pre PA`, export `exports/PA_papegaai.fbx`, `zsh -ic build/upload.sh`; plaatsen `roblox/plaats_papegaai.luau`, groen
+  `roblox/plaats_papegaai_groen.luau` (SprekendePapegaaiGroen: 2380 planten, 55 bomen; in Wind-MAPPEN). Asset **136319841903954** (13k tris). Place opgeslagen (v199).
+- NOG (later): ara mooier (veren, kop), dak/consoles fijner, nis-stuc met afgebladderde randen (foto), herringbone-pad, wandeltest.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
