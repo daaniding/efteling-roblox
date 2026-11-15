@@ -16,8 +16,8 @@ D = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); R = os.path.dir
 sys.path.insert(0, os.path.join(R, 'tools')); import veld
 
 BAND, FRINGE, CELL, TEGEL = 0.22, 0.8, 1.0, 24.0
-TOP = {'klinker': 0.18, 'kassei': 0.18, 'asfalt': 0.15, 'kantsteen': 0.22, 'waaier': 0.18, 'roze': 0.18, 'plavuis': 0.18}   # studs boven het maaiveld
-PERIODE = {'klinker': 2.0, 'kassei': 1.8, 'asfalt': 3.0, 'kantsteen': 2.0, 'rand': 2.4, 'waaier': 1.2, 'roze': 2.0, 'plavuis': 2.0}
+TOP = {'klinker': 0.18, 'grijs': 0.18, 'keitjes': 0.18, 'kassei': 0.18, 'asfalt': 0.15, 'kantsteen': 0.22, 'waaier': 0.18, 'roze': 0.18, 'plavuis': 0.18}   # studs boven het maaiveld
+PERIODE = {'klinker': 2.0, 'grijs': 2.0, 'keitjes': 1.8, 'kassei': 1.8, 'asfalt': 3.0, 'kantsteen': 2.0, 'rand': 2.4, 'waaier': 1.2, 'roze': 2.0, 'plavuis': 2.0}
 SKIRT = 0.9 / 3   # m omlaag langs de buitenrand
 
 d = json.load(open(os.path.join(D, 'ref_paden.json')))
@@ -63,9 +63,10 @@ for q in json.load(open(os.path.join(D, 'ref_zones.json')))['zones']:
     q['geom'] = g; ZONES.append(q)
 for q in ZONES:
     zg = q['geom'].intersection(Ui)
+    soorten = [k for k in SURF if k not in ('kantsteen', 'rand') and (not q.get('alleen') or k in q['alleen'])]
+    if q.get('alleen'): zg = zg.intersection(unary_union([SURF[k] for k in soorten] or [Polygon()])).buffer(0)
     if zg.is_empty: continue
-    for k in list(SURF):
-        if k in ('kantsteen', 'rand'): continue
+    for k in soorten:
         SURF[k] = SURF[k].difference(zg).buffer(0)
     SURF[q['type']] = unary_union([SURF.get(q['type'], Polygon()), zg]).buffer(0)
 SURF['kantsteen'] = U.difference(Ui).buffer(0)
@@ -296,7 +297,7 @@ for mat, geom in SURF.items():
         Y = Y + 0.10 - 0.07 * np.clip(afst(P[:, 0], P[:, 1], False) / FRINGE, 0, 1)
     # UV
     UV = np.zeros((len(P), 2))
-    if mat in ('klinker', 'kassei', 'waaier', 'roze', 'plavuis'):
+    if mat in ('klinker', 'grijs', 'keitjes', 'kassei', 'waaier', 'roze', 'plavuis'):
         per = PERIODE[mat]; u = np.zeros(len(P)); v = np.zeros(len(P))
         pts = shapely.points(C)
         # 1) pleinen (breed): recht verband langs de lange as van het plein

@@ -79,10 +79,74 @@ def stenen(Wpx, Hpx, per_x, per_y, rij_h, steen_l, voeg, afr, palet, seed, bol=0
     return K, H, ruw
 
 
+def verf(X, lx, ly, Lx, Ly, keys, voeg, afr, palet, seed, bol=0.6, onregelmatig=0.0):
+    """Schaduw/kleur per steen gegeven lokale coördinaten (m) binnen de steen (Lx x Ly) en een steen-sleutel per pixel."""
+    uk, inv = np.unique(keys, return_inverse=True)
+    r1 = np.array([hashrand(int(k) // 1000, int(k) % 1000, seed) for k in uk])[inv].reshape(keys.shape)
+    r2 = np.array([hashrand(int(k) // 1000, int(k) % 1000, seed + 1) for k in uk])[inv].reshape(keys.shape)
+    r3 = np.array([hashrand(int(k) // 1000, int(k) % 1000, seed + 2) for k in uk])[inv].reshape(keys.shape)
+    v = voeg * (1 + (r2 - 0.5) * (0.6 + onregelmatig * 2))
+    dx = np.minimum(lx, Lx - lx) - v / 2; dy = np.minimum(ly, Ly - ly) - v / 2
+    hoek = np.sqrt(np.clip(afr - dx, 0, None) ** 2 + np.clip(afr - dy, 0, None) ** 2)
+    rand = np.where((dx < afr) & (dy < afr), afr - hoek, np.minimum(dx, dy))
+    rand = rand + (ruis(X.shape, 24, seed + 3) - 0.5) * afr * 0.9
+    binnen = rand > 0
+    H = np.where(binnen, np.clip(rand / afr, 0, 1) ** 0.5 * bol, -0.35)
+    H += binnen * ((r1 - 0.5) * 0.25 + (lx / Lx - 0.5) * (r3 - 0.5) * 0.3)
+    H += ruis(X.shape, 6, seed + 4) * 0.08 * binnen
+    pal = np.array(palet, float); ci = np.minimum((r1 * len(pal)).astype(int), len(pal) - 1)
+    K = pal[ci] * (0.92 + 0.16 * r3[..., None])
+    K = K * (0.9 + 0.2 * ruis(X.shape, 40, seed + 5)[..., None])
+    K = K * (0.93 + 0.1 * ruis(X.shape, 4, seed + 6)[..., None])
+    voegk = np.array([58, 53, 47.0]) * (0.8 + 0.35 * ruis(X.shape, 10, seed + 7)[..., None])
+    mos = (ruis(X.shape, 30, seed + 8) > 0.72)[..., None] & (~binnen)[..., None]
+    voegk = np.where(mos, np.array([72, 86, 50.0]), voegk)
+    K = np.where(binnen[..., None], K * (0.62 + 0.38 * np.clip(rand / (afr * 2.2), 0, 1) ** 0.7)[..., None], voegk)
+    ruw = np.where(binnen, 0.78 + 0.1 * r2 - 0.08 * np.clip(rand / afr, 0, 1), 0.96)
+    return K, H, ruw
+
+
+def visgraat(Wpx, P, n, voeg, afr, palet, seed, bol=0.6):
+    """Visgraatverband 90 graden (steen 2:1), onder 45 graden met het pad. Periode P m; n bepaalt de steenbreedte W = P/(n*sqrt2).
+    Rooster (in steenbreedtes, as-assenstelsel): liggende steen op i*(1,1)+j*(2,-2), staande steen op dezelfde plek + (-2,-1)."""
+    W = P / (n * np.sqrt(2)); s = (np.arange(Wpx) + 0.5) / Wpx * P; S_, T_ = np.meshgrid(s, s)
+    x = (S_ + T_) / np.sqrt(2) / W; y = (T_ - S_) / np.sqrt(2) / W
+    # opzoektabel 4x4 cellen -> (type, oorsprong)
+    tab = {}
+    for i in range(-6, 7):
+        for j in range(-6, 7):
+            ox, oy = i + 2 * j, i - 2 * j
+            for c in ((ox, oy), (ox + 1, oy)): tab[(c[0] % 4, c[1] % 4)] = (0, c[0] - ox, c[1] - oy)
+            for c in ((ox - 2, oy - 1), (ox - 2, oy)): tab[(c[0] % 4, c[1] % 4)] = (1, c[0] - (ox - 2), c[1] - (oy - 1))
+    cx = np.floor(x).astype(int); cy = np.floor(y).astype(int)
+    typ = np.zeros(x.shape, int); dxo = np.zeros(x.shape, int); dyo = np.zeros(x.shape, int)
+    for (a, b), (t, ex, ey) in tab.items():
+        m = (cx % 4 == a) & (cy % 4 == b); typ[m] = t; dxo[m] = ex; dyo[m] = ey
+    ox = cx - dxo; oy = cy - dyo
+    lx = (x - ox) * W; ly = (y - oy) * W
+    Lx = np.where(typ == 0, 2 * W, W); Ly = np.where(typ == 0, W, 2 * W)
+    # sleutel: steenmidden in textuurcoördinaten, periodiek
+    mx = ox + Lx / W / 2; my = oy + Ly / W / 2
+    ms = ((mx - my) * W / np.sqrt(2)) % P; mt = ((mx + my) * W / np.sqrt(2)) % P
+    keys = (np.round(ms / P * 997).astype(int) % 997) * 1000 + (np.round(mt / P * 997).astype(int) % 997) + typ * 7
+    return verf(S_, lx, ly, Lx, Ly, keys, voeg, afr, palet, seed, bol)
+
+
+# klinker: verweerde roodbruine gebakken klinkers in visgraatverband (video-route 2026: Sprookjesboom, Repelsteeltje, Vrouw Holle, Zevengeitjes, Kabouterdorp-Langnek)
+PAL_VR = [(150, 120, 110), (140, 112, 104), (160, 132, 120), (128, 104, 98), (146, 128, 118), (118, 98, 92), (158, 124, 108), (136, 120, 114)]
+K, H, R = visgraat(1024, 2.0, 14, 0.006, 0.012, PAL_VR, 13)
+K = (K * 0.62 + K.mean(2, keepdims=True) * 0.38) * 1.06   # verweerd: flets roze-grijsbruin zoals in de video
+opslaan('klinker', K, H, R, 4.0)
+# grijs: grijze betonklinkers in visgraat (zuidelijk bos: Trollenkoning, Rapunzel, Zeemeermin, Draak, Langnek-Roodkapje)
+PAL_VG = [(118, 116, 114), (128, 125, 122), (108, 106, 105), (138, 134, 128), (100, 99, 99), (124, 118, 112), (132, 130, 128)]
+K, H, R = visgraat(1024, 2.0, 14, 0.006, 0.012, PAL_VG, 17)
+opslaan('grijs', K, H, R, 4.0)
+# keitjes: lichte grijswitte keitjes ~10 cm (Kabouterdorp), onregelmatige rijen
+K, H, R = stenen(1024, 1024, 1.8, 1.8, 0.12, 0.15, 0.008, 0.03, [(186, 182, 174), (196, 192, 184), (172, 168, 162), (204, 198, 188), (164, 160, 156), (180, 174, 164)], 41, bol=1.0, onregelmatig=0.7)
+opslaan('keitjes', K, H, R, 5.0)
+# oud halfsteens (niet meer in gebruik als klinker)
 # klinker: 20 x 6,7 cm, rijen haaks op het pad (y = langs het pad), periode 2 m
 PAL_KL = [(128, 124, 122), (138, 133, 130), (118, 114, 113), (150, 145, 140), (165, 158, 150), (104, 100, 100), (132, 118, 108), (142, 136, 136)]
-K, H, R = stenen(1024, 1024, 2.0, 2.0, 2.0 / 30, 0.2, 0.006, 0.012, PAL_KL, 11)
-opslaan('klinker', K, H, R, 4.0)
 # kassei: grijze natuursteen-keien ~16 x 14 cm, onregelmatig, bol, brede zandvoeg
 PAL_KS = [(112, 110, 108), (124, 121, 118), (98, 97, 98), (136, 130, 122), (108, 104, 100), (145, 140, 132)]
 K, H, R = stenen(1024, 1024, 1.8, 1.8, 0.15, 0.18, 0.016, 0.035, PAL_KS, 21, bol=1.0, onregelmatig=0.6)

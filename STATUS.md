@@ -852,3 +852,12 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - NOG: terrein onder de net gesloten naadjes (< 1 m) is niet verlaagd (kan hier en daar door het pad prikken: controleren);
   soort bestrating per traject uit de video (yt-dlp/ffmpeg staan in `.venv-video`, video "Alone in the Efteling Fairy Tale Forest"
   2:23 u -> 1.724 frames elke 5 s in de scratchpad; `tools/video_frames.py`); kasseizones nu alleen waar OSM surface=sett zegt.
+
+## Paden, ronde 3: bestrating per stuk uit de video (15 nov 2026)
+- Bron: wandelvideo "Alone in the Efteling Fairy Tale Forest" (2,5 uur, frames om de 5 s), route langs de attracties gevolgd en per stuk pad de bestrating vastgesteld. Bewijsbeelden: models/PR_Paden/review/video_bewijs_*.jpg, kaart met soorten: review/soorten_kaart.jpg.
+- Bevinding: bijna alle bospaden zijn **klinkers in visgraatverband** (niet halfsteens). Kleur: verweerd roodbruin/roze-grijs (noorden, oosten, Kabouterdorp-Langnek, Vrouw Holle, Zevengeitjes) of grijs (zuidelijk bos: Trollenkoning, Rapunzel, Zeemeermin, Draak, Langnek-Roodkapje, Rode Schoentjes, Hans en Grietje).
+- Nieuwe texturen (03_texturen.py): `klinker` = roodbruine visgraat (nieuw), `grijs` = grijze visgraat, `keitjes` = lichte keitjes (Kabouterdorp). Visgraat is een echt 90-graden-rooster (steen 2:1) onder 45 graden met het pad, naadloos per 2 m.
+- Zones (ref_zones.json): Zuidbos_grijs (alleen klinker vervangen), Kabouterdorp_keitjes; Herautentuin nu glad grijs (asfalt) in plaats van waaier (video 90:00/97:40). Kasseipaden (Roodkapje, Pinokkio, Rode Schoentjes, Doornroosje) en de waaier rond het Herautenplein (video 65:20) blijven.
+- 02_mesh.py: zones kunnen `alleen` (welke soorten ze vervangen) en `uv: veld` (verband blijft het pad volgen).
+- Studio: MODEL 80732356672347, 448 delen met textuur (klinker 99, grijs 33, keitjes 5, kassei 17, waaier 8, roze 3, plavuis 4, asfalt 18). Place nog niet opgeslagen.
+- Nog open: Trollenkoningplein lijkt in de video grote grijze platen (nu grijze visgraat); bij Assepoester/Zes Zwanen staat een roodbruin plein met kasseirand (video 77:10) dat nu BGT-asfalt is; ronde verbredingen in Kabouterdorp tonen zichtbare ringen.

@@ -1,8 +1,10 @@
 -- Sprookjesbos-paden (models/PR_Paden): BGT-padvlakken op het AHN-veld, gebakken in Blender (04_blender.py). Vervangt workspace.SprookjesbosPaden.
 -- Terrein eronder (0,5 stud omlaag + Ground) doet ServerStorage.AHN_Delta.PadenTerrein, eenmalig (attribuut PadenTerreinBanden).
-local MODEL = 117439322924252
+local MODEL = 80732356672347
 local IDS = {
- klinker={70717503266138,80504200991154,133271566968418},
+ klinker={92043763234790,94005482950689,115939889177642},
+ grijs={135645898189680,105581428619780,80924239132213},
+ keitjes={112953952434700,93626348792730,105883840162032},
  kassei={127574960591258,77871033037157,120119392898514},
  asfalt={85404863396414,125247639465688,117362102891321},
  kantsteen={79255050163796,89521820345427,117750992401457},
