@@ -254,6 +254,15 @@ Script maakt de trajecten en AHN-cijfers automatisch; Claude ziet per traject é
 - Donkerder onder de bomen dan op open plekken: het contrast maakt het echt. Niet overbelichten (staat al in WERKWIJZE).
 - Lantaarns 's avonds aan (warm), overdag uit.
 
+### Geluid: besluit Daan (15 nov)
+- Daan kiest voor **echte Efteling-geluiden** (muziek/stemmen per sprookje), zoals andere Efteling-games op Roblox.
+  Risico is besproken en bekend: auteursrecht bij de Efteling; Roblox kan audio weghalen (automatische scan of
+  melding via Rights Manager) en herhaalde inbreuk kan strikes op het account geven.
+- Afspraken om het risico klein te houden: een lijst bijhouden welk geluid waar zit (`audio/BRON.txt`), per geluid
+  een **reserve** (natuurgeluid / Roblox-bibliotheek / eigen muziek) zodat een weggehaald geluid direct te vervangen
+  is, en natuurgeluiden (vogels, wind, water, voetstappen) altijd uit CC0-bronnen.
+- Geluid blijft pas aan de beurt als het park staat.
+
 ### Geluid (pas als het park staat, Daan)
 - Lagen: vogels, wind in de bomen, ritselende blaadjes, water bij vijvers, en **per sprookje de eigen muziek/stem** die
   aanzwelt als je dichterbij komt en wegvalt als je verder loopt. Geluid is de helft van het gevoel.
