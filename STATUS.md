@@ -710,7 +710,7 @@ paden 1001200259/1116332898 (lus om het huis), 1054471996/1074489754 (lus om de 
 
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
 Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Kleine Boodschap, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
-Volgende op de route na Vrouw Holle: Kleine Boodschap (OSM-node 55-ish m west, bij de Herberg).
+Volgende op de route na Vrouw Holle: Kleine Boodschap (OSM-node, ~16 m west van het huisje van Vrouw Holle, bij vijvertje 625505853).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
