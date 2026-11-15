@@ -748,9 +748,26 @@ waterbak 184688428, plein 55350040.
   in Wind-MAPPEN). Screenshot `review/studio_v1.jpg`.
 - NOG (later): fakirs in de torens + vliegend tapijt (animatie), gele tulpen (bron toevoegen), motiefjes/schilderingen fijner, dakpannen strakker.
 
+## De Chinese Nachtegaal (chat 11, 15 nov) — v1 in Studio: versie 1999-2026 (Daan koos het paleis; echt gebouw gesloopt sept. 2026, nieuwe versie 2027)
+Map `models/AR_Nachtegaal/`. Bronnen: 111 Eftepedia-plaatjes (Intro_nachtegaal, Chineseachtergaal1 = hellende muren + balustrade, Voortuin_Overzicht,
+Nachtegaalingang, Ingang-cn-boog = maanpoort, Chinese_Nachtegaal_Sneeuw, Vogelperspectief-2027), lemma. OSM: paleis 50911622, achterterrein 961616762,
+tuinmuur 767716980 met maanpoort-ingang, tuinpad 55350038, vijvertje 961616761, uitgangsmuur 556546231, grote vijver 86734294 (noord).
+- Frame: oorsprong = zwaartepunt 50911622 = studs (400.32, -526.62); model = OSM -8.2 graden; -Y = zuid; Roblox F = (0.143, 0, 0.990).
+- `build/03_nachtegaal.py` (CN_master, 26k tris): beige blok 7.4 m met licht hellende muren, blauwgroene friesband met gouden panelen, dakrandlijst +
+  roze balustrade, bakstenen hoektanding en doorpiepende bakstenen, pagodetorentje boven de uitgang (rode zuiltjes, fries, 2 blauwe krulpannendaken,
+  roze balustrade, gouden spits + draakjes), ingangsuitbouw (grijsgroen pannendak met nokornament, groene ornamentrand, donkere deur, blauwe potten,
+  lampjes), noordmuur met maanpoort (groene pannenkap, pilaren met lantaarns), west/zuid muurtje met houten raamwerk, rode dienstdeur, zwart grind,
+  kronkelpad (licht grind), lavarotsen, vijvertje, lantaarns, stenen lantaarn, bankjes, potten, sprookjesboek, rotsen + watervalletje (noord),
+  uitgangsmuur met poortje + uitgangspad.
+- Bake `--pre CN` (stuc per gevel, baksteen, rots; rots in Studio getint 70,68,68), plaatsen `roblox/plaats_nachtegaal.luau`, groen
+  `roblox/plaats_nachtegaal_groen.luau` (NachtegaalGroen ~1350: azalea's + siergras langs de tuinmuren, bos rondom, gesnoeid; in Wind-MAPPEN).
+  Screenshots `review/studio_v1.jpg` (noordkant), `studio_v1_tuin.jpg`.
+- TWIJFEL: torentje staat volgens OSM boven de uitgang (oost); op de sneeuwfoto lijkt het meer naar rechts te staan - nakijken met Daan.
+- NOG (later): interieur/show (keizer, Dood, mechanische en echte nachtegaal), bamboe, kersenbloesem, scheurtjes in het stuc, draakjes fijner.
+
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Chinese Nachtegaal.
-Volgende op de route na de Vliegende Fakir: Chinese Nachtegaal (laatste voor de uitgang); daarna Kabouterdorp en De Zes Dienaren (begin route).
+Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren.
+Route-einde bereikt (Chinese Nachtegaal); nog te doen: Kabouterdorp en De Zes Dienaren (begin van de route, na Doornroosje).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
