@@ -285,6 +285,71 @@ devforum.roblox.com/t/full-release-enabling-grasslength/3064300, strayspark.stud
 80.lv (forest trail vegetation), efteling.com/nl/blog/backstage/20200712-interview-sander-de-bruijn-wonder,
 efteling.com/nl/over-de-efteling/sprookjes/ontwerpers, devforum.roblox.com/t/real-world-fov-field-of-view/2009285.
 
+## WERKWIJZE 1-OP-1 PER SPROOKJE (7 stappen, elke stap een keuring)
+1. **Verzamelen** (scripts): Eftepedia + Commons + 3-5 YouTube-wandelvideo's -> scherpe frames zonder mensen;
+   luchtfoto/AHN/OSM-uitsnede. Daan ziet één overzichtsblad.
+2. **Elementenlijst**: grond, randen, keien, planten per soort, water, hekjes, bordjes, lantaarns, figuur, zicht vanaf pad.
+3. **Plattegrond op de cm**: luchtfoto overtrekken + AHN-hoogte. Keuring: bovenaanzicht over de luchtfoto.
+4. **Gebouw/figuur in 3D**: zie figuren-pijplijn hieronder; gebouwen uit foto-maten (deur 3 m) + OSM/BAG.
+   Keuring: silhouet op 3-5 foto's vanuit dezelfde camera + close-ups.
+5. **Texturen/materiaal**: foto-projectie zonder schaduw, 4 PBR-kaarten, slijtage, grondcontact.
+   Keuring: kleur/helderheid gemeten tegen de foto (reference-look-calibration).
+6. **Scène**: alles van de lijst, drie lagen (detail langs pad / plantenwand / alleen kruinen), botsrand, licht, water.
+   Keuring: lijst afvinken.
+7. **Wandeltest**: zelfde route als een YouTube-video lopen, frames naast elkaar. Verschil -> terug naar die stap.
+Eenmalig vooraf: fundament (AHN-terrein, paden, bomen), Efteling-set (lantaarn/bank/bak/hekjes/bordjes), skill
+"efteling-sprookje". Eerste proef: Klein Duimpje, daarna Monstervis.
+
+## FIGUREN-PIJPLIJN (reus, Monstervis, Magische Klok, ...): hoe we beelden echt namaken
+Uitgangspunt: een beeld is een **vast, glad, beschilderd object** -> ideaal voor fotogrammetrie en image-to-3D.
+Wat níet werkt (bewezen): boetseren met code (klei), Roblox generate_mesh (chibi), één foto + gokken.
+
+**Deze Mac** (gecheckt 15 nov): Apple A18 Pro, 8 GB geheugen, macOS 26.5, Blender aanwezig; geen colmap/ffmpeg/
+yt-dlp/brew. Zware AI-modellen lokaal draaien gaat niet (geen NVIDIA, weinig geheugen) -> die via online diensten.
+Fotogrammetrie kan wel lokaal via Apple's ingebouwde **Object Capture** (RealityKit PhotogrammetrySession), mits
+`isSupported` true geeft op deze chip; anders online fotogrammetrie of kleiner aantal frames.
+
+**A. Beelden van alle kanten verzamelen**
+- yt-dlp + ffmpeg installeren (pip/statische binaries; vraagt toestemming). Per figuur 3-8 video's (verschillende
+  jaren/seizoenen/looprichtingen), elke 0,3 s een frame rond het stuk waar de figuur in beeld is.
+- Script kiest: scherp (Laplace-variantie), figuur groot in beeld, geen mensen ervoor; maskers om achtergrond en
+  bezoekers weg te halen. Doel 60-150 frames met overlap.
+- Eerlijk: bij Klein Duimpje kijk je vanaf het pad, dus de video's dekken ~120-180 graden. De achterkant komt uit
+  Eftepedia-zijfoto's, onderhoudsfoto's (Kduimpje_reusonderhoud, Bouwreus1998) en de maquette (Model_reus.jpg).
+  De Monstervis en Magische Klok zie je van meer kanten -> beter te scannen.
+
+**B. Route 1: fotogrammetrie (eerste keus als er genoeg hoeken zijn)**
+- Object Capture (lokaal) of COLMAP/RealityScan, met de maskers. Uitkomst: dicht model + kleur uit de foto's.
+- Video-frames hebben bewegingsonscherpte en wisselend licht: alleen de beste frames, één video per keer proberen,
+  dan combineren.
+
+**C. Route 2: image-to-3D met meerdere echte foto's (als scannen gaten geeft)**
+- 3-4 beste echte foto's (voor, schuin, zij, eventueel achter) in een multi-view model: Rodin (Blender-MCP
+  `generate_3d`, kost credits), Hi3DGen (skill `roblox-3d-model`, Hugging Face), of Hunyuan3D/Trellis (online).
+  Geeft in minuten een vorm die al op het beeld lijkt, inclusief de kant die je niet goed ziet.
+- Nooit schetsen of AI-concepten als input; alleen foto's van het echte beeld.
+
+**D. Passen op de foto's (de 1-op-1-stap)**
+- Model in Blender, 3-5 foto's als camera's nagemaakt (cam_match: positie, richting, lens; horizon-methode).
+- Silhouet van het model vs. silhouet op elke foto meten (overlap %). Verschillen wegwerken met lattice/
+  proportionele bewerking/sculpt, tot **>95% overlap op elke foto** (skill multiview-fit-loop).
+- Maat: bezoekers (~1,7 m), deuren, of AHN-hoogte van het beeld zelf.
+
+**E. Fijn detail**
+- Ruis/hobbels van scan of AI wegwerken (glad remeshen), dan **strakke plooien en randen** opnieuw zetten
+  zoals op de foto (creases, geen ruis). Gezicht, handen, voeten, bek/ogen apart met de close-up-foto's
+  (bv. KleinDuimpjeHoofd.jpg, Kduimpje_duimcloseup.jpg, Monstervis_oog_2021.jpg).
+
+**F. Klaar voor Roblox**
+- LOW-versie per deel (≤ ~20k driehoeken per mesh, figuur in delen), normal map gebakken van de hoge versie.
+- Kleur: foto's van alle camera's op het model projecteren, mengen op kijkhoek, schaduw eruit (delighting),
+  onzichtbare plekken bijschilderen in dezelfde kleur. Roughness ~0.35-0.45 (gelakt), vuil/groen in holtes.
+- 4 PBR-kaarten in SurfaceAppearance.
+
+**G. Keuring**
+- Overlay-render op elke foto + close-ups; Daan beoordeelt pas als alle overlays dekken.
+- Daarna in Studio vanuit de looprichting(en) van het pad vergelijken met video-frames (wandeltest).
+
 ## Volgorde
 Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
