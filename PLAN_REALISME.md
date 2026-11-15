@@ -352,9 +352,20 @@ Fotogrammetrie kan wel lokaal via Apple's ingebouwde **Object Capture** (Reality
 
 ## HERBRUIKBARE ASSET-KIT (één keer perfect, overal gebruiken)
 Elk item: echte foto's als bron, 4 PBR-kaarten, LOD, botsing apart (COLL_), in ServerStorage als bron + ScaleTo.
-Al aanwezig (hergebruiken/verbeteren): `BomenBronV3` (den, taxus, rododendron, eik, beuk), `VVEchtePlanten`
-(varens), MaterialVariants `EftelingKlinkers`, `VV_Pleister`, `VV_Steen`, kroos-decals + Rimpelbron uit
-`SprookjesboomWater`; refs afvalbakken in `models/PR_Straatmeubilair/ref/commons` (Papier hier, Sprookjesbos-afvalmand).
+**Daan (15 nov): de bestaande assets zijn NIET goed genoeg; elke asset wordt opnieuw en beter gemaakt.**
+`BomenBronV3`, `VVEchtePlanten`, `EftelingKlinkers`, `VV_Pleister`, `VV_Steen`, kroos/rimpels gelden alleen als
+tijdelijke placeholder tot de nieuwe versie de keuring haalt; daarna overal vervangen.
+Refs afvalbakken: `models/PR_Straatmeubilair/ref/commons` (Papier hier, Sprookjesbos-afvalmand).
+
+**Kwaliteitslat per asset (keuring vóór het in de kit mag)**
+- Gemaakt naar **echte foto's van het Efteling-exemplaar** (lantaarn, bank, hek, bak) of van de echte soort
+  (beuk, eik, rododendron uit het Sprookjesbos-beeld), niet een generiek model.
+- Naast 2+ foto's gerenderd onder dezelfde hoek en licht: vorm, kleur en glans kloppen; close-up houdt stand.
+- Volledige PBR (kleur, normal, roughness, metalness), slijtage/vuil passend bij de plek, geen zichtbare herhaling.
+- Bomen/planten: gescande bladeren/schors (CC0: Poly Haven, ambientCG) of eigen bladkaarten uit echte bladtrossen,
+  natuurlijke takstructuur, kroonvorm volgens AHN-hoogte/breedte, 3 LOD's zonder zichtbaar wisselen, wind.
+- In Roblox getest: van dichtbij (pad) en van ver, en fps gemeten met 100+ exemplaren.
+- Pas als een asset dit haalt gaat hij in de kit; bestaande scènes worden daarna in één keer bijgewerkt.
 
 1. **Straatmeubilair (Efteling-huisstijl)**: lantaarns (alle typen langs de paden; OSM: 257 stuks), bankjes,
    afvalbakken (Sprookjesbos-mand, "Papier hier"), hekjes/leuningen in elk type (Efteling-groen met bol, houten
