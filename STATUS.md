@@ -642,6 +642,20 @@ blueprint, lemma: toren precies 10.01 m incl. windvaan. OSM 55423664 (toren r ~1
   **133725694471918** (29k tris). `review/m3/pair.jpg` (materiaal vs tekening), `review/studio_v2.jpg`.
 - NOG (later): figuren Raponsje (in het raam) en de heks (aan de vlecht), klimopblad groter/zichtbaarder, vakwerkvakken strakker, wandeltest.
 
+## De Kleine Zeemeermin (chat 11, 15 nov) — v1 in Studio (scene; beeld grof, finetunen later)
+Map `models/AR_Zeemeermin/`. Bronnen: 26 Eftepedia-plaatjes (Boekloc = overzicht, Kzmm = frontaal beeld, Zeemeermin-leeg = vijver + decor zonder beeld,
+Zeemeermin2024, Cupido-close), lemma (decor = muur van de oude Liefdesbron, vijvertje uit 1954, beeld Ton van de Ven 1970), OSM node 7161344475, vijver/plek
+55423759, rots 766787182, pad 405848924 (driesprong zuid) + sluippad 55444222. Geen bouwtekening.
+- Frame: oorsprong = node 7161344475 = studs (361.59, 67.68); model = OSM-assen, -Y = zuid (naar het pad); Roblox F = (0, 0, 1).
+- `build/03_zeemeermin.py` (ZM_master, een asset): vijfhoekig vijvertje (OSM) met betonnen binnenrand, water + modder, rotsstapel met ring van stenen,
+  zittende meermin (lijf/hoofd/armen organisch, lang blond haar, groene staart met gele vin, schaal 1.35) met de grote spuwende vis kop-omlaag naast haar,
+  wit barok decor aan de achterrand (middenpaneel met krullen en profiellijst, dolfijn-relief, schelpbekken op console + straal, Cupido), lage golvende
+  vleugelmuren, smeedijzeren hekjes langs de zijkanten, breukstenen rand + lage blauwgroene leuning aan de padkant, sprookjesboek, grindstrook.
+- Bake `--pre ZM` (stuc, natuursteen, rots, breuksteen), export `exports/ZM_zeemeermin.fbx`, plaatsen `roblox/plaats_zeemeermin.luau` (vijver zacht uitgegraven,
+  onzichtbare bodem), groen `roblox/plaats_zeemeermin_groen.luau` (KleineZeemeerminGroen ~2320 planten, 55 bomen, plantenwand achter het decor en rechts naast het
+  hek; in Wind-MAPPEN). Asset **101300529925530** (42k tris). Screenshot `review/studio_v1.jpg` (vanaf het Boekloc-standpunt).
+- NOG (later): meermin realistischer (gezicht, schubben, staartkrul naar links-omlaag zoals Kzmm), vis met schubben/kleurverloop, Cupido fijner, waterstralen.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

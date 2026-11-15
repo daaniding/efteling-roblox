@@ -1,0 +1,15 @@
+MODEL_zeemeermin 101300529925530
+ZM_breuksteen_kleur 117429902431031
+ZM_breuksteen_normaal 127790353719886
+ZM_natuursteen_kleur 139104017222641
+ZM_natuursteen_normaal 91582413346514
+ZM_rots_kleur 98845458811444
+ZM_rots_normaal 107998784980920
+ZM_stuc_A_kleur 73766662634199
+ZM_stuc_A_normaal 105515873493925
+ZM_stuc_L_kleur 108746240218311
+ZM_stuc_L_normaal 116781967282476
+ZM_stuc_R_kleur 109694693724017
+ZM_stuc_R_normaal 140643195612615
+ZM_stuc_V_kleur 132701173095430
+ZM_stuc_V_normaal 76460171245120
