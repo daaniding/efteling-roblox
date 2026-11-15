@@ -734,9 +734,23 @@ Iwplein77, Lelies_ansicht, IndelingIW = plattegrondschets, Rolschaats = luchtfot
 - NOG (later): grot met tribune en de show (elfjes, kikkerorkest, heks, lelies), wachters gedetailleerder (schubben, gezicht), rotsen grilliger,
   wegwijzer met witte vogel, gevlamd natuurstenen plaveisel.
 
+## De Vliegende Fakir (chat 11, 15 nov) — v1 in Studio (paleis + voortuin; fakirs, vliegend tapijt en bloeiende tulpen later)
+Map `models/AR_Fakir/`. Bronnen: 58 Eftepedia-plaatjes (Fakirpaleis = frontaal, Intro_fakir/Fakirvliegt = toren close-up, Fakir_1981, Boekloc = hekje
+naast het plein), lemma. OSM: paleis 50911617, middenvijver 184688429, L-water 184688431/432, tulpenranden 556546221/222, gras 55441538, lange
+waterbak 184688428, plein 55350040.
+- Frame: oorsprong = zwaartepunt 50911617 = studs (240.66, -638.46); model = OSM -7.3 graden; -Y = zuid (plein); Roblox F = (0.127, 0, 0.992).
+- `build/03_fakir.py` (FK_master, strakke architectuur zonder remesh: 6.6k tris): gaanderij met 5 gekartelde ezelsrugbogen + motiefjeswand, laag rood
+  schilddak met gouden randen, kantelenmuur (16 kantelen, voegenlijnen), 2 torens (benedenverdieping met ezelsrugraam en sierpanelen, brede rode luifel,
+  bovenverdieping met raam + rood kleed, rood dak, achtkantige trommel met boogjes, uikoepel, gouden spits, rafel-arm), middenvijver met gouden
+  fonteinvaas, L-water om de torens, tulpenbedden, geplaveide binnentuin (licht grind), grasrand, lange waterbak, oosterse roosterhekjes, sprookjesboek, plein.
+- Bake `--pre FK` (stuc per gevel, pannen), plaatsen `roblox/plaats_fakir.luau` (label "De Tuinman en de Fakir" weg), groen `roblox/plaats_fakir_groen.luau`
+  (FakirGroen ~1220: plantenwand achter de kantelenmuur, rododendrons naast de hekjes, tulpen wit/rood (geel ontbreekt in de plantbron), bomen; gesnoeid;
+  in Wind-MAPPEN). Screenshot `review/studio_v1.jpg`.
+- NOG (later): fakirs in de torens + vliegend tapijt (animatie), gele tulpen (bron toevoegen), motiefjes/schilderingen fijner, dakpannen strakker.
+
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Vliegende Fakir, Chinese Nachtegaal.
-Volgende op de route na de Indische Waterlelies: (Klein Duimpje ... Sprookjesboom staan al) -> Vliegende Fakir -> Chinese Nachtegaal; daarna Kabouterdorp en De Zes Dienaren (begin route).
+Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Chinese Nachtegaal.
+Volgende op de route na de Vliegende Fakir: Chinese Nachtegaal (laatste voor de uitgang); daarna Kabouterdorp en De Zes Dienaren (begin route).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
