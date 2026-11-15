@@ -676,6 +676,26 @@ mappen de afstand tot het dichtstbijzijnde pad: bodem/bloemen > 8 m, struiken > 
 nieuwe groen-scripts. Daarna ook over de hele map (Daan: "tenzij het bij de scene hoort"): VillaVoltaPlantenEcht -387, VillaVoltaHorizon -298,
 SprookjesboomPlanten 0; alles binnen 15 m van een attractiemodel blijft staan. Padennet staat als `ServerStorage.PadNetOSM` (ModuleScript).
 
+## De Wolf en de Zeven Geitjes (chat 11, 15 nov) — v1 in Studio (huisje + tuin + scene; geiten/wolf/moeder geit en interieur later)
+Map `models/AR_Geitjes/`. Bronnen: 51 Eftepedia-plaatjes (7GeitjesAvond = padzijde met gezicht + gaanderij, ext1981 = poortgevel, ZevenGeitjes_Achterkant,
+Voorstudiegeitjes = plattegrondschets met put/puthaal/wiel/waslijn, Boekloc + Moeder-geit = afdakje aan het pad, Dewolf, gevel-negentig = nis met schildje),
+lemma. OSM gebouw 55423662 (8.45 x 7.45 m, uitsparing NW), voetpad 397496612/397496610/55539213 (door het huisje), hoofdpad 405848924 (noord + oost).
+- Frame: oorsprong = zwaartepunt 55423662 = studs (300.3, -127.23); model = OSM +7.27 graden (gevels assen-recht); +Y = noord (hoofdpad), -Y = achtertuin;
+  Roblox F = (0.1265, 0, 0.992) (= model -Y).
+- `build/03_geitjes.py` (GT_master): zuidblok + noordblok met overdekte doorgang (boog in de oostgevel), krullende Pieck-gevels boven het riet uit
+  (daklijn + 0.55 m, schouders, kopje), riet met golvende nok + rode nokpannen, dakkapel, hoge schoorsteen met windvaan, nis met rood knolraapschildje,
+  boogvensters met warm licht, breuksteen in het stuc, bebaard gezicht op de NW-hoek, gaanderij met groene zuiltjes + lessenaarsdakje + leuning in de
+  uitsparing (wolfdeur + kijkvenster), achterdeur met spitse kap, achtertuin (put, puthaal met emmer, rood wagenwiel, vogelhuisje, waslijn), afdakje van
+  moeder geit met lage stucmuur, plankenhek langs het pad, sprookjesboek, grindplein. Muur-remesh gedecimeerd: 97k tris.
+- Bake `--pre GT` (stuc per gevel, breuksteen, riet, pannen), export `exports/GT_geitjes.fbx`, plaatsen `roblox/plaats_geitjes.luau` (label weg, grond
+  onder plein/huis, modder in de tuin, spawn op het plein), groen `roblox/plaats_geitjes_groen.luau` (GeitjesGroen ~1760 planten, 55 bomen, plantenwand
+  achter de tuin, rododendrons achter moeder geit, meteen gesnoeid op padafstand; in Wind-MAPPEN). Screenshots `review/studio_v1.jpg`, `studio_v1_west.jpg`.
+- NOG (later): figuren (moeder geit, wolf in rokkostuum, geitjes binnen), interieur (woonkamer met klok, slaapkamer), gezicht fijner (Avond), stuc groenig verweerd.
+
+## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
+Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Vrouw Holle, Kleine Boodschap, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
+Volgende op de route na de Zeven Geitjes: Hans en Grietje (al v1) -> Vrouw Holle.
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).
