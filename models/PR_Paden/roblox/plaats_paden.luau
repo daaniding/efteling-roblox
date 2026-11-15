@@ -1,6 +1,6 @@
 -- Sprookjesbos-paden (models/PR_Paden): BGT-padvlakken op het AHN-veld, gebakken in Blender (04_blender.py). Vervangt workspace.SprookjesbosPaden.
 -- Terrein eronder (0,5 stud omlaag + Ground) doet ServerStorage.AHN_Delta.PadenTerrein, eenmalig (attribuut PadenTerreinBanden).
-local MODEL = 129106712042227
+local MODEL = 132138991118243
 local IDS = {
  klinker={92043763234790,94005482950689,115939889177642},
  grijs={135645898189680,105581428619780,80924239132213},
@@ -54,7 +54,8 @@ local ASSETPADEN = {
 	"PrinsesOpDeErwtPlein.static__MAT_tegelwit_0", "PrinsesOpDeErwtPlein.static__MAT_tegelzwart_0", "RepelsteeltjeHuisje.static__MAT_flagstone_0",
 	"RodeSchoentjes.static__MAT_grind_0", "Sneeuwwitje.static__MAT_pad_0", "SprekendePapegaai.static__MAT_grind_0", "SprookjesboomOmgeving.band_0",
 	"VliegendeFakir.static__MAT_grind_0", "VrouwHolle.static__MAT_grind_0", "ZesZwanenOmgeving.static__MAT_klinker_0",
-	"ZevenGeitjes.static__MAT_grind_0", "ZwavelstokjesStadje.static__MAT_klinker_0"}
+	"ZevenGeitjes.static__MAT_grind_0", "ZwavelstokjesStadje.static__MAT_klinker_0",
+	"TrollenkoningPlein.static__MAT_grind_0"}  -- grindpleintje: vervangen door het platenplein (extra_vlakken)
 for _, pad in ipairs(ASSETPADEN) do
 	local mdl, nm = pad:match("^(.-)%.(.+)$")
 	local p = workspace:FindFirstChild(mdl) and workspace[mdl]:FindFirstChild(nm, true)

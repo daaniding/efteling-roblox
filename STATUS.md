@@ -882,3 +882,9 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - 24 asset-paden (plus eerder 4: Herautenplein.MAT_bodem en Sneeuwwitje-omgeving aarde/klinker/band) staan nu in ServerStorage.V1PadVervangen met attribuut Herkomst; plaats_paden.luau verplaatst ze bij een nieuwe plaatsing ook.
 - Bewust blijven staan: vijver-/podiumbodems, water en modder, siergrind Chinese tuin, Villa Volta, Sneeuwwitje-vloer, delen die naast de paden liggen (bv. grindpleintje voor de Trollenkoning-boom, Kogeloog- en Roodkapje-tegels, Kleine Zeemeermin-grind).
 - Place nog niet opgeslagen.
+
+### Ronde 3e (15 nov 2026): strepen weg, Trollenkoningplein
+- Strepen in de bestrating (Daan, screenshot bij park 26.6,2.4): fout in lijn_uv. De langsrichting was s - v*theta met theta de opgetelde draaiing van het hele pad; op lange kronkelpaden (de grote keten is 1,5 km) gaf dat afschuiving tot 16x uitgerekt. Nu u = booglengte langs de middellijn. Uitgerekte driehoeken (verhouding > 1,6): klinker 5%, grijs 8% (krappe binnenbochten); eerder 28-36% boven 2,5.
+- Trollenkoningplein: het v1-grindpleintje is vervangen door een extra bestraat vlak (ref_zones.json 'extra_vlakken', vorm uit Studio) met lichtgrijze platen (video 35:00); de grasstrook tot het pad is gedicht, alleen strookjes die aan het plein grenzen, en het bestaande pad blijft grijze visgraat (pleinrand langs de padrand). TrollenkoningPlein.MAT_grind_0 -> V1PadVervangen.
+- Studio: MODEL 132138991118243, 451 delen met textuur (speltest gestopt om in Edit te plaatsen). Place nog niet opgeslagen.
+- Nog open: ronde verbredingen en het roze rondplein houden wat uitrekking (ringen); niet in Studio op screenshot gecontroleerd (capture reageerde niet), wel in Blender.

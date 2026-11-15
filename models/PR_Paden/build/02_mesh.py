@@ -29,6 +29,18 @@ def zonder_gaatjes(g, min_opp=6.0):
         out.append(Polygon(pg.exterior, [h for h in pg.interiors if Polygon(h).area >= min_opp]))
     return unary_union(out)
 U = zonder_gaatjes(U)
+# extra vlakken (pleintjes die niet in de BGT staan, ref_zones.json 'extra_vlakken'): bij U voegen en de strook tot het pad dichten
+for ev in json.load(open(os.path.join(D, 'ref_zones.json'))).get('extra_vlakken', []):
+    pg = shape(ev['poly']).buffer(0); r_ = ev.get('sluit', 2.0)
+    samen = unary_union([U, pg]); dicht = samen.buffer(r_, join_style=1).buffer(-r_, join_style=1).intersection(pg.buffer(2 * r_)).buffer(0)
+    vul = dicht.difference(U).difference(pg).buffer(0)
+    vul = unary_union([q_ for q_ in (vul.geoms if hasattr(vul, 'geoms') else [vul]) if q_.distance(pg) < 0.05]) if not vul.is_empty else vul   # alleen strookjes die aan het plein grenzen
+    nieuw = unary_union([pg, vul]).difference(U).buffer(0)   # bestaand pad blijft van zichzelf: de pleinrand ligt langs de padrand
+    U = unary_union([U, nieuw]).buffer(0)
+    VL[ev['type']] = unary_union([VL.get(ev['type'], Polygon()), nieuw]).buffer(0)
+    for k in list(VL):
+        if k != ev['type']: VL[k] = VL[k].difference(nieuw).buffer(0)
+    print('extra vlak', ev['naam'], round(nieuw.area, 1), 'm2')
 # typevlakken mee laten groeien tot U (anders kale plekjes in de gedichte naden)
 rest = U.difference(unary_union(list(VL.values())))
 VL['klinker'] = unary_union([VL.get('klinker', Polygon()), rest]).intersection(U).buffer(0)
@@ -313,8 +325,8 @@ def lijn_uv(li, P):
     rel = P - q; v = t[:, 0] * rel[:, 1] - t[:, 1] * rel[:, 0]
     # buiten het lijnstuk (s op 0 of L): ook langs-component meenemen
     along = (rel * t).sum(1); s = s + np.where((s <= 1e-6) | (s >= l['s'][-1] - 1e-6), along, 0)
-    th = np.interp(s, l['s'], l['th'])
-    return s - v * th, v
+    # u = booglengte langs de middellijn (géén opgetelde draaiing erbij: die gaf afschuiving/strepen op lange kronkelpaden)
+    return s, v
 
 def tri_vlak(poly, cell):
     """Driehoeken (lijst van 3x2) die poly bedekken: raster + knippen aan de rand."""
