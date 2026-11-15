@@ -1,5 +1,5 @@
 {
- "uitleg": "Per plek het soort bestrating (park-m, x oost / y noord). Volgorde telt: latere zones gaan voor. uv: veld (volgt het pad), recht (hoek in graden), radiaal (ringen om centrum). Bron per zone in 'bron'. 'alleen': deze zone vervangt alleen die soorten (bv. kasseipaden blijven). uv 'veld' = verband volgt het pad.",
+ "uitleg": "Per plek het soort bestrating (park-m, x oost / y noord). Volgorde telt: latere zones gaan voor. uv: veld (volgt het pad), recht (hoek in graden), radiaal (ringen om centrum). Bron per zone in 'bron'. 'alleen': deze zone vervangt alleen die soorten (bv. kasseipaden blijven). uv 'veld' = verband volgt het pad. 'per_pad': true = de zone geldt per heel pad (meerderheid van de lengte erin), zodat de soort alleen op kruisingen wisselt (Daan: geen gare overgangen midden in een pad; alleen het Herautenplein heeft eigen bestrating).",
  "zones": [
   {
    "naam": "Zuidbos_grijs",
@@ -51,7 +51,8 @@
      ]
     ]
    },
-   "bron": "video 'Alone in the Efteling Fairy Tale Forest' 22:45 (Langnek-Roodkapje), 34:50 (Rode Schoentjes-Trollenkoning), 37:20 (Rapunzel), 52:20 (Hans en Grietje): grijze klinkers in visgraat, 42:00-45:40 (Kleine Zeemeermin, Draak) en 22:30 (Kogeloog-Roodkapje). Het noord-zuidpad Kabouterdorp-Langnek (x~150) blijft roodbruin (15:30)."
+   "bron": "video 'Alone in the Efteling Fairy Tale Forest' 22:45 (Langnek-Roodkapje), 34:50 (Rode Schoentjes-Trollenkoning), 37:20 (Rapunzel), 52:20 (Hans en Grietje): grijze klinkers in visgraat, 42:00-45:40 (Kleine Zeemeermin, Draak) en 22:30 (Kogeloog-Roodkapje). Het noord-zuidpad Kabouterdorp-Langnek (x~150) blijft roodbruin (15:30).",
+   "per_pad": true
   },
   {
    "naam": "Kabouterdorp_keitjes",
@@ -69,25 +70,8 @@
     0
    ],
    "bron": "video 8:05 en 13:35: lichte grijswitte keitjes in Kabouterdorp; recht gelegd (rijen haaks op het hoofdpad), geen ringen",
-   "hoek": 90
-  },
-  {
-   "naam": "Trollenkoningplein",
-   "type": "platen",
-   "uv": "recht",
-   "hoek": 0,
-   "alleen": [
-    "grijs",
-    "klinker"
-   ],
-   "rect": [
-    17,
-    -14.5,
-    18,
-    9,
-    0
-   ],
-   "bron": "video 35:00-35:10: lichtgrijze betonplaten voor de Trollenkoning-boom; het aanlooppad is grijze visgraat (34:55)"
+   "hoek": 90,
+   "per_pad": true
   },
   {
    "naam": "Herautenplein_rond_omgeving",

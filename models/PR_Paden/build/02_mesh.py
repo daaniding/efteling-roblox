@@ -62,6 +62,7 @@ for q in json.load(open(os.path.join(D, 'ref_zones.json')))['zones']:
     else: g = shape(q['poly'])
     q['geom'] = g; ZONES.append(q)
 for q in ZONES:
+    if q.get('per_pad'): continue   # per heel pad toegekend (na de padketens), geen snijlijn dwars door een pad
     zg = q['geom'].intersection(Ui)
     soorten = [k for k in SURF if k not in ('kantsteen', 'rand') and (not q.get('alleen') or k in q['alleen'])]
     if q.get('alleen'): zg = zg.intersection(unary_union([SURF[k] for k in soorten] or [Polygon()])).buffer(0)
@@ -236,6 +237,66 @@ def veld_uv(P):
 print('verbandveld klaar', N2, 'pixels')
 np.savez_compressed(os.path.join(D, 'exports', 'verbandveld.npz'), U=UFLD, V=VFLD, M=M2, FX=FX, FY=FY, minx=minx, maxy=maxy, rs=RS2)
 TREE = STRtree([l['geom'] for l in LIJN])
+# per_pad-zones: elk pad wordt op zijn kruisingen in stukken geknipt; een stuk hoort bij de zone als het grootste deel erin ligt.
+# Zo wisselt de soort alleen op een kruising (zijpad tegen hoofdpad), nooit midden in een pad.
+KNIP = []
+for li, l in enumerate(LIJN):
+    g = l['geom']; js = []
+    for lj, m_ in enumerate(LIJN):
+        if lj == li: continue
+        for e in (m_['geom'].coords[0], m_['geom'].coords[-1]):
+            pe = Point(e)
+            if g.distance(pe) < l['h'] + 1.5:
+                t = g.project(pe)
+                if 2.0 < t < g.length - 2.0: js.append(t)
+        if g.crosses(m_['geom']):
+            for q_ in getattr(g.intersection(m_['geom']), 'geoms', [g.intersection(m_['geom'])]):
+                if isinstance(q_, Point): js.append(g.project(q_))
+    KNIP.append(np.array(sorted([0.0] + js + [g.length + 1e-6])))
+# padstukken -> routes: stukken die op een knoop van precies twee stukken (geen echte kruising) aansluiten horen bij dezelfde route
+STUK = [(li, k) for li in range(len(LIJN)) for k in range(len(KNIP[li]) - 1)]
+SI = {st: i for i, st in enumerate(STUK)}
+eind = []
+for i, (li, k) in enumerate(STUK):
+    g = LIJN[li]['geom']
+    for t in (KNIP[li][k], min(KNIP[li][k + 1], g.length)): eind.append((i, g.interpolate(t).coords[0]))
+EP = np.array([e[1] for e in eind]); ouder = list(range(len(STUK)))
+def wortel(i):
+    while ouder[i] != i: ouder[i] = ouder[ouder[i]]; i = ouder[i]
+    return i
+gezien = np.zeros(len(eind), bool)
+for e in range(len(eind)):
+    if gezien[e]: continue
+    cl = np.where(np.hypot(*(EP - EP[e]).T) < 3.0)[0]; gezien[cl] = True
+    st = sorted(set(eind[c][0] for c in cl))
+    if len(st) == 2: ouder[wortel(st[0])] = wortel(st[1])
+# zelfde pad over een knip heen samenvoegen als daar geen zichtbare aansluiting is (bestrating niet breder dan het pad zelf)
+for li in range(len(LIJN)):
+    g = LIJN[li]['geom']; h_ = LIJN[li]['h']
+    for k in range(1, len(KNIP[li]) - 1):
+        t = KNIP[li][k]
+        if t <= 0.5 or t >= g.length - 0.5: continue
+        r_ = h_ + 2.5; schijf = g.interpolate(t).buffer(r_, 24)
+        strook = g.buffer(h_ + 0.3, cap_style=2).intersection(schijf).area
+        if U.intersection(schijf).area < strook * 1.25:   # geen echte kruising
+            ouder[wortel(SI[(li, k - 1)])] = wortel(SI[(li, k)])
+ROUTE = [wortel(i) for i in range(len(STUK))]
+print('padstukken', len(STUK), 'routes', len(set(ROUTE)))
+PERPAD = []
+for q in ZONES:
+    if not q.get('per_pad'): continue
+    binnen_l, tot_l = {}, {}
+    for i, (li, k) in enumerate(STUK):
+        g = LIJN[li]['geom']; a_, b_ = KNIP[li][k], min(KNIP[li][k + 1], g.length)
+        ts = np.arange(a_ + 0.25, b_, 0.5) if b_ - a_ > 0.5 else np.array([(a_ + b_) / 2])
+        f = float(np.mean(shapely.contains(q['geom'], shapely.points([g.interpolate(t).coords[0] for t in ts]))))
+        r = ROUTE[i]; binnen_l[r] = binnen_l.get(r, 0) + f * (b_ - a_); tot_l[r] = tot_l.get(r, 0) + (b_ - a_)
+    vl = {li: np.array([binnen_l[ROUTE[SI[(li, k)]]] > 0.5 * tot_l[ROUTE[SI[(li, k)]]] for k in range(len(KNIP[li]) - 1)]) for li in range(len(LIJN))}
+    PERPAD.append((q, vl)); print('per pad', q['naam'], sum(int(v.sum()) for v in vl.values()), 'padstukken in de zone')
+def pad_vlag(vl, li, pts):
+    """In-zone-vlag per punt voor punten van keten li (stuk tussen twee kruisingen)."""
+    t = shapely.line_locate_point(LIJN[li]['geom'], pts); k = np.clip(np.searchsorted(KNIP[li], t, side='right') - 1, 0, len(vl[li]) - 1)
+    return vl[li][k]
 RINGS = []
 for pg in polys(U):
     RINGS.append(LineString(pg.exterior.coords))
@@ -296,7 +357,7 @@ for mat, geom in SURF.items():
     else:   # rand: van +0,10 aan de padkant naar +0,03 buiten
         Y = Y + 0.10 - 0.07 * np.clip(afst(P[:, 0], P[:, 1], False) / FRINGE, 0, 1)
     # UV
-    UV = np.zeros((len(P), 2))
+    UV = np.zeros((len(P), 2)); nmat = np.array([mat] * len(T), dtype=object)
     if mat in ('klinker', 'grijs', 'keitjes', 'platen', 'kassei', 'waaier', 'roze', 'plavuis'):
         per = PERIODE[mat]; u = np.zeros(len(P)); v = np.zeros(len(P))
         pts = shapely.points(C)
@@ -339,6 +400,27 @@ for mat, geom in SURF.items():
                 th3 = th.reshape(-1, 3); spr = th3.max(1) - th3.min(1) > np.pi; th3[spr] = np.where(th3[spr] < 0, th3[spr] + 2 * np.pi, th3[spr])
                 u[sel] = r; v[sel] = th3.reshape(-1) * np.maximum(r, 0.5)
         UV = np.column_stack([v / per, u / per])
+        nmat = np.array([mat] * len(T), dtype=object)
+        for q, vl in PERPAD:
+            if mat not in q.get('alleen', []): continue
+            hit = np.zeros(len(T), bool); cp = shapely.points(C)
+            for li in np.unique(own[own >= 0]):
+                sel = np.where(own == li)[0]; hit[sel] = pad_vlag(vl, int(li), cp[sel])
+            # verbredingen/pleinen: stemmen met de paden die erdoorheen lopen (dichtstbijzijnde padstuk per driehoek), hele plein in of uit
+            wsel = np.where(own == -2)[0]
+            if len(wsel):
+                nb = TREE.query_nearest(cp[wsel]); near = np.zeros(len(wsel), int); near[nb[0]] = nb[1]
+                stem = np.zeros(len(wsel), bool)
+                for li in np.unique(near):
+                    m_ = near == li; stem[m_] = pad_vlag(vl, int(li), cp[wsel[m_]])
+                for k in np.unique(vb[wsel]):
+                    mk = vb[wsel] == k; hit[wsel[mk]] = stem[mk].mean() > 0.5
+            nmat[hit] = q['type']
+            si = np.repeat(np.where(hit)[0] * 3, 3) + np.tile([0, 1, 2], int(hit.sum())); ps = P[si]; pn = PERIODE[q['type']]
+            if q['uv'] == 'recht':
+                a = math.radians(q.get('hoek', 0)); uu = ps[:, 0] * math.cos(a) + ps[:, 1] * math.sin(a); vv = -ps[:, 0] * math.sin(a) + ps[:, 1] * math.cos(a)
+                UV[si] = np.column_stack([vv / pn, uu / pn])
+            else: UV[si] = UV[si] * per / pn
     elif mat == 'asfalt':
         UV = P / PERIODE[mat]
     else:   # kantsteen / rand: langs de padrand
@@ -354,10 +436,14 @@ for mat, geom in SURF.items():
             UV[np.repeat(sel * 3, 3) + np.tile([0, 1, 2], len(sel))] = np.column_stack([u.reshape(-1) / PERIODE[mat], np.clip(dv, 0, 1)])
     # tegels
     tid = np.floor(C / TEGEL).astype(int)
-    for key in set(map(tuple, tid)):
-        sel = np.where((tid[:, 0] == key[0]) & (tid[:, 1] == key[1]))[0]
-        k = f"{mat}_{key[0]}_{key[1]}"
-        res[k] = {'mat': mat, 'tegel': [int(key[0]), int(key[1])],
+    for key in set((str(m_), a_, b_) for m_, (a_, b_) in zip(nmat, map(tuple, tid))):
+        m2 = key[0]; key = key[1:]
+        sel = np.where((tid[:, 0] == key[0]) & (tid[:, 1] == key[1]) & (nmat == m2))[0]
+        k = f"{m2}_{key[0]}_{key[1]}"
+        if k in res:   # zelfde soort+tegel uit een andere bron-soort: samenvoegen
+            res[k]['tri'] += np.round(np.column_stack([-T[sel].reshape(-1, 2)[:, 0], -T[sel].reshape(-1, 2)[:, 1], Y.reshape(-1, 3)[sel].reshape(-1) / 3]), 3).tolist()
+            res[k]['uv'] += np.round(UV.reshape(-1, 3, 2)[sel].reshape(-1, 2), 4).tolist(); continue
+        res[k] = {'mat': m2, 'tegel': [int(key[0]), int(key[1])],
                   'tri': np.round(np.column_stack([-T[sel].reshape(-1, 2)[:, 0], -T[sel].reshape(-1, 2)[:, 1], Y.reshape(-1, 3)[sel].reshape(-1) / 3]), 3).tolist(),
                   'uv': np.round(UV.reshape(-1, 3, 2)[sel].reshape(-1, 2), 4).tolist()}
     print(mat, len(T), 'driehoeken')

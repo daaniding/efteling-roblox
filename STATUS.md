@@ -869,3 +869,10 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - In Studio lagen v1-delen over de nieuwe paden en staken erdoorheen (beige vlakken op het ronde plein): Herautenplein.MAT_bodem, SneeuwwitjeOmgeving.MAT_aarde/MAT_klinker/MAT_band -> ServerStorage.V1PadVervangen (attribuut Herkomst, terug te zetten). plaats_paden.luau doet dit nu ook.
 - Studio: MODEL 93309456015457, 451 delen met textuur. Place nog niet opgeslagen.
 - Open (stap 5): voor de Trollenkoning-boom ligt nog het beige v1-pleintje van TrollenkoningPlein met een strook gras tot het platenplein; in het echt staat de boom aan het platenplein.
+
+### Ronde 3c (15 nov 2026): geen gare overgangen
+- Daan: overal hetzelfde pad aanhouden als een overgang lelijk wordt; alleen het Herautenplein houdt eigen bestrating.
+- Zones `Zuidbos_grijs` en `Kabouterdorp_keitjes` zijn nu `per_pad`: elk pad wordt op zijn kruisingen in stukken geknipt, stukken zonder zichtbare aansluiting (bestrating daar niet breder dan het pad) worden samengevoegd tot een route, en een route krijgt in zijn geheel een soort (meerderheid van de lengte in de zone). Verbredingen stemmen mee met de paden die erdoorheen lopen. De soort wisselt dus alleen waar een zijpad echt aansluit of een plein begint.
+- Platen op het Trollenkoningplein weer weg (rechte snijlijn); daar loopt de grijze visgraat door.
+- Gevolg: het pad langs Zevengeitjes is nu ook grijs (loopt zonder kruising door in de grijze lus), het hoofdpad door Kabouterdorp is roodbruin met keitjes op de zijpaden/pleintjes.
+- Studio: MODEL 129106712042227, 447 delen met textuur. Place nog niet opgeslagen.
