@@ -893,3 +893,11 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Daan: overal de gelegde steentjes, alleen het oranje rondje bij het plein niet. Nu: alle padvlakken grijze visgraatklinkers (`eenheid: grijs` in ref_zones.json, 02_mesh.py voegt alle soorten samen), ook waar eerder asfalt, kasseien, keitjes, waaier, platen (fontein, Trollenkoningplein) en de Herautentuin lagen. Alleen het rondje op het Herautenplein (roze ringen + kasseicirkel rond de sokkel) wijkt af.
 - De video-indeling (rood/grijs, kasseien, keitjes, waaier) staat nog in git-geschiedenis en de bouwcode (per_pad-zones, texturen) als het ooit terug moet.
 - Studio: MODEL 73836082264416, 395 delen met textuur. Niet op screenshot gecontroleerd in Studio (capture reageerde niet), wel in Blender. Place nog niet opgeslagen.
+
+### Ronde 3g (15 nov 2026): een samenhangend padennet, alleen het Sprookjesbos
+- Daan: paden moeten op elkaar aansluiten, geen pad dat nergens op uitkomt (behalve aan begin/eind van het Sprookjesbos); dingen in de hoeken die niet bij het bos horen moeten weg.
+- `rand_sprookjesbos` (ref_zones.json): alle bestrating buiten de rand weg (promenade zuid, driehoeksplein zuidoost, strook langs het kasteelgebouw, oprit hotel, servicewegen west/oost, parkeerterrein). Paden die de rand kruisen eindigen daar (in-/uitgang).
+- `losse_stukken`: losse padstukken binnen de rand worden aangesloten langs het OSM-looppad door het gat (anders kortste lijn): noordelijk deel (Sprookjesboom/Fakir/Chinese Nachtegaal, 5,6 m), tuinpad noord, stukjes Kabouterdorp, stukje Roodkapje. Weg: strook over een gebouwdak, snippers, smalle strook naast het pad bij Kabouterdorp-noord. Handmatige brug: twee padstukken bij Holle Bolle Gijs.
+- Controle: het net is een geheel (1 stuk, 12.652 m2). tools/pad_einden.py vindt 7 einden: 2 aan de rand, 5 bij een attractie (Sprookjesboom, Klein Duimpje, Zes Zwanen, Sneeuwwitje, Vrouw Holle). Kaart: models/PR_Paden/review/padennet_rand.jpg.
+- Studio: MODEL 89495355370457, 322 delen met textuur. Niet op screenshot gecontroleerd. Place nog niet opgeslagen.
+- Nog open: het terrein onder de nieuwe aansluitstukjes is niet verlaagd (PadenTerrein liep eenmalig); kan hier en daar door het pad prikken.

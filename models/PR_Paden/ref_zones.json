@@ -87,5 +87,159 @@
    "bron": "vorm van het v1-grindpleintje voor de Trollenkoning-boom (Studio TrollenkoningPlein.MAT_grind_0, boom op 16,-6); video 35:00-35:10: lichtgrijze platen, de boom staat aan het plein dat op het pad aansluit. De grasstrook tot het pad wordt gedicht (sluit 3 m)."
   }
  ],
- "eenheid": "grijs"
+ "eenheid": "grijs",
+ "losse_stukken": {
+  "uitleg": "Elk padstuk moet op het net aansluiten (Daan: geen pad dat nergens op uitkomt, behalve aan de rand van het Sprookjesbos). Losse stukken worden aangesloten langs het OSM-looppad door het gat (anders de kortste lijn); stukken op deze punten worden weggehaald (geen echt Sprookjesbos-pad, beoordeeld op de luchtfoto).",
+  "weg": [
+   [
+    184,
+    18,
+    "snipper pad buiten het Sprookjesbos (oostrand)"
+   ],
+   [
+    -20,
+    127,
+    "strook over een gebouwdak"
+   ],
+   [
+    -24,
+    -27,
+    "strook langs het hotelgebouw"
+   ],
+   [
+    -52,
+    154,
+    "strook op het parkeerterrein"
+   ],
+   [
+    170,
+    163,
+    "snipper bij gebouw buiten het bos"
+   ],
+   [
+    186,
+    69,
+    "snipper op buitenpad"
+   ],
+   [
+    50,
+    234,
+    "snipper"
+   ],
+   [
+    136,
+    209,
+    "snipper"
+   ],
+   [
+    158.5,
+    80,
+    "smalle strook naast het pad bij Kabouterdorp-noord (loopt nergens heen)"
+   ]
+  ],
+  "bruggen": [
+   [
+    2.7,
+    175.7,
+    8.5,
+    178.0,
+    1.25,
+    "twee padstukken bij Holle Bolle Gijs die 5 m van elkaar ophielden: een pad"
+   ]
+  ]
+ },
+ "rand_sprookjesbos": {
+  "uitleg": "Rand van het Sprookjesbos (park-m). Bestrating erbuiten hoort bij de rest van het park (promenade zuid, driehoeksplein zuidoost, strook langs het kasteelgebouw, servicewegen) en gaat weg; paden die de rand kruisen eindigen daar (in-/uitgang, mag volgens Daan).",
+  "poly": {
+   "type": "Polygon",
+   "coordinates": [
+    [
+     [
+      -45,
+      195
+     ],
+     [
+      -15,
+      235
+     ],
+     [
+      65,
+      240
+     ],
+     [
+      172,
+      238
+     ],
+     [
+      176,
+      140
+     ],
+     [
+      178,
+      60
+     ],
+     [
+      176,
+      -25
+     ],
+     [
+      160,
+      -35
+     ],
+     [
+      158,
+      -58
+     ],
+     [
+      100,
+      -60
+     ],
+     [
+      60,
+      -63
+     ],
+     [
+      35,
+      -70
+     ],
+     [
+      5,
+      -55
+     ],
+     [
+      -8,
+      -25
+     ],
+     [
+      -14,
+      0
+     ],
+     [
+      -38,
+      14
+     ],
+     [
+      -45,
+      40
+     ],
+     [
+      -47,
+      60
+     ],
+     [
+      -46,
+      110
+     ],
+     [
+      -46,
+      150
+     ],
+     [
+      -45,
+      195
+     ]
+    ]
+   ]
+  }
+ }
 }

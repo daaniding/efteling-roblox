@@ -41,6 +41,47 @@ for ev in json.load(open(os.path.join(D, 'ref_zones.json'))).get('extra_vlakken'
     for k in list(VL):
         if k != ev['type']: VL[k] = VL[k].difference(nieuw).buffer(0)
     print('extra vlak', ev['naam'], round(nieuw.area, 1), 'm2')
+# --- rand van het Sprookjesbos: alles erbuiten hoort bij de rest van het park
+_rand = json.load(open(os.path.join(D, 'ref_zones.json'))).get('rand_sprookjesbos')
+if _rand:
+    RAND = shape(_rand['poly'])
+    U = U.intersection(RAND).buffer(0)
+    for k in list(VL): VL[k] = VL[k].intersection(RAND).buffer(0)
+    # snippers die door het afknippen overblijven (< 4 m2) weg
+    U = unary_union([q_ for q_ in (U.geoms if hasattr(U, 'geoms') else [U]) if q_.area >= 4.0])
+# --- samenhang: elk los padstuk aansluiten op het net (langs het OSM-looppad door het gat) of weghalen (ref_zones.json 'losse_stukken')
+_ls = json.load(open(os.path.join(D, 'ref_zones.json'))).get('losse_stukken', {})
+_weg = [Point(w[0], w[1]) for w in _ls.get('weg', [])]
+_osm = [LineString(l['coords']) for l in d['osm_lijnen'] if len(l['coords']) >= 2]
+for b_ in _ls.get('bruggen', []):   # handmatige aansluitingen tussen twee pad-einden
+    vlak = LineString([(b_[0], b_[1]), (b_[2], b_[3])]).buffer(b_[4], cap_style=1)
+    U = unary_union([U, vlak]).buffer(0); print('brug', b_[5][:40])
+for _ronde in range(40):
+    stukken = sorted(list(U.geoms) if hasattr(U, 'geoms') else [U], key=lambda g: -g.area)
+    if len(stukken) == 1: break
+    net, los = stukken[0], stukken[1:]
+    g = min(los, key=lambda q: q.distance(net))   # dichtstbijzijnde losse stuk eerst; zo groeit het net naar buiten toe
+    if any(g.distance(w) < 3.0 for w in _weg):
+        U = U.difference(g.buffer(0.05)).buffer(0)
+        for k in list(VL): VL[k] = VL[k].difference(g.buffer(0.05)).buffer(0)
+        print('los stuk weg', round(g.area, 1), 'm2 bij', np.round(g.representative_point().coords[0], 1)); continue
+    # brug: deel van een OSM-lijn buiten U dat dit stuk met het net verbindt (kortste), anders de kortste lijn
+    brug = None
+    gb = g.buffer(1.0)
+    for l in _osm:
+        if not l.intersects(gb): continue
+        Uc = U.intersection(l.buffer(2.0)).buffer(-0.05)
+        for seg in (lambda x: list(x.geoms) if hasattr(x, 'geoms') else [x])(l.difference(Uc)):
+            if seg.is_empty or seg.length > 25: continue
+            if seg.distance(g) < 0.6 and seg.distance(net) < 0.6 and (brug is None or seg.length < brug.length): brug = seg
+    if brug is None:
+        from shapely.ops import nearest_points
+        a_, b_ = nearest_points(g, net); brug = LineString([a_, b_])
+    bw = 1.25 if g.area > 30 else 0.9
+    vlak = brug.buffer(bw, cap_style=1).buffer(0.3, join_style=2).buffer(-0.3, join_style=2)
+    U = unary_union([U, vlak, g]).buffer(0.05).buffer(-0.05)
+    print('los stuk aangesloten', round(g.area, 1), 'm2 bij', np.round(g.representative_point().coords[0], 1), 'brug', round(brug.length, 1), 'm')
+U = zonder_gaatjes(U.simplify(0.08).buffer(0))   # omtrek weer eenvoudig (anders veel te veel driehoeken in kantsteen/rand)
 # typevlakken mee laten groeien tot U (anders kale plekjes in de gedichte naden)
 rest = U.difference(unary_union(list(VL.values())))
 VL['klinker'] = unary_union([VL.get('klinker', Polygon()), rest]).intersection(U).buffer(0)
