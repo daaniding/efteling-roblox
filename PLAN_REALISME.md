@@ -234,6 +234,14 @@ Script maakt de trajecten en AHN-cijfers automatisch; Claude ziet per traject é
      Minder driehoeken, geen schaduw op kleine planten.
   3. **Erachter**: alleen boomkruinen tegen de lucht (AHN-posities, lichte LOD of bladkaarten) + nevel.
      Geen stammen, geen ondergroei: niemand komt daar.
+- **Gemeten (15 nov, `tools/zichtzone.py`, `reference/ahn_sprookjesbos/zichtzone.png`)**: Sprookjesbos-gebied
+  7,8 ha met ~1.950 boomtoppen (AHN). Afstand tot het dichtstbijzijnde pad: 0-5 m = 54% van de grond (~1.000 bomen),
+  5-20 m = 42% (~900 bomen), 20-40 m = 4% (~40 bomen), verder dan 40 m = niets. De paden liggen dus zo dicht op
+  elkaar dat **binnen het Sprookjesbos bijna alles binnen 20 m van een pad ligt**.
+  Gevolg: niet minder bomen, wel **minder per boom** buiten de looproute: voorbij de plantenwand zie je geen grond
+  en geen onderstam -> daar alleen kruin + bovenste stam, geen ondergroei, geen schaduw van kleine dingen.
+  **Buiten het Sprookjesbos** (achter de randen, richting andere parkdelen/buitenwereld): alleen een rand van
+  kruinen tegen de lucht tot waar je kijkt, verder niets.
 - Bomen die vanaf geen enkel pad zichtbaar zijn: weglaten. Script dat vanaf punten op het pad zichtlijnen test en
   onzichtbare bomen schrapt (bespaart veel fps; Roblox occlusion culling werkt slecht op gestreamde bomen).
 - Bos van het Sprookjesbos: **oude beuken en eiken** (hoge rechte stammen, kroondak boven), daaronder rododendron,
@@ -444,6 +452,22 @@ Refs afvalbakken: `models/PR_Straatmeubilair/ref/commons` (Papier hier, Sprookje
 10. **Systemen**: onzichtbare botsrand langs paden, zichtafstand-culling per objectsoort (klein 200 / groot 400
     studs), wind voor planten (`StarterPlayerScripts.Wind`, bestaat al), lantaarns-overdag-uit (bestaat al).
 Volgorde: 1 + 2 + 3 eerst (zie je overal), dan 6 en 7, dan 4 en 5, geluid en leven als laatste.
+
+### Planten- en stenen-kit: ALLES eerst als Blender-asset (Daan: struiken zijn ook belangrijk)
+Geen enkele boom, struik of steen meer direct in Studio of als snel model. Eerst in Blender als asset, door de
+kwaliteitslat, dan pas in de kit:
+- **Bomen**: beuk, eik, grove den, fijnspar/conifeer, berk, taxus-boom; jong/volwassen/oud; vol + "alleen kruin".
+- **Struiken (eigen categorie, net zo belangrijk)**: rododendron (groot, bloeiend en niet bloeiend), taxus
+  (vrij en geschoren), hulst, buxus (bol en haag), laurierkers, hortensia, varens (adelaarsvaren, mannetjesvaren),
+  klimop als bodembedekker en tegen stammen, hosta's bij water, braam/ruigte aan randen. Elk in 2-3 maten en
+  vormen, zodat herhaling niet opvalt.
+- **Stenen**: ronde grijze zwerfkeien (randkeien, 12+ varianten), mosstenen, kalksteenblokken, kunstrots-stukken,
+  oeverstenen met algenrand, grind/kiezels voor tussen de stenen.
+- **Werkwijze per asset**: echte foto's van die soort in het Sprookjesbos (frames) -> CC0-scans als basis
+  (Poly Haven/ambientCG: schors, blad, steen) of eigen bladkaarten uit echte bladtrossen -> takstructuur/vorm naar
+  de foto -> PBR-bake -> 3 LOD's (dichtbij / middel / ver, onzichtbaar wisselen) -> wind (planten) -> keuring naast
+  foto's + fps-test met 100+ stuks. Skills: vegetation-artist, blender-environment-kits, blender-texture-baking,
+  blender-game-optimization, blender-asset-qa.
 
 ### Grond-kit: alles wat op de grond ligt (Daan: gras, modder enz. moeten ook assets worden)
 Niets meer met kaal terreinmateriaal. Elke ondergrond = eigen PBR-materiaal (CC0-scan als basis, getint naar
