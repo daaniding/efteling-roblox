@@ -405,6 +405,48 @@ Refs afvalbakken: `models/PR_Straatmeubilair/ref/commons` (Papier hier, Sprookje
     studs), wind voor planten (`StarterPlayerScripts.Wind`, bestaat al), lantaarns-overdag-uit (bestaat al).
 Volgorde: 1 + 2 + 3 eerst (zie je overal), dan 6 en 7, dan 4 en 5, geluid en leven als laatste.
 
+### Grond-kit: alles wat op de grond ligt (Daan: gras, modder enz. moeten ook assets worden)
+Niets meer met kaal terreinmateriaal. Elke ondergrond = eigen PBR-materiaal (CC0-scan als basis, getint naar
+Sprookjesbos-foto's) + losse 3D-stukken erop waar je dichtbij komt.
+- **Bosgrond onder beuken/eiken**: bruin blad, beukennootjes, takjes, stukjes kale aarde; donkerder onder dennen
+  (naalden, kale plekken). Losse **bladhopen** en takken als mesh langs randen en tegen stammen.
+- **Gras**: drie soorten: (1) verzorgd gazon bij pleintjes, (2) schaduwgras/pollen half kaal onder bomen,
+  (3) ruig gras met onkruid aan bosranden. Langs het pad als **graskaarten/pollen-meshes** (terreingras alleen ver weg).
+- **Modder en kaal**: vertrapte stukken bij hoeken van paden en bij hekjes, modder rond vijvers, natte donkere aarde
+  in kuilen, **plassen** (spiegelend vlakje, alleen in kuilen van paden/aarde).
+- **Mos**: plakken op grond, stenen, stammen, muren (noordkant); mos in voegen van kasseien en klinkers.
+- **Wortels** die over de grond lopen bij oude bomen, **stronken**, **omgevallen tak**.
+- **Overgangen** (de belangrijkste): pad->blad, blad->gras, gras->modder->water. Altijd een overgangsstrook met
+  blend-textuur + losse stukjes (blad op het pad, grassprietjes tussen keien), nooit een harde lijn.
+- **Grondcontact**: donkere AO-vlek + ophoping (blad/aarde) aan de voet van alles.
+- Bron per stuk grond: luchtfoto (gras of bos?), video-frames (wat ligt er precies), AHN (kuil/heuvel = nat/droog).
+
+### Water-kit: vijvers en beekjes, alles erop en eraan
+Bijna elk sprookje heeft water. Uit de foto's (Langnek, Klein Duimpje, Doornroosje, Zeemeermin, Pinokkio):
+- **Water zelf**: troebel groenbruin, je ziet de bodem alleen aan de rand; spiegeling van bomen en lucht; bij
+  fonteinen/watervallen beweging en schuim. Niet helder blauw.
+- **Oevers** per type: (a) natuurkei met mos en algen (meeste sprookjes), (b) betonrand/kademuurtje met groene
+  aanslag en waterlijn (Pinokkio, Zeemeermin), (c) rotsbed (kunstrots), (d) zachte oever met riet en modder.
+  Altijd een **natte donkere strook** boven de waterlijn en een **algenrand** op de waterlijn.
+- **Planten**: riet, gele lis, waterlelies/blad (Indische Waterlelies, vijvers), kroos in stille hoeken, varens
+  en hosta's aan de oever, overhangende takken.
+- **Leven/detail**: drijvende blaadjes, rimpelringen, insecten boven het water, eenden, druppelende fonteintjes,
+  bubbels waar water instroomt, stroming in beekjes (bewegende textuur in één richting).
+- **Vorm en hoogte**: contour uit OSM (`natural=water`), oever en waterpeil uit AHN (laser kaatst niet op water ->
+  gat in AHN = waterlijn; peil = laagste oeverhoogte), diepte ondiep (~0,3-0,8 m) met bodem aflopend.
+
+**Hoe in Roblox (afweging)**
+- **Terreinwater**: echte golven/spiegeling/breking, botsing en zwemmen; maar kleur/transparantie/golven
+  (`Terrain.WaterColor`, `WaterTransparency`, `WaterReflectance`, `WaterWaveSize/Speed`) gelden voor **het hele park**,
+  en voxels (1,33 m) zijn te grof voor smalle beekjes en strakke kademuren.
+- **Mesh-water** (gebruikt bij Langnek): per vijver eigen kleur, strakke randen, smalle beekjes; spiegeling minder
+  echt, heeft dikte nodig (Roblox toont alleen voorkanten), stroming via bewegende textuur/decals.
+- Voorstel: **terreinwater voor grote vijvers** (één vaste troebele parkkleur, kleine golven, weinig transparant)
+  + **mesh-water voor beekjes, fonteinbekkens en kademuren**; oevers, algenrand, natte strook, planten en drijvende
+  dingen altijd als mesh/decal erbovenop. Bodem: donker modder-materiaal zodat troebel water klopt.
+- Keuring: render naast oeverfoto's vanaf het pad (kleur water, natte strook, plantdichtheid) + Studio-check op
+  spiegeling met Future-belichting.
+
 ## Volgorde
 Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
