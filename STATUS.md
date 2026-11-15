@@ -913,3 +913,13 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Stoeprand-rokken nu 1,8 stud diep (SKIRT). Terrein: ServerStorage.AHN_Delta.PadenTerreinBij (bron tools/studio/paden_terrein_bij.luau) met vaste marge: grond boven het pad -> weg tot 1,0 onder; grond >2,0 onder -> aanvullen tot 1,2 onder; stoeprand idem met 1,6/1,2. De geul in de Doornroosjeheuvel is weer dicht.
 - Meting na 3 rondes: net = 1 geheel, 7 einden (2 rand, 5 attractie). Grond boven het pad 0,68% van de padpunten (43 punten > 0,5 stud), kier onder de stoeprand 16 van 5366, uitgerekte stenen 0,72% (10 gedegenereerd). Rond de 300 plekken blijven per ronde heen en weer gaan (glad terrein); verder draaien heeft geen zin.
 - Studio: MODEL 136307310662075, 322 delen. Place nog niet opgeslagen.
+
+## Stap 1c: water (15 nov 2026, bezig)
+- Daan: botsrand langs de paden later (bij de scene per attractie, want daar loop je vaak dichter naar de attractie); eerst het water.
+- Overzicht: reference/paden/water_park.json (BGT-watervlakken in park-m, 9 binnen de rand). v1-waterdelen per attractie gemeten: wateroppervlak, oeverhoogte, bodem.
+- AHN-terrein ligt in een vijver vlak op ongeveer waterhoogte; daardoor drie soorten fouten:
+  - water onder de grond (Kleine Zeemeermin, Raponsje, Trollenkoning): terrein binnen de wateromtrek weggegraven tot net onder de VijverBodem van het model -> water en modderbodem weer zichtbaar (Zeemeermin in Studio gecontroleerd).
+  - oever lager dan het water (randje waterplaat zweefde): lage oever aangelegd in een ring rond het water tot 0,35 stud boven het water (alleen terrein, waterdelen/kroos niet verplaatst), max 1,2 stud ophogen: Vliegende Fakir 290 cellen, Roodkapje 105, Kabouterdorp 29, Kleine Zeemeermin 28, Zwavelstokjes 24, Kleine Boodschap 22, Draak 20, Pinokkio 20, Chinese Nachtegaal 11, overige < 6.
+  - klopt al (rand van het model houdt het water): Langnek, Prinsenpoort, Sprookjesboom, Indische Waterlelies, Zes Zwanen, Raponsje.
+- NOG: Kleren van de Keizer (waterplaat zweeft ~1,5 stud boven de grond, video 119:40-123:00 = vijver met fontein in een tuin), Kabouterdorp-beekje (water 4,7, grond deels 2,1), restplekken Klein Duimpje/Pinokkio/Zwavelstokjes (verschil > 1,2 stud). BGT-water zonder water in Studio: Prinsenpoort-gracht (48,84), vijvertje Doornroosje (134,69). Magische Klok bewust droog (Daan: gras). Chinese Nachtegaal (130,199): pad over de koivijver = houten vlonder (video 141:40), later hout.
+- Alleen Studio-terrein gewijzigd; place nog niet opgeslagen.
