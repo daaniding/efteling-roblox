@@ -343,3 +343,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Controleer na een plaat-functie altijd de bovenoppervlakte tegen de shoelace-oppervlakte van de polygoon.
 - Eerste overlay liet zien dat het "getrapte muurtje" eigenlijk losse pilaren met pannendakjes is en de middenpijler veel hoger: eerst de clay naast de foto, dan bakken.
 - Planten ver van paden kosten alleen performance: na een groen-script `tools/snoei_onzichtbaar.luau` draaien.
+
+## Lessen AHN-terrein (15 nov)
+- Terrein smooth: oppervlak = bovenkant laatste volle voxel + 2 + 4 * occupancy van de voxel erboven (gemeten, lineair). Een kolom
+  verschuiven = occupancy lineair verschuiven; dat houdt vijvers en uitgravingen intact.
+- Maaiveld is niet meer overal Y 2: gebruik `ServerStorage.AHN_Delta.Veld.dy(X, Z)`. Raycast-checks "zweeft boven terrein" geven
+  vals alarm bij planten op grond-/COLL-meshes: altijd ook zonder filter raycasten.
+- Studio (Assistant) mag niet van raw.githubusercontent.com downloaden: data comprimeren (delta+RLE) en in de code plakken.

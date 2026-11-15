@@ -806,13 +806,15 @@ blender-image-to-3d (kern), blender-cinematic-modeling, blender-core, blender-te
 blender-export-pipelines, blender-hardsurface-modeling, blender-retopology-uv, blender-game-optimization, blender-environment-kits,
 blender-pipeline-automation, roblox-animation, roblox-texture-gen, roblox-vfx, roblox-3d-model, roblox-skills-setup.
 
-## Realisme-plan gestart (15 nov) — stap 0 klaar, stap 1 (AHN-terrein) wacht op keuze Daan
+## Realisme-plan gestart (15 nov) — stap 0 klaar, stap 1a (AHN-terrein) klaar in Studio
 - `PLAN_REALISME.md` staat in main (bouwvolgorde onderaan). Skill `skills/efteling-sprookje/` (ook in ~/.claude/skills).
 - `tools/geo.py` (park-m <-> RD <-> WGS <-> studs), `tools/uitsnede.py` (luchtfoto 5 cm/px + AHN-hoogte + OSM-overlay per plek).
-- Studio gemeten: alle ~90 onderdelen staan op vlak maaiveld Y=2. AHN-maaiveld Sprookjesbos (referentie NAP 8.89 = Y 2):
-  -7 tot +15 studs, meeste attracties binnen +-3 studs, Doornroosje-heuvel/duinen tot +5 m.
-- `tools/hoogteveld.py` rekent het verschuivingsveld (4-stud-cellen) + plateaus per v1-model; keuzebeeld
-  `reference/ahn_sprookjesbos/terrein_keuze_A_B.png`: A = grote vlakke plateaus (v1 blijft heel, reliëf grotendeels weg),
-  B = echte hoogte overal (v1-pleinen/paden kantelen niet mee; die worden in stap 1/5 toch opnieuw gemaakt).
-- Uitvoering (na keuze): terreinkolommen verschuiven (behoudt vijvers/uitgravingen), objecten met attribuut AHN_dY verschuiven,
-  backup TerrainRegion in ServerStorage vóór de wijziging.
+- **Terrein Sprookjesbos op echte hoogte (keuze B, Daan liet het aan mij):** maaiveld uit AHN4 (NAP 8,89 = Y 2), -6,6 tot +12,4 studs,
+  loopt 30 m buiten het Sprookjesbos weer naar Y 2. Terreinkolommen verschoven (vijvers/uitgravingen mee), ~31.000 objecten mee
+  verschoven (attribuut `AHN_dY`): kleine v1-modellen als geheel op een plateau, grote v1-modellen per onderdeel, bomen/planten per stuk.
+  Doornroosje staat nu op zijn heuvel (+11,3). Alles in `ServerStorage.AHN_Delta` (Veld/Schuif/Objecten/Terugdraaien) + backup
+  `ServerStorage.Backup_Terrein_voor_AHN_15nov`; uitleg `tools/studio/AHN_README.md`.
+- **Nieuw maaiveld voor alles wat je hierna plaatst: `Y = 2 + require(ServerStorage.AHN_Delta.Veld).dy(X, Z)`** (niet meer vast Y 2).
+- Bekend: grote vlakke v1-grond/padmeshes kantelen niet mee; op hellingen steken randen iets in/uit het terrein. Wordt opgelost in
+  stap 1b (paden opnieuw in Blender op dit terrein) en stap 5 (scène per attractie). Place nog NIET opgeslagen (vraag Daan).
+- VOLGENDE: stap 1b paden: luchtfoto overtrekken (`tools/uitsnede.py`), padmeshes met echte verharding in Blender, botsrand.
