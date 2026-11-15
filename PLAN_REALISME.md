@@ -207,6 +207,25 @@ Geen terreinmateriaal of tegelende textuur meer voor paden. Elk pad wordt in Ble
 8. **Keuring**: render op ooghoogte naast een video-frame van hetzelfde stuk pad (kleur, steengrootte, verband,
    voegen, slijtage) + bovenaanzicht naast de luchtfoto; in Studio van dichtbij en van ver (geen moiré/glinstering).
 
+### Het bos per stuk pad (Daan: hoe het bos eruitziet bij elk stuk lopen is belangrijk)
+Het bos is niet overal hetzelfde: open en licht bij vijvers, donker onder dennen, rododendronwanden, beukenlanen.
+Daarom het hele padennet opdelen in **trajecten** (tussen twee kruisingen, of elke ~20 m) en per traject een
+**trajectkaart** maken:
+1. **Video-frames op de kaart zetten**: wandelvideo's lopen de paden af; met herkenningspunten (sprookjes,
+   kruisingen, lantaarns uit OSM) en loopsnelheid (~1,2 m/s) krijgt elk frame een plek op het pad. Per traject
+   frames vooruit, links en rechts (beide looprichtingen).
+2. **Meten uit AHN per traject, links en rechts apart**: kroonbedekking (open/gesloten bladerdak -> licht),
+   boomhoogte, waar open plekken zijn, helling/wal/kuil naast het pad, afstand tot water. Waar het open is ook
+   lage begroeiing (0,5-3 m). Onder een dicht bladerdak ziet AHN de ondergroei niet -> daar beslissen de frames.
+3. **Trajectkaart** (één blad per traject): kaartje + frames + per kant: boomsoorten en dichtheid, ondergroei
+   (rododendron/taxus/hulst/varens/klimop), plantenwand ja/nee en hoe hoog, grond (blad/naalden/gras/mos),
+   keien/hekje/lantaarn/bank, helling, licht (open/halfschaduw/donker), wat je in de verte ziet (zichtlijn,
+   lokkertje), seizoensbeeld zomer.
+4. **Bouwen per traject** met de kits volgens die kaart; overgangen tussen trajecten geleidelijk.
+5. **Keuring per traject**: in Studio op dezelfde plek en kijkrichting als de frames een screenshot, naast elkaar.
+   Klopt de "sfeer" (licht/donker, open/dicht, soort groen)? Pas dan het volgende traject.
+Script maakt de trajecten en AHN-cijfers automatisch; Claude ziet per traject één verkleind blad (usage).
+
 ### Natuur: alleen bouwen wat je ziet
 - Je kunt niet het bos in: **onzichtbare botsrand langs elk pad** (achter de keienrand). Dan geldt:
   1. **Strook 0-5 m van het pad**: maximaal detail. Echte plantscans, varens, ondergroei, bosgrond met blad, wortels,
