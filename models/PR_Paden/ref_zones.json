@@ -1,0 +1,56 @@
+{
+ "uitleg": "Per plek het soort bestrating (park-m, x oost / y noord). Volgorde telt: latere zones gaan voor. uv: veld (volgt het pad), recht (hoek in graden), radiaal (ringen om centrum). Bron per zone in 'bron'.",
+ "zones": [
+  {
+   "naam": "Herautenplein_rond_omgeving",
+   "type": "waaier",
+   "uv": "recht",
+   "hoek": 15,
+   "centrum": [
+    -11.5,
+    54.5
+   ],
+   "cirkel": 24,
+   "bron": "Eftepedia Herautenplein99 (grijze kasseien rond het roze plein)"
+  },
+  {
+   "naam": "Herautenplein_tuin",
+   "type": "waaier",
+   "uv": "recht",
+   "hoek": 15,
+   "rect": [
+    28,
+    71.5,
+    47,
+    40,
+    15
+   ],
+   "bron": "luchtfoto 10 cm + Eftepedia Herautenplein-april09/2010 (kasseien in waaierverband)"
+  },
+  {
+   "naam": "Herautenplein_fontein",
+   "type": "plavuis",
+   "uv": "recht",
+   "hoek": 15,
+   "rect": [
+    23,
+    69.5,
+    11,
+    11,
+    15
+   ],
+   "bron": "luchtfoto: licht vierkant rond de fontein"
+  },
+  {
+   "naam": "Herautenplein_rond",
+   "type": "roze",
+   "uv": "radiaal",
+   "centrum": [
+    -11.5,
+    54.5
+   ],
+   "cirkel": 12.5,
+   "bron": "luchtfoto (roze cirkel) + Eftepedia Herautenplein99"
+  }
+ ]
+}

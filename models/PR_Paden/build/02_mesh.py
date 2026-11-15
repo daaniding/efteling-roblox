@@ -16,8 +16,8 @@ D = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); R = os.path.dir
 sys.path.insert(0, os.path.join(R, 'tools')); import veld
 
 BAND, FRINGE, CELL, TEGEL = 0.22, 0.8, 1.0, 24.0
-TOP = {'klinker': 0.18, 'kassei': 0.18, 'asfalt': 0.15, 'kantsteen': 0.22}   # studs boven het maaiveld
-PERIODE = {'klinker': 2.0, 'kassei': 1.8, 'asfalt': 3.0, 'kantsteen': 2.0, 'rand': 2.4}
+TOP = {'klinker': 0.18, 'kassei': 0.18, 'asfalt': 0.15, 'kantsteen': 0.22, 'waaier': 0.18, 'roze': 0.18, 'plavuis': 0.18}   # studs boven het maaiveld
+PERIODE = {'klinker': 2.0, 'kassei': 1.8, 'asfalt': 3.0, 'kantsteen': 2.0, 'rand': 2.4, 'waaier': 1.2, 'roze': 2.0, 'plavuis': 2.0}
 SKIRT = 0.9 / 3   # m omlaag langs de buitenrand
 
 d = json.load(open(os.path.join(D, 'ref_paden.json')))
@@ -51,6 +51,23 @@ if _sett:
     allp = unary_union([VL.get('klinker', Polygon()), VL.get('kassei', Polygon())])
     VL['kassei'] = ks.intersection(allp).buffer(0); VL['klinker'] = allp.difference(VL['kassei']).buffer(0)
 SURF = {k: v.intersection(Ui).buffer(0) for k, v in VL.items()}
+# --- zones (ref_zones.json): per plek een ander soort bestrating + eigen verbandrichting
+from shapely import affinity
+ZONES = []
+for q in json.load(open(os.path.join(D, 'ref_zones.json')))['zones']:
+    if 'rect' in q:
+        cx, cy, w, h, a = q['rect']
+        g = affinity.rotate(Polygon([(cx - w / 2, cy - h / 2), (cx + w / 2, cy - h / 2), (cx + w / 2, cy + h / 2), (cx - w / 2, cy + h / 2)]), a, origin=(cx, cy))
+    elif 'cirkel' in q: g = Point(q['centrum']).buffer(q['cirkel'], 64)
+    else: g = shape(q['poly'])
+    q['geom'] = g; ZONES.append(q)
+for q in ZONES:
+    zg = q['geom'].intersection(Ui)
+    if zg.is_empty: continue
+    for k in list(SURF):
+        if k in ('kantsteen', 'rand'): continue
+        SURF[k] = SURF[k].difference(zg).buffer(0)
+    SURF[q['type']] = unary_union([SURF.get(q['type'], Polygon()), zg]).buffer(0)
 SURF['kantsteen'] = U.difference(Ui).buffer(0)
 SURF['rand'] = U.buffer(FRINGE).difference(U).buffer(0)
 
@@ -130,59 +147,53 @@ for c in KETENS:
 # --- vloeiend verbandveld: richting = gewogen gemiddelde van de (gericht gemaakte) middellijnen, daarna u/v via Poisson (kleinste kwadraten)
 #     zodat het halfsteensverband overal doorloopt en bij vorken/kruisingen geleidelijk uitwaaiert (geen harde naden).
 from scipy.sparse import coo_matrix, vstack as svstack, identity
-from scipy.sparse.linalg import lsqr
-# richting van elke keten afstemmen op de keten waar hij op aansluit (langste eerst)
-volg = sorted(range(len(LIJN)), key=lambda k: -LIJN[k]['L']); gericht = {volg[0]}
-def tang(li, pt):
-    g = LIJN[li]['geom']; s0 = g.project(Point(pt)); a = g.interpolate(max(s0 - 0.5, 0)); b = g.interpolate(min(s0 + 0.5, g.length))
-    v = np.array([b.x - a.x, b.y - a.y]); return v / (np.hypot(*v) + 1e-9)
-veranderd = True
-while veranderd:
-    veranderd = False
-    for li in volg:
-        if li in gericht: continue
-        c = LIJN[li]['c']
-        for e, pt in ((0, c[0]), (1, c[-1])):
-            for lj in gericht:
-                if LIJN[lj]['geom'].distance(Point(pt)) < 1.5:
-                    ta = tang(lj, pt); tb = tang(li, pt)
-                    if float(np.dot(ta, tb)) < 0:   # omdraaien
-                        l = LIJN[li]; l['c'] = l['c'][::-1]; l['geom'] = LineString(l['c'])
-                    gericht.add(li); veranderd = True; break
-            if li in gericht: break
+from scipy.sparse.linalg import lsqr, factorized
+_FACT = None
 RS2 = 0.25
 W2 = int((maxx - minx) / RS2) + 1; H2 = int((maxy - miny) / RS2) + 1
 ii2, jj2 = np.mgrid[0:H2, 0:W2]
 M2 = M[np.clip(((ii2 + 0.5) * RS2 / RS).astype(int), 0, H - 1), np.clip(((jj2 + 0.5) * RS2 / RS).astype(int), 0, W - 1)]
-TX = np.zeros((H2, W2)); TY = np.zeros((H2, W2)); WT = np.zeros((H2, W2))
+# lijnveld zonder voor/achter: dubbele hoek (cos 2a, sin 2a), gladgestreken
+C2 = np.zeros((H2, W2)); S2 = np.zeros((H2, W2)); WT = np.zeros((H2, W2))
 for l in LIJN:
     g = l['geom']; ss = np.arange(0, g.length, 0.2)
     if len(ss) < 2: continue
-    q = shapely.get_coordinates(shapely.line_interpolate_point(g, ss)); dq = np.gradient(q, axis=0); dq /= (np.hypot(dq[:, 0], dq[:, 1])[:, None] + 1e-9)
+    q = shapely.get_coordinates(shapely.line_interpolate_point(g, ss)); dq = np.gradient(q, axis=0); a = np.arctan2(dq[:, 1], dq[:, 0])
     ri = np.clip(((maxy - q[:, 1]) / RS2).astype(int), 0, H2 - 1); ci = np.clip(((q[:, 0] - minx) / RS2).astype(int), 0, W2 - 1)
-    np.add.at(TX, (ri, ci), dq[:, 0]); np.add.at(TY, (ri, ci), dq[:, 1]); np.add.at(WT, (ri, ci), 1)
+    np.add.at(C2, (ri, ci), np.cos(2 * a)); np.add.at(S2, (ri, ci), np.sin(2 * a)); np.add.at(WT, (ri, ci), 1)
 def glad(sig):
-    a = ndimage.gaussian_filter(TX, sig / RS2); b = ndimage.gaussian_filter(TY, sig / RS2); w = ndimage.gaussian_filter(WT, sig / RS2)
-    return a, b, w
-a1, b1, w1 = glad(1.5); a2, b2, w2 = glad(6.0)
-mix = np.clip(w1 / (w1.max() * 0.02 + 1e-12), 0, 1)
-FX = a1 * mix + a2 * (1 - mix) * (w1.max() / (w2.max() + 1e-12)); FY = b1 * mix + b2 * (1 - mix) * (w1.max() / (w2.max() + 1e-12))
-nrm = np.hypot(FX, FY) + 1e-12; FX /= nrm; FY /= nrm
-# brede pleinen (> ~6 m breed): één rechte verbandrichting langs de lange as van het plein, zacht overgaand naar de padrichting
+    return ndimage.gaussian_filter(C2, sig / RS2), ndimage.gaussian_filter(S2, sig / RS2), ndimage.gaussian_filter(WT, sig / RS2)
+c1, s1, w1 = glad(1.5); c2, s2, w2 = glad(6.0)
+mix = np.clip(w1 / (w1.max() * 0.02 + 1e-12), 0, 1); sc = w1.max() / (w2.max() + 1e-12)
+CC = c1 * mix + c2 * (1 - mix) * sc; SS = s1 * mix + s2 * (1 - mix) * sc
+# brede pleinen: vaste richting langs de lange as (ook als dubbele hoek)
 DIN2 = DIN[np.clip(((ii2 + 0.5) * RS2 / RS).astype(int), 0, H - 1), np.clip(((jj2 + 0.5) * RS2 / RS).astype(int), 0, W - 1)]
-breed = ndimage.binary_dilation(DIN2 > 3.0, iterations=int(4 / RS2)) & M2
-lab, nlab = ndimage.label(breed)
-PX = np.zeros((H2, W2)); PY = np.zeros((H2, W2))
+breed = ndimage.binary_dilation(DIN2 > 2.4, iterations=int(4 / RS2)) & M2
+lab, nlab = ndimage.label(breed); PC = np.zeros((H2, W2)); PS = np.zeros((H2, W2)); heeft = np.zeros((H2, W2), bool)
 for k in range(1, nlab + 1):
     sel = lab == k
-    if sel.sum() < 200: continue
+    if sel.sum() < 80: continue
     yy, xx = np.nonzero(sel); pts = np.column_stack([xx * RS2, -yy * RS2]); pts -= pts.mean(0)
-    ev, evec = np.linalg.eigh(np.cov(pts.T)); ax = evec[:, np.argmax(ev)]
-    if float((FX[sel] * ax[0] + FY[sel] * ax[1]).sum()) < 0: ax = -ax
-    PX[sel] = ax[0]; PY[sel] = ax[1]
-sw = ndimage.gaussian_filter(np.clip((DIN2 - 2.5) / 2.0, 0, 1) * (np.hypot(PX, PY) > 0), 2.0 / RS2)
-FX = FX * (1 - sw) + PX * sw; FY = FY * (1 - sw) + PY * sw
-nrm = np.hypot(FX, FY) + 1e-12; FX /= nrm; FY /= nrm
+    ev, evec = np.linalg.eigh(np.cov(pts.T)); ax = evec[:, np.argmax(ev)]; a = math.atan2(ax[1], ax[0])
+    PC[sel] = math.cos(2 * a); PS[sel] = math.sin(2 * a); heeft |= sel
+nrm = np.hypot(CC, SS) + 1e-12; CC /= nrm; SS /= nrm
+sw = ndimage.gaussian_filter(np.clip((DIN2 - 2.0) / 1.5, 0, 1) * heeft, 2.0 / RS2)
+CC = CC * (1 - sw) + PC * sw; SS = SS * (1 - sw) + PS * sw
+TH = 0.5 * np.arctan2(SS, CC); TX0 = np.cos(TH); TY0 = np.sin(TH)
+# looprichting vastleggen: per samenhangend stuk vanaf één punt doorgeven aan de buren (breadth-first)
+from collections import deque
+SG = np.zeros((H2, W2), np.int8)
+lab2, n2 = ndimage.label(M2)
+for k in range(1, n2 + 1):
+    ys, xs = np.nonzero(lab2 == k)
+    if len(ys) == 0: continue
+    q0 = (ys[0], xs[0]); SG[q0] = 1; dq_ = deque([q0])
+    while dq_:
+        y, x = dq_.popleft(); tx, ty = TX0[y, x] * SG[y, x], TY0[y, x] * SG[y, x]
+        for ny, nx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+            if 0 <= ny < H2 and 0 <= nx < W2 and M2[ny, nx] and SG[ny, nx] == 0:
+                SG[ny, nx] = 1 if TX0[ny, nx] * tx + TY0[ny, nx] * ty >= 0 else -1; dq_.append((ny, nx))
+FX = TX0 * SG; FY = TY0 * SG
 idx = -np.ones((H2, W2), int); idx[M2] = np.arange(M2.sum()); N2 = int(M2.sum())
 def poisson(gx, gy):
     rows, cols, vals, b = [], [], [], []; r = 0
@@ -195,16 +206,20 @@ def poisson(gx, gy):
     k = np.arange(len(I)) + r; rows += [k, k]; cols += [idx[I + 1, J], idx[I, J]]; vals += [np.ones(len(I)), -np.ones(len(I))]
     b.append(-RS2 * (gy[I, J] + gy[I + 1, J]) / 2); r += len(I)
     A = coo_matrix((np.concatenate(vals), (np.concatenate(rows), np.concatenate(cols))), shape=(r, N2)).tocsr()
-    A = svstack([A, identity(N2, format='csr') * 1e-3]); bb = np.concatenate(b + [np.zeros(N2)])
-    x = lsqr(A, bb, atol=1e-7, btol=1e-7, iter_lim=6000)[0]
+    global _FACT
+    bb = np.concatenate(b)
+    if _FACT is None:
+        _FACT = factorized((A.T @ A + identity(N2, format='csr') * 1e-6).tocsc())
+    x = _FACT(A.T @ bb)
     out = np.zeros((H2, W2)); out[M2] = x
     # buiten het masker: dichtstbijzijnde waarde (randpunten van driehoeken)
     _, (ri, ci) = ndimage.distance_transform_edt(~M2, return_indices=True); return out[ri, ci]
-UFLD = poisson(FX, FY); VFLD = poisson(-FY, FX)
+UFLD = np.zeros((H2, W2)); VFLD = np.zeros((H2, W2))   # (Poisson-verband uitgezet: naden bij kruisingen zoals bij een stratenmaker)
 def veld_uv(P):
     fi = (maxy - P[:, 1]) / RS2 - 0.5; fj = (P[:, 0] - minx) / RS2 - 0.5
     return ndimage.map_coordinates(UFLD, [fi, fj], order=1, mode='nearest'), ndimage.map_coordinates(VFLD, [fi, fj], order=1, mode='nearest')
 print('verbandveld klaar', N2, 'pixels')
+np.savez_compressed(os.path.join(D, 'exports', 'verbandveld.npz'), U=UFLD, V=VFLD, M=M2, FX=FX, FY=FY, minx=minx, maxy=maxy, rs=RS2)
 TREE = STRtree([l['geom'] for l in LIJN])
 RINGS = []
 for pg in polys(U):
@@ -262,13 +277,46 @@ for mat, geom in SURF.items():
     Y = veld.maaiveld_studs(P[:, 0], P[:, 1])
     if mat in TOP:
         Y = Y + TOP[mat]
-        if mat in ('klinker', 'kassei', 'asfalt'): Y = Y + 0.075 * np.minimum(afst(P[:, 0], P[:, 1]) / 1.5, 1)   # bolling 2,5 cm
+        if mat not in ('kantsteen',): Y = Y + 0.075 * np.minimum(afst(P[:, 0], P[:, 1]) / 1.5, 1)   # bolling 2,5 cm
     else:   # rand: van +0,10 aan de padkant naar +0,03 buiten
         Y = Y + 0.10 - 0.07 * np.clip(afst(P[:, 0], P[:, 1], False) / FRINGE, 0, 1)
     # UV
     UV = np.zeros((len(P), 2))
-    if mat in ('klinker', 'kassei'):
-        u, v = veld_uv(P); per = PERIODE[mat]
+    if mat in ('klinker', 'kassei', 'waaier', 'roze', 'plavuis'):
+        per = PERIODE[mat]; u = np.zeros(len(P)); v = np.zeros(len(P))
+        pts = shapely.points(C)
+        # 1) pleinen (breed): recht verband langs de lange as van het plein
+        ci_ = np.clip(((C[:, 0] - minx) / RS2).astype(int), 0, W2 - 1); ri_ = np.clip(((maxy - C[:, 1]) / RS2).astype(int), 0, H2 - 1)
+        plein = heeft[ri_, ci_] & (DIN2[ri_, ci_] > 2.0)
+        own = np.full(len(T), -1); own[plein] = -2
+        # 2) hoofdpad eerst: langste doorlopende paden claimen hun padbreedte, zijpaden krijgen wat overblijft
+        for li in sorted(range(len(LIJN)), key=lambda k: -LIJN[k]['L']):
+            vrij = np.where(own == -1)[0]
+            if len(vrij) == 0: break
+            dd = shapely.distance(LIJN[li]['geom'], pts[vrij])
+            own[vrij[dd <= LIJN[li]['h']]] = li
+        rest = np.where(own == -1)[0]
+        if len(rest):
+            near = TREE.query_nearest(pts[rest]); own[rest[near[0]]] = near[1]
+        for li in np.unique(own):
+            sel = np.where(own == li)[0]; si = np.repeat(sel * 3, 3) + np.tile([0, 1, 2], len(sel)); ps = P[si]
+            if li == -2:
+                th = 0.5 * np.arctan2(PS[ri_[sel], ci_[sel]], PC[ri_[sel], ci_[sel]]); a = np.repeat(th, 3)
+                u[si] = ps[:, 0] * np.cos(a) + ps[:, 1] * np.sin(a); v[si] = -ps[:, 0] * np.sin(a) + ps[:, 1] * np.cos(a)
+            elif li >= 0:
+                uu, vv = lijn_uv(int(li), ps); u[si] = uu; v[si] = vv
+        zi = np.full(len(T), -1)
+        for k, q in enumerate(ZONES):
+            if q['type'] != mat: continue
+            inz = shapely.contains(q['geom'], shapely.points(C)); zi[inz] = k
+        for k in np.unique(zi[zi >= 0]):
+            q = ZONES[k]; sel = np.repeat(zi == k, 3); ps = P[sel]
+            if q['uv'] == 'recht':
+                a = math.radians(q.get('hoek', 0)); u[sel] = ps[:, 0] * math.cos(a) + ps[:, 1] * math.sin(a); v[sel] = -ps[:, 0] * math.sin(a) + ps[:, 1] * math.cos(a)
+            elif q['uv'] == 'radiaal':
+                dx = ps[:, 0] - q['centrum'][0]; dy_ = ps[:, 1] - q['centrum'][1]; r = np.hypot(dx, dy_); th = np.arctan2(dy_, dx)
+                th3 = th.reshape(-1, 3); spr = th3.max(1) - th3.min(1) > np.pi; th3[spr] = np.where(th3[spr] < 0, th3[spr] + 2 * np.pi, th3[spr])
+                u[sel] = r; v[sel] = th3.reshape(-1) * np.maximum(r, 0.5)
         UV = np.column_stack([v / per, u / per])
     elif mat == 'asfalt':
         UV = P / PERIODE[mat]

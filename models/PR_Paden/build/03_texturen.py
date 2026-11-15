@@ -32,7 +32,7 @@ def opslaan(naam, kleur, H, ruw, sterkte, alfa=None):
 
 def hashrand(a, b, seed):
     x = (a * 73856093) ^ (b * 19349663) ^ (seed * 83492791)
-    return ((x * 2654435761) % 4294967296) / 4294967296.0
+    return ((int(x) * 2654435761) % 4294967296) / 4294967296.0
 
 
 def stenen(Wpx, Hpx, per_x, per_y, rij_h, steen_l, voeg, afr, palet, seed, bol=0.6, onregelmatig=0.0):
@@ -90,6 +90,46 @@ opslaan('kassei', K, H, R, 5.0)
 # kantsteen: vierkante grijze stenen 20 x 20 cm langs de rand (x = langs de rand, y = 0 buiten .. 1 binnen, 0,22 m)
 K, H, R = stenen(1024, 128, 2.0, 0.22, 0.22, 0.2, 0.01, 0.02, [(96, 95, 97), (108, 106, 106), (88, 88, 90), (118, 114, 110)], 31, bol=0.8)
 opslaan('kantsteen', K[::-1], H[::-1], R[::-1], 3.5)   # UV v=0 (buitenrand) = onderste rij
+# kassei_waaier: grijze kasseien (~10 cm) in waaierverband (bogen), periode 1,2 x 1,2 m (Herautenplein-foto's)
+def waaier(Wpx, P, s, voeg, palet, seed):
+    x = (np.arange(Wpx) + 0.5) / Wpx * P; X, Y = np.meshgrid(x, x)
+    R = P * 0.76; best = np.full(X.shape, -1e9); dist = np.zeros(X.shape); ang = np.zeros(X.shape); cid = np.zeros(X.shape, int)
+    k = 0
+    for j in range(-2, 5):
+        for i in range(-2, 4):
+            cx = i * P + (j % 2) * P / 2; cy = j * P / 2
+            for ox in (-P, 0, P):
+                for oy in (-P, 0, P):
+                    dx = X - (cx + ox); dy = Y - (cy + oy); r = np.hypot(dx, dy)
+                    ok = (r <= R) & ((cy + oy) > best)
+                    best = np.where(ok, cy + oy, best); dist = np.where(ok, r, dist); ang = np.where(ok, np.arctan2(dy, dx), ang)
+                    cid = np.where(ok, k * 10 + (j % 2), cid); k += 1
+    ring = np.floor(dist / s); fr = dist / s - ring
+    sa = s * 0.8; boog = ang * np.maximum(dist, s * 0.5); off = (ring % 2) * 0.5 * sa
+    st = np.floor((boog + off) / sa); fa = (boog + off) / sa - st
+    keys = (cid * 131 + ring.astype(int) * 7919 + st.astype(int)) % 1000003
+    uk, inv = np.unique(keys, return_inverse=True)
+    r1 = np.array([hashrand(int(q), 3, seed) for q in uk])[inv].reshape(keys.shape)
+    r2 = np.array([hashrand(int(q), 5, seed) for q in uk])[inv].reshape(keys.shape)
+    v = voeg * (0.7 + 0.6 * r2)
+    dxe = np.minimum(fa, 1 - fa) * sa - v / 2; dye = np.minimum(fr, 1 - fr) * s - v / 2
+    rand = np.minimum(dxe, dye) + (ruis(X.shape, 10, seed + 3) - 0.5) * 0.012
+    binnen = rand > 0
+    H = np.where(binnen, np.clip(rand / 0.03, 0, 1) ** 0.5 * 1.0 + (r1 - 0.5) * 0.25, -0.35)
+    pal = np.array(palet, float); ci = np.minimum((r1 * len(pal)).astype(int), len(pal) - 1)
+    K = pal[ci] * (0.9 + 0.2 * r2[..., None]) * (0.92 + 0.12 * ruis(X.shape, 5, seed + 6)[..., None])
+    voegk = np.array([60, 55, 48.0]) * (0.8 + 0.35 * ruis(X.shape, 10, seed + 7)[..., None])
+    K = np.where(binnen[..., None], K * (0.62 + 0.38 * np.clip(rand / 0.025, 0, 1) ** 0.7)[..., None], voegk)
+    ruw = np.where(binnen, 0.8 - 0.08 * np.clip(rand / 0.03, 0, 1), 0.96)
+    return K, H, ruw
+K, H, R = waaier(1024, 1.2, 0.1, 0.012, [(128, 124, 118), (140, 134, 126), (116, 113, 110), (150, 142, 132), (108, 104, 100), (158, 150, 138)], 61)
+opslaan('waaier', K, H, R, 4.5)
+# roze: roze-rode plein-klinkers (Herautenplein rond), in ringen gelegd via radiale UV; 20 x 10 cm, periode 2 m
+K, H, R = stenen(1024, 1024, 2.0, 2.0, 0.1, 0.2, 0.006, 0.012, [(168, 118, 108), (178, 128, 116), (156, 108, 100), (186, 140, 126), (160, 120, 112), (146, 100, 94)], 71, bol=0.7)
+opslaan('roze', K, H, R, 3.5)
+# plavuis: lichte natuursteen-platen 40 x 40 cm (rond de fontein), periode 2 m
+K, H, R = stenen(1024, 1024, 2.0, 2.0, 0.4, 0.4, 0.008, 0.01, [(190, 184, 172), (198, 192, 180), (182, 176, 166), (205, 198, 186)], 81, bol=0.4)
+opslaan('plavuis', K, H, R, 2.5)
 # asfalt: CC0-scan ambientCG Ground091 (grindachtige toplaag), donkerder en grijsbruin getint
 AC = os.path.join(os.path.dirname(os.path.dirname(D)), 'textures', 'ambientcg')
 lees = lambda n: np.asarray(Image.open(os.path.join(AC, n)).convert('RGB')).astype(float)

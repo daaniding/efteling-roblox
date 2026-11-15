@@ -1,10 +1,15 @@
 -- Sprookjesbos-paden (models/PR_Paden): BGT-padvlakken op het AHN-veld, gebakken in Blender (04_blender.py). Vervangt workspace.SprookjesbosPaden.
 -- Terrein eronder (0,5 stud omlaag + Ground) doet ServerStorage.AHN_Delta.PadenTerrein, eenmalig (attribuut PadenTerreinBanden).
-local MODEL = 132911656696735
+local MODEL = 122036013158027
 local IDS = {
- klinker={70717503266138,80504200991154,133271566968418}, kassei={127574960591258,77871033037157,120119392898514},
- asfalt={85404863396414,125247639465688,117362102891321}, kantsteen={79255050163796,89521820345427,117750992401457},
- rand={116026820112420,138155942636706,91900900245966}}
+ klinker={70717503266138,80504200991154,133271566968418},
+ kassei={127574960591258,77871033037157,120119392898514},
+ asfalt={85404863396414,125247639465688,117362102891321},
+ kantsteen={79255050163796,89521820345427,117750992401457},
+ rand={116026820112420,138155942636706,91900900245966},
+ waaier={87300606792458,86312279132384,91757189376028},
+ roze={120340772977652,127698793851907,83976370345614},
+ plavuis={118160700412498,83533569345776,77470067210237}}
 local objs = game:GetObjects("rbxassetid://" .. MODEL)
 local oud = workspace:FindFirstChild("SprookjesbosPaden"); if oud then oud:Destroy() end
 local m = Instance.new("Model"); m.Name = "SprookjesbosPaden"
@@ -25,6 +30,14 @@ for _, p in ipairs(m:GetChildren()) do
 		else p.CanCollide = true; p.CanQuery = true; p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end
 		sa.Parent = p; p:SetAttribute("Padmateriaal", mat); n += 1
 		if n % 30 == 0 then task.wait() end
+	end
+end
+-- Herautenplein: de zones (waaier/roze/plavuis) vervangen de oude v1-bestrating; die gaat naar ServerStorage (terug te zetten)
+local bak = game.ServerStorage:FindFirstChild("V1PadVervangen") or Instance.new("Folder", game.ServerStorage); bak.Name = "V1PadVervangen"
+local hp = workspace:FindFirstChild("Herautenplein")
+if hp then
+	for _, p in ipairs(hp:GetDescendants()) do
+		if p:IsA("MeshPart") and (p.Name:find("MAT_plavuis") or p.Name:find("MAT_kassei")) then p:SetAttribute("Herkomst", p:GetFullName()); p.Parent = bak end
 	end
 end
 return n .. " paddelen geplaatst"

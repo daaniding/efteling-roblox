@@ -11,3 +11,6 @@ textures/ambientcg/LeafSet016/*NormalDX.png
 textures/ambientcg/LeafSet016/LeafSet016.png
 models/PR_Paden/exports/paden_mesh.json
 models/PR_Paden/exports/*.fbm/
+.venv/
+.venv-video/
+models/PR_Paden/exports/verbandveld.npz
