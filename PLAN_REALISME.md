@@ -38,6 +38,18 @@ Let op: als hoofdreferentie werd ook een **schets** gebruikt (`Pinokkio_monsterv
 3. **Geen echte texturen/glans**: geschilderde bake met vlakke kleur.
 4. **Geen keuring per detail**: vergelijkingsblad op afstand verbergt dat bek, ogen, handen, laarzen niet kloppen.
 
+## Overzicht: waar staat elke boom, struik en decoratie? (bronnen)
+Eén bestaand "inventaris"-bestand van de Efteling is niet openbaar. Wel te combineren:
+- **OSM (al in `reference/data/efteling_osm.xml`)**: 411 losse bomen, 108 hagen, 257 lantaarns, 220 bankjes,
+  123 afvalbakken, 113 bosvlakken, en per pad de verharding (444 klinkers, 275 asfalt, 36 kasseien/sett, 31 fijn grind,
+  36 hout, ...). De 15.805 boomrecords die we nu plaatsen zijn grotendeels **verzonnen binnen bosvlakken**, niet gemeten.
+- **AHN-laserscan**: elke boomkruin met plek, hoogte en kroonbreedte (ook in het dichte bos). Vervangt de verzonnen bomen.
+- **Boomregister.nl** (AHN + luchtfoto, alle bomen van NL incl. particulier terrein): zelfde idee, kant-en-klaar;
+  toegang/licentie nog uitzoeken.
+- **PDOK-luchtfoto 7,5 cm**: struiken, rododendronmassa's, perken, keienranden en grote decoratie zijn van boven zichtbaar.
+- **Video-frames**: wat er onder de bomen staat (varens, hulst, keien, bordjes, hekjes) per stuk pad.
+Resultaat: één kaartlaag per soort (boom/struik/haag/lantaarn/bank/bak/kei/pad-verharding) in studs, als data-PNG.
+
 ## Fase A: fundament voor het hele Sprookjesbos (eenmalig)
 1. Gebied bepalen uit `reference/data/efteling_osm.xml`.
 2. **PDOK-luchtfoto 7,5 cm/px**: alle paden, randen, perken overtrekken (vervangt de scheve OSM-lijnen).
