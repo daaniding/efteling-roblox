@@ -1,0 +1,4 @@
+AHN 0.5 m (PDOK WCS dtm_05m/dsm_05m), opgehaald 2026-11-15. RD bbox in bbox.txt. Parkoorsprong (51.6500N,5.0455E) = RD (131351.6, 406851.6).
+Maaiveld 6.1-14.4 m NAP (p5 7.5, p95 10.1). 26.6% maaiveld-gaten (onder gebouwen/dicht blad) -> gevuld in ahn_analyse.py.
+~3.300 boomtoppen > 6 m (lokale maxima, venster 4.5 m) in het hele vak incl. randen.
+Bron: AHN (Rijkswaterstaat/Waterschappen), CC0.
