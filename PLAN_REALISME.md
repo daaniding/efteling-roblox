@@ -501,15 +501,18 @@ elke attractie opnieuw geplaatst/aangesloten worden als het terrein verandert.
    (bomen/struiken/plantenwanden), licht-preset. Elk door de kwaliteitslat.
 3. **Bomenlaag**: alle bomen uit AHN op hun plek (volle boom waar je de stam ziet, anders alleen kroon).
    Dan klopt het silhouet van het bos en het licht onder het bladerdak al vóór de details.
-4. **Per attractie** (van het pad uit gezien belangrijkste eerst; proef: Klein Duimpje): v1 op de AHN-hoogte zetten
-   en aansluiten op het pad -> gebouw/figuur 1-op-1 opnieuw (figuren-pijplijn) -> scène eromheen uit de
-   elementenlijst met de kits -> keuring.
-   Figuren (reus, vis, klok) mogen al eerder, parallel aan 1-3: die hangen niet af van het terrein.
-5. **Bos tussen de attracties**: plantenwanden, ondergroei en grond-overgangen langs alle paden, zichtlijnen
-   (bocht -> onthulling), lantaarns/bankjes/bakken op de OSM-plekken.
+**Daan (15 nov): eerst ALLES buiten (scène, paden, bos, water), de attracties zelf en interieurs komen DAARNA.**
+De v1-attracties blijven staan als plaatshouder (alleen op de AHN-hoogte zetten en op het pad aansluiten).
+4. **Bos per traject** (trajectkaarten): plantenwanden, ondergroei, grond-overgangen, zichtlijnen, lantaarns/
+   bankjes/bakken op de OSM-plekken.
+5. **Scène rond elke attractie** (elementenlijst): grond, randen, water/oevers, planten, decoratie rond de
+   v1-plaatshouder, zodat de omgeving al 1-op-1 klopt.
 6. **Licht, lucht en water fijn afstellen** op het geheel (zones onder bladerdak, terugkaats-lampjes, waterkleur).
-7. **Leven en geluid** (geluid pas als Daan zegt dat het mag).
-8. **Wandeltest** over de hele route naast YouTube-video's + fps-test; verschillen terug naar de juiste stap. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
+7. **Wandeltest buiten** over de hele route naast YouTube-video's + fps-test.
+8. **DAARNA: attracties 1-op-1** (gebouwen + figuren-pijplijn: reus, vis, klok, ...), één voor één in de al
+   kloppende scène; proef Klein Duimpje.
+9. **DAARNA: interieurs** (Villa Volta, Assepoester, Doornroosje, ...).
+10. **Leven en geluid** (geluid pas als Daan zegt dat het mag), laatste wandeltest. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
 ## Usage
 Zwaar rekenwerk (downloads, fotogrammetrie, bakes) draait lokaal = bijna geen usage. Duur is plaatjes bekijken:
