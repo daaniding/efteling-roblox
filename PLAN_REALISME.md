@@ -350,6 +350,39 @@ Fotogrammetrie kan wel lokaal via Apple's ingebouwde **Object Capture** (Reality
 - Overlay-render op elke foto + close-ups; Daan beoordeelt pas als alle overlays dekken.
 - Daarna in Studio vanuit de looprichting(en) van het pad vergelijken met video-frames (wandeltest).
 
+## HERBRUIKBARE ASSET-KIT (één keer perfect, overal gebruiken)
+Elk item: echte foto's als bron, 4 PBR-kaarten, LOD, botsing apart (COLL_), in ServerStorage als bron + ScaleTo.
+Al aanwezig (hergebruiken/verbeteren): `BomenBronV3` (den, taxus, rododendron, eik, beuk), `VVEchtePlanten`
+(varens), MaterialVariants `EftelingKlinkers`, `VV_Pleister`, `VV_Steen`, kroos-decals + Rimpelbron uit
+`SprookjesboomWater`; refs afvalbakken in `models/PR_Straatmeubilair/ref/commons` (Papier hier, Sprookjesbos-afvalmand).
+
+1. **Straatmeubilair (Efteling-huisstijl)**: lantaarns (alle typen langs de paden; OSM: 257 stuks), bankjes,
+   afvalbakken (Sprookjesbos-mand, "Papier hier"), hekjes/leuningen in elk type (Efteling-groen met bol, houten
+   knuppel, smeedijzer, touwnet), paaltjes, wegwijzers en naambordjes (Efteling-lettertype), sprookjesboek-
+   standaard (staat bij veel sprookjes), wachtrij-/kijkleuningen.
+2. **Pad-kit**: klinkerstrook in het Efteling-verband, kasseien in bogen, flagstone, houten bruggetje-dek, set van
+   ~12 ronde **randkeien** met mos (varianten in maat/draaiing), overgangsrand pad->bosgrond, afvoerrooster/putdeksel.
+3. **Natuur-kit**: bomen uit AHN-maten (beuk, eik, den, conifeer, berk) elk in 3 LOD's + "alleen kroon"-versie;
+   struiken (rododendron, taxus, hulst, buxus), **plantenwand-modules** (2/4/8 m, zichtafsluitend), varens, klimop
+   voor muren, mos-plakken, bladhopen, wortels die over de grond lopen, stronken, takken, paddenstoelen, gras- en
+   varenkaarten voor langs het pad.
+4. **Water-kit**: vijveroever (kei, riet, beton-met-mos), riet, gele lissen, kroos, rimpels, druppelende/stromende
+   waterval, fonteinstraal, natte-steen-materiaal.
+5. **Gebouw-kit**: pannen (rood/oud), leien, riet, stuc (oud, met regenstrepen), vakwerk, baksteen in verbanden,
+   ramen (glas-in-lood, luiken), deuren, schoorstenen, dakgoten, windvanen, makelaars. (Huizen gaan al redelijk;
+   dit maakt ze consistenter en sneller.)
+6. **Materialen- en decalbibliotheek**: CC0-scans als MaterialVariants/SurfaceAppearance (bosgrond met blad, mos,
+   schors, grind, klinkers, kasseien, natuursteen, stuc, hout), plus decals: vocht, modder, regenstrepen, roest,
+   vuil-in-hoeken, blad op pad, grondcontact-AO.
+7. **Licht-kit**: lantaarn-licht (warm 2700 K, aan/uit per tijd), verborgen terugkaats-lampjes, licht-zones onder
+   het bladerdak (Ambient/ColorCorrection), lichtvlek-decals, Lighting/Atmosphere-preset "Sprookjesbos zomer".
+8. **Geluid-kit** (later): voetstappen per ondergrond, vogels, wind, water, eenden, bos-galm, zone-script dat
+   sprookjesmuziek laat aanzwellen.
+9. **Leven/VFX-kit**: vallende blaadjes (deels aanwezig), stofjes in zonlicht, vlinders, libellen, eenden op vijvers.
+10. **Systemen**: onzichtbare botsrand langs paden, zichtafstand-culling per objectsoort (klein 200 / groot 400
+    studs), wind voor planten (`StarterPlayerScripts.Wind`, bestaat al), lantaarns-overdag-uit (bestaat al).
+Volgorde: 1 + 2 + 3 eerst (zie je overal), dan 6 en 7, dan 4 en 5, geluid en leven als laatste.
+
 ## Volgorde
 Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
