@@ -244,6 +244,47 @@ devforum.roblox.com/t/optimizing-roblox-without-streamingenabled-the-mystery-of-
 gamesbeat.com (SLIM, 5 dec 2025), create.roblox.com/docs/tutorials/curriculums/environmental-art/construct-your-world,
 devforum.roblox.com/t/disney-parks-roblox-development-credits/1516766, roblox.com/games/9695230318.
 
+## Nog meer gevonden (onderzoek 15 nov, ronde 3)
+**Licht dat Roblox niet zelf kan**
+- Roblox heeft **geen echte global illumination** (indirect licht/terugkaatsing); ook niet op de officiële roadmap 2026.
+  Dus faken: (1) **licht inbakken** in de kleurtextuur in Blender (AO + zachte terugkaatsing van de omgeving, wat we
+  deels al doen), (2) **verborgen zwakke PointLights zonder schaduw** als terugkaatsing (onder een afdak, in een nis,
+  tegen een lichte muur), (3) zones onder het bladerdak donkerder via Ambient/ColorCorrection.
+- Roadmap: betere PBR-lichtreactie (specular, huid) pas medio 2027; niet op wachten.
+
+**Materialen: alle vier PBR-kaarten**
+- SurfaceAppearance kan **Color + Normal + Roughness + Metalness**. Nu bakken we vooral kleur(+AO). Overal ook
+  normal + roughness: natte stenen en vijverranden glanzend, gelakte figuren satijn, hout en stuc mat, metaal hekken
+  licht metallic. Dit is een grote stap voor weinig moeite.
+- Unified Mesh Importer neemt mesh + PBR-kaarten in één keer mee; **reimport** houdt eigenschappen (botsing,
+  RenderFidelity) en vervangt texturen op bestandsnaam -> snellere rondes.
+- Meshes > ~20k driehoeken worden door Roblox zelf gedecimeerd: zelf knippen (doen we al) om controle te houden.
+
+**Grond en randen (uit game-environment-art)**
+- Tegel-herhaling breken: grote **macro-variatie** over het hele terrein (vlekken, lichter/donkerder), kleurruis,
+  en **decals** (vocht, modder, blad) over herhaalde vlakken.
+- **Overgangsstroken** pad -> gras/bosgrond: aparte randmesh met blend-textuur (grind/blad dat de grond in loopt),
+  schaduwrandje onder de padrand, puin/blad in hoeken, vuil in kieren (vertex color in Blender).
+- Terreingras: alleen GrassLength instelbaar, geen eigen grasmodellen in terrein -> langs het pad **gras- en
+  varenkaarten als mesh** (dicht bij de speler), verder terreingras.
+
+**Schaal en camera**
+- De Roblox-camera laat dingen kleiner/groter lijken dan echt. Standaard FieldOfView 70 houden en de **review-renders
+  in Blender met dezelfde FOV** maken (cam_match), dan vergelijk je eerlijk. Spelersschaal 0,9 en deuren 3 m als
+  maatstok blijven; check of de bezoekershoogte tegen de figuren klopt (reus moet echt groot voelen).
+
+**Efteling/Anton Pieck-gevoel**
+- Pieck: organische lijnen, niets strak, "poëtische details", ~1500 schetsen voor het Sprookjesbos. Dus: scheve
+  daken, ongelijke stenen, krommende hekjes, en per sprookje **kleine verborgen details** (zoals elders in het park een
+  kabouter achter een raam of een slapende kat) die je pas ziet als je goed kijkt.
+- Ontwerptekeningen van Pieck (veel op Eftepedia) als extra bron naast foto's, alleen voor vorm/sfeer; maat = foto.
+
+Bronnen: create.roblox.com/updates/roadmap, devforum.roblox.com/t/global-illumination-research/4894935,
+create.roblox.com/docs/art/modeling/surface-appearance, create.roblox.com/docs/art/modeling/reimport,
+devforum.roblox.com/t/full-release-enabling-grasslength/3064300, strayspark.studio (environment art pipeline),
+80.lv (forest trail vegetation), efteling.com/nl/blog/backstage/20200712-interview-sander-de-bruijn-wonder,
+efteling.com/nl/over-de-efteling/sprookjes/ontwerpers, devforum.roblox.com/t/real-world-fov-field-of-view/2009285.
+
 ## Volgorde
 Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
