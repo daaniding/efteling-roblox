@@ -656,6 +656,26 @@ Zeemeermin2024, Cupido-close), lemma (decor = muur van de oude Liefdesbron, vijv
   hek; in Wind-MAPPEN). Asset **101300529925530** (42k tris). Screenshot `review/studio_v1.jpg` (vanaf het Boekloc-standpunt).
 - NOG (later): meermin realistischer (gezicht, schubben, staartkrul naar links-omlaag zoals Kzmm), vis met schubben/kleurverloop, Cupido fijner, waterstralen.
 
+## Draak Lichtgeraakt (chat 11, 15 nov) — v1 in Studio (scene; draak grof, statisch; finetunen later)
+Map `models/AR_Draak/`. Bronnen: 45 Eftepedia-plaatjes (Overzicht = frontaal, Boekloc_Draak2017/Overzicht_2020 = schuin, Kop/Ruststand = draak, Storing = muur,
+Schatkist), lemma (muurtje 1952 van de Chinese Nachtegaal, draak 1979), OSM eiland 55423757, water 766787180, muur 766787181 (8.8 m), pad 405848924.
+- Frame: oorsprong = zwaartepunt 55423757 = studs (363.72, -40.38); X = 0.264*ox - 0.965*oy, Y = 0.965*ox + 0.264*oy; -Y = naar het plein (W); Roblox F = (-0.965, 0, 0.264).
+- `build/03_draak.py` (DR_master, een asset): pilaarmuurtje naar Overzicht (middenpijler 3.2 m breed x 4.6 m hoog iets terug, zijpilaren 3.4 m, buitenpilaren 2.1 m)
+  met rode pannendakjes (holle pannen + nokpannen), gouden ornamentjes, takken + klimop, draak gehurkt bovenop (kop recht naar voren, open bek met tanden en
+  gevorkte tong, gele ogen, paarse stekels/hoorns, wijde vleugels met vingers + vlies, staart rechts omlaag met speerpunt; schaal 1.25), breuksteen-eilandje
+  met halfopen schatkist (dukaten, juwelen, kroon), water in twee lobben + modder + randstenen, rood Pieck-hek om de plein-tong, laag groen hekje langs de
+  buitenrand, sprookjesboek, grindplein (tessellate_polygon met de waterrand als gat).
+- Bake `--pre DR` (stuc per gevel, breuksteen, pannen), export `exports/DR_draak.fbx`, `build/upload.sh`, plaatsen `roblox/plaats_draak.luau` (vijver zacht
+  uitgegraven, onzichtbare VijverBodem, label "De Draak" weg, spawn op het plein), groen `roblox/plaats_draak_groen.luau` (DraakGroen, plantenwand achter en
+  naast het muurtje, Kabouterdorp (noord, y > 13) vrij; in Wind-MAPPEN). Screenshot `review/studio_v1.jpg`.
+- NOG (later): draak realistischer (schubben, kop naar Kop-foto, vleugelvlies dunner/gerafeld), muur beige verweerd met vlekken, rookpluim/animatie (Daan).
+
+## Snoeien onzichtbare planten (15 nov, Daan: "haal wat planten weg die je toch niet ziet vanaf het pad")
+`tools/snoei_onzichtbaar.luau`: OSM-padennet (footway/path/pedestrian/steps/service..., Douglas-Peucker 4 studs) in het script; per plant in alle *Groen/*Bos
+mappen de afstand tot het dichtstbijzijnde pad: bodem/bloemen > 8 m, struiken > 17 m, bomen > 30 m weg. Eerste run: 6487 weg, 17801 over. Opnieuw draaien na
+nieuwe groen-scripts. Daarna ook over de hele map (Daan: "tenzij het bij de scene hoort"): VillaVoltaPlantenEcht -387, VillaVoltaHorizon -298,
+SprookjesboomPlanten 0; alles binnen 15 m van een attractiemodel blijft staan. Padennet staat als `ServerStorage.PadNetOSM` (ModuleScript).
+
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
 5. Park terugzetten en mooier (den-lagen, kleinere bladkaarten, gras/bosgrondtexturen, opsluitbanden, oevers). 6. Grote gebouwen (entree, Symbolica).

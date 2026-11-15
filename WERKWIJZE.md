@@ -336,3 +336,10 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Kunstrots-muren van de Efteling zijn vaak gewoon rechte muren van grote liggende blokken** (Daan: "een rechte muur van steen, het is niet
   zo lastig", "hij loopt gewoon door"): `steenwand()` in `AR_RodeSchoentjes/build/03_loggia.py` (lagen 0.6-0.9 m, blokken 1.2-2.2 m,
   verspringende voegen, kleine afschuining, getrapte bovenrand). Geen L-vormen of klompen verzinnen.
+
+## Lessen Draak Lichtgeraakt (15 nov)
+- Concave pleinen/vijvers NIET met bmesh EAR_CLIP op een n-gon (gaf overlappende driehoeken: grind 153 m2 i.p.v. 33, over het water heen). Gebruik
+  `mathutils.geometry.tessellate_polygon([buiten, gat])` en roep `f.normal_update()` aan voor je op normal.z test (nieuwe faces hebben nog normaal 0).
+- Controleer na een plaat-functie altijd de bovenoppervlakte tegen de shoelace-oppervlakte van de polygoon.
+- Eerste overlay liet zien dat het "getrapte muurtje" eigenlijk losse pilaren met pannendakjes is en de middenpijler veel hoger: eerst de clay naast de foto, dan bakken.
+- Planten ver van paden kosten alleen performance: na een groen-script `tools/snoei_onzichtbaar.luau` draaien.
