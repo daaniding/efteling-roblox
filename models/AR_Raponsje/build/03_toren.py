@@ -36,7 +36,7 @@ def build(master):
     sch = bmesh.new()
     def add(b_):
         me_ = bpy.data.meshes.new("_t"); b_.to_mesh(me_); b_.free(); sch.from_mesh(me_); bpy.data.meshes.remove(me_)
-    nz, nu = 24, 10
+    nz, nu = 48, 12
     rings = []
     for iz in range(nz + 1):
         z = Z0 - 0.3 + (Z1 - Z0 + 0.3) * iz / nz; t = (z - Z0 + 0.3) / (Z1 - Z0 + 0.3); r = R0 + (R1 - R0) * t
@@ -47,52 +47,77 @@ def build(master):
                 u = iu / nu; a = a0 + u * math.tau / 8
                 Rc = r / math.cos(math.pi / 8) * (1 - 0.0) ; flat = r / math.cos(abs(u - 0.5) * math.tau / 8)
                 depth = 0.13 * math.sin(math.pi * u) ** 0.7 * (0.0 if z > Z1 - 0.55 else 1.0)                  # groef, bovenaan dicht (boogjes)
-                rad = flat - depth + 0.015 * noise.noise(Vector((math.cos(a) * 3, math.sin(a) * 3, z * 1.3)))
+                rad = flat - depth + 0.03 * noise.noise(Vector((math.cos(a) * 2.2, math.sin(a) * 2.2, z * 0.9))) + 0.012 * noise.noise(Vector((math.cos(a) * 9, math.sin(a) * 9, z * 4)))
                 ring.append(Vector((rad * math.cos(a), rad * math.sin(a), z)))
         rings.append(ring)
     V = [[sch.verts.new(p) for p in ring] for ring in rings]; M_ = len(V[0])
     for A, B in zip(V, V[1:]):
         for i in range(M_): sch.faces.new((A[i], A[(i + 1) % M_], B[(i + 1) % M_], B[i]))
-    sch.faces.new(V[-1]); bmesh.ops.recalc_face_normals(sch, faces=sch.faces)
-    put("schacht", "stuc", sch)
-    # spitsboogfries: per zijde een spitsboogje als verdiepte nis net onder de vakwerkvloer + kraag
+    sch.faces.new(V[-1])
+    sch.faces.new(V[0][::-1]); bmesh.ops.recalc_face_normals(sch, faces=sch.faces)              # dichte onderkant (boolean vraagt een gesloten vorm)
+    sob = new_mesh_object("RA_schacht__stuc", sch, "FORMS"); assign(sob, bpy.data.materials["MAT_stuc"])
+    # boogfries: per zijde 2 diepe rondboognissen vlak onder de vakwerkvloer (Intro, Tvdv) + klein boograampje op de ZO-zijde (Intro, Tvdv rechts)
+    cut = bmesh.new()
+    def addc(b_):
+        me_ = bpy.data.meshes.new("_c"); b_.to_mesh(me_); b_.free(); cut.from_mesh(me_); bpy.data.meshes.remove(me_)
+    def boog(w, z0, z1, n=10):
+        r = w / 2; return [(-r, z0)] + [(-r * math.cos(math.pi * i / n), z1 - r + r * math.sin(math.pi * i / n)) for i in range(n + 1)] + [(r, z0)]
     for k in range(8):
-        a = -math.pi / 2 + k * math.tau / 8
-        c = Vector((math.cos(a), math.sin(a), 0)); tng = Vector((-math.sin(a), math.cos(a), 0))
-        Mk = Matrix(((tng.x, 0, c.x, 0), (tng.y, 0, c.y, 0), (0, 1, 0, 0), (0, 0, 0, 1)))
-        pts = [(-0.32, Z1 - 0.62)] + [(-0.32 + 0.32 * (1 - math.cos(t * math.pi / 2)) ** 0.8 * 1.0, Z1 - 0.62 + 0.42 * math.sin(t * math.pi / 2)) for t in [i / 6 for i in range(1, 7)]]
-        pts = pts + [(-x, z) for x, z in pts[::-1]]
-        bm = boutline([(x, z) for x, z in pts], 0, 0.02)
-        bmesh.ops.transform(bm, matrix=Matrix.Translation(c * (R1 - 0.005)) @ Mk @ Matrix.Rotation(math.radians(0), 4, "X"), verts=bm.verts)
-        for v in bm.verts: v.co.z = v.co.z      # al in z
-        put("fries", "venster", bm)
+        a = -math.pi / 2 + k * math.tau / 8; c = Vector((math.cos(a), math.sin(a), 0)); tng = Vector((-math.sin(a), math.cos(a), 0))
+        for off in (-0.22, 0.22):
+            bm = boutline(boog(0.24, Z1 - 0.62, Z1 - 0.08), 0, 0.6)
+            M2 = Matrix.Translation(c * (R1 - 0.28) + tng * off) @ Matrix(((-tng.x, c.x, 0, 0), (-tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
+            bmesh.ops.transform(bm, matrix=M2, verts=bm.verts); addc(bm)
+    a = -math.pi / 4; c = Vector((math.cos(a), math.sin(a), 0)); tng = Vector((-math.sin(a), math.cos(a), 0)); rW = R0 + (R1 - R0) * (4.2 - Z0) / (Z1 - Z0)
+    bm = boutline(boog(0.3, 3.85, 4.55), 0, 0.7)
+    M2 = Matrix.Translation(c * (rW - 0.35)) @ Matrix(((-tng.x, c.x, 0, 0), (-tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))); bmesh.ops.transform(bm, matrix=M2, verts=bm.verts); addc(bm)
+    put("raampje", "rots", bz(-0.25, 0.25, -0.02, 0.16, -0.06, 0.0, 0.01), Matrix.Translation(c * rW + Vector((0, 0, 3.85))) @ Matrix(((-tng.x, c.x, 0, 0), (-tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))))
+    put("raampje", "venster", bz(-0.15, 0.15, -0.37, -0.33, 3.85, 4.55), Matrix.Translation(c * rW) @ Matrix(((-tng.x, c.x, 0, 0), (-tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))))
+    cme = bpy.data.meshes.new("CUT_fries"); cut.to_mesh(cme); cut.free(); cob = bpy.data.objects.new("CUT_fries", cme); bpy.context.scene.collection.objects.link(cob)
+    md = sob.modifiers.new("fries", "BOOLEAN"); md.object = cob; md.operation = "DIFFERENCE"; md.solver = "EXACT"; md.use_hole_tolerant = True; md.use_self = True; voor = len(sob.data.polygons)
+    bpy.context.view_layer.objects.active = sob; bpy.ops.object.modifier_apply(modifier="fries"); bpy.data.objects.remove(cob); print("SCHACHT", voor, len(sob.data.polygons), flush=True)
+    bm_ = bmesh.new(); bm_.from_mesh(sob.data); bmesh.ops.recalc_face_normals(bm_, faces=bm_.faces); bm_.to_mesh(sob.data); bm_.free()
+    for k in range(8):                                                                            # donkere achterwand in elke nis (schaduw)
+        a = -math.pi / 2 + k * math.tau / 8; c = Vector((math.cos(a), math.sin(a), 0)); tng = Vector((-math.sin(a), math.cos(a), 0))
+        for off in (-0.22, 0.22):
+            put("fries", "venster", bz(-0.13, 0.13, -0.27, -0.25, Z1 - 0.62, Z1 - 0.08), Matrix.Translation(c * R1 + tng * off) @ Matrix(((-tng.x, c.x, 0, 0), (-tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1))))
     put("fries", "stuc", blathe([(R1 / math.cos(math.pi / 8) + 0.02, Z1 - 0.12), (RV / math.cos(math.pi / 8) - 0.02, Z1 + 0.05), (RV / math.cos(math.pi / 8) - 0.02, ZV0 - 0.02), (0, ZV0 - 0.02), (0, Z1 - 0.12)], 8))
     # kale baksteenplekken in het stuc (Tvdv, Boekloc)
-    for (a_deg, z, w, h) in ((-115, 4.6, 0.5, 0.35), (-70, 3.3, 0.45, 0.4), (-95, 2.1, 0.35, 0.25), (-30, 5.1, 0.4, 0.3), (-150, 2.8, 0.4, 0.35), (150, 4.0, 0.5, 0.4), (40, 2.5, 0.4, 0.3)):
+    for (a_deg, z, w, h) in ((-115, 4.6, 0.5, 0.35), (-70, 3.3, 0.45, 0.4), (-95, 2.1, 0.35, 0.25), (-30, 5.1, 0.4, 0.3), (-150, 2.8, 0.4, 0.35), (150, 4.0, 0.5, 0.4), (40, 2.5, 0.4, 0.3), (-55, 1.3, 0.9, 0.55), (-130, 1.5, 0.7, 0.45), (-20, 2.2, 0.6, 0.5)):
         a = math.radians(a_deg); c = Vector((math.cos(a), math.sin(a), 0)); tng = Vector((-math.sin(a), math.cos(a), 0)); r = R0 + (R1 - R0) * (z - Z0) / (Z1 - Z0)
-        p0 = c * (r - 0.005) + Vector((0, 0, z))
+        p0 = c * (r + 0.004) + Vector((0, 0, z))
         for row in range(int(h / 0.08)):
             off = 0.06 if row % 2 else 0.0
             for col in range(int(w / 0.22)):
                 q = p0 + tng * (-w / 2 + off + col * 0.22) + Vector((0, 0, -h / 2 + row * 0.08))
                 bb = bz(-0.1, 0.1, -0.012, 0.012, -0.034, 0.034, 0.005)
-                M2 = Matrix.Translation(q) @ Matrix(((tng.x, c.x, 0, 0), (tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
+                M2 = Matrix.Translation(q) @ Matrix(((-tng.x, c.x, 0, 0), (-tng.y, c.y, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
                 put("baksteen", "baksteen", bb, M2)
     coll_box(0, 0, (Z1 + Z0) / 2, 2 * R0, 2 * R0, Z1 - Z0 + 1.0)
     # ---------- vakwerkverdieping: achtkant, overkragend, dikke balken, vakken gestuct; raam voor (Meisje_raponsje) ----------
-    put("vakwerk", "hout", blathe([(RV / math.cos(math.pi / 8) + 0.08, ZV0 - 0.3), (RV / math.cos(math.pi / 8) + 0.1, ZV0), (0, ZV0), (0, ZV0 - 0.3)], 8))   # vloerbalken
+    put("vakwerk", "hout", blathe([(RV / math.cos(math.pi / 8) + 0.1, ZV0 - 0.32), (RV / math.cos(math.pi / 8) + 0.13, ZV0 - 0.16), (RV / math.cos(math.pi / 8) + 0.13, ZV0), (0, ZV0), (0, ZV0 - 0.32)], 8))   # dubbele vloerbalk (Intro)
     put("vakwerk", "vakvlak", blathe([(RV / math.cos(math.pi / 8), ZV0), (RV / math.cos(math.pi / 8), ZV1), (0, ZV1), (0, ZV0)], 8))
-    P8 = oct_pts(RV + 0.025, 0)
-    for k in range(8):
-        a = Vector(P8[k][:2]); b = Vector(P8[(k + 1) % 8][:2])
-        put("vakwerk", "hout", btube([(a.x, a.y, ZV0), (a.x, a.y, ZV1)], 0.07, 4))                               # hoekstijlen
-        for z in (ZV0 + 0.05, ZV0 + 0.55, ZV1 - 0.05): put("vakwerk", "hout", btube([(a.x, a.y, z), (b.x, b.y, z)], 0.05, 4))
-        m = (a + b) / 2
-        if k != 0:                                                                                                # schoren (niet op de raamzijde)
-            put("vakwerk", "hout", btube([(a.x, a.y, ZV0 + 0.55), (m.x, m.y, ZV1 - 0.05)], 0.04, 4)); put("vakwerk", "hout", btube([(m.x, m.y, ZV0 + 0.05), (m.x, m.y, ZV0 + 0.55)], 0.04, 4))
+    P8 = oct_pts(RV + 0.04, 0)
+    def balk(p0, p1, n, w, d):
+        p0, p1, n = Vector(p0), Vector(p1), Vector(n).normalized(); u = (p1 - p0).normalized(); sd = u.cross(n).normalized()
+        bm = bmesh.new(); vs = []
+        for p in (p0, p1):
+            for (a_, b_) in ((-1, -1), (1, -1), (1, 1), (-1, 1)): vs.append(bm.verts.new(p + sd * a_ * w / 2 + n * b_ * d / 2))
+        for f in ((0, 1, 2, 3), (7, 6, 5, 4), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)): bm.faces.new([vs[i] for i in f])
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces); return bm
+    ZM = ZV0 + 0.62
+    for k in range(8):                                                                            # dikke verweerde balken (Intro): stijlen, regels, schoren per vak
+        a = Vector(P8[k]); b = Vector(P8[(k + 1) % 8]); n = ((a + b) / 2).normalized(); m = (a + b) / 2
+        A0, A1 = a + Vector((0, 0, ZV0)), a + Vector((0, 0, ZV1)); B0, B1 = b + Vector((0, 0, ZV0)), b + Vector((0, 0, ZV1))
+        put("vakwerk", "hout", balk(A0, A1, a.normalized(), 0.15, 0.13))
+        for z in (ZV0 + 0.06, ZM, ZV1 - 0.06): put("vakwerk", "hout", balk(a + Vector((0, 0, z)), b + Vector((0, 0, z)), n, 0.11, 0.1))
+        if k != 0:
+            put("vakwerk", "hout", balk(m + Vector((0, 0, ZV0)), m + Vector((0, 0, ZV1)), n, 0.1, 0.09))           # middenstijl
+            put("vakwerk", "hout", balk(a + Vector((0, 0, ZM)), m + Vector((0, 0, ZV1 - 0.06)), n, 0.08, 0.08))       # schoren (Tvdv)
+            put("vakwerk", "hout", balk(b + Vector((0, 0, ZV0 + 0.06)), m + Vector((0, 0, ZM)), n, 0.08, 0.08))
     for k in range(8):                                                                                            # consoles onder de overkraging
         a = -math.pi / 2 + (k + 0.5) * math.tau / 8; c = Vector((math.cos(a), math.sin(a)))
-        put("vakwerk", "hout", btube([(c.x * R1, c.y * R1, ZV0 - 0.75), (c.x * (R1 + 0.05), c.y * (R1 + 0.05), ZV0 - 0.4), (c.x * (RV + 0.1), c.y * (RV + 0.1), ZV0 - 0.15)], 0.06, 5))
+        put("vakwerk", "hout", btube([(c.x * R1, c.y * R1, ZV0 - 0.75), (c.x * (R1 + 0.05), c.y * (R1 + 0.05), ZV0 - 0.4), (c.x * (RV + 0.1), c.y * (RV + 0.1), ZV0 - 0.15)], 0.09, 5))
     # raam (zuidzijde = vlak naar -Y): rondboog met glas-in-lood boogje, luik open, plank-vensterbank, haak
     yf = -(RV + 0.03); wx = 0.32; wz0, wz1 = ZV0 + 0.25, ZV1 - 0.1
     put("raam", "venster", bz(-wx, wx, yf - 0.01, yf + 0.02, wz0, wz1 - 0.25))
@@ -117,6 +142,9 @@ def build(master):
         t = j / 9; ring = [Vector(p) * (1 - t) + Vector((0, 0, APEX)) * t + Vector((0, 0, 0.005)) for p in E8]
         for k in range(8): put("dak", "lei", btube([ring[k], ring[(k + 1) % 8]], 0.018, 4))
     for k in range(8): put("dak", "hout", btube([E8[k], (0, 0, APEX)], 0.04, 4))                               # graatlatten
+    for k in range(8):                                                                            # dikke boeiplank langs de dakrand (Intro)
+        a = Vector(E8[k]); b = Vector(E8[(k + 1) % 8]); n = ((a + b) / 2).to_2d().to_3d().normalized()
+        put("dak", "hout", balk(a - Vector((0, 0, 0.1)), b - Vector((0, 0, 0.1)), n, 0.2, 0.06))
     put("dak", "ijzer", blathe([(0.0, 0), (0.08, 0), (0.15, 0.12), (0.17, 0.25), (0.12, 0.38), (0.05, 0.45), (0.03, 0.5), (0, 0.5)], 12), TR(0, 0, APEX - 0.05))
     put("vaan", "ijzer", btube([(0, 0, BOL - 0.1), (0, 0, VAAN)], 0.018, 6))
     put("vaan", "ijzer", btube([(-0.55, 0, 9.55), (0.55, 0, 9.55)], 0.012, 4)); put("vaan", "ijzer", bz(-0.62, -0.5, -0.006, 0.006, 9.5, 9.6))
@@ -124,16 +152,18 @@ def build(master):
     bird = [(0.0, 0.0), (0.25, 0.05), (0.42, 0.28), (0.35, 0.05), (0.55, 0.0), (0.3, -0.06), (0.05, -0.05)]       # vogel op de pijl
     put("vaan", "ijzer", boutline(bird, -0.01, 0.02), TR(0.05, 0, 9.62))
     # ---------- sokkel: ruw gestapelde rotsen + stucen ruinemuur voor (Tvdv, Boekloc) ----------
-    for k in range(34):
-        a = rr.uniform(0, math.tau); r = rr.uniform(1.15, 1.7); sc = rr.uniform(0.25, 0.5)
-        st = ell((0, 0, 0), (sc * rr.uniform(0.9, 1.3), sc * rr.uniform(0.7, 1.0), sc * rr.uniform(0.5, 0.8)), 8, 6)
-        for v in st.verts: v.co += Vector((rr.uniform(-1, 1), rr.uniform(-1, 1), rr.uniform(-1, 1))) * sc * 0.2
+    for k in range(40):                                                                          # grote bleke stapelstenen (Tvdv)
+        a = rr.uniform(0, math.tau); r = rr.uniform(1.2, 1.85); sc = rr.uniform(0.3, 0.6)
+        st = bz(-sc, sc, -sc * rr.uniform(0.6, 0.9), sc * rr.uniform(0.6, 0.9), -sc * 0.45, sc * rr.uniform(0.4, 0.75), sc * 0.25)
+        for v in st.verts: v.co += Vector((rr.uniform(-1, 1), rr.uniform(-1, 1), rr.uniform(-1, 1))) * sc * 0.22
         put("sokkel", "rots", st, TR(r * math.cos(a), r * math.sin(a), rr.uniform(0.05, 0.9), rr.uniform(0, 360)))
     put("sokkel", "rots", blathe([(1.62, -0.1), (1.55, 0.5), (1.3, 0.95), (0, 0.95), (0, -0.1)], 8))
     rm = [(-1.45, 0.0), (-1.45, 1.55), (-1.15, 1.85), (-0.7, 1.72), (-0.3, 1.9), (0.15, 1.6), (0.55, 1.45), (0.9, 1.15), (1.15, 1.2), (1.3, 0.0)]   # ruinemuur, getrapte breukrand
     put("ruine", "stuc", organisch(boutline(rm, -1.95, 0.35), 0.04, 2, 0.4, 0.02, 1.4, 0.4))
-    for (x, z) in ((-1.2, 1.65), (-0.45, 1.75), (0.35, 1.5), (1.0, 1.15), (-1.4, 0.9), (1.25, 0.5)):
-        st = ell((0, 0, 0), (0.16, 0.12, 0.1), 6, 4); put("ruine", "rots", st, TR(x, -1.8, z, rr.uniform(0, 90)))
+    for (x, z) in ((-1.2, 1.65), (-0.45, 1.75), (0.35, 1.5), (1.0, 1.15), (-1.4, 0.9), (1.25, 0.5), (-1.3, 0.3), (-0.9, 0.55), (0.7, 0.35), (1.1, 0.8), (-0.2, 0.2), (0.3, 0.6), (-0.6, 1.2), (0.9, 1.35)):
+        sc = rr.uniform(0.14, 0.26); st = bz(-sc, sc, -0.08, 0.08, -sc * 0.6, sc * 0.6, sc * 0.2)
+        for v in st.verts: v.co += Vector((rr.uniform(-1, 1), rr.uniform(-1, 1), rr.uniform(-1, 1))) * sc * 0.2
+        put("ruine", "rots", st, TR(x, -1.96, z, rr.uniform(-15, 15)))
     for row in range(3):                                                                                          # baksteenplek in de ruine
         for col in range(3): put("ruine", "baksteen", bz(-0.1, 0.1, -0.012, 0.012, -0.034, 0.034, 0.005), TR(-0.1 + col * 0.22 + (0.11 if row % 2 else 0), -1.965, 1.2 + row * 0.08))
     coll_box(-0.07, -1.78, 0.9, 2.75, 0.4, 1.8)
@@ -152,10 +182,10 @@ def build(master):
                 d = b_ - a_; t = max(0, min(1, (p - a_).dot(d) / d.length_squared)); best = min(best, (p - (a_ + d * t)).length)
         return best
     kb = bmesh.new()
-    for _ in range(6000):
+    for _ in range(3000):
         a_deg = rr.uniform(-170, -20); z = rr.uniform(1.0, 5.4)
         c = opp(a_deg, z, 0.05)
-        if bij_rank(c) > 0.32: continue                                                   # alleen langs de ranken (Tvdv)
+        if bij_rank(c) > 0.13 or rr.random() < 0.45: continue                                                   # alleen langs de ranken (Tvdv)
         n = Vector((math.cos(math.radians(a_deg)), math.sin(math.radians(a_deg)), 0))
         t = n.cross(Vector((0, 0, 1))).normalized(); u = Vector((0, 0, 1)); s_ = rr.uniform(0.06, 0.11); ang = rr.uniform(0, math.tau)
         t2 = t * math.cos(ang) + u * math.sin(ang); u2 = -t * math.sin(ang) + u * math.cos(ang)

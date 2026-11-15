@@ -635,6 +635,11 @@ blueprint, lemma: toren precies 10.01 m incl. windvaan. OSM 55423664 (toren r ~1
 - Bake `05_bake.py --pre RA`, export `exports/RA_toren.fbx`, `zsh -ic build/upload.sh`, plaatsen `roblox/plaats_raponsje.luau` (vijver zacht uitgegraven met
   FillBall), groen `roblox/plaats_raponsje_groen.luau` (RaponsjeGroen 1927 planten, 55 bomen; Papegaai-gebied overgeslagen; daarna 42 planten tussen pad en voet weg
   zodat vijver/leuning zichtbaar zijn zoals Boekloc). Asset **138467979361401** (24k tris). Screenshot `review/studio_v1.jpg`.
+- v2 (Daan: "mag echt iets beter, je hebt de blueprints"): echte diepe rondboognissen (2 per zijde) in de schachttop via boolean (gespiegelde snijmatrix was de
+  fout: determinant -1 = binnenstebuiten normalen = niets gesneden), klein boograampje met steen op de ZO-zijde, handgemaakte bobbels + scherpere groeven in de
+  schacht, grotere baksteenplekken onderaan, vakwerk met dikke vierkante verweerde balken (stijlen, regels, middenstijl, schoren), dubbele vloerbalk, zware
+  consoles, boeiplank langs de dakrand, grote bleke stapelstenen + stenen in de ruinemuur, klimop dun langs de ranken, stuc creme getint. Asset
+  **133725694471918** (29k tris). `review/m3/pair.jpg` (materiaal vs tekening), `review/studio_v2.jpg`.
 - NOG (later): figuren Raponsje (in het raam) en de heks (aan de vlecht), klimopblad groter/zichtbaarder, vakwerkvakken strakker, wandeltest.
 
 ## Daarna (volgorde met Daan afgesproken)

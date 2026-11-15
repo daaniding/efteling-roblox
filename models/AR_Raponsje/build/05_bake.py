@@ -19,7 +19,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(HERE))
 TEX = os.path.join(HERE, "textures"); os.makedirs(TEX, exist_ok=True)
 CONCRETE = os.path.join(REPO, "textures", "ambientcg", "Concrete012_Color.png")
-RGB = {"stuc": (228, 226, 220), "baksteen": (162, 104, 80), "hout": (84, 60, 44), "lei": (120, 96, 70), "rots": (150, 148, 140), "vakvlak": (226, 222, 210)}
+RGB = {"stuc": (228, 226, 220), "baksteen": (162, 104, 80), "hout": (118, 98, 78), "lei": (120, 96, 70), "rots": (150, 148, 140), "vakvlak": (226, 222, 210)}
 
 
 

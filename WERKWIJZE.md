@@ -311,6 +311,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - **Bij kleine taferelen achter het muurtje/de toren hoort een dichte plantenwand** (Daan, Papegaai): het bosscript houdt rond de attractie te veel afstand;
   zet achter en naast het object expliciet een rij grote rododendrons/taxussen, maar houd het zicht vanaf het pad vrij (struiken tussen pad en object weg).
 - Foto gaat voor lemmatekst (Papegaai: lemma "leien dakje", foto rode pannen).
+- **Snijvormen plaatsen met een matrix: controleer de determinant** (kolommen tangent/normaal/z): -1 spiegelt de vorm, de normalen staan binnenstebuiten en een
+  EXACT-boolean snijdt dan niets (Raponsje-boognissen). Gebruik -tangent of kijk na de boolean in een close-up of er echt iets weg is.
+- Na voxel-remesh + decimate kan een vorm open/binnenstebuiten raken en onzichtbaar renderen: herbereken normalen na de boolean en houd simpele vormen liever zonder remesh.
 - Zsh: een leeg zoekpatroon (`rm -f x*` zonder treffers) breekt een `&&`-keten af; controleer na zo'n keten of alle stappen (STATUS!) zijn uitgevoerd.
 
 ## Lessen De Trollenkoning (15 nov) — Daan: "ziet er niet uit maar voor nu prima, als de scene klopt is het goed; later finetunen"
