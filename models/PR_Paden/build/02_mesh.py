@@ -264,7 +264,8 @@ for k in range(1, nvb + 1):
     cx, cy = px_.mean(), py_.mean()
     ev, evec = np.linalg.eigh(np.cov(np.vstack([px_ - cx, py_ - cy]))); ax = evec[:, np.argmax(ev)]
     lang = math.sqrt(max(ev) / (min(ev) + 1e-9))
-    VINFO[k] = {'rond': bool(rond > 0.7 and lang < 1.35 and A < 900), 'c': (cx, cy), 'a': math.atan2(ax[1], ax[0]), 'A': A}
+    VINFO[k] = {'rond': False,   # ringen gaven draaikolken op kruisingen (Daan, screenshot); verbredingen altijd recht langs de lange as (rond: {rond:.2f})
+                'rondheid': float(rond), 'c': (cx, cy), 'a': math.atan2(ax[1], ax[0]), 'A': A}
 print('verbredingen', len(VINFO), 'waarvan rond', sum(v['rond'] for v in VINFO.values()))
 idx = -np.ones((H2, W2), int); idx[M2] = np.arange(M2.sum()); N2 = int(M2.sum())
 def poisson(gx, gy):
@@ -368,7 +369,7 @@ def lijn_uv(li, P):
     a = l['ang'][k]; t = np.column_stack([np.cos(a), np.sin(a)])
     rel = P - q; v = t[:, 0] * rel[:, 1] - t[:, 1] * rel[:, 0]
     # buiten het lijnstuk (s op 0 of L): ook langs-component meenemen
-    along = (rel * t).sum(1); s = s + np.where((s <= 1e-6) | (s >= l['s'][-1] - 1e-6), along, 0)
+    along = (rel * t).sum(1); s = s + along   # ook in de 'hoek' buiten een knik (alle punten vallen daar op hetzelfde hoekpunt): langs-component meenemen
     # u = booglengte langs de middellijn (géén opgetelde draaiing erbij: die gaf afschuiving/strepen op lange kronkelpaden)
     return s, v
 
@@ -456,6 +457,35 @@ for mat, geom in SURF.items():
                 th3 = th.reshape(-1, 3); spr = th3.max(1) - th3.min(1) > np.pi; th3[spr] = np.where(th3[spr] < 0, th3[spr] + 2 * np.pi, th3[spr])
                 u[sel] = r; v[sel] = th3.reshape(-1) * np.maximum(r, 0.5)
         UV = np.column_stack([v / per, u / per])
+        # vervormde stukken (verhouding > 1,5, bv. brede onregelmatige pleinen, buitenkant van knikken): als plein recht leggen langs de looprichting
+        if mat not in ('roze', 'kassei'):
+            e1 = T[:, 1] - T[:, 0]; e2 = T[:, 2] - T[:, 0]; U3 = UV.reshape(-1, 3, 2); f1 = U3[:, 1] - U3[:, 0]; f2 = U3[:, 2] - U3[:, 0]
+            Mx = np.stack([e1, e2], 1); Fx = np.stack([f1, f2], 1)
+            ok_ = np.abs(np.linalg.det(Mx)) > 1e-9
+            sv = np.zeros((len(T), 2)); sv[ok_] = np.linalg.svd(np.linalg.solve(Mx[ok_], Fx[ok_]), compute_uv=False)
+            rr = sv[:, 0] / np.maximum(sv[:, 1], 1e-9); slecht = ok_ & (rr > 2.0)
+            if slecht.any():
+                bt = STRtree(shapely.points(C)); groep = -np.ones(len(T), int); gi = 0
+                for i in np.where(slecht)[0]:
+                    if groep[i] >= 0: continue
+                    stapel = [i]; groep[i] = gi
+                    while stapel:
+                        j = stapel.pop()
+                        for q in bt.query(shapely.Point(C[j]).buffer(1.6)):
+                            if groep[q] < 0 and (slecht[q] or np.hypot(*(C[q] - C[j])) < 1.6):
+                                groep[q] = gi
+                                if slecht[q]: stapel.append(q)
+                    gi += 1
+                for g_ in range(gi):
+                    sel = np.where(groep == g_)[0]
+                    if len(sel) == 0: continue
+                    cc = C[sel].mean(0); li = TREE.query_nearest(shapely.Point(cc)); li = int(np.atleast_1d(li)[0])
+                    gl = LIJN[li]['geom']; t0 = gl.project(shapely.Point(cc)); pa = np.array(gl.interpolate(max(t0 - 1, 0)).coords[0]); pb = np.array(gl.interpolate(min(t0 + 1, gl.length)).coords[0])
+                    a = math.atan2(pb[1] - pa[1], pb[0] - pa[0]) if np.hypot(*(pb - pa)) > 1e-6 else 0.0
+                    si = np.repeat(sel * 3, 3) + np.tile([0, 1, 2], len(sel)); ps = P[si]
+                    uu = ps[:, 0] * math.cos(a) + ps[:, 1] * math.sin(a); vv = -ps[:, 0] * math.sin(a) + ps[:, 1] * math.cos(a)
+                    UV[si] = np.column_stack([vv / per, uu / per])
+                print(mat, 'recht gelegde vervormde stukken', gi, 'driehoeken', int((groep >= 0).sum()))
         nmat = np.array([mat] * len(T), dtype=object)
         for q, vl in PERPAD:
             if mat not in q.get('alleen', []): continue

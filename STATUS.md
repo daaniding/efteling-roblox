@@ -901,3 +901,9 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Controle: het net is een geheel (1 stuk, 12.652 m2). tools/pad_einden.py vindt 7 einden: 2 aan de rand, 5 bij een attractie (Sprookjesboom, Klein Duimpje, Zes Zwanen, Sneeuwwitje, Vrouw Holle). Kaart: models/PR_Paden/review/padennet_rand.jpg.
 - Studio: MODEL 89495355370457, 322 delen met textuur. Niet op screenshot gecontroleerd. Place nog niet opgeslagen.
 - Nog open: het terrein onder de nieuwe aansluitstukjes is niet verlaagd (PadenTerrein liep eenmalig); kan hier en daar door het pad prikken.
+
+### Ronde 3h (15 nov 2026): draaikolken weg, terrein bij de paden
+- Daan (screenshot): draaikolk op een Y-kruising. Oorzaak 1: verbredingen die als 'rond' werden herkend kregen ringen; nu worden alle verbredingen recht gelegd langs hun lange as (alleen het oranje rondje heeft eigen ringen). Oorzaak 2: buiten een knik in de middellijn vallen alle punten op hetzelfde hoekpunt (zelfde u -> veeg); nu telt de langs-component altijd mee. Oorzaak 3: brede onregelmatige pleinen; vervormde stukken (verhouding > 2) worden als plein recht gelegd langs de looprichting van het dichtstbijzijnde pad. Resultaat grijs: 0,7% > 1,5, 10 gedegenereerd (was 4% en 124).
+- Terrein: ServerStorage.AHN_Delta.PadenTerreinBij (bron tools/studio/paden_terrein_bij.luau). Eerst een voxel-verschuiving (3775 kolommen, niet herhaalbaar door glad terrein), daarna uitsnijden met FillBlock(Air) waar de grond door het pad stak (1318 + 376 plekken) en kieren onder de stoeprand gevuld (266). Grond boven het pad: van 4,4% naar 0,9% van de padpunten.
+- Over: Doornroosje (pad door de kasteelheuvel, tot 7,8 stud onder het plateau; er is een geul zichtbaar waar het pad de heuvel in gaat) en Zwavelstokjesstadje (tot 1,8 stud). Daar moet het pad het v1-model volgen of anders lopen (stap 5); niet verder graven.
+- Studio: MODEL 84917456870593, 322 delen. Place nog niet opgeslagen.
