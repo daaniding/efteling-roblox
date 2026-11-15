@@ -448,7 +448,28 @@ Bijna elk sprookje heeft water. Uit de foto's (Langnek, Klein Duimpje, Doornroos
   spiegeling met Future-belichting.
 
 ## Volgorde
-Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
+Fase A → Fase C → Fase B per sprookje → Fase D over het hele bos.
+
+## BOUWVOLGORDE NA DE V1'S (buiten naar binnen, grof naar fijn)
+Regel: eerst wat de plek van al het andere bepaalt (grond, hoogte, paden, water), dan wat erop komt. Anders moet
+elke attractie opnieuw geplaatst/aangesloten worden als het terrein verandert.
+0. **Voorbereiden** (1x): skill "efteling-sprookje", scripts (frames uit video's, luchtfoto/AHN-uitsnede, overlay).
+1. **Fundament hele Sprookjesbos**: AHN-terrein (heuvels, kuilen, vijverbodems), waterpeilen, alle paden uit
+   luchtfoto+OSM als echte padmeshes met de juiste verharding, onzichtbare botsrand langs de paden.
+   Keuring: bovenaanzicht over de luchtfoto + wandeling over alle paden.
+2. **Kits** (parallel aan 1 te maken): grond-kit, pad-randen (keien), straatmeubilair, water-kit, natuur-kit
+   (bomen/struiken/plantenwanden), licht-preset. Elk door de kwaliteitslat.
+3. **Bomenlaag**: alle bomen uit AHN op hun plek (volle boom waar je de stam ziet, anders alleen kroon).
+   Dan klopt het silhouet van het bos en het licht onder het bladerdak al vóór de details.
+4. **Per attractie** (van het pad uit gezien belangrijkste eerst; proef: Klein Duimpje): v1 op de AHN-hoogte zetten
+   en aansluiten op het pad -> gebouw/figuur 1-op-1 opnieuw (figuren-pijplijn) -> scène eromheen uit de
+   elementenlijst met de kits -> keuring.
+   Figuren (reus, vis, klok) mogen al eerder, parallel aan 1-3: die hangen niet af van het terrein.
+5. **Bos tussen de attracties**: plantenwanden, ondergroei en grond-overgangen langs alle paden, zichtlijnen
+   (bocht -> onthulling), lantaarns/bankjes/bakken op de OSM-plekken.
+6. **Licht, lucht en water fijn afstellen** op het geheel (zones onder bladerdak, terugkaats-lampjes, waterkleur).
+7. **Leven en geluid** (geluid pas als Daan zegt dat het mag).
+8. **Wandeltest** over de hele route naast YouTube-video's + fps-test; verschillen terug naar de juiste stap. Eerste proef: **Klein Duimpje + Monstervis** opnieuw (meeste winst, duidelijkste fouten).
 
 ## Usage
 Zwaar rekenwerk (downloads, fotogrammetrie, bakes) draait lokaal = bijna geen usage. Duur is plaatjes bekijken:
