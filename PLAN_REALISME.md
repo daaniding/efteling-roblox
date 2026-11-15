@@ -68,6 +68,52 @@ Resultaat: één kaartlaag per soort (boom/struik/haag/lantaarn/bank/bak/kei/pad
   (schatting 600-1.000), de rest **alleen kroon** (lichte LOD) + plantenwanden ertussen. Ondergroei alleen in de
   strook langs het pad.
 
+### Hoogteverschillen (AHN, opgehaald 15 nov: `reference/ahn_sprookjesbos/`)
+- Het Sprookjesbos is **niet vlak**: maaiveld 6,1 tot 14,4 m NAP; meeste grond tussen 7,5 en 10,1 m (ruim 2,5 m verschil).
+- Duidelijk te zien (`maaiveld_hillshade.png`): **heuvels/wallen** (o.a. de heuvel bij Doornroosje, wallen langs
+  de vijvers en paden), **verdiepte vijvers**, paden die licht insnijden, en het terrein loopt op naar het zuidoosten.
+- Ook in de data: ~3.300 boomtoppen > 6 m in het hele vak (incl. randen buiten het bos); boomkronen tot ~22 m hoog.
+- Toepassen: AHN-maaiveld als terrein-hoogtekaart (blender-environment-kits), elke attractie op de echte hoogte
+  zetten (nu staat alles op Y=2 = vlak). Let op: 27% van het maaiveld is een gat onder dicht blad/gebouwen en is
+  bijgevuld; bij vijvers en heuvels nakijken met foto's.
+
+## De scène rond elke attractie (hier gaat nu veel mis)
+Per attractie een vaste **scène-inventaris** vóór het bouwen, uit alle foto's/video-frames van alle kanten:
+- Grond: wat ligt er (gras, bosgrond, grind, mos, schors, klinkers), waar gaat het over in elkaar.
+- Randen: keien, hekjes (vorm, kleur, hoogte), borders, opsluitbanden of juist niet.
+- Planten per soort en plek (varens, hulst, rododendron, taxus, buxus), hoogte en dichtheid; wat staat er ACHTER.
+- Water: vorm, oever (kei/riet/beton), kleur, troebelheid.
+- Decoratie: bordjes, lantaarns, bankjes, prullenbakken, boekstandaard, de sprookjesboek-stoel, enz. (OSM + foto).
+- Hoogte: ligt het sprookje in een kuil, op een heuvel, tegen een wal (AHN).
+- Wat de bezoeker vanaf het pad ziet: kijkrichting(en), wat moet achter de attractie dicht zijn.
+Keuring: dezelfde camera als 3+ foto's (vooraanzicht, schuin, vanaf het pad) en een bovenaanzicht naast de
+luchtfoto. Elk punt van de inventaris afvinken.
+
+## Figuren 1 op 1 (reus, Monstervis, Magische Klok, Langnek, ...)
+Code-boetseren haalt het niet. Werkwijze in volgorde van kwaliteit:
+1. **Multi-view uit video's**: 30-100 frames rond de figuur (meerdere video's/jaren) -> fotogrammetrie (COLMAP /
+   RealityScan) of **3D Gaussian Splatting -> mesh**. Bij figuren waar je omheen kijkt (vis, klok) werkt dit goed;
+   bij een figuur die je maar van één kant ziet, alleen de zichtbare kant betrouwbaar.
+2. **Image-to-3D met meerdere echte foto's** (skill `roblox-3d-model` / Hi3DGen, of Hunyuan3D/Tripo multi-view):
+   echte foto's van voor/zij/achter erin, nooit een schets of AI-concept. Geeft direct een vorm die lijkt.
+3. **Bijwerken in Blender**: schaal uit AHN/foto (maatstok: deur 3 m, bezoekers 1,7 m), houding via cam_match op
+   2-3 fotocamera's tegelijk (multiview-fit-loop), gezicht/handen/voeten apart verfijnen, plooien strak (creases).
+4. **Kleur van de foto**: foto's projecteren op het model (meerdere camera's, schaduw eruit), naden bijwerken.
+5. **Materiaal**: satijnglans polyester (roughness ~0.35-0.45), airbrush-overgangen, vuil/groen in holtes.
+6. **Keuring per detail**: overlay-render op elke foto + close-ups gezicht/handen/voeten/bek/ogen; pas naar Studio
+   als het silhouet op alle foto's dekt (bv. > 95% overlap van het silhouet).
+
+## Licht 1 op 1
+- **Echte zonrichting**: Roblox `GeographicLatitude` = 51,65 en noord goed zetten (parkcoördinaten: -Z = noord),
+  zodat zon en schaduwen vallen zoals in Kaatsheuvel. Tijd standaard rond 14:00 in de zomer.
+- **Bos donker, open plekken licht**: onder het bladerdak minder licht (Atmosphere/ambient per zone of zachte
+  ColorCorrection die meeloopt) en lichtvlekken op de grond (gerenderde lichtvlek-decals of SunRays door gaten).
+- **Kalibreren op foto's**: met `reference-look-calibration` helderheid, verzadiging en kleurtint van een
+  Roblox-screenshot meten tegen echte foto's vanaf dezelfde plek, en Lighting/ColorCorrection daarop afstellen.
+- **Texturen zonder ingebakken zon**: foto-texturen eerst egaal maken (delighting), anders dubbele schaduw.
+- Lantaarns/attractielicht: warm (2700 K), 's avonds aan; vijvers met reflectie (Water/Glass + Future).
+- Future-belichting zet Daan zelf (staat in WERKWIJZE).
+
 ## Skills die helpen (gezocht 15 nov)
 Al geïnstalleerd en direct bruikbaar:
 - **roblox-3d-model**: foto -> high-poly mesh (Hi3DGen via Hugging Face) -> Blender decimate/UV/normal bake ->
@@ -78,9 +124,13 @@ Al geïnstalleerd en direct bruikbaar:
 - **blender-texture-baking** + **blender-game-optimization**: scan/AI-mesh naar Roblox-budget, LOD's voor bomen.
 - **blender-lighting**: licht in de review-renders lijkt dan op Roblox-licht.
 - **multiview-fit-loop / reference-to-3d**: vorm passen aan meerdere foto's tegelijk.
-Online gevonden (nog niet geïnstalleerd, eerst bekijken voor installeren):
-- **roblox-lighting** (skills.sh, tabooharmony/roblox-brain): Lighting, Atmosphere, tijd van de dag, post-processing.
-- **create-3d-scene** (agent-almanac): Blender-scène via bpy met PBR-materialen, licht en camera.
+Online gevonden en **geïnstalleerd 15 nov** in `~/.claude/skills/` (alle MIT, alleen markdown, gecontroleerd; bron in BRON.txt):
+- Uit tabooharmony/roblox-brain: **roblox-lighting** (Lighting/Atmosphere/post-processing, naar de officiële docs),
+  **roblox-building**, **roblox-audio**.
+- Uit arjun988/blender-skills: **vegetation-artist** (bomen, bladkaarten, kroon-LOD's), **set-dressing**,
+  **scene-assembly**, **lookdev**, **creature-artist** (vis/draak), **character-artist** (reus), **collision-proxy**
+  (onzichtbare botsranden), **biome-worlds**.
+- Uit pjt222/agent-almanac: **create-3d-scene**.
 Geen kant-en-klare skill gevonden die Roblox + realistisch licht + Blender samen doet -> onze eigen
 "efteling-sprookje"-skill (Fase C) bundelt deze.
 
