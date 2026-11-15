@@ -305,6 +305,18 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Bos: de strook langs ALLE paden waarvan je de attractie ziet vrijhouden (ook het aanlooppad van de vorige attractie), anders sta je op het
   fotostandpunt in de struiken.
 
+## Lessen De Trollenkoning (15 nov) — Daan: "ziet er niet uit maar voor nu prima, als de scene klopt is het goed; later finetunen"
+- Prioriteit bij een nieuwe attractie: de SCENE moet kloppen (plek, richting, wat waar staat); mooiheid/finetunen mag later.
+- Richting van een attractie zonder gebouw (boom/rots): uit de padligging (de holte kijkt naar het plein tussen de paden) en controleren met
+  twee schuine foto's (waar zie je de holte binnen het silhouet: links = camera rechts van de as).
+- Organische vorm (stronk): ringen met wortelribben (cos^8, diepe groeven ertussen) + wortelbuizen -> voxel-remesh met WEINIG smooth (3 iteraties),
+  anders smelt alles tot een gladde kegel. Beugelzwammen: bolle hoed + aparte onderkant die naar de stam OMHOOG loopt + plaatjes als vinnen.
+- Een camera oplossen op modeldelen (zwammen) die zelf nog geschat zijn geeft rommel: alleen ijkpunten gebruiken die al op een andere foto kloppen
+  en een fout > 15 px betekent: niet vertrouwen.
+- Export groepeert per materiaal: losse onderdelen (medaillons) kun je in Studio niet apart verschuiven -> fixes in het bouwscript + alleen dat deel
+  opnieuw uploaden.
+- Vijver: Terrain:FillCylinder (Air) graaft zacht rond i.p.v. 4-stud-blokken; onzichtbare vijverbodem-Part zodat je niet in het gat valt.
+
 ## Lessen Rode Schoentjes v2 (14 nov) — Daan: "kijk goed hoe het eruit ziet, gebruik je skills"
 - **Altijd de skill blender-image-to-3d volgen**: eerst de fotocamera nadoen en een klei-overlay naast de foto (gate), pas daarna bakken/uploaden.
   Zonder overlay maakte ik de loggia te breed/laag, met platte bogen en een rotsklomp i.p.v. een muur.

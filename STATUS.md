@@ -588,9 +588,27 @@ Echte bouwtekeningen niet openbaar (geen Eftelist-pagina, geen vergunning online
 - Assets: huis **139451136573282** (8.6k tris), plein **120932882084389** (7.2k); texturen in `textures/asset_ids.txt`.
 - Studio: PrinsesOpDeErwt, PrinsesOpDeErwtPlein, PrinsesOpDeErwtGroen (2127 planten, 55 bomen; zicht vanaf de paden vrij; in Wind-MAPPEN).
   Ground onder het plein, layout-label weg, spawn op het plein (OudeCFrame bewaard). Wandeltest Play: plein, hekje, bankjes, achter de pijler: OK,
-  Y stabiel 4.7. Fps 14-15 op het plein en elders (Studio op de achtergrond). Screenshots `review/studio_v1_*.jpg`. Place nog NIET opgeslagen.
+  Y stabiel 4.7. Fps 14-15 op het plein en elders (Studio op de achtergrond). Screenshots `review/studio_v1_*.jpg`. Place opgeslagen (Team Create).
 - NOG (later): interieur (hemelbed met 8 matrassen, Adinda, kaptafel, lampetkan; door de glasdeuren + kijkraam), klokgevel-voluten voller
   (dikkere krullen/consoles zoals Kamerheer), herringbone-paden (later, met de paden), hotelhek/poort (buiten 15 m), meubilair (lantaarns) later.
+
+## De Trollenkoning (chat 11, 15 nov) — v1 in Studio (stronk + vijvertje + plein + bos; trol/uiltje/gordijnbeweging later). Daan: "voor nu prima, later finetunen"
+Map `models/AR_Trollenkoning/`, brief `asset-brief.md`. Bronnen: 36 Eftepedia-plaatjes (`ref/eftepedia/`, contactblad `review/contact.jpg`), OSM 766787184 (stronk r 1.4),
+55423661 (vijver r 2.9), paden 405848924 / 1406396368. Geen bouwtekeningen.
+- Frame: oorsprong = midden 766787184 = studs (48.09, 17.88); -Y = holte (ZZO, naar de kruising van de twee paden); OSM -> model: X = 0.94*ox + 0.34*oy ;
+  Y = -0.34*ox + 0.94*oy; Roblox F = (0.34, 0, 0.94).
+- `build/03_boom.py` (TK_boom_master): stam als ringen met 9 wortelribben + wortels -> organisch(), afgebroken top met splinters + klimop, holte (spitsboog
+  1.5 x 0.5..4.0 m) met DICHT rood gordijn (zo staat hij als niemand een sterrenbeeld kiest) boven de troonkist, 3 reuzenzwammen (bolle hoed + plaatjes),
+  trapje zwammetjes rechts omlaag, tak met bel + touw, hoekige stenen in het water. Klei-overlay op Boomtrollenkoning: `build/cam.sh <tag> 0,-6.3,1.3,20 0 16 0,0 clay 36 669x1000`.
+- `build/04_omgeving.py` (TK_omgeving_master): vijver (waterplaat + modderbodem + oeverwand), keienrand + groene buisleuning langs het plein, plein in licht
+  grind (wig tussen de paden) met 13 verzonken dierenriem-medaillons, wijzersteen met bronzen wijzerplaat rechts op de rand (2023) + trilsteen, sprookjesboek.
+- Bake `05_bake.py --pre TK --res 2048` / `--pre TO` (schors grijsgroen, zwam, zwamplaat, rots), `build/export.sh`, `zsh -ic build/upload.sh`,
+  `python3 roblox/maak_plaatsscript.py` -> `plaats_trollenkoning.luau` + `plaats_trollenkoning_groen.luau`.
+- Assets: boom **82116469856189** (55k tris), plein **120296597517083** (11k). Studio: Trollenkoning, TrollenkoningPlein, TrollenkoningGroen (1850 planten,
+  55 bomen, beuk/rododendron; zicht voor vrij; De Prinses op de Erwt-gebied overgeslagen; in Wind-MAPPEN). Vijver zacht uitgegraven (FillCylinder),
+  onzichtbare vijverbodem (je waadt), label weg, spawn op het plein. Wandeltest: plein OK, leuning houdt je bij r 3.1. Screenshots `review/studio_v1_*.jpg`.
+- NOG (finetunen later, Daan): schors/zwammen realistischer (kleur, detail), trol + uiltje in de holte (figuren later), herringbone-paden, Muzikale Paddenstoel 7
+  staat er al (niet van ons), camera-oplossing op de schuine foto's klopte niet (zwamhoogtes vs frontale foto) -> plaatsing wijzersteen/boek op foto-verhoudingen.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
