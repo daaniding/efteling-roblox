@@ -213,11 +213,32 @@ def build(master):
     if bm.faces[0].normal.z < 0:
         for f_ in bm.faces: f_.normal_flip()
     put("plein", "grind", bm)
+    # voetpad (OSM 405848924) langs de loggia: links aansluitend op het Pinokkio-plein (PLEIN-hoek 8.09,-7.49 in Pinokkio-frame),
+    # rechts door tot de splitsing richting De Prinses op de Erwt (21.58,-20.06). Breedte 3.2 m, iets lager dan het pleintje.
+    PAD = [(-22.2, -13.6), (-21.26, -12.89), (-9.43, -4.75), (-3.18, -4.16), (4.83, -6.13), (13.15, -11.8), (21.58, -20.06), (22.3, -20.8)]
+    for _ in range(3):
+        q = [PAD[0]]
+        for a_, b2 in zip(PAD, PAD[1:]): q += [(0.75 * a_[0] + 0.25 * b2[0], 0.75 * a_[1] + 0.25 * b2[1]), (0.25 * a_[0] + 0.75 * b2[0], 0.25 * a_[1] + 0.75 * b2[1])]
+        PAD = q + [PAD[-1]]
+    bm = bmesh.new(); top, bot = [], []
+    for i, (x, y) in enumerate(PAD):
+        a_, b2 = PAD[max(0, i - 1)], PAD[min(len(PAD) - 1, i + 1)]; tx, ty = b2[0] - a_[0], b2[1] - a_[1]; L = math.hypot(tx, ty) or 1
+        nx, ny = -ty / L * 1.6, tx / L * 1.6
+        top.append((bm.verts.new((x + nx, y + ny, 0.08)), bm.verts.new((x - nx, y - ny, 0.08))))
+        bot.append((bm.verts.new((x + nx, y + ny, -0.04)), bm.verts.new((x - nx, y - ny, -0.04))))
+    for i in range(len(PAD) - 1):
+        bm.faces.new((top[i][0], top[i][1], top[i + 1][1], top[i + 1][0])); bm.faces.new((bot[i][0], bot[i + 1][0], bot[i + 1][1], bot[i][1]))
+        bm.faces.new((top[i][0], top[i + 1][0], bot[i + 1][0], bot[i][0])); bm.faces.new((top[i][1], bot[i][1], bot[i + 1][1], top[i + 1][1]))
+    bm.faces.new((top[0][0], bot[0][0], bot[0][1], top[0][1])); bm.faces.new((top[-1][0], top[-1][1], bot[-1][1], bot[-1][0]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    for f_ in bm.faces:
+        if abs(f_.normal.z) > 0.5 and (f_.calc_center_median().z > 0) != (f_.normal.z > 0): f_.normal_flip()
+    put("pad", "grind", bm)
     for (part, mat), bm in PARTS.items():
         if len(bm.faces) == 0: continue
         ob = new_mesh_object(f"RD_{part}__{mat}", bm, "FORMS"); assign(ob, bpy.data.materials["MAT_" + mat])
     out = os.path.join(ROOT, "exports"); os.makedirs(out, exist_ok=True)
-    json.dump({"colliders": COLL, "lamps": LAMPS_, "plein": pl}, open(os.path.join(out, "loggia_extra.json"), "w"))
+    json.dump({"colliders": COLL, "lamps": LAMPS_, "plein": pl, "pad": [list(p) for p in PAD]}, open(os.path.join(out, "loggia_extra.json"), "w"))
     save_master(master); log("built", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "tris",
                              sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER_TAG and o.type == "MESH"))
 

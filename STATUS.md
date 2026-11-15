@@ -566,7 +566,7 @@ verhoogde dansvloer met geruite glastegels en zigzagrand, 2 rode schoentjes, gro
 - v2 (Daan: "kijk goed", "gebruik je skills", "rechte muur van steen die gewoon doorloopt", "zoek een andere hoek"): volgens blender-image-to-3d
   met fotocamera-overlays op 2 foto's (`build/cam.sh`, FOTO=voor.jpg = Rode-Schoentjes-weg vooraanzicht; Boekloc schuin): loggia 3.6 x 2.6 m,
   4 zuilen 2.45 m, brede lage segmentboog voor (kruin 3.35) + segmentbogen links/rechts, schildering + kaarsen op de ACHTERwand, rechte stenen
-  muur van grote vlakke blokken in lagen achter de loggia, **symmetrisch** rond het midden (x -3.74..7.34): links en rechts even laag aflopend, in het midden boven het dak uit (Daan, 15 nov). Model **134454081581695**; plaatsscript `models/AR_RodeSchoentjes/roblox/plaats_rodeschoentjes.luau`.
+  muur van grote vlakke blokken in lagen achter de loggia, **symmetrisch** rond het midden (x -3.74..7.34): links en rechts even laag aflopend, in het midden boven het dak uit (Daan, 15 nov). Model **104355923225012** (incl. OSM-voetpad 405848924 van het Pinokkio-plein langs de loggia tot de splitsing naar De Prinses op de Erwt, 3.2 m grind); plaatsscript `models/AR_RodeSchoentjes/roblox/plaats_rodeschoentjes.luau`.
   Vergelijkbladen `review/d3/compare_clay.jpg` (voor) en `review/d4/compare_clay.jpg` (schuin).
 - NOG (later): muurschildering mooier, kruisgewelf binnen, dansende schoentjes (animatie later).
 

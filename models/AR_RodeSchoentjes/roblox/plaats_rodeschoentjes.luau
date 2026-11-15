@@ -1,10 +1,11 @@
 -- De Rode Schoentjes: loggia + symmetrische stenen muur (x -3.74..7.34). Plakken in Studio execute_luau.
-local ID = 134454081581695
-local TEX = {hout = {81472054670694, 85629092080186}, mural = {124287892024974}, pannen = {96729143021074, 100110566945474}, rots = {81326043261864, 92530187225438}, stuc = {89844253411773, 82763351226057}}
+local ID = 104355923225012
+local TEX = {hout = {81472054670694, 85629092080186}, mural = {124287892024974}, pannen = {96729143021074, 100110566945474}, rots = {81326043261864, 92530187225438}, stuc = {79551565079879, 82763351226057}}
 local COLL = {{1.8, 0.65, 1.7, 3.6, 0.3, 3.4, 0.0}, {0.16, -2.1, 1.225, 0.4, 0.4, 2.45, 0.0}, {3.44, -2.1, 1.225, 0.4, 0.4, 2.45, 0.0}, {3.44, 0.34, 1.225, 0.4, 0.4, 2.45, 0.0}, {0.16, 0.34, 1.225, 0.4, 0.4, 2.45, 0.0}, {1.8, -0.525, 0.45, 2.36, 1.45, 0.9, 0.0}, {0.32, -0.575, 0.55, 0.1, 2.05, 1.1, 0.0}, {1.8, -1.6, 0.55, 2.96, 0.1, 1.1, 0.0}, {3.28, -0.575, 0.55, 0.1, 2.05, 1.1, 0.0}, {1.8, 1.4, 2.2, 11.08, 1.2, 4.4, 0.0}, {-1.1, -0.9, 0.5, 0.7, 0.4, 1.0, 10}}
 local F = Vector3.new(0.808, 0, -0.589)
 local ORIGIN = CFrame.new(49.59, 2.0, 141.45) * CFrame.Angles(0, math.atan2(-F.X, -F.Z), 0)
 local S = 3
+local PAD = {{-22.20, -13.60}, {-22.05, -13.49}, {-21.67, -13.20}, {-19.50, -11.68}, {-14.61, -8.31}, {-9.56, -5.42}, {-5.91, -4.42}, {-2.51, -4.52}, {1.33, -5.27}, {5.38, -6.83}, {9.51, -9.32}, {13.69, -12.56}, {17.89, -16.45}, {20.90, -19.40}, {21.98, -20.48}, {22.23, -20.73}}
 local function lokaal(x, y, z) return ORIGIN * CFrame.new(-x * S, z * S, y * S) end
 local M = {
 	stuc = {Color3.fromRGB(226, 214, 190), "Plastic"}, zuil = {Color3.fromRGB(214, 190, 130), "SmoothPlastic"}, pannen = {Color3.fromRGB(150, 82, 56), "ClayRoofTiles"},
@@ -54,11 +55,18 @@ for _, c in ipairs(COLL) do
 	b.Size = Vector3.new(c[4] * S, c[6] * S, c[5] * S); b.CFrame = lokaal(c[1], c[2], c[3]) * CFrame.Angles(0, math.rad(c[7]), 0); b.Parent = bots
 end
 m.WorldPivot = ORIGIN
+local function padd(x, y) local best = 1e9
+	for i = 1, #PAD - 1 do local a, b = PAD[i], PAD[i + 1]; local dx, dy = b[1] - a[1], b[2] - a[2]; local L2 = math.max(dx * dx + dy * dy, 1e-9)
+		local t = math.clamp(((x - a[1]) * dx + (y - a[2]) * dy) / L2, 0, 1); best = math.min(best, math.sqrt((x - a[1] - t * dx) ^ 2 + (y - a[2] - t * dy) ^ 2)) end
+	return best end
 local weg = 0
-for _, c in ipairs(workspace.RodeSchoentjesGroen:GetChildren()) do
-	local p = c:IsA("Model") and c:GetPivot().Position or (c:IsA("BasePart") and c.Position)
-	if p then local l = ORIGIN:PointToObjectSpace(p); local x, y = -l.X / S, l.Z / S
-		if (x > -4.6 and x < 6.0 and y > -6.8 and y < 2.3) or (x > -4.2 and x < 7.8 and y > 0.4 and y < 2.4) then c:Destroy(); weg += 1 end end
+for _, map in ipairs({workspace:FindFirstChild("RodeSchoentjesGroen"), workspace:FindFirstChild("PinokkioGroen")}) do
+	for _, c in ipairs(map and map:GetChildren() or {}) do
+		local p = c:IsA("Model") and c:GetPivot().Position or (c:IsA("BasePart") and c.Position)
+		if p then local l = ORIGIN:PointToObjectSpace(p); local x, y = -l.X / S, l.Z / S
+			local boom = c:IsA("Model") and c:GetExtentsSize().Y > 12
+			if (map.Name == "RodeSchoentjesGroen" and ((x > -4.6 and x < 6.0 and y > -6.8 and y < 2.3) or (x > -4.2 and x < 7.8 and y > 0.4 and y < 2.4))) or padd(x, y) < (boom and 2.6 or 1.9) then c:Destroy(); weg += 1 end end
+	end
 end
 local ok = 0
 pcall(function() local dec = {}; for _, id in ipairs(pre) do local d = Instance.new("Decal"); d.Texture = id; table.insert(dec, d) end
