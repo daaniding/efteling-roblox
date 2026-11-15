@@ -783,9 +783,18 @@ beekje 767397169, boom "De Gouden Stemvork" = Kabouterboom, Muzikale Paddenstoel
 - NOG (later): kabouters (muziek, vissertje, pijproker, schrijver met eekhoorn, deurkabouter, wasvrouwtje, rustende kabouters), witte stippen groter,
   interieurs (schrijfkamer, kachel, slaapkamer), waterrad laten draaien, kijkbuizen, bordjes met rijmpjes, morielje-ribbels fijner.
 
-## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-De Zes Dienaren (3e op de route, na het Kabouterdorp).
-Laatste: De Zes Dienaren (tussen het Kabouterdorp en Roodkapje).
+## De Zes Dienaren (chat 11, 15 nov) — v1 in Studio: Kogeloog-gebouwtje (arcade), Langnek stond er al (CH_Langnek)
+- Blender: models/AR_ZesDienaren/build/03_kogeloog.py (master KG_master.blend, 12.7k tris). Geknikte witte arcade over 3 segmenten langs de OSM-gevellijn,
+  rondbogen op Toscaanse zuilen, bakstenen kopgevels, achterwand, tegelvloer, houten plafond, zadeldak met rode pannen; ovale schilderijen, bankjes, lantaarns.
+  Midden: barokke dakgevel met blauw schild, gouden lint en buste van Kogeloog (rode jas, blinddoek, steek met veren), vazen, kiosk-luik.
+- Plein: OSM plaza 766787197, licht grind (terrein onder plein → Ground).
+- Studio: roblox/plaats_kogeloog.luau (asset 111628397476125, frame studs (485.37, 150.69), F=(0,0,1)); 2 oude labels weg.
+- Groen: roblox/plaats_kogeloog_groen.luau → workspace.KogeloogGroen (812 planten, 28 bomen; rododendrons dicht achter het gebouw), Langnek-hoek en paden vrij; Wind-keten + KogeloogGroen.
+- Later: andere dienaren (Breedkop, Scherpoor, Dikke, Lange, Kogeloog-animatie), interieur-schilderingen finetunen.
+- Screenshot: models/AR_ZesDienaren/review/studio_v1.jpg
+
+## Sprookjesbos — alle attracties staan als v1 in Studio (15 nov)
+Volgende stap alleen op verzoek van Daan: finetunen, figuren, interieurs, animaties.
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
