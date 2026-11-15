@@ -708,9 +708,20 @@ paden 1001200259/1116332898 (lus om het huis), 1054471996/1074489754 (lus om de 
   Herautenplein/Trollenkoning/Ezeltje vrij; in Wind-MAPPEN). Screenshots `review/studio_v1.jpg`, `studio_v1_put.jpg`.
 - NOG (later): Vrouw Holle met kussen in het luikenraam + sneeuw (animatie), dia-voorstelling in de put, gevels organischer (bolle Pieck-vormen).
 
+## Kleine Boodschap (chat 11, 15 nov) — v1 in Studio (beeld + waterbak + haag; armbeweging later)
+Map `models/AR_KleineBoodschap/`. Bronnen: 31 Eftepedia-plaatjes (Intro/Boodschap = beeld close-up, Kbvijver = waterbak met haag en bloemen), lemma.
+OSM-node Kleine Boodschap (tussen toiletgebouw, Vrouw Holle en Herberg), vijvertje 625505853.
+- Frame: oorsprong = node = studs (-46.68, -92.28); model +X = noord, -Y = oost (kijkrichting, naar pad 1001200259); Roblox F = (1, 0, 0).
+- `build/03_boodschap.py` (KB_master, geen bake: Roblox-materialen): niervormige waterbak met gemetselde rand, bakstenen muurtje (1.6 m) aan de achterrand,
+  kabouter v1 (groot hoofd, blonde lokken, blauwe krulmuts met rode veer, capeje, geblokte zakdoek, rechtervoet op de muur, duim omhoog, linkerhand op de
+  rand), hoge U-haag (geremeshte blokken), laag houten hekje, modderbed, grindplein tot het hekje. 70k tris.
+- Plaatsen `roblox/plaats_boodschap.luau` (ook bomen uit HerautenpleinBos binnen de scene weg), groen `roblox/plaats_boodschap_groen.luau`
+  (KleineBoodschapGroen: begoniarand + struiken/varens; in Wind-MAPPEN). Screenshot `review/studio_v1.jpg`.
+- NOG (later): kabouter realistischer (gezicht naar Intro, stoffen plooien), wijzende armbeweging (animatie), haag fijner.
+
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Kleine Boodschap, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
-Volgende op de route na Vrouw Holle: Kleine Boodschap (OSM-node, ~16 m west van het huisje van Vrouw Holle, bij vijvertje 625505853).
+Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
+Volgende op de route na Kleine Boodschap: (Ezeltje, Sneeuwwitje, Genoveva ... staan al) -> De Indische Waterlelies (na de Magische Klok).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
