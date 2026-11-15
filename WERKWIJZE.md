@@ -350,3 +350,14 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Maaiveld is niet meer overal Y 2: gebruik `ServerStorage.AHN_Delta.Veld.dy(X, Z)`. Raycast-checks "zweeft boven terrein" geven
   vals alarm bij planten op grond-/COLL-meshes: altijd ook zonder filter raycasten.
 - Studio (Assistant) mag niet van raw.githubusercontent.com downloaden: data comprimeren (delta+RLE) en in de code plakken.
+
+## Lessen paden (15 nov)
+- **BGT (PDOK OGC API `api.pdok.nl/lv/bgt/ogc/v1/collections/wegdeel/items?bbox=...`) heeft alle Efteling-paden als nauwkeurige vlakken
+  met verharding** (betonstraatstenen/asfalt). Filter op `eind_registratie == None` (anders oude versies erbij). Veel beter dan OSM-lijnen.
+- Overlay tekenen met gaten: via een masker, niet `polygon(fill=(0,0,0,0))` (dat wist niets en lijkt dan een dichte vlek).
+- Verband langs een pad: niet per lijnstuk (springt bij elke OSM-knip, Daan: "het verandert opeens van richting"), maar één vloeiend
+  richtingsveld + Poisson voor de UV's. Brede pleinen: vaste richting.
+- Diepte in bestrating (Daan): Roblox heeft geen displacement -> diepe donkere voegen + AO in de kleurtextuur + sterke normal map.
+  Echte 3D-stenen alleen op plekken waar je heel dichtbij komt.
+- Blender-UV v=0 = onderste rij van het plaatje: texturen voor randstroken (alfa-verloop) daarop afstemmen.
+- Na nieuwe paden altijd checken op v1-planten en v1-padvlakken die op/onder het pad liggen (raycast op de padmap).

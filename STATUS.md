@@ -817,4 +817,25 @@ blender-pipeline-automation, roblox-animation, roblox-texture-gen, roblox-vfx, r
 - **Nieuw maaiveld voor alles wat je hierna plaatst: `Y = 2 + require(ServerStorage.AHN_Delta.Veld).dy(X, Z)`** (niet meer vast Y 2).
 - Bekend: grote vlakke v1-grond/padmeshes kantelen niet mee; op hellingen steken randen iets in/uit het terrein. Wordt opgelost in
   stap 1b (paden opnieuw in Blender op dit terrein) en stap 5 (scène per attractie). Place nog NIET opgeslagen (vraag Daan).
-- VOLGENDE: stap 1b paden: luchtfoto overtrekken (`tools/uitsnede.py`), padmeshes met echte verharding in Blender, botsrand.
+
+## Stap 1b: paden Sprookjesbos (15 nov) — in Studio als workspace.SprookjesbosPaden
+Map `models/PR_Paden/`. Bron padvormen: **BGT wegdeel** (PDOK OGC API, actuele vlakken, cm-nauwkeurig; `reference/paden/bgt_*.json`),
+aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). Luchtfoto 10 cm: `reference/paden/luchtfoto_10cm.jpg`.
+- `build/01_vlakken.py` (venv met shapely) -> `ref_paden.json`: klinker 12.800 m2, kassei 1.350 m2 (alleen zijpaden met OSM surface=sett,
+  grens langs de rand van het klinkerpad), asfalt 490 m2.
+- `build/02_mesh.py`: driehoeken per tegel van 24 m op het AHN-veld (`tools/veld.py` = exact het Studio-veld), looplaag +0,18 stud,
+  bolling 2,5 cm, kantsteenrij 0,22 m binnen de rand, bosgrondstrook 0,8 m buiten de rand (alfa), rok 0,3 m omlaag.
+  **Verband:** halfsteens, rijen haaks op de looprichting, via een vloeiend richtingsveld (OSM-stukken samengevoegd tot 79 doorlopende
+  paden, gericht, gewogen gemiddeld) + Poisson-oplossing voor u/v -> geen naden, waaiert uit bij vorken; brede pleinen recht langs de lange as.
+- `build/03_texturen.py`: klinker/kassei/kantsteen per steen opgebouwd (kleuren uit Kabouterdorp_pad.jpg, diepe donkere voegen, AO,
+  normal 4-5), asfalt = ambientCG Ground091, rand = ambientCG Ground076 (CC0). `build/04_blender.py`: Blender, renders, FBX. `build/upload.sh`.
+- Studio: `roblox/plaats_paden.luau` (model 132911656696735; 419 MeshParts, ~91k driehoeken, PreciseConvexDecomposition, rand zonder botsing).
+  Terrein onder de looplaag 0,5 stud omlaag + Ground, onder de rand Ground (`ServerStorage.AHN_Delta.PadenTerrein`, banden gedaan:
+  attribuut PadenTerreinBanden — niet opnieuw draaien).
+- Opgeruimd (terug te zetten, attribuut Herkomst): 4.812 v1-planten/bomen die OP het pad stonden -> `ServerStorage.OpPadVerwijderd`;
+  16 v1-grind/klinkervlakken die >= 75% onder het nieuwe pad lagen -> `ServerStorage.V1PadVervangen`; 8 deels overlappende (o.a.
+  Herautenplein plavuis/kassei) 0,25 stud lager (attribuut PadLager).
+- NOG / bekend: overal hetzelfde klinkertype (BGT zegt bijna overal betonstraatstenen); variatie per stuk (flagstone-pleintjes, houten
+  bruggetjes, trappen, keien i.p.v. kantsteen, kleurverschillen, roze Herautenplein) volgt uit video-frames per traject (stap 4, yt-dlp/ffmpeg
+  vragen). Kabouterdorp-tonnetje staat op het pad (v1-plaatsing, stap 5). Herautenplein: lappendeken v1-plavuis + nieuw pad (stap 5).
+  Place nog niet opgeslagen na de paden.

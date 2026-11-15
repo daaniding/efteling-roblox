@@ -9,3 +9,5 @@ textures/ambientcg/LeafSet016/*.mtlx
 textures/ambientcg/LeafSet016/*Displacement.png
 textures/ambientcg/LeafSet016/*NormalDX.png
 textures/ambientcg/LeafSet016/LeafSet016.png
+models/PR_Paden/exports/paden_mesh.json
+models/PR_Paden/exports/*.fbm/
