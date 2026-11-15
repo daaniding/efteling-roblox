@@ -719,9 +719,24 @@ OSM-node Kleine Boodschap (tussen toiletgebouw, Vrouw Holle en Herberg), vijvert
   (KleineBoodschapGroen: begoniarand + struiken/varens; in Wind-MAPPEN). Screenshot `review/studio_v1.jpg`.
 - NOG (later): kabouter realistischer (gezicht naar Intro, stoffen plooien), wijzende armbeweging (animatie), haag fijner.
 
+## De Indische Waterlelies (chat 11, 15 nov) — v1 in Studio (voorplein, wachters, gaanderij, tunnel, loods-schil; grot/show en interieur later)
+Map `models/AR_Waterlelies/`. Bronnen: 129 Eftepedia-plaatjes (Waterlelies_Voorplein_2024, Indischewaterlelies-voorplein-mei09 = wachters + gaanderij,
+Iwplein77, Lelies_ansicht, IndelingIW = plattegrondschets, Rolschaats = luchtfoto, Waterlelies_Ingang_2024), lemma. OSM: attractie 279667940, gebouw
+1395767223 (incl. gaanderijstrook), vijver 55441202, plein 55441203, rotstunnel 556674121, paden 767397166/767397167.
+- Frame: oorsprong = midden vijver = studs (109.98, -351.87); model = OSM -12.3 graden; +Y = noord (gaanderij); Roblox F = (0.213, 0, 0.977).
+- `build/03_lelies.py` (WL_master): vijver 15.6 x 10.3 m met witte rand + gouden lotusfontein + gouden reigerbeeldje, gaanderij met 7 witte zuilen,
+  donkere achterwand met rood-gouden leeuwenschilden en deur naar de grot, overhangende grijze rotsmassa (geremeshte blokken), 2 tempelwachters v1
+  (goud/rood, gelaagde kroon, slagtanden, knots), verhoogd wit plantenbed, witte muren met Simurgh-deur (west), bankjes + varenborder (zuid),
+  rotstunnel met gouden naambord, groene showloods (279667940) als schil, grindplein met gat voor de vijver. 74k tris.
+- Bake `--pre WL` (stuc per gevel, rots; rots in Studio getint 205,208,208), plaatsen `roblox/plaats_lelies.luau`, groen
+  `roblox/plaats_lelies_groen.luau` (WaterleliesGroen ~1080: boomvarens langs de muren, plantenbed, bomen rond tunnel en loods, gesnoeid; in Wind-MAPPEN).
+  Screenshots `review/studio_v1.jpg`, `studio_v1_wachters.jpg`.
+- NOG (later): grot met tribune en de show (elfjes, kikkerorkest, heks, lelies), wachters gedetailleerder (schubben, gezicht), rotsen grilliger,
+  wegwijzer met witte vogel, gevlamd natuurstenen plaveisel.
+
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, De Indische Waterlelies, Vliegende Fakir, Chinese Nachtegaal.
-Volgende op de route na Kleine Boodschap: (Ezeltje, Sneeuwwitje, Genoveva ... staan al) -> De Indische Waterlelies (na de Magische Klok).
+Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren, Vliegende Fakir, Chinese Nachtegaal.
+Volgende op de route na de Indische Waterlelies: (Klein Duimpje ... Sprookjesboom staan al) -> Vliegende Fakir -> Chinese Nachtegaal; daarna Kabouterdorp en De Zes Dienaren (begin route).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
