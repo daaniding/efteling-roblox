@@ -73,6 +73,10 @@ Resultaat: één kaartlaag per soort (boom/struik/haag/lantaarn/bank/bak/kei/pad
 - Duidelijk te zien (`maaiveld_hillshade.png`): **heuvels/wallen** (o.a. de heuvel bij Doornroosje, wallen langs
   de vijvers en paden), **verdiepte vijvers**, paden die licht insnijden, en het terrein loopt op naar het zuidoosten.
 - Ook in de data: ~3.300 boomtoppen > 6 m in het hele vak (incl. randen buiten het bos); boomkronen tot ~22 m hoog.
+- **Hoogte per attractie** staat in `reference/ahn_sprookjesbos/hoogte_attracties.csv` (maaiveld in m NAP en
+  t.o.v. de parkoorsprong, 9,02 m NAP). Opvallend: Doornroosje +4,7 m (op de heuvel; nakijken: AHN-gat onder het
+  kasteel is bijgevuld), Langnek +1,4 m, Kabouterdorp/Roodkapje/De Draak ~+0,9 m, Tuinman en Fakir/Magische Klok/
+  Repelsteeltje/Sprookjesboom/Klein Duimpje -0,5 tot -1,0 m. Alles staat nu op dezelfde hoogte in Studio.
 - Toepassen: AHN-maaiveld als terrein-hoogtekaart (blender-environment-kits), elke attractie op de echte hoogte
   zetten (nu staat alles op Y=2 = vlak). Let op: 27% van het maaiveld is een gat onder dicht blad/gebouwen en is
   bijgevuld; bij vijvers en heuvels nakijken met foto's.
@@ -131,6 +135,13 @@ Online gevonden en **geïnstalleerd 15 nov** in `~/.claude/skills/` (alle MIT, a
   **scene-assembly**, **lookdev**, **creature-artist** (vis/draak), **character-artist** (reus), **collision-proxy**
   (onzichtbare botsranden), **biome-worlds**.
 - Uit pjt222/agent-almanac: **create-3d-scene**.
+- Extra uit roblox-brain (15 nov): **roblox-camera**, **roblox-studio-mcp**, **roblox-animation-vfx** (pas voor later,
+  animeren mag nog niet). Niet geïnstalleerd: roblox-performance (dubbel met roblox-dev:roblox-performance) en
+  onbekende losse Roblox-skills van skills.sh (niet te controleren).
+- **Al ingebouwd in de Roblox Studio MCP** (niets te installeren, oproepen via de Studio-skilltool):
+  **rbx-import-asset** (Blender/FBX/GLB -> Studio met controle op geometrie, texturen, kleur, schaal, oriëntatie),
+  **rbx-scene-analysis** (render/geheugen/instanties per scène), **rbx-perf-profiling** (MicroProfiler: CPU/GPU-
+  pieken), **rbx-docs-search** (actuele Roblox-docs), rbx-debug, rbx-unit-test, rbx-device-simulator-lua.
 Geen kant-en-klare skill gevonden die Roblox + realistisch licht + Blender samen doet -> onze eigen
 "efteling-sprookje"-skill (Fase C) bundelt deze.
 
