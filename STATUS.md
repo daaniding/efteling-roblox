@@ -765,9 +765,27 @@ tuinmuur 767716980 met maanpoort-ingang, tuinpad 55350038, vijvertje 961616761, 
 - TWIJFEL: torentje staat volgens OSM boven de uitgang (oost); op de sneeuwfoto lijkt het meer naar rechts te staan - nakijken met Daan.
 - NOG (later): interieur/show (keizer, Dood, mechanische en echte nachtegaal), bamboe, kersenbloesem, scheurtjes in het stuc, draakjes fijner.
 
+## Het Kabouterdorp (chat 11, 15 nov) — v1 in Studio (alle huisjes + paden + vijvers + bos; kabouters, waterradbeweging, bel en show later)
+Map `models/AR_Kabouterdorp/`. Bronnen: 84 Eftepedia-plaatjes + lemma (beschrijving per onderdeel). OSM: dorp 55423167, hoofdpad 1074483532, zwammetjes
+55444984/55445041, grote zwam 763240405 (+ ring 763240404), morieljehuis 55444985, Grote Kabouterhuis 55444983, vijvers 767397170/763240399/763240398,
+beekje 767397169, boom "De Gouden Stemvork" = Kabouterboom, Muzikale Paddenstoel 1.
+- Frame: oorsprong = zwaartepunt 55423167 = studs (458.25, -63.78); model = OSM-assen (x oost, y noord); Roblox F = (0, 0, 1).
+- `build/03_kabouterdorp.py` (KD_master, 70k tris): paddenstoelenparcours (2 vliegenzwammen met lage doorgangen, raampjes met hartjesluiken,
+  lantaarntjes, schoorsteentje, morielje-doorloop, bruggetje over het beekje, tafeltje + 4 krukjes, waslijntje, laag poortje met hartjesbord),
+  Kabouterboom (holle stam + wortels + dikke takken, gezicht, kijkruitjes, deurtje), loze vissertje (overhangende zwam over de oostvijver, bootje,
+  hengel met dennenappel, bordje), morieljehuis (gestucte voet + lange morieljehoed, deur, raam, trapje), grote vliegenzwam (steel r 3 m, hoed r 4.75 m,
+  luikenraam, bovendeur + bordes + trap op, houten trap omlaag naar het beekje), huisje met waterrad (pannendak, klokgevel, morieljehoed rechts,
+  waterrad, bruggetje, hekje, stro-afdakje met tobbe), Grote Kabouterhuis (organische muren op OSM, morieljekegel, vliegenzwamdak, 2 doorloop-poortjes,
+  hoefijzer, traliewerk, balkonnetje, klokkentorentje, loden schoorsteentje, windvaantjes), vijvers met steenrand, paden (licht grind), sprookjesboek.
+- Bake `--pre KD` (stuc per gevel, zwam, schors, riet, pannen), plaatsen `roblox/plaats_kabouterdorp.luau` (3 vijvers uitgegraven + onzichtbare bodem,
+  grond onder het hoofdpad), groen `roblox/plaats_kabouterdorp_groen.luau` (KabouterdorpGroen ~2310: bos tussen de huisjes; in Wind-MAPPEN).
+  Screenshots `review/studio_v1.jpg` (grote zwam + waterrad), `studio_v1_parcours.jpg`, `studio_v1_grotehuis.jpg`.
+- NOG (later): kabouters (muziek, vissertje, pijproker, schrijver met eekhoorn, deurkabouter, wasvrouwtje, rustende kabouters), witte stippen groter,
+  interieurs (schrijfkamer, kachel, slaapkamer), waterrad laten draaien, kijkbuizen, bordjes met rijmpjes, morielje-ribbels fijner.
+
 ## Nog te doen in het Sprookjesbos (Eftepedia-routevolgorde)
-Kabouterdorp (2e op de route, na Doornroosje), De Zes Dienaren.
-Route-einde bereikt (Chinese Nachtegaal); nog te doen: Kabouterdorp en De Zes Dienaren (begin van de route, na Doornroosje).
+De Zes Dienaren (3e op de route, na het Kabouterdorp).
+Laatste: De Zes Dienaren (tussen het Kabouterdorp en Roodkapje).
 
 ## Daarna (volgorde met Daan afgesproken)
 1. Villa Volta (KLAAR). 2. Sprookjesboom + paddenstoelen (KLAAR), Langnek (KLAAR, statisch), Assepoester (KLAAR, interieur later). 3. Lantaarnpaal/bankje/prullenbak. 4. Gijs afmaken. Hans en Grietje: figuren later (huis + tuin KLAAR v1).
