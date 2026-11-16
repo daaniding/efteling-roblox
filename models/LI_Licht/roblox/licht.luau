@@ -22,10 +22,10 @@ local STANDEN = {
 	schemering = {   -- belfast_sunset_puresky; zon op de foto 2,1 graden, Roblox-zon 2,1 graden (ClockTime 17.8439)
 		lucht = { Ft = 106457871100289, Bk = 133107173128123, Lf = 130881222383257, Rt = 127070471178195, Up = 118986672181749, Dn = 130111079083953 },
 		zon = 5, sterren = 0, gras = Color3.fromRGB(80, 116, 60),   -- kleine zon (gloed doet het werk), geen sterren zolang de zon op is, koeler gras
-		licht = { ClockTime = 17.8439, Brightness = 2.2, ExposureCompensation = 1.15, Ambient = Color3.fromRGB(40, 30, 54), OutdoorAmbient = Color3.fromRGB(172, 126, 215) },   -- lichter en paars (Daan)
+		licht = { ClockTime = 17.8439, Brightness = 3, ExposureCompensation = 1.5, Ambient = Color3.fromRGB(56, 42, 60), OutdoorAmbient = Color3.fromRGB(196, 158, 214) },   -- licht, gezellig, warm-paars (Daan)
 		-- dunne nevel = dromerige, lichtende lila horizon (zonder nevel: gouden horizonstreep, Daans eerdere keuze)
-		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(202, 184, 228), Glare = 1.8, Haze = 0.5 },
-		kleur = { Contrast = -0.06, Saturation = 0.02, TintColor = Color3.fromRGB(224, 212, 255) },   -- paarse waas (mauve i.p.v. zalmroze), zacht contrast
+		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(214, 196, 226), Glare = 1.8, Haze = 0.5 },
+		kleur = { Brightness = 0.04, Contrast = -0.06, Saturation = 0.08, TintColor = Color3.fromRGB(240, 222, 250) },   -- warme lila waas, zacht contrast
 		gloed = { Intensity = 1.4, Size = 56, Threshold = 0.95 },
 		stralen = { Intensity = 0.18, Spread = 0.9 },
 		verte = 0.12, focus = 30, scherp = 50,
@@ -55,7 +55,7 @@ local atm = L:FindFirstChildOfClass("Atmosphere")
 if S.atmosfeer then maak("Atmosphere", "Atmosfeer", S.atmosfeer) elseif atm then atm:Destroy() end
 
 maak("ColorGradingEffect", "Tonemapper", { TonemapperPreset = Enum.TonemapperPreset.Default })
-maak("ColorCorrectionEffect", "Kleur", { Brightness = 0, Contrast = S.kleur.Contrast, Saturation = S.kleur.Saturation, TintColor = S.kleur.TintColor })
+maak("ColorCorrectionEffect", "Kleur", { Brightness = S.kleur.Brightness or 0, Contrast = S.kleur.Contrast, Saturation = S.kleur.Saturation, TintColor = S.kleur.TintColor })
 maak("BloomEffect", "Gloed", S.gloed)
 maak("SunRaysEffect", "Zonnestralen", S.stralen)
 maak("DepthOfFieldEffect", "Scherptediepte", { FarIntensity = S.verte, FocusDistance = S.focus or 40, InFocusRadius = S.scherp or 70, NearIntensity = 0 })

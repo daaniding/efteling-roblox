@@ -24,6 +24,8 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
   Daarna mijn voorstellen (Daan: "doe"): geen sterren zolang de zon op is, kleinere zon, koeler groen gras (graskleur
   hoort nu bij de lichtstand), minder verte-waas, lichtere paarse waas (zonbeschenen kanten werden fel roze).
   Daarna ("iets paarser nog"): kleurwaas (224,212,255) -> mauve lucht i.p.v. zalmroze.
+  Daarna ("te donker, het moet echt gezellig zijn en dromerig"): belichting +1,5, Brightness 3, warm-lila schaduwlicht,
+  warmere kleurwaas met iets meer kleur. Dit is de huidige schemering.
   Later: warme lantaarns/verlichte ramen tegen de paarse lucht zodra er paden en gebouwen staan.
 - Gemeten: onder ~5 graden kleurt Roblox de skybox zelf oranje/rood. Daan koos juist dat beeld. Een pastel-lila
   variant (ClockTime 17.3) staat klaar in textures/schemering/asset_ids.txt.
