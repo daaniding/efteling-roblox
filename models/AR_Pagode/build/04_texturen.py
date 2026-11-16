@@ -175,5 +175,32 @@ def kernwand():
     opslaan('kernwand', k, h, 2.0)
 
 
-for f in (pannen, sierveld, windveer, trommel, sierrand, kernwand):
+def arm():
+    """Zijvlak van de hefarm (ref/eftepedia/Pagode.jpg): creme, oranje randstrepen, in het midden een rij spitse oranje
+    bladmotieven (punt omhoog) met creme hart en rode kern. u = langs de arm (1 textuur = 1.6 m), v = over de breedte."""
+    img = Image.new('RGB', (N, N), (234, 224, 204)); hg = Image.new('L', (N, N), 90)
+    d = ImageDraw.Draw(img); dh = ImageDraw.Draw(hg)
+    OR, RD, CR = (214, 100, 50), (176, 52, 38), (234, 224, 204)
+    for y0, y1 in ((60, 120), (904, 964)):
+        d.rectangle([0, y0, N, y1], fill=OR); dh.rectangle([0, y0, N, y1], fill=140)
+    def blad(cx, cy, L, W, kl, hv):
+        pts = []
+        for i in range(41):
+            t = i / 40 * 2 * math.pi
+            x = math.cos(t); y = math.sin(t)
+            w = W * (1 - 0.55 * max(0, x)) * abs(y) ** 0.9 * (1 if y >= 0 else -1)
+            pts.append((cx + x * L, cy + w))
+        d.polygon(pts, fill=kl); dh.polygon(pts, fill=hv)
+    # u loopt langs de arm (x in de textuur): blad met de punt naar +u (omhoog langs de arm)
+    for cx in (N * 0.25, N * 0.75):
+        blad(cx, N / 2, 230, 230, OR, 180)
+        blad(cx - 20, N / 2, 150, 150, CR, 120)
+        blad(cx - 40, N / 2, 80, 80, RD, 200)
+    img = img.filter(ImageFilter.GaussianBlur(1.0))
+    h = np.asarray(hg.filter(ImageFilter.GaussianBlur(3))).astype(np.float32) / 255
+    k = np.asarray(img).astype(np.float32) * (0.85 + 0.2 * h[..., None]) + ruis(1.2, 9)[..., None]
+    opslaan('arm', k, h, 2.5)
+
+
+for f in (pannen, sierveld, windveer, trommel, sierrand, kernwand, arm):
     f(); print('textuur', f.__name__)

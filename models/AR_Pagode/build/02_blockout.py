@@ -593,15 +593,18 @@ def build(scene, args):
     N_GEVEL = 22        # zijfoto: 12 punten over 180 graden; hoek middelste gevels 15.5 graden; video ~21.5
     Z = lambda h: RAND + h      # hoogte boven de schotelrand -> z
     seg = 80
-    # 1 schotel: ondiepe kegel van de armaansluiting (r 1.2) naar de rand
-    profile_spin("AR_Pagode_schotel", [(0.0, 0.0), (1.2, 0.0), (R - 0.3, RAND - 0.15), (R, RAND)], steps=seg)
+    # 1 onderkant = HOLLE paraplu (Pagode_tech.png: kegel van de rand omhoog naar de naaf waar de arm aangrijpt; foto van onder:
+    #   de arm verdwijnt achter de voorrand). Onder de loopgang vrijwel vlak (rand -> r 5.4: +0.55), daarbinnen kegel tot de naaf.
+    NAAF = 2.5          # naaf boven de rand (foto van onder: arm komt ~1-2 m naast het midden onder de rand vandaan)
+    profile_spin("AR_Pagode_schotel", [(0.0, RAND + NAAF + 0.06), (1.05, RAND + NAAF + 0.06), (5.45, RAND + 0.61), (R - 0.05, RAND + 0.06),
+                                       (R - 0.05, RAND), (5.4, RAND + 0.55), (1.0, RAND + NAAF), (0.0, RAND + NAAF)], steps=seg)
     # 2 sierrand (fascia), 0.8 m hoog
     cylinder("AR_Pagode_sierrand", R, 0.8, segments=seg, location=(0, 0, Z(0.4)))
     # Uit video "Ontdek de Efteling - Pagode" 6:40-6:50 (gondel beneden, van opzij; vrouw 1.65 m = maatstok):
     # dek 0.7 boven de schotelrand; boven het dek: balustrade 1.3, plafond 2.4, gevelvoet 2.6, gevelpunt 4.6, palen om de 2.4 m.
     DEK = 0.7
     # 3 dek
-    cylinder("AR_Pagode_dek", R - 0.1, 0.12, segments=seg, location=(0, 0, Z(DEK - 0.06)))
+    profile_spin("AR_Pagode_dek", [(5.3, Z(DEK - 0.12)), (R - 0.1, Z(DEK - 0.12)), (R - 0.1, Z(DEK)), (5.3, Z(DEK))], steps=seg)   # ring (loopgang), midden = kern
     # 4 balustrade (blok-ring), 1.3 boven het dek
     profile_spin("AR_Pagode_balustrade", [(R - 0.25, Z(DEK)), (R - 0.15, Z(DEK)), (R - 0.15, Z(DEK + 1.3)), (R - 0.25, Z(DEK + 1.3))], steps=seg)
     # 5 palen op de kielen tussen de gevels (r 8.2) van dek tot plafond

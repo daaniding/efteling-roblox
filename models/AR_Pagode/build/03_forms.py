@@ -793,7 +793,8 @@ def build(scene, args):
     # radiale ribben onder de schotel (zijkant_onder.jpg: ~24 lichte ribben)
     for k in range(24):
         a = k / 24 * 2 * math.pi
-        krul(f"AR_Pagode_F_schotelrib_{k:02d}", [(1.3 * math.cos(a), 1.3 * math.sin(a), 0.02), (8.2 * math.cos(a), 8.2 * math.sin(a), RAND - 0.18)],
+        c, s_ = math.cos(a), math.sin(a)     # ribben volgen de holle paraplu (02: rand RAND, r 5.4 +0.55, naaf r 1.0 +2.5), 6 cm eronder
+        krul(f"AR_Pagode_F_schotelrib_{k:02d}", [(1.3 * c, 1.3 * s_, RAND + 2.30), (5.4 * c, 5.4 * s_, RAND + 0.50), (8.15 * c, 8.15 * s_, RAND + 0.02)],
              0.08, 1.0, "onderkant")
     # rollen naar blokkering-objecten die blijven
     for ob in bpy.data.objects:

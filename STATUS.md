@@ -84,7 +84,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   buurgevels vielen samen, pilasterdoppen op trommel/band, spijlen in palen, palen/bank/trommeltjes/spits precies tegen vlakken
   (nu 3-8 cm overlap). Uitslag: 0 zichtbaar; 24 'tegen elkaar' = ribben die in het dak zakken (binnenin, onzichtbaar).
   LET OP: geen commentaar midden in een regel zetten bij tekstvervanging (brak twee keer een aanroep).
-- Volgende stukjes: arm + knik (wit/creme met rood-oranje motief), voet/draaias, contragewicht, station/put; daarna export en Studio.
+- Stukje 4 (arm) klaar: build/08_arm.py. Ontdekt: de onderkant is een HOLLE paraplu (schema + foto van onder: de arm verdwijnt
+  achter de voorrand), geen bolle schotel; naaf 2.5 m boven de rand. Arm = kokerbalk 1.6 x 1.2 m, creme met oranje randstrepen en
+  een rij spitse oranje bladmotieven (Pagode.jpg). Kort stuk 7.2 m onder 34 graden (FOTO gaat voor; schema zei 9.3 m / 43.5),
+  vloeiende knik (r 2.5), lang stuk 37 m naar de draaias recht onder het gondelmidden, daaronder 5 m door naar het contragewicht.
+  Draaias 40.8 m onder het dek; met platform op 45 m ligt de as ~4.2 m boven de grond (schema ~3 m): voetstuk bepaalt dit.
+  Z-fighting na de arm: 0 zichtbaar. Vergelijking: models/AR_Pagode/review/08_arm/blad.jpg.
+- Afwerking later: zwarte stalen liggers onder de loopgang (foto van onder), lampjes in plafond en lichtlijnen langs de gevels.
+- Volgende stukjes: voet/draaias + hefcilinders, contragewicht, station/put; daarna export en Studio.
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).

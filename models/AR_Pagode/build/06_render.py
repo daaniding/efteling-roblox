@@ -27,6 +27,8 @@ CAMS = {
     "onder": ((0, -150, -42), (0, 0, 6.5), 200, (1000, 952)),
     "station": ((0, -14.5, 3.4), (0, 0, 5.6), 26, (1280, 720)),
     "boven": ((-6, -26, 26), (0, 0, 5.0), 35, (1280, 853)),
+    "vol": ((0, -157, -46), (0, 0, 0.5), 175, (651, 1000)),         # hele ref/eftepedia/Pagode.jpg (gondel + arm)
+    "zij": ((0, -140, -18), (0, 0, -16.0), 85, (900, 1100)),         # van opzij zoals Pagode_tech.png
 }
 for naam in arg.alleen.split(","):
     pos, doel, lens, res = CAMS[naam]

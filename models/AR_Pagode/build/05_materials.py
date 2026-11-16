@@ -28,6 +28,8 @@ ROLLEN = {
     "onderkant": ((0.045, 0.012, 0.012), 0.75, 0.0, None, 0),   # bijna zwart-roodbruin (foto van onder)
     "dek":       ((0.25, 0.20, 0.16), 0.8, 0.0, None, 0),
     "wit":       ((0.80, 0.80, 0.76), 0.6, 0.0, None, 0),
+    "arm":       ((1, 1, 1), 0.5, 0.0, "arm", 0.4),
+    "armzijde":  ((0.78, 0.72, 0.62), 0.5, 0.0, None, 0),
 }
 
 
@@ -134,6 +136,8 @@ def main():
         if ob.name.startswith("AR_Pagode_sierrand"): rol = "sierrand"
         if rol not in mats: rol = "rood"
         ob.data.materials.clear(); ob.data.materials.append(mats[rol])
+        if rol == "arm":                 # 08_arm: vlak 0 = zijvlak met ruiten (UV al gezet), vlak 1 = effen randvlak
+            ob.data.materials.append(mats["armzijde"]); n += 1; continue
         if ob.type == "MESH":
             uv_laag(ob.data)
             if rol == "sierveld": uv_driehoek(ob)
