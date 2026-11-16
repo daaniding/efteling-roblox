@@ -2,23 +2,44 @@
 -- Echte 3D-grasplukjes (models/LI_Grond, ReplicatedStorage.Gras.plukje0-2) alleen rond de camera, alleen op terrein-gras.
 -- Verderop doet de grasfoto (MaterialVariant EF_Gras) het werk. Vast patroon per cel: niets verspringt als je loopt.
 -- Aan de rand krimpen de plukjes, zodat ze niet zichtbaar 'ploppen'.
+-- Schaalt mee met de speler: grafische kwaliteit bepaalt het maximum, en zakt de fps onder 40 dan gaat er een stand af
+-- (stand 0 = geen 3D-gras, alleen de foto). Komt de fps weer ruim boven 58, dan gaat hij na een tijdje weer een stand op.
 local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
 local RS = game:GetService("ReplicatedStorage")
 local bron = RS:WaitForChild("Gras")
 local SJ = { bron:WaitForChild("plukje0"), bron:WaitForChild("plukje1"), bron:WaitForChild("plukje2") }
 
+--            straal, dicht, per cel   (stud, stud, plukjes)
+local STANDEN = {
+	[1] = { 8, 4, 1 },
+	[2] = { 12, 6, 2 },
+	[3] = { 16, 9, 3 },
+}
 local CEL = 0.9        -- stud
-local STRAAL = 16      -- stud rond de camera
 local RAND = 4         -- laatste 4 stud: krimpen
-local PER_CEL = 3      -- plukjes per cel dichtbij
-local DICHT = 9        -- binnen 9 stud alle plukjes, daarbuiten 1 per cel
 local BUDGET = 200     -- cellen per frame (tegen haperen)
+
+-- maximum uit de grafische instelling van de speler
+local function maxStand()
+	local ok, q = pcall(function() return UserSettings():GetService("UserGameSettings").SavedQualityLevel end)
+	local n = ok and tonumber(tostring(q):match("(%d+)$")) or nil      -- QualityLevel1..10, of Automatic (nil)
+	local m = 3
+	if n then m = n >= 7 and 3 or n >= 4 and 2 or n >= 2 and 1 or 0 end
+	if UIS.TouchEnabled and not UIS.KeyboardEnabled then m = math.min(m, 2) end   -- telefoon/tablet
+	return m
+end
+local stand = maxStand()
+local STRAAL, DICHT, PER_CEL = 0, 0, 0
+local function pasToe() local s = STANDEN[stand]; if s then STRAAL, DICHT, PER_CEL = s[1], s[2], s[3] end end
+pasToe()
 
 local map = Instance.new("Folder"); map.Name = "GrasLokaal"; map.Parent = workspace
 local rp = RaycastParams.new(); rp.FilterType = Enum.RaycastFilterType.Include; rp.FilterDescendantsInstances = { workspace.Terrain }; rp.IgnoreWater = true
 
 local cellen = {}      -- key -> {i, j, plukjes = {{part, k, schaal, x, y0, z, rot}}}
 local pool = { {}, {}, {} }
+local WEG = CFrame.new(0, -1e4, 0)
 
 local function haal(k)
 	local p = table.remove(pool[k])
@@ -35,12 +56,16 @@ end
 
 local function factor(d) return 0.3 + 0.7 * math.clamp((STRAAL - d) / RAND, 0, 1) end
 
-local WEG = CFrame.new(0, -1e4, 0)
 local function zet(e, f, aan)
 	local p, k = e[1], e[2]
 	if not aan then p.CFrame = WEG; return end
 	p.Size = SJ[k].Size * (e[3] * f)
 	p.CFrame = CFrame.new(e[4], e[5] + p.Size.Y / 2 - 0.02, e[6]) * CFrame.Angles(0, e[7], 0)
+end
+
+local function leeg(key, c)
+	for _, e in ipairs(c.plukjes) do e[1].CFrame = WEG; table.insert(pool[e[2]], e[1]) end
+	cellen[key] = nil
 end
 
 local function vul(i, j, d)
@@ -59,7 +84,37 @@ local function vul(i, j, d)
 end
 
 local laatste, wachtrij, kop = nil, {}, 1
+
+local function wissel(nieuw)
+	if nieuw == stand then return end
+	stand = nieuw; pasToe()
+	for key, c in pairs(cellen) do leeg(key, c) end
+	wachtrij, kop, laatste = {}, 1, nil
+	if stand == 0 then   -- geheugen vrijgeven
+		for k = 1, 3 do for _, p in ipairs(pool[k]) do p:Destroy() end; pool[k] = {} end
+	end
+end
+
+-- fps bewaken (alleen tellen als er echt getekend wordt)
+local beelden, sinds, goedSinds, laatsteWissel = 0, os.clock(), nil, 0
+RunService.RenderStepped:Connect(function() beelden += 1 end)
+task.spawn(function()
+	while true do
+		task.wait(3)
+		local nu = os.clock(); local fps = beelden / (nu - sinds); beelden, sinds = 0, nu
+		local max = maxStand()
+		if stand > max then wissel(max)
+		elseif fps > 5 and fps < 40 and stand > 0 and nu - laatsteWissel > 6 then wissel(stand - 1); laatsteWissel = nu; goedSinds = nil
+		elseif fps > 58 and stand < max then
+			goedSinds = goedSinds or nu
+			if nu - goedSinds > 20 and nu - laatsteWissel > 20 then wissel(stand + 1); laatsteWissel = nu; goedSinds = nil end
+		else goedSinds = nil end
+		map:SetAttribute("Stand", stand); map:SetAttribute("Fps", math.floor(fps))
+	end
+end)
+
 RunService.Heartbeat:Connect(function()
+	if stand == 0 then return end
 	local cam = workspace.CurrentCamera; if not cam then return end
 	local pos = cam.CFrame.Position
 	local p2 = Vector2.new(pos.X, pos.Z)
@@ -67,9 +122,7 @@ RunService.Heartbeat:Connect(function()
 		laatste = p2
 		for key, c in pairs(cellen) do
 			local d = (Vector2.new((c.i + 0.5) * CEL, (c.j + 0.5) * CEL) - p2).Magnitude
-			if d > STRAAL + 2 then
-				for _, e in ipairs(c.plukjes) do e[1].CFrame = CFrame.new(0, -1e4, 0); table.insert(pool[e[2]], e[1]) end
-				cellen[key] = nil
+			if d > STRAAL + 2 then leeg(key, c)
 			elseif d > DICHT - 2 then
 				local f = factor(d); for m, e in ipairs(c.plukjes) do zet(e, f, m == 1 or d < DICHT) end
 			end

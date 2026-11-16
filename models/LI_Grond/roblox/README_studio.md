@@ -10,3 +10,7 @@
   TextureID GR_sprietkleur 126762741933227, Plastic, DoubleSided, CastShadow uit) + `speler/GrasRondSpeler.client.luau`
   (alleen op terrein-gras, straal 16 stud, cel 0,9 stud, 3 plukjes/cel binnen 9 stud, 1 daarbuiten, krimpt aan de rand).
   Gemeten: ~1.600 zichtbare plukjes (250 driehoeken elk), ~62 fps in Studio.
+- Meeschalen (16 nov, Daan): stand 3 = straal 16 / 3 plukjes per cel, 2 = 12 / 2, 1 = 8 / 1, 0 = geen 3D-gras (alleen foto).
+  Maximum uit de grafische kwaliteit van de speler (1 -> 0, 2-3 -> 1, 4-6 -> 2, 7+ of Automatisch -> 3; telefoon max 2).
+  fps < 40 (3 s gemeten) -> een stand omlaag; > 58 gedurende 20 s -> een stand omhoog. Stand/Fps staan als attribuut op
+  workspace.GrasLokaal. Getest: Studio op de achtergrond (14 fps) zakte netjes 3 -> 2 -> 1 -> 0.
