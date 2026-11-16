@@ -25,8 +25,8 @@ Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Li
 - Gemeten: schaduw op gras 17% van zonlicht (echt 15-25%); wit in de zon niet uitgebrand; metaal weerspiegelt de echte lucht.
 - First person (Daan): StarterPlayer.CameraMode LockFirstPerson, eigen lichaam zichtbaar, FOV 78, lichte loopbeweging,
   WalkSpeed 10. Script ook in `speler/EerstePersoon.client.luau`.
-- In de wereld staat nog de proefplek `workspace.LichtTest` + een stuk proefterrein (gras, grindpad, rotsen) om het licht te
-  beoordelen en rond te lopen. Weghalen zodra Daan het licht goedkeurt.
+- Daan keurde het licht goed ("Goed, proefplek weg"); proefplek en proefterrein zijn weggehaald. De wereld is weer leeg
+  (alleen SpawnLocation, zichtbaar en botsend zodat je bij Play niet valt) met het nieuwe licht.
 
 ## Doel en kwaliteitslat
 Daan bouwt de Efteling realistisch en op schaal na in Roblox, met modellen uit Blender. De lat ligt hoog:
