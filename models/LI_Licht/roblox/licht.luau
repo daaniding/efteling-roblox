@@ -20,7 +20,8 @@ local STANDEN = {
 		verte = 0.08,
 	},
 	schemering = {   -- belfast_sunset_puresky; zon op de foto 2,1 graden, Roblox-zon 2,1 graden (ClockTime 17.8439)
-		lucht = { Ft = 106457871100289, Bk = 133107173128123, Lf = 130881222383257, Rt = 127070471178195, Up = 118986672181749, Dn = 130111079083953 },
+		-- v3: anti-zonkant opgehelderd (01_skybox.py ... -0.88096 0.03602 0.47181 -0.3 2.2), Daan: "andere kant te donker"
+		lucht = { Ft = 76188089991146, Bk = 110867308161873, Lf = 85992499420552, Rt = 122993953191886, Up = 125927959417922, Dn = 135587794577108 },
 		zon = 5, sterren = 0, gras = Color3.fromRGB(80, 116, 60),   -- kleine zon (gloed doet het werk), geen sterren zolang de zon op is, koeler gras
 		licht = { ClockTime = 17.8439, Brightness = 3, ExposureCompensation = 1.5, Ambient = Color3.fromRGB(56, 42, 60), OutdoorAmbient = Color3.fromRGB(196, 158, 214) },   -- licht, gezellig, warm-paars (Daan)
 		-- dunne nevel = dromerige, lichtende lila horizon (zonder nevel: gouden horizonstreep, Daans eerdere keuze)
