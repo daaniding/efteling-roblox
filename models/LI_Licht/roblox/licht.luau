@@ -22,10 +22,10 @@ local STANDEN = {
 	schemering = {   -- belfast_sunset_puresky; zon op de foto 2,1 graden, Roblox-zon 2,1 graden (ClockTime 17.8439)
 		lucht = { Ft = 106457871100289, Bk = 133107173128123, Lf = 130881222383257, Rt = 127070471178195, Up = 118986672181749, Dn = 130111079083953 },
 		zon = 5, sterren = 0, gras = Color3.fromRGB(80, 116, 60),   -- kleine zon (gloed doet het werk), geen sterren zolang de zon op is, koeler gras
-		licht = { ClockTime = 17.8439, Brightness = 2.2, ExposureCompensation = 1.15, Ambient = Color3.fromRGB(40, 30, 54), OutdoorAmbient = Color3.fromRGB(168, 128, 205) },   -- lichter en paars (Daan)
+		licht = { ClockTime = 17.8439, Brightness = 2.2, ExposureCompensation = 1.15, Ambient = Color3.fromRGB(40, 30, 54), OutdoorAmbient = Color3.fromRGB(172, 126, 215) },   -- lichter en paars (Daan)
 		-- dunne nevel = dromerige, lichtende lila horizon (zonder nevel: gouden horizonstreep, Daans eerdere keuze)
-		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(198, 188, 216), Glare = 1.8, Haze = 0.5 },
-		kleur = { Contrast = -0.06, Saturation = 0.02, TintColor = Color3.fromRGB(244, 234, 255) },   -- lichte paarse waas, zacht contrast
+		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(202, 184, 228), Glare = 1.8, Haze = 0.5 },
+		kleur = { Contrast = -0.06, Saturation = 0.02, TintColor = Color3.fromRGB(224, 212, 255) },   -- paarse waas (mauve i.p.v. zalmroze), zacht contrast
 		gloed = { Intensity = 1.4, Size = 56, Threshold = 0.95 },
 		stralen = { Intensity = 0.18, Spread = 0.9 },
 		verte = 0.12, focus = 30, scherp = 50,
