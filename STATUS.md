@@ -18,6 +18,7 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
 - Lichtstand `schemering` in `models/LI_Licht/roblox/licht.luau` (middag blijft als tweede stand). Echte foto-lucht
   belfast_sunset_puresky (CC0), zon op de horizon (2,1 graden, ClockTime 17.8439), gouden horizonstreep, eerste sterren,
   GEEN Atmosphere (die maakte de horizon melkwit), meer gloed en zonnestralen, iets verte-waas.
+  Daarna (Daan: "net iets te donker, denk aan paars"): belichting +0,85, paarse OutdoorAmbient en een paarse kleurwaas.
 - Gemeten: onder ~5 graden kleurt Roblox de skybox zelf oranje/rood. Daan koos juist dat beeld. Een pastel-lila
   variant (ClockTime 17.3) staat klaar in textures/schemering/asset_ids.txt.
 - Gras: ruwheid Grass004 was te glad (0,26: nat-asfalt-streep bij lage zon) -> nu 0,75-0,95 (GR_gras004_ruwheid_mat).
