@@ -2,7 +2,7 @@
 -- Gondel+arm+voet: oorsprong = draaias, op park (320.5, 58.5), 4.2 m boven de grond, draaiing 164.44 graden.
 -- Station: oorsprong = middelpunt bak, park (360.0, 47.5); 180 graden gedraaid (Blender x oost/y noord -> Roblox).
 -- Hoogte: NAP 10.0 = Roblox Y 2. Terrein uit AHN (x 300..385, y 15..80), materiaal uit de luchtfoto.
-local ID = {AR_Pagode_gondel = 136098683069651, AR_Pagode_station = 96213656935827, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 79740012087376, klinker_normaal = 128984416658668, bord_kleur = 107214009738343, AR_Pagode_omgeving = 116280333393500, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 99529554898967, breuksteen_normaal = 99903194418372, bamboe_kleur = 114001507931809, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290}
+local ID = {AR_Pagode_gondel = 136098683069651, AR_Pagode_station = 124320247767428, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 72708170089065, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 85202062591978, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 114001507931809, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290}
 local S = 3
 local G = 2                                   -- Roblox Y van NAP 10.0
 local function park(x, y, nap) return Vector3.new(x * S, G + (nap - 10) * S, -y * S) end
@@ -57,7 +57,8 @@ local function aankleden(m, opstaan)
       local s = Instance.new("SurfaceAppearance")
       s.ColorMap = "rbxassetid://" .. ID[rol .. "_kleur"]
       if ID[rol .. "_normaal"] then s.NormalMap = "rbxassetid://" .. ID[rol .. "_normaal"] end
-      if rol == "klinker" then s.Color = Color3.fromRGB(128, 112, 114) end   -- rode klinkers gloeiden onder belichting 1.25 + bloom
+      if rol == "klinker" then s.Color = Color3.fromRGB(214, 200, 172) end      -- tegen het paarse schemerlicht in (video = daglicht)
+      if rol == "breuksteen" then s.Color = Color3.fromRGB(206, 204, 180) end
       if ALPHA[rol] then s.AlphaMode = Enum.AlphaMode.Transparency; p.CastShadow = true end
       s.Parent = p
     elseif EFFEN[rol] then

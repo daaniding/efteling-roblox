@@ -97,14 +97,59 @@ def uv_laag(me):
 
 
 def uv_doos(ob, schaal=1.5):
+    """Doosprojectie in wereldmaat. Per vlak een geheel getal eraf: Roblox bewaart UV's met beperkte precisie, bij
+    parkcoordinaten (~350) verschoof de textuur per driehoek. Voor herhalende texturen is een hele verschuiving onzichtbaar."""
     me = ob.data; bm = bmesh.new(); bm.from_mesh(me); uv = bm.loops.layers.uv.verify()
-    mw = ob.matrix_world
+    mw = ob.matrix_world; alle = []
     for f in bm.faces:
         n = (mw.to_3x3() @ f.normal); a = max(range(3), key=lambda i: abs(n[i]))
+        uvs = []
         for l in f.loops:
             p = mw @ l.vert.co
             u, v = [(p.y, p.z), (p.x, p.z), (p.x, p.y)][a]
-            l[uv].uv = (u / schaal, v / schaal)
+            uvs.append((u / schaal, v / schaal))
+        alle.append((f, uvs, a))
+    zet_uv(bm, uv, alle)
+    bm.to_mesh(me); bm.free()
+
+
+def zet_uv(bm, uv, alle):
+    """Een geheel getal per OBJECT eraf (rond het midden): naadloos binnen het vlak, kleine getallen. Per vlak verschuiven gaf
+    in Roblox lijnen langs elke driehoek (mipmap op de sprong); niets verschuiven gaf bij ~350 verschoven driehoeken (precisie)."""
+    groepen = {}
+    for f, uvs, g in alle: groepen.setdefault(g, []).extend(uvs)        # per projectierichting een eigen verschuiving
+    schuif = {g: (round(sum(u for u, _ in l) / len(l)), round(sum(v for _, v in l) / len(l))) for g, l in groepen.items()}
+    for f, uvs, g in alle:
+        du, dv = schuif[g]
+        for l, (u, v) in zip(f.loops, uvs): l[uv].uv = (u - du, v - dv)
+
+
+def uv_muur(ob, schaal, cx=360.0, cy=47.5):
+    """Muren: u langs de muur, v = hoogte. Gebogen muren (straal rond het bakmidden ~constant): booglengte; rechte/schuine
+    muren: langs de hoofdrichting. Bovenvlakken: x/y. Per vlak een geheel getal eraf (precisie in Roblox)."""
+    me = ob.data; bm = bmesh.new(); bm.from_mesh(me); uv = bm.loops.layers.uv.verify()
+    mw = ob.matrix_world
+    pts = [mw @ v.co for v in bm.verts]
+    rs = [math.hypot(p.x - cx, p.y - cy) for p in pts]
+    boog = (max(rs) - min(rs)) < 1.0
+    if boog:
+        rm = sum(rs) / len(rs)
+    else:
+        mx = sum(p.x for p in pts) / len(pts); my = sum(p.y for p in pts) / len(pts)
+        sxx = sum((p.x - mx) ** 2 for p in pts); syy = sum((p.y - my) ** 2 for p in pts); sxy = sum((p.x - mx) * (p.y - my) for p in pts)
+        hoek = 0.5 * math.atan2(2 * sxy, sxx - syy); dx, dy = math.cos(hoek), math.sin(hoek)
+    alle = []
+    for f in bm.faces:
+        n = (mw.to_3x3() @ f.normal)
+        uvs = []
+        for l in f.loops:
+            p = mw @ l.vert.co
+            if abs(n.z) > 0.7: u, v = p.x, p.y
+            elif boog: u, v = rm * math.atan2(p.y - cy, p.x - cx), p.z
+            else: u, v = p.x * dx + p.y * dy, p.z
+            uvs.append((u / schaal, v / schaal))
+        alle.append((f, uvs, abs(n.z) > 0.7))
+    zet_uv(bm, uv, alle)
     bm.to_mesh(me); bm.free()
 
 
@@ -206,6 +251,7 @@ def main():
             elif rol == "sierrand": uv_cilinder(ob, 1.0)
             elif rol == "kernwand": uv_cilinder(ob, 1.2)
             elif rol in ("klinker", "natuursteen", "vlonder"): uv_doos(ob, 1.0 if rol == "klinker" else 2.0)
+            elif rol == "breuksteen" and len(ob.data.vertices) > 60: uv_muur(ob, 2.0)     # muren (rotsblokken: doos)
             elif rol in ("breuksteen", "naald", "haag", "bloem", "schors"):
                 uv_doos(ob, {"breuksteen": 2.0, "naald": 1.0, "haag": 0.8, "bloem": 0.6, "schors": 1.0}[rol])
             elif rol == "bord": uv_bord(ob)

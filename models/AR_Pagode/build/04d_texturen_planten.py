@@ -97,7 +97,7 @@ def breuksteen():
     Voronoi met platte (horizontaal gerekte) maat, naadloos; normaal uit de hoogte (steen bol, voeg diep)."""
     import numpy as np
     N = 1024; rng = np.random.default_rng(5)
-    cols, rows = 6, 18
+    cols, rows = 8, 22
     pts = []
     for j in range(rows):
         for i in range(cols):
@@ -107,18 +107,20 @@ def breuksteen():
     d1 = np.full((N, N), 9.0); d2 = np.full((N, N), 9.0); idx = np.zeros((N, N), int)
     for k, (px, py) in enumerate(pts):
         dx = np.abs(xx - px); dx = np.minimum(dx, 1 - dx); dy = np.abs(yy - py); dy = np.minimum(dy, 1 - dy)
-        d = np.sqrt((dx * 0.36) ** 2 + dy ** 2) * rng.uniform(0.85, 1.15)
+        d = np.sqrt((dx * 0.36) ** 2 + dy ** 2)
         nieuw = d < d1
         d2 = np.where(nieuw, d1, np.minimum(d2, d)); idx = np.where(nieuw, k, idx); d1 = np.where(nieuw, d, d1)
     rand = d2 - d1                                     # afstand tot de voeg
-    pal = np.array([(92, 78, 66), (110, 94, 80), (78, 70, 64), (120, 88, 66), (96, 84, 80), (70, 60, 52), (128, 110, 92), (104, 72, 56)], float)
+    pal = np.array([(112, 110, 106), (104, 106, 94), (124, 102, 102), (132, 104, 88), (84, 80, 80), (66, 62, 62), (150, 140, 124), (118, 94, 98)], float)   # grijs, grijsgroen, mauve, roest, donker, beige (video 0:22)
     kl = pal[rng.integers(0, len(pal), len(pts))][idx] * rng.uniform(0.85, 1.12, len(pts))[idx][..., None]
     from PIL import ImageFilter as _F
     vlek = np.asarray(Image.fromarray((rng.random((N, N)) * 255).astype(np.uint8)).filter(_F.GaussianBlur(3)), float)
     ruis = (rng.normal(0, 6, (N, N)) + (vlek - 128) * 0.35)[..., None]
-    voeg = np.clip(rand / 0.012, 0, 1)[..., None]
-    img = kl * (0.55 + 0.45 * voeg) + ruis
-    img = img * voeg + np.array([28, 24, 22]) * (1 - voeg)
+    voeg = np.clip((rand - 0.0025) / 0.006, 0, 1)[..., None]
+    licht = np.clip(rand / 0.03, 0, 1)[..., None]                 # stenen bol: midden lichter, randen schaduw
+    py_ = pts[idx][..., 1]; boven = (((yy - py_ + 0.5) % 1.0) - 0.5)[..., None]   # boven het steenmidden iets lichter
+    img = kl * (0.95 + 0.2 * licht - boven * 0.7) + ruis
+    img = img * voeg + np.array([38, 36, 38]) * (1 - voeg)
     Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).save(os.path.join(T, 'PG_breuksteen_kleur.png'))
     h = np.clip(rand / 0.02, 0, 1) + rng.normal(0, 0.03, (N, N))
     gx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * 2.5; gy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * 2.5
@@ -150,8 +152,38 @@ def spartak():
     im.save(os.path.join(T, 'PG_spar_kleur.png'))
 
 
+def klinker_visgraat():
+    """Klinkers in visgraat onder 45 graden (video 0:05 plein, 0:28 laantje), steen ~18 x 9 cm, 1 textuur = 1 m (naadloos).
+    Kleur gemeten in de video: laantje (120, 106, 114), plein (146, 137, 140) -> mauve-bruin, iets warmer dan de koele video."""
+    import numpy as np
+    N = 1024; T = 1.0; k = 4; W = T / (k * 2 * math.sqrt(2)); rng = np.random.default_rng(21)
+    yy, xx = (np.mgrid[0:N, 0:N] + 0.5) / N * T
+    cx = (xx + yy) / math.sqrt(2) / W; cy = (yy - xx) / math.sqrt(2) / W
+    c = np.floor(cx).astype(int); r = np.floor(cy).astype(int); d = (c - r) % 4
+    sc = np.where(d == 1, c - 1, c); sr = np.where(d == 3, r + 1, r); hor = d < 2
+    # kleur per steen PERIODIEK met het patroon (perioden (8,8) en (8,-8) in cellen), anders wisselt een steen op de
+    # tegelrand halverwege van kleur -> schuine driehoeken op de klinkers
+    pp = (sc + sr) % 16; qq = (sc - sr) % 16
+    sid = pp * 16 + qq + hor * 256
+    pal = np.array([(132, 104, 102), (140, 98, 88), (116, 98, 106), (98, 80, 82), (152, 128, 122), (126, 110, 108)], float)
+    kl = pal[rng.integers(0, len(pal), 512)][sid] * rng.uniform(0.88, 1.1, 512)[sid][..., None]
+    fx, fy = cx - c, cy - r                                   # positie binnen de cel
+    lx = np.where(hor, (fx + (d == 1)) / 2, fx); ly = np.where(hor, fy, (fy + 1 - (d == 3)) / 2)   # 0..1 binnen de steen
+    lx = np.where(hor, lx, fx); ly = np.where(hor, fy, np.where(d == 3, fy / 2, (fy + 1) / 2))
+    rand = np.minimum(np.minimum(lx, 1 - lx) * np.where(hor, 2, 1), np.minimum(ly, 1 - ly) * np.where(hor, 1, 2))
+    voeg = np.clip((rand - 0.035) / 0.03, 0, 1)[..., None]
+    vlek = rng.normal(0, 6, (N, N))[..., None]
+    img = kl * (0.82 + 0.18 * voeg) + vlek
+    img = img * voeg + np.array([150, 142, 132]) * (1 - voeg)
+    Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).save(os.path.join(T_ := os.path.join(D, 'textures'), 'PG_klinker_kleur.png'))
+    h = voeg[..., 0] * 0.7 + rng.normal(0, 0.02, (N, N))
+    gx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) * 2.0; gy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) * 2.0
+    nz = 1 / np.sqrt(gx ** 2 + gy ** 2 + 1)
+    Image.fromarray((np.stack([(-gx * nz + 1) / 2, (gy * nz + 1) / 2, (nz + 1) / 2], -1) * 255).astype(np.uint8)).save(os.path.join(T_, 'PG_klinker_normaal.png'))
+
+
 if __name__ == '__main__':
-    spartak(); breuksteen(); bamboe(); loofblad()
+    klinker_visgraat(); spartak(); breuksteen(); bamboe(); loofblad()
     tegel('PG_naald_kleur.png', (30, 50, 26), naald, 2600)
     tegel('PG_haag_kleur.png', (34, 58, 22), haagblad, 9000)
     tegel('PG_bloem_kleur.png', (44, 72, 30), bloem, 5000)

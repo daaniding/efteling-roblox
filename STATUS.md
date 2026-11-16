@@ -119,7 +119,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
 - In Studio: workspace.PagodeOmgeving + nieuw PagodeStation, 9 lantaarnlichten in Pagode.Afwerking, spawn op het plein.
 - Terreinfout opgelost: het leegmaken haalde alleen terrein onder Y -8 weg, dus het oude (hogere) terrein bleef staan en
   stak als "zand" (Ground) door de klinkers. Nu: hele hoogte leeg, onder alle bestrating terrein op NAP 8.0, alleen gras.
-- Nog te doen (volgende ronde): breuksteenmuur iets fijner en minder roze, klinkers minder rood (textuur zelf), Toko Pagode
+- Ronde "muur en klinkers fijner" (16 nov): kleuren gemeten in de video (muur gem. (98, 94, 97), klinkers (120, 106, 114)).
+  Klinkers nu VISGRAAT onder 45 graden zoals op het plein en in het laantje (~18 x 9 cm, mauve-bruin); breuksteen fijner
+  (8 x 22 stenen per 2 m), grijs/grijsgroen/mauve/roest met smalle voegen. In Studio een warme tint (klinker 214,200,172;
+  muur 206,204,180) tegen het paarse schemerlicht in. Muren krijgen de textuur langs de muur (boog of hoofdrichting).
+  Driehoeken op de klinkers opgelost: (1) textuur herhaalde niet in kleur -> stenen wisselden op de tegelrand halverwege van
+  kleur; (2) UV's in parkmaat (~350) te groot voor Roblox -> nu per object en projectierichting een geheel getal eraf.
+- Nog te doen (volgende ronde): Toko Pagode
   met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw

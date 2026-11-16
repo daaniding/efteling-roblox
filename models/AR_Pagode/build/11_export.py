@@ -58,8 +58,13 @@ def schrijf(groepen, naam):
             for pi in polys:
                 p = me.polygons[pi]; vs = []
                 for vi in p.vertices:
-                    if vi not in vmap: vmap[vi] = bm.verts.new(me.vertices[vi].co)
-                    vs.append(vmap[vi])
+                    # eigen hoekpunten per vlak: Roblox voegt gedeelde hoekpunten samen en neemt dan de UV van het buurvlak
+                    # (driehoeken met verschoven textuur op de klinkers); per vlak los = geen naad om samen te voegen
+                    if p.use_smooth:             # gladde vormen (blobs) blijven gedeeld voor zachte schaduw
+                        if vi not in vmap: vmap[vi] = bm.verts.new(me.vertices[vi].co)
+                        vs.append(vmap[vi])
+                    else:
+                        vs.append(bm.verts.new(me.vertices[vi].co))
                 try: f = bm.faces.new(vs)
                 except ValueError: continue
                 f.smooth = p.use_smooth

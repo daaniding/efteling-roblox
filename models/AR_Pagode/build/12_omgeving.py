@@ -313,8 +313,10 @@ def build():
     for k, (a0, a1) in enumerate(((-52.0, A_UIT - gat), (A_UIT + gat, 54.0))):
         ringsector(f"AR_Pagode_O_oostmuur{k}", R_VL, 11.0, -1.0, Z_I + 0.12, a0, a1, "breuksteen")
         spijlenhek(f"AR_Pagode_O_hek_oost{k}", boog(10.82, a0 + 0.3, a1 - 0.3, Z_I + 0.12))
-    ringsector("AR_Pagode_O_pad_oost", 11.0, R_BO + 0.15, -0.9, Z_P + 0.03, -52.0, 54.0, "klinker")
-    ringsector("AR_Pagode_O_plein", R_BO + 0.15, 24.0, -0.9, Z_P, -52.0, 88.0, "klinker")
+    for k in range(4):                     # in stukken: kleine UV-getallen per object (precisie in Roblox)
+        ringsector(f"AR_Pagode_O_pad_oost{k}", 11.0, R_BO + 0.15, -0.9, Z_P + 0.03, -52.0 + 26.5 * k, -52.0 + 26.5 * (k + 1), "klinker")
+    for k in range(5):
+        ringsector(f"AR_Pagode_O_plein{k}", R_BO + 0.15, 24.0, -0.9, Z_P, -52.0 + 28.0 * k, -52.0 + 28.0 * (k + 1), "klinker")
     ringsector("AR_Pagode_O_plein_kop", R_BO + 0.15, 16.2, -0.9, Z_P, 88.0, aL(15.2) - 0.1, "klinker", seg=3)
     rot = math.radians(A_UIT); f = Vector((math.cos(rot), math.sin(rot), 0)); tg = Vector((-f.y, f.x, 0))
     for k in range(9):

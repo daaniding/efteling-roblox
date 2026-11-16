@@ -104,7 +104,8 @@ local function aankleden(m, opstaan)
       local s = Instance.new("SurfaceAppearance")
       s.ColorMap = "rbxassetid://" .. ID[rol .. "_kleur"]
       if ID[rol .. "_normaal"] then s.NormalMap = "rbxassetid://" .. ID[rol .. "_normaal"] end
-      if rol == "klinker" then s.Color = Color3.fromRGB(128, 112, 114) end   -- rode klinkers gloeiden onder belichting 1.25 + bloom
+      if rol == "klinker" then s.Color = Color3.fromRGB(214, 200, 172) end      -- tegen het paarse schemerlicht in (video = daglicht)
+      if rol == "breuksteen" then s.Color = Color3.fromRGB(206, 204, 180) end
       if ALPHA[rol] then s.AlphaMode = Enum.AlphaMode.Transparency; p.CastShadow = true end
       s.Parent = p
     elseif EFFEN[rol] then

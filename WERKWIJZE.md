@@ -375,3 +375,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Onder eigen meshes (bestrating, trappen) terrein minstens 1.5 m lager leggen: terreinvoxels van 4 stud bollen op.
 - Scène namaken: eerst een video zoeken waarin iemand de route loopt, frames per seconde, en elke plek uit het beeld
   terugzoeken op luchtfoto + AHN; daarna renders vanaf dezelfde camerapunten naast de video leggen.
+- Herhalende texturen moeten ook in KLEUR naadloos zijn (willekeurige kleur per steen periodiek kiezen), anders zie je op elke
+  tegelrand halve stenen; bij een patroon onder 45 graden lijken dat driehoeken. Altijd 3x3 naast elkaar leggen en kijken.
+- UV's klein houden: Roblox bewaart UV's niet nauwkeurig genoeg voor waarden rond 350. Per object (en per projectierichting) een
+  geheel getal eraf; NIET per vlak (dan krijg je in Roblox lijnen langs elke driehoek door de mipmap op de sprong).
+- In het schemerlicht (paars) worden mauve/roze kleuren lila: texturen naar daglicht-video kalibreren en in Studio een warme tint.
+- screen_capture geeft bij exact dezelfde camerapositie soms een oud beeld terug: verschuif de camera een fractie bij elke test.
