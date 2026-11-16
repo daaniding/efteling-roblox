@@ -1,6 +1,6 @@
 {
  "AR_Pagode_gondel": 136098683069651,
- "AR_Pagode_station": 78321443649687,
+ "AR_Pagode_station": 96213656935827,
  "pannen_kleur": 113862951849627,
  "pannen_normaal": 135305032497691,
  "sierveld_kleur": 92806080990483,
@@ -21,5 +21,17 @@
  "vlonder_normaal": 105858881415149,
  "klinker_kleur": 79740012087376,
  "klinker_normaal": 128984416658668,
- "bord_kleur": 107214009738343
+ "bord_kleur": 107214009738343,
+ "AR_Pagode_omgeving": 116280333393500,
+ "ingangsbord_kleur": 106758910462500,
+ "uitgangsbord_kleur": 71715100841980,
+ "breuksteen_kleur": 99529554898967,
+ "breuksteen_normaal": 99903194418372,
+ "bamboe_kleur": 114001507931809,
+ "blad_kleur": 75105356130828,
+ "spar_kleur": 91377517844234,
+ "naald_kleur": 72168876031761,
+ "haag_kleur": 97966661994557,
+ "bloem_kleur": 71396169120830,
+ "schors_kleur": 139686993244290
 }

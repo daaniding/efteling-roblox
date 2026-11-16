@@ -75,4 +75,11 @@ for i = 0, 47 do
   staaf("rodelijn", B(8.55 * math.cos(a0), 8.55 * math.sin(a0), 1.54).Position, B(8.55 * math.cos(a1), 8.55 * math.sin(a1), 1.54).Position, 0.25,
     {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 40, 40), CanCollide = false, CanQuery = false})
 end
+-- 4 lantaarns van de omgeving (12_omgeving.py -> exports/omgeving_lampen.json, park x, y, z = NAP - 10): warm licht
+local LAMPEN = {{352.74, 63.42, 3.63}, {349.52, 67.41, 2.88}, {341.45, 56.23, 3.18}, {349.81, 56.05, 4.23}, {360.53, 62.69, 2.55}, {367.14, 60.92, 2.55}, {355.63, 68.04, 2.85}, {372.36, 40.93, 2.58}, {373.79, 49.93, 2.58}}
+for i, l in ipairs(LAMPEN) do
+  local p = Instance.new("Part"); p.Name = "lantaarnlicht"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+  p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3); p.Position = Vector3.new(l[1] * S, 2 + l[3] * S, -l[2] * S); p.Parent = map
+  local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 196, 128); pl.Brightness = 1.4; pl.Range = 18; pl.Shadows = true; pl.Parent = p
+end
 return "afwerking: " .. #map:GetChildren() .. " onderdelen"

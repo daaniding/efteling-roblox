@@ -45,6 +45,27 @@ ROLLEN = {
     "staal_groen": ((0.03, 0.12, 0.08), 0.5, 0.6, None, 0),
     "hek_open":  ((0.03, 0.12, 0.08), 0.5, 0.6, None, 0),
     "armzijde":  ((0.78, 0.72, 0.62), 0.5, 0.0, None, 0),
+    # 12_omgeving (video fmEZsIkqsl8)
+    "brons":     ((0.09, 0.06, 0.035), 0.45, 0.8, None, 0),      # lantaarnpalen
+    "lamp":      ((1.0, 0.84, 0.58), 0.3, 0.0, None, 0),         # lantaarnglas (Neon in Roblox)
+    "lamp_groen": ((0.2, 1.0, 0.45), 0.3, 0.0, None, 0),         # tourniquetlampjes
+    "glas":      ((0.55, 0.65, 0.66), 0.05, 0.0, None, 0),       # ramen controlehuisje
+    "dak_donker": ((0.06, 0.06, 0.07), 0.7, 0.0, None, 0),
+    "aarde":     ((0.07, 0.045, 0.03), 0.95, 0.0, None, 0),      # bloemenperk
+    "reling":    ((0.02, 0.045, 0.03), 0.4, 0.6, None, 0),       # donkergroene wachtrijreling
+    "bord_blauw": ((0.48, 0.74, 0.80), 0.4, 0.0, None, 0),
+    "ingangsbord": ((1, 1, 1), 0.4, 0.0, "ingangsbord", 0),
+    "uitgangsbord": ((1, 1, 1), 0.4, 0.0, "uitgangsbord", 0),
+    "breuksteen": ((1, 1, 1), 0.9, 0.0, "breuksteen", 0.9),      # keermuren wachtrij (video 0:04-0:30)
+    # 14_planten
+    "bamboe":    ((1, 1, 1), 0.6, 0.0, "bamboe", 0),             # bladkaart (alpha)
+    "blad":      ((1, 1, 1), 0.6, 0.0, "blad", 0),               # bladkaart (alpha)
+    "spar":      ((1, 1, 1), 0.7, 0.0, "spar", 0),               # sparrentak (alpha)
+    "naald":     ((1, 1, 1), 0.8, 0.0, "naald", 0),
+    "haag":      ((1, 1, 1), 0.8, 0.0, "haag", 0),
+    "bloem":     ((1, 1, 1), 0.7, 0.0, "bloem", 0),
+    "schors":    ((1, 1, 1), 0.9, 0.0, "schors", 0),
+    "bamboestam": ((0.42, 0.45, 0.16), 0.45, 0.0, None, 0),
 }
 
 
@@ -59,6 +80,8 @@ def materiaal(rol):
     if tex:
         it = nt.nodes.new("ShaderNodeTexImage"); it.image = bpy.data.images.load(os.path.join(T, f"PG_{tex}_kleur.png"), check_existing=True)
         nt.links.new(it.outputs["Color"], b.inputs["Base Color"])
+        if tex in ("bamboe", "blad", "spar"):          # bladkaarten: alpha uit de textuur
+            nt.links.new(it.outputs["Alpha"], b.inputs["Alpha"])
         if rol == "pannen":     # pannen: textuur x oranje is al in de textuur; vermenigvuldigen niet nodig
             pass
         nn = os.path.join(T, f"PG_{tex}_normaal.png")
@@ -173,6 +196,8 @@ def main():
             for p in ob.data.polygons:   # materials.clear() zet de indexen terug op 0
                 p.material_index = 0 if abs(p.normal.y) > 0.9 else 1
             n += 1; continue
+        if ob.type == "MESH" and ob.get("uv_vast"):     # borden: UV gezet in 12_omgeving
+            n += 1; continue
         if ob.type == "MESH":
             uv_laag(ob.data)
             if rol == "sierveld": uv_driehoek(ob)
@@ -181,6 +206,8 @@ def main():
             elif rol == "sierrand": uv_cilinder(ob, 1.0)
             elif rol == "kernwand": uv_cilinder(ob, 1.2)
             elif rol in ("klinker", "natuursteen", "vlonder"): uv_doos(ob, 1.0 if rol == "klinker" else 2.0)
+            elif rol in ("breuksteen", "naald", "haag", "bloem", "schors"):
+                uv_doos(ob, {"breuksteen": 2.0, "naald": 1.0, "haag": 0.8, "bloem": 0.6, "schors": 1.0}[rol])
             elif rol == "bord": uv_bord(ob)
             else: uv_doos(ob, 1.5)
         n += 1

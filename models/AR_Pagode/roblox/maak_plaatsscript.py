@@ -71,7 +71,9 @@ end
 
 -- rol -> textuur (SurfaceAppearance) of effen kleur + materiaal
 local TEX = {{pannen = true, sierveld = true, windveer = true, trommel = true, sierrand = true, kernwand = true, arm = true,
-  natuursteen = true, vlonder = true, klinker = true, bord = true}}
+  natuursteen = true, vlonder = true, klinker = true, bord = true, ingangsbord = true, uitgangsbord = true, breuksteen = true,
+  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true}}
+local ALPHA = {{bamboe = true, blad = true, spar = true}}       -- bladkaarten: transparantie uit de textuur
 local EFFEN = {{
   groen = {{Color3.fromRGB(22, 112, 86), Enum.Material.SmoothPlastic}}, rib = {{Color3.fromRGB(232, 228, 216), Enum.Material.SmoothPlastic}},
   vlam = {{Color3.fromRGB(236, 232, 220), Enum.Material.SmoothPlastic}}, goud = {{Color3.fromRGB(214, 168, 70), Enum.Material.Metal}},
@@ -83,8 +85,14 @@ local EFFEN = {{
   chroom = {{Color3.fromRGB(205, 205, 210), Enum.Material.Metal}}, wit_glans = {{Color3.fromRGB(228, 222, 206), Enum.Material.SmoothPlastic}},
   grind = {{Color3.fromRGB(84, 76, 66), Enum.Material.Pebble}}, beton_groen_licht = {{Color3.fromRGB(78, 104, 82), Enum.Material.Concrete}},
   staal_groen = {{Color3.fromRGB(24, 62, 44), Enum.Material.Metal}}, hek_open = {{Color3.fromRGB(24, 62, 44), Enum.Material.Metal}},
+  brons = {{Color3.fromRGB(64, 46, 30), Enum.Material.Metal}}, lamp = {{Color3.fromRGB(255, 214, 150), Enum.Material.Neon}},
+  lamp_groen = {{Color3.fromRGB(70, 255, 120), Enum.Material.Neon}}, glas = {{Color3.fromRGB(150, 172, 176), Enum.Material.Glass}},
+  dak_donker = {{Color3.fromRGB(46, 46, 50), Enum.Material.Slate}}, aarde = {{Color3.fromRGB(58, 40, 28), Enum.Material.Ground}},
+  reling = {{Color3.fromRGB(20, 36, 26), Enum.Material.Metal}}, bord_blauw = {{Color3.fromRGB(128, 196, 212), Enum.Material.SmoothPlastic}},
+  bamboestam = {{Color3.fromRGB(118, 122, 52), Enum.Material.SmoothPlastic}},
 }}
-local LOOP = {{dek = true, vlonder = true, klinker = true, rooster = true, beton_groen = true, beton_groen_licht = true, natuursteen = true, grind = true}}
+local LOOP = {{dek = true, vlonder = true, klinker = true, rooster = true, beton_groen = true, beton_groen_licht = true, natuursteen = true, grind = true,
+  breuksteen = true, aarde = true, bloem = true}}
 
 local function aankleden(m, opstaan)
   for _, p in ipairs(m:GetChildren()) do
@@ -96,20 +104,25 @@ local function aankleden(m, opstaan)
       local s = Instance.new("SurfaceAppearance")
       s.ColorMap = "rbxassetid://" .. ID[rol .. "_kleur"]
       if ID[rol .. "_normaal"] then s.NormalMap = "rbxassetid://" .. ID[rol .. "_normaal"] end
-      if rol == "klinker" then s.Color = Color3.fromRGB(170, 150, 145) end   -- rode klinkers gloeiden onder belichting 1.25 + bloom
+      if rol == "klinker" then s.Color = Color3.fromRGB(128, 112, 114) end   -- rode klinkers gloeiden onder belichting 1.25 + bloom
+      if ALPHA[rol] then s.AlphaMode = Enum.AlphaMode.Transparency; p.CastShadow = true end
       s.Parent = p
     elseif EFFEN[rol] then
       p.Color = EFFEN[rol][1]; p.Material = EFFEN[rol][2]
       if rol == "chroom" then p.Reflectance = 0.15 end
+      if rol == "glas" then p.Transparency = 0.55 end
+      if rol == "lamp" or rol == "lamp_groen" then p.CastShadow = false end
     end
   end
 end
 
-for _, n in ipairs({{"Pagode", "PagodeStation"}}) do local o = workspace:FindFirstChild(n); if o then o:Destroy() end end
+for _, n in ipairs({{"Pagode", "PagodeStation", "PagodeOmgeving"}}) do local o = workspace:FindFirstChild(n); if o then o:Destroy() end end
 local gondel = laad(ID.AR_Pagode_gondel, "Pagode"); aankleden(gondel, true)
 gondel:PivotTo(CFrame.new(park({AS_PARK[0]}, {AS_PARK[1]}, 10 + {AS_HOOGTE:.3f})) * CFrame.Angles(0, math.rad({rot_y:.4f}), 0))
 local station = laad(ID.AR_Pagode_station, "PagodeStation"); aankleden(station, true)
 station:PivotTo(CFrame.new(park(360.0, 47.5, 10)) * CFrame.Angles(0, math.pi, 0))
+local omgeving = laad(ID.AR_Pagode_omgeving, "PagodeOmgeving"); aankleden(omgeving, true)
+omgeving:PivotTo(CFrame.new(park(360.0, 47.5, 10)) * CFrame.Angles(0, math.pi, 0))
 
 -- terrein (AHN, 1 m) met uitsparingen
 local A = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
@@ -130,7 +143,7 @@ local NX, NY = {NX}, {NY}
 local function hoogte(i, j) return 8.5 + string.byte(HB, j * NX + i + 1) * 0.015 end
 local function verhard(i, j) local k = j * NX + i; return bit32.btest(string.byte(MB, k // 8 + 1), bit32.lshift(1, 7 - k % 8)) end
 local t = workspace.Terrain
-t:FillBlock(CFrame.new((({X0} + {X1}) / 2) * S, G - 30, -(({Y0} + {Y1}) / 2) * S), Vector3.new({NX} * S, 40, {NY} * S), Enum.Material.Air)
+t:FillBlock(CFrame.new((({X0} + {X1}) / 2) * S, 6, -(({Y0} + {Y1}) / 2) * S), Vector3.new({NX} * S, 112, {NY} * S), Enum.Material.Air)   -- hele hoogte leeg (oude fout: alleen onder Y -8)
 local ASX, ASY = {AS_PARK[0]}, {AS_PARK[1]}
 local ux, uy = math.cos(math.rad({theta:.4f})), math.sin(math.rad({theta:.4f}))
 local n = 0
@@ -142,10 +155,17 @@ for j = 0, NY - 1 do
     local lx, ly = (x - ASX) * ux + (y - ASY) * uy, -(x - ASX) * uy + (y - ASY) * ux    -- langs/dwars de arm vanaf de as
     local weg = r < 9.0 or (lx > -9.8 and lx < 6.8 and math.abs(ly) < 3.6) or (lx > 6.5 and lx < 30.0 and math.abs(ly) < 1.5)
     if not weg then
-      if r < 10.8 then nap = math.min(nap, 11.3 - 0.3) end                                   -- onder de vlonder
-      if r < 19.2 and a > 93 and a < 157 then nap = math.min(nap, 11.3 - (r - 10.6) / 8.4 * 1.6 - 0.45) end   -- onder de tribune
+      -- onder alle eigen bestrating/tribune/bordes ruim weg: terreinvoxels (4 stud) bollen anders door de klinkers heen
+      local aL = 104.0 + (r - 14.2) * 0.95 - math.deg(0.9 / math.max(r, 1))                  -- tuinkant laantje (12_omgeving)
+      local bebouwd = r < 11.2
+        or (r < 27.2 and a > aL - 1.0 and a < 157.5)                                         -- bordes, tribune, laantje, onderpad
+        or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
+        or (r < 24.6 and (a < 89 or a > 306))                                                -- plein en oostpad
+        or (r < 16.6 and a >= 88 and a < aL)                                                 -- kop van het laantje
+      if bebouwd then nap = math.min(nap, 8.0)
+      elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 9.5) end               -- tuin: niet boven het laantje
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)
-      t:FillBlock(CFrame.new(x * S, (top + (G - 30)) / 2, -y * S), Vector3.new(S, top - (G - 30), S), verhard(i, j) and Enum.Material.Ground or Enum.Material.Grass)
+      t:FillBlock(CFrame.new(x * S, (top + (G - 30)) / 2, -y * S), Vector3.new(S, top - (G - 30), S), Enum.Material.Grass)   -- Ground zag eruit als zand
       n += 1
       if n % 400 == 0 then task.wait() end
     end
@@ -155,7 +175,7 @@ end
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")
 if sp then
   if not sp:GetAttribute("OudeCFrame") then sp:SetAttribute("OudeCFrame", tostring(sp.CFrame)) end
-  sp.CFrame = CFrame.new(park(372, 62, 11.4))
+  sp.CFrame = CFrame.new(park(366.5, 68.5, 9.75))      -- op het plein, voor het ingangsbord (video 0:05)
 end
 return "Pagode geplaatst, terrein " .. n .. " kolommen"
 '''

@@ -104,8 +104,23 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   rode lichtlijn onder het platform. Klinkers iets gedempt (gloeiden onder belichting 1.25 + bloom).
 - Gecontroleerd: tribune en vlonder vrij van terrein, onderkant van onder leesbaar (hol, rode rand), speltest 58 fps bij het
   station (GPU 7.5 ms).
-- Nog open (later, als Daan wil): zwarte stalen liggers onder de loopgang; omgeving rond de Pagode (bomen, paden) hoort bij de
-  volgende stap.
+- Nog open (later, als Daan wil): zwarte stalen liggers onder de loopgang.
+
+### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
+- Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
+  luchtfoto, AHN. Alles in models/AR_Pagode/scene-brief.md.
+- Route zoals echt: plein (NAP 9.6) -> blauw bord PAGODE -> verdiept laantje langs de keermuur (bonsai, rotsen, bamboe) ->
+  tribune (11 klinkerrijen met wachtrijrelingen, trapstrook met lantaarns) -> bordes (11.3) met dubbele tourniquet en
+  controlehuisje -> instappen. Uit: andere kant, vlonder, trap naar het oostpad (UITGANG-bord), eik, sparren.
+- Scripts: build/12_omgeving.py (wachtrij, muren, hekken, huisje, borden, lantaarns, uitgang), 14_planten.py (bamboe, niwaki,
+  haag langs de sleuf, bloemenperk, eik, Douglassparren, loofbomen), 04c/04d (bord- en planttexturen getekend),
+  13_review_omgeving.py (renders vanaf de videoplekken). Tribune en bord zijn uit 10_station.py gehaald.
+- Export: AR_Pagode_omgeving.fbx (26 delen, 45k driehoeken) + station opnieuw; ids in exports/asset_ids.json.
+- In Studio: workspace.PagodeOmgeving + nieuw PagodeStation, 9 lantaarnlichten in Pagode.Afwerking, spawn op het plein.
+- Terreinfout opgelost: het leegmaken haalde alleen terrein onder Y -8 weg, dus het oude (hogere) terrein bleef staan en
+  stak als "zand" (Ground) door de klinkers. Nu: hele hoogte leeg, onder alle bestrating terrein op NAP 8.0, alleen gras.
+- Nog te doen (volgende ronde): breuksteenmuur iets fijner en minder roze, klinkers minder rood (textuur zelf), Toko Pagode
+  met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).

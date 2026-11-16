@@ -3,10 +3,9 @@ Bronnen: luchtfoto PDOK (ref/luchtfoto/pagode_10cm.jpg), AHN dtm (ref/ahn), Pago
 Pagodebouw03.jpg, Pagode-ingang-wachttijd.jpeg, video 0:40-0:55.
   - bak: middelpunt (360.0, 47.5), binnen-r 8.1, breuksteenrand tot r 8.9; vloer NAP 9.35 (z -0.65), groen beton
   - instapniveau / loopring NAP 11.3 (z +1.3), houten vlonder r 8.9 -> 10.6, groen hek aan de bakzijde
-  - tribunetrap: bogen rond het bakmidden, r 10.6 (boven, z +1.3) -> 19.0 (onder, z -0.3), van 95 tot 160 graden (luchtfoto)
   - sleuf komt aan de westkant binnen (richting draaias, 164.4 graden), daar geen tribune/vlonder
   - stalen trap + bordes in de bak (Pagode-bak-2023.jpg)
-  - bord PAGODE bij de ingang van de wachtrij (onderkant tribune)
+  - tribune, wachtrij, borden: zie 12_omgeving.py
 Gebruik: blender --background --python build/10_station.py -- --master AR_Pagode_master.blend"""
 import bpy, bmesh, sys, os, math
 from mathutils import Vector, Matrix
@@ -98,12 +97,7 @@ def build():
         buis(f"AR_Pagode_S_hekpaal_{i:03d}", boogpunt(R_RAND + 0.15, ang, Z_INSTAP - 0.05), boogpunt(R_RAND + 0.15, ang, Z_INSTAP + 1.1), 0.035, "groen")
     for nm, z in (("boven", 1.1), ("midden", 0.6), ("onder", 0.12)):
         ringsector(f"AR_Pagode_S_hekregel_{nm}", R_RAND + 0.11, R_RAND + 0.19, Z_INSTAP + z - 0.03, Z_INSTAP + z + 0.03, ws1, ws0 + 360, "groen")
-    # 3 tribunetrap: 8 treden van r 10.6 (z 1.3) naar r 19 (z -0.3), klinkers
-    N_TR = 8
-    for t in range(N_TR):
-        r0 = R_VL + t * (19.0 - R_VL) / N_TR; r1 = R_VL + (t + 1) * (19.0 - R_VL) / N_TR + 0.05
-        ztop = Z_INSTAP - t * (Z_INSTAP + 0.3) / N_TR
-        ringsector(f"AR_Pagode_S_trede_{t}", r0 - 0.03, r1, -1.0 - 0.01 * t, ztop, 95, 155, "klinker")   # stopt voor de sleufopening
+    # 3 tribunetrap: verhuisd naar 12_omgeving.py (11 rijen naar video + AHN)
     # 4 stalen trap + bordes in de bak (Pagode-bak-2023.jpg): kolom, bordes 2.4 x 2.4 op z 3.6, trap vanaf de vloer
     bx, by = CX - 1.5, CY + 1.0
     buis("AR_Pagode_S_kolom", (bx, by, Z_VLOER - 0.05), (bx, by, 3.55), 0.25, "staal_groen", 16)
@@ -118,13 +112,7 @@ def build():
     for s in (-1, 1):
         buis(f"AR_Pagode_S_trapboom_{s}", (bx - 6.3, by + s * 0.55, Z_VLOER), (bx - 1.15, by + s * 0.55, 3.6), 0.08, "staal_groen", 8)
         buis(f"AR_Pagode_S_trapleuning_{s}", (bx - 6.3, by + s * 0.55, Z_VLOER + 1.0), (bx - 1.15, by + s * 0.55, 4.6), 0.03, "hek", 8)
-    # 5 bord PAGODE bij de ingang (onderkant tribune, westkant): twee groene palen + bord 2.6 x 0.65 m
-    ex, ey, ez = boogpunt(20.2, 158, -0.3)
-    rot = math.radians(158) + math.pi / 2
-    dx, dy = math.cos(rot) * 1.5, math.sin(rot) * 1.5
-    for k, s in enumerate((-1, 1)):
-        buis(f"AR_Pagode_S_bordpaal_{k}", (ex + s * dx, ey + s * dy, ez - 0.3), (ex + s * dx, ey + s * dy, ez + 3.3), 0.08, "groen", 12)
-    bord = doos("AR_Pagode_S_bord", (ex, ey, ez + 2.8), (2.6, 0.08, 0.65), "bord", rot=rot)
+    # 5 bord PAGODE: verhuisd naar 12_omgeving.py (staat bij het plein, video 0:13)
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=m)
     print("[10_station] klaar, sleufrichting %.1f graden, %d objecten" % (A_SLEUF, len([o for o in bpy.data.objects if o.get("owner") == OWNER])))

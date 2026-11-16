@@ -22,11 +22,15 @@ AS = Vector(arm["draaias"])
 info = {"draaias_lokaal": list(AS), "delen": {}}
 
 
+seen = set()
+
+
 def verzamel(collectie, verschuif):
     groepen = defaultdict(list)
     for o in bpy.data.collections[collectie].all_objects:
-        if not o.name.startswith("AR_Pagode") or o.type not in ("MESH", "CURVE") or o.hide_render:
+        if not o.name.startswith("AR_Pagode") or o.type not in ("MESH", "CURVE") or o.hide_render or o.name in seen:
             continue
+        seen.add(o.name)
         me = bpy.data.meshes.new_from_object(o.evaluated_get(dg), preserve_all_data_layers=True, depsgraph=dg)
         if len(me.polygons) == 0:
             bpy.data.meshes.remove(me); continue
@@ -61,7 +65,8 @@ def schrijf(groepen, naam):
                 f.smooth = p.use_smooth
                 for lp, li in zip(f.loops, p.loop_indices): lp[uvl].uv = uv[li].uv
         bmesh.ops.triangulate(bm, faces=bm.faces)
-        nm = f"{mn}_{idx}" if naam.endswith("gondel") else f"{mn}_{idx}_st"   # unieke namen (geen .001 in Roblox)
+        achter = {"AR_Pagode_gondel": "", "AR_Pagode_station": "_st", "AR_Pagode_omgeving": "_om"}[naam]
+        nm = f"{mn}_{idx}{achter}"                    # unieke namen over alle FBX'en (geen .001 in Roblox)
         me2 = bpy.data.meshes.new(nm); bm.to_mesh(me2); bm.free()
         mat = bpy.data.materials.get(mn) or bpy.data.materials.new(mn); me2.materials.append(mat)
         ob = bpy.data.objects.new(nm, me2); exp.objects.link(ob); made.append((nm, len(me2.polygons)))
@@ -95,4 +100,5 @@ def schrijf(groepen, naam):
 
 schrijf(verzamel("LOW", AS), "AR_Pagode_gondel")
 schrijf(verzamel("STATION", Vector((360.0, 47.5, 0.0))), "AR_Pagode_station")
+schrijf(verzamel("OMGEVING", Vector((360.0, 47.5, 0.0))), "AR_Pagode_omgeving")
 json.dump(info, open(os.path.join(uit, "export_info.json"), "w"), indent=1)

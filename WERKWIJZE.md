@@ -371,3 +371,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Luchtfoto's verplaatsen hoge dingen (reliefverplaatsing): plaats op wat op de grond ligt (sleuf, bak), niet op het dak.
 - Foto gaat voor op een schema als ze elkaar tegenspreken (arm 34 graden i.p.v. 43.5).
 - Geen commentaar midden in een regel invoegen bij tekstvervanging.
+- Terrein leegmaken: de Air-FillBlock moet de HELE hoogte dekken (ook boven de grond); anders blijft oud terrein staan.
+- Onder eigen meshes (bestrating, trappen) terrein minstens 1.5 m lager leggen: terreinvoxels van 4 stud bollen op.
+- Scène namaken: eerst een video zoeken waarin iemand de route loopt, frames per seconde, en elke plek uit het beeld
+  terugzoeken op luchtfoto + AHN; daarna renders vanaf dezelfde camerapunten naast de video leggen.
