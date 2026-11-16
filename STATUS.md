@@ -4,7 +4,7 @@
 
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
-## OPNIEUW BEGINNEN (16 nov 2026) — de place is helemaal leeg
+## OPNIEUW BEGINNEN (16 nov 2026) — de place is helemaal leeg (daarna: licht, en nu de Pagode)
 Daan: "echt alles bij 0 beginnen", daarna ook het licht en het archief weg. In Studio is gewist: alle attracties, paden,
 water, bomen/groen, het terrein, het licht (Lighting op Roblox-standaard, Technology niet aangeraakt), heel ServerStorage
 (ook de terrein-backups), alle scripts (ServerScriptService en StarterPlayerScripts), geluiden en MaterialVariants.
@@ -57,6 +57,20 @@ Daan: "gras is echt heel onrealistisch in roblox ... echt grasprietjes". Zie `mo
   (Blender, 50 dunne gebogen sprieten, kleur gemeten uit de foto) die een clientscript alleen rond de speler neerzet.
 - Proefveld (terrein: gras, 2 heuveltjes, grindstrook) staat nog in de wereld om rond te lopen; weghalen na Daans oordeel.
 - Nog te doen: ruig/lang gras voor randen, bloemetjes/klaver, en de overgang 3D-gras -> foto nog zachter.
+
+## De Pagode (16 nov 2026) — eerste attractie van de nieuwe opbouw, stukje voor stukje (models/AR_Pagode)
+Daan: proef-attractie buiten het Sprookjesbos, "met al je tactieken", stand OMHOOG, statisch. In Studio staat nog niets.
+Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); bestanden staan nog in models/LI_Grond.
+- Bronnen: 63 Eftepedia-plaatjes (ref/eftepedia, lemma.txt met alle maten), 4 Wikimedia-foto's, 3 YouTube-video's
+  (on-ride Efteling _Wz0aORIVaM, 4K POV 5spp16f9Dfg, "Ontdek de Efteling - Pagode" fmEZsIkqsl8; frames in de scratchpad,
+  tools/video_frames.py). Geen openbare bouwtekeningen gevonden; wel het schema Pagode_tech.png en de Intamin-productmaten.
+- Maten (asset-brief.md): tempel 17 m doorsnede, 15 m hoog (schotel 1.5 + 13.7 tot de naald), platform omhoog 45 m,
+  arm 43 m van as tot gondel, contragewicht 8 m achter de as, put 10 m. Boven het dek (video 6:40-6:50, vrouw als maatstok):
+  balustrade 1.3, plafond 2.4, gevelvoet 2.6, gevelpunt 4.6, palen om de 2.4 m (~21 gevels). Dek 0.7 boven de schotelrand.
+- Stukje 1 (gondel) BLOKKERING klaar: build/02_blockout.py -> AR_Pagode_master.blend; vergelijking review/02_blockout/blad.jpg.
+  Silhouet hoogte/breedte 0.747 (foto 0.778, -4%: binnen de 5% voor blokkering). Schotel-onderkant 0.130 vs 0.152: kijkhoek
+  van de foto onzeker, niet de vorm.
+- Volgende stukjes: gevels/daken/vlammen in vorm (03_forms), dan materialen/bake, arm + knik, voet/contragewicht, station.
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).
