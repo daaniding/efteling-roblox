@@ -23,11 +23,11 @@ local STANDEN = {
 		-- v4: anti-zonkant opgehelderd + paars in de lucht zelf (01_skybox.py ... -0.88096 0.03602 0.47181 -0.3 2.2 0.86 0.82 1.12)
 		lucht = { Ft = 129297966488534, Bk = 75659856270740, Lf = 115529229283104, Rt = 98242062795457, Up = 125287541652465, Dn = 80340274035280 },
 		zon = 5, sterren = 0, gras = Color3.fromRGB(80, 116, 60),   -- kleine zon (gloed doet het werk), geen sterren zolang de zon op is, koeler gras
-		licht = { ClockTime = 17.8439, Brightness = 3, ExposureCompensation = 1.5, Ambient = Color3.fromRGB(54, 46, 42), OutdoorAmbient = Color3.fromRGB(196, 158, 214) },   -- licht, gezellig, warm-paars (Daan)
+		licht = { ClockTime = 17.8439, Brightness = 3, ExposureCompensation = 1.25, Ambient = Color3.fromRGB(54, 46, 42), OutdoorAmbient = Color3.fromRGB(196, 158, 214) },   -- licht, gezellig, warm-paars (Daan)
 		-- dunne nevel = dromerige, lichtende lila horizon (zonder nevel: gouden horizonstreep, Daans eerdere keuze)
-		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(214, 196, 226), Glare = 1.8, Haze = 0.5 },
+		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(214, 196, 226), Glare = 1.2, Haze = 0.5 },
 		kleur = { Brightness = 0.04, Contrast = -0.06, Saturation = 0.08, TintColor = Color3.fromRGB(255, 248, 240) },   -- bijna neutraal: het paars zit in lucht + schaduwlicht, interieurs blijven warm wit
-		gloed = { Intensity = 1.4, Size = 56, Threshold = 0.95 },
+		gloed = { Intensity = 0.9, Size = 48, Threshold = 1.5 },   -- alleen zon/lampen gloeien (0,95 gaf overbelichte lucht)
 		stralen = { Intensity = 0.18, Spread = 0.9 },
 		verte = 0.12, focus = 30, scherp = 50,
 	},

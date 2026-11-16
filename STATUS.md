@@ -41,7 +41,9 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
   opgehelderd (vloeiend naar 1 bij de zon; 01_skybox.py kreeg een 'ophelder'-argument).
   Daarna (lichtproef: alles werd roze, ook binnen): het paars zit nu in de lucht zelf (skybox v4, kleurfilter 0.86/0.82/1.12)
   en in het buitenschaduwlicht; de kleurwaas over het beeld is bijna neutraal en het binnenlicht warm. Interieurs blijven
-  warm wit, buiten blijft het paars-dromerig. Dit is de huidige schemering.
+  warm wit, buiten blijft het paars-dromerig.
+  Daarna ("soms overbelicht"): belichting 1,25, gloed alleen boven drempel 1,5, minder glare. Gemeten richting zon:
+  bijna-witte lucht 8,8% -> 3,4%, gras even licht. Dit is de huidige schemering.
   Later: warme lantaarns/verlichte ramen tegen de paarse lucht zodra er paden en gebouwen staan.
 - Gemeten: onder ~5 graden kleurt Roblox de skybox zelf oranje/rood. Daan koos juist dat beeld. Een pastel-lila
   variant (ClockTime 17.3) staat klaar in textures/schemering/asset_ids.txt.
