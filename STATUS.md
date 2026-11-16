@@ -59,7 +59,7 @@ Daan: "gras is echt heel onrealistisch in roblox ... echt grasprietjes". Zie `mo
 - Nog te doen: ruig/lang gras voor randen, bloemetjes/klaver, en de overgang 3D-gras -> foto nog zachter.
 
 ## De Pagode (16 nov 2026) — eerste attractie van de nieuwe opbouw, stukje voor stukje (models/AR_Pagode)
-Daan: proef-attractie buiten het Sprookjesbos, "met al je tactieken", stand OMHOOG, statisch. In Studio staat nog niets.
+Daan: proef-attractie buiten het Sprookjesbos, "met al je tactieken", stand OMHOOG, statisch. STAAT IN STUDIO (workspace.Pagode + PagodeStation); Daan moet de place nog opslaan.
 Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); bestanden staan nog in models/LI_Grond.
 - Bronnen: 63 Eftepedia-plaatjes (ref/eftepedia, lemma.txt met alle maten), 4 Wikimedia-foto's, 3 YouTube-video's
   (on-ride Efteling _Wz0aORIVaM, 4K POV 5spp16f9Dfg, "Ontdek de Efteling - Pagode" fmEZsIkqsl8; frames in de scratchpad,
@@ -90,8 +90,22 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   vloeiende knik (r 2.5), lang stuk 37 m naar de draaias recht onder het gondelmidden, daaronder 5 m door naar het contragewicht.
   Draaias 40.8 m onder het dek; met platform op 45 m ligt de as ~4.2 m boven de grond (schema ~3 m): voetstuk bepaalt dit.
   Z-fighting na de arm: 0 zichtbaar. Vergelijking: models/AR_Pagode/review/08_arm/blad.jpg.
-- Afwerking later: zwarte stalen liggers onder de loopgang (foto van onder), lampjes in plafond en lichtlijnen langs de gevels.
-- Volgende stukjes: voet/draaias + hefcilinders, contragewicht, station/put; daarna export en Studio.
+- Stukje 5 (voet) klaar: build/09_voet.py. Put 16 x 6 x 10 m (groene wanden, roosters, zwarte hekken), pijlers, as en lagers,
+  2 witte hefcilinders met chromen zuigerstang (Pagode_tech.png), groen contragewicht 6 x 4.2 x 5.6 m, sleuf naar de bak.
+  Plek uit luchtfoto PDOK 10 cm + AHN (ref/luchtfoto, ref/ahn): draaias park (320.5, 58.5), bakmidden (360.0, 47.5).
+  LET OP: de luchtfoto toont de opgeheven gondel 10 m naar het zuiden verschoven (reliefverplaatsing); de as staat waar de sleuf eindigt.
+- Stukje 6 (station) klaar: build/10_station.py (eigen frame, collectie STATION): bak met natuurstenen wand, vlonder met groen hek,
+  8 klinkertreden van de tribune, stalen kolom met bordes en trap, bord PAGODE.
+- Export: build/11_export.py -> exports/AR_Pagode_gondel.fbx (26 delen, 54.480 driehoeken) en AR_Pagode_station.fbx (12 delen,
+  11.328). Per materiaal samengevoegd, max 9.500 driehoeken per deel, bochten grover (125k -> 54k). Ids in exports/asset_ids.json.
+- In Studio: roblox/maak_plaatsscript.py schrijft roblox/plaats_pagode.luau (laden, aankleden met texturen/kleuren, plaatsen,
+  terrein uit de AHN-DTM met gras/verhard uit de luchtfoto, spawn op de tribune). roblox/afwerking_pagode.luau: onzichtbare
+  reling op de gondel en bij de bak, kernwand botst, 22 ronde plafondlampjes met warm licht, lichtsnoeren langs de 44 windveren,
+  rode lichtlijn onder het platform. Klinkers iets gedempt (gloeiden onder belichting 1.25 + bloom).
+- Gecontroleerd: tribune en vlonder vrij van terrein, onderkant van onder leesbaar (hol, rode rand), speltest 58 fps bij het
+  station (GPU 7.5 ms).
+- Nog open (later, als Daan wil): zwarte stalen liggers onder de loopgang; omgeving rond de Pagode (bomen, paden) hoort bij de
+  volgende stap.
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).

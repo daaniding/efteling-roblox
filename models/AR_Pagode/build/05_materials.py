@@ -29,6 +29,21 @@ ROLLEN = {
     "dek":       ((0.25, 0.20, 0.16), 0.8, 0.0, None, 0),
     "wit":       ((0.80, 0.80, 0.76), 0.6, 0.0, None, 0),
     "arm":       ((1, 1, 1), 0.5, 0.0, "arm", 0.4),
+    "beton_groen": ((0.035, 0.07, 0.04), 0.85, 0.0, None, 0),     # donkergroen geverfd beton (Pagodegewicht.jpg)
+    "beton_donker": ((0.05, 0.05, 0.05), 0.9, 0.0, None, 0),
+    "rooster":   ((0.18, 0.19, 0.19), 0.55, 0.7, None, 0),
+    "hek":       ((0.02, 0.02, 0.02), 0.45, 0.6, None, 0),
+    "staal":     ((0.25, 0.26, 0.27), 0.4, 0.9, None, 0),
+    "chroom":    ((0.8, 0.8, 0.8), 0.15, 1.0, None, 0),
+    "wit_glans": ((0.82, 0.80, 0.74), 0.3, 0.0, None, 0),
+    "grind":     ((0.20, 0.18, 0.15), 0.95, 0.0, None, 0),
+    "beton_groen_licht": ((0.12, 0.20, 0.14), 0.9, 0.0, None, 0),   # groene bakvloer (Pagode-bak-2023.jpg)
+    "natuursteen": ((1, 1, 1), 0.85, 0.0, "natuursteen", 0.8),
+    "vlonder":   ((1, 1, 1), 0.8, 0.0, "vlonder", 0.4),
+    "klinker":   ((1, 1, 1), 0.85, 0.0, "klinker", 0.5),
+    "bord":      ((1, 1, 1), 0.4, 0.0, "bord", 0),
+    "staal_groen": ((0.03, 0.12, 0.08), 0.5, 0.6, None, 0),
+    "hek_open":  ((0.03, 0.12, 0.08), 0.5, 0.6, None, 0),
     "armzijde":  ((0.78, 0.72, 0.62), 0.5, 0.0, None, 0),
 }
 
@@ -123,6 +138,23 @@ def uv_trommel(ob):
     bm.to_mesh(me); bm.free()
 
 
+def uv_bord(ob):
+    """Bordtekst (bovenste kwart van de textuur) op de twee grote vlakken, randen effen."""
+    me = ob.data; bm = bmesh.new(); bm.from_mesh(me); uv = bm.loops.layers.uv.verify()
+    vs = [v.co for v in bm.verts]
+    xs = sorted(set(round(v.x, 4) for v in vs)); zs = [v.z for v in vs]; z0, z1 = min(zs), max(zs)
+    for f in bm.faces:
+        n = f.normal
+        groot = abs(n.z) < 0.3 and max(abs(n.x), abs(n.y)) > 0.9 and f.calc_area() > 0.5
+        for l in f.loops:
+            if groot:
+                c = l.vert.co; t = Vector((-n.y, n.x, 0)).normalized(); us = [v.dot(t) for v in [ll.vert.co for ll in f.loops]]
+                l[uv].uv = ((c.dot(t) - min(us)) / (max(us) - min(us)), 0.75 + 0.25 * (c.z - z0) / (z1 - z0))
+            else:
+                l[uv].uv = (0.5, 0.3)
+    bm.to_mesh(me); bm.free()
+
+
 def main():
     a = sys.argv[sys.argv.index("--") + 1:]
     p = argparse.ArgumentParser(); p.add_argument("--master", required=True); arg = p.parse_args(a)
@@ -136,8 +168,11 @@ def main():
         if ob.name.startswith("AR_Pagode_sierrand"): rol = "sierrand"
         if rol not in mats: rol = "rood"
         ob.data.materials.clear(); ob.data.materials.append(mats[rol])
-        if rol == "arm":                 # 08_arm: vlak 0 = zijvlak met ruiten (UV al gezet), vlak 1 = effen randvlak
-            ob.data.materials.append(mats["armzijde"]); n += 1; continue
+        if rol == "arm":                 # 08_arm: zijvlakken (normaal langs y) = sier (UV al gezet), randvlakken = effen
+            ob.data.materials.append(mats["armzijde"])
+            for p in ob.data.polygons:   # materials.clear() zet de indexen terug op 0
+                p.material_index = 0 if abs(p.normal.y) > 0.9 else 1
+            n += 1; continue
         if ob.type == "MESH":
             uv_laag(ob.data)
             if rol == "sierveld": uv_driehoek(ob)
@@ -145,6 +180,8 @@ def main():
             elif rol == "trommel" and "trommel2" not in ob.name and "trommel3" not in ob.name: uv_trommel(ob)
             elif rol == "sierrand": uv_cilinder(ob, 1.0)
             elif rol == "kernwand": uv_cilinder(ob, 1.2)
+            elif rol in ("klinker", "natuursteen", "vlonder"): uv_doos(ob, 1.0 if rol == "klinker" else 2.0)
+            elif rol == "bord": uv_bord(ob)
             else: uv_doos(ob, 1.5)
         n += 1
     bpy.context.preferences.filepaths.save_version = 0

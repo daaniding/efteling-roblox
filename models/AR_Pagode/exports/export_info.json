@@ -1,0 +1,51 @@
+{
+ "draaias_lokaal": [
+  0.5,
+  0.0,
+  -38.60065841674805
+ ],
+ "delen": {
+  "AR_Pagode_gondel": {
+   "PG_onderkant_0": 3744,
+   "PG_sierrand_0": 316,
+   "PG_dek_0": 480,
+   "PG_rood_0": 3016,
+   "PG_kernwand_0": 480,
+   "PG_wit_0": 480,
+   "PG_goud_0": 888,
+   "PG_sierveld_0": 176,
+   "PG_windveer_0": 528,
+   "PG_groen_0": 9500,
+   "PG_groen_1": 3504,
+   "PG_pannen_0": 6048,
+   "PG_vlam_0": 9500,
+   "PG_vlam_1": 7660,
+   "PG_trommel_0": 148,
+   "PG_rib_0": 5664,
+   "PG_arm_0": 216,
+   "PG_armzijde_0": 220,
+   "PG_beton_donker_0": 12,
+   "PG_beton_groen_0": 108,
+   "PG_rooster_0": 36,
+   "PG_hek_0": 924,
+   "PG_staal_0": 516,
+   "PG_wit_glans_0": 184,
+   "PG_chroom_0": 120,
+   "PG_grind_0": 12
+  },
+  "AR_Pagode_station": {
+   "PG_beton_groen_licht_0": 768,
+   "PG_natuursteen_0": 940,
+   "PG_grind_0": 12,
+   "PG_vlonder_0": 916,
+   "PG_beton_groen_0": 916,
+   "PG_groen_0": 5968,
+   "PG_klinker_0": 1312,
+   "PG_staal_groen_0": 116,
+   "PG_rooster_0": 276,
+   "PG_hek_open_0": 36,
+   "PG_hek_0": 56,
+   "PG_bord_0": 12
+  }
+ }
+}

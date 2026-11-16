@@ -202,5 +202,70 @@ def arm():
     opslaan('arm', k, h, 2.5)
 
 
-for f in (pannen, sierveld, windveer, trommel, sierrand, kernwand, arm):
+def natuursteen():
+    """Breuksteenmuur van de bak (Pagode-bak-2023.jpg, video 6:50 onderrand): grijsbruine keien met donkere voegen."""
+    rng2 = np.random.default_rng(11)
+    pts = rng2.uniform(0, N, (90, 2)); kl = rng2.uniform(0.75, 1.15, 90)
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    d1 = np.full((N, N), 1e9, np.float32); d2 = np.full((N, N), 1e9, np.float32); idx = np.zeros((N, N), int)
+    for i, (px, py) in enumerate(pts):
+        for ox in (-N, 0, N):
+            for oy in (-N, 0, N):
+                d = np.hypot(xx - px - ox, yy - py - oy)
+                m = d < d1
+                d2 = np.where(m, d1, np.minimum(d2, d)); idx = np.where(m, i, idx); d1 = np.where(m, d, d1)
+    rand = (d2 - d1)
+    h = np.clip(rand / 18, 0, 1) ** 0.6
+    base = np.array([118, 108, 96], np.float32)
+    k = base[None, None, :] * kl[idx][..., None] * (0.55 + 0.45 * h[..., None])
+    k[rand < 3] = (48, 44, 40)
+    k += ruis(1.5, 16)[..., None] + ruis(8, 20)[..., None] * np.array([1.0, 1.1, 0.8])
+    opslaan('natuursteen', k, h + ruis(2, 0.1), 5.0)
+
+
+def vlonder():
+    """Houten loopring rond de bak (Pagode-bak-2023.jpg): grijsbruine planken 14 cm, naden. u = dwars, v = langs."""
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    rng2 = np.random.default_rng(5)
+    plank = (xx / (N / 10)).astype(int); kv = rng2.uniform(0.8, 1.15, 20)[plank % 20]
+    k = np.zeros((N, N, 3), np.float32); k[:] = (112, 98, 82)
+    k *= kv[..., None]
+    nerf = np.sin(yy / 7 + np.sin(xx / 40) * 3 + plank * 1.7) * 0.06
+    k *= (1 + nerf[..., None])
+    naad = (xx % (N / 10)) < 4
+    k[naad] = (40, 34, 28)
+    h = np.where(naad, 0.0, 0.7)
+    k += ruis(1, 8)[..., None]
+    opslaan('vlonder', k, h.astype(np.float32), 2.0)
+
+
+def klinker():
+    """Rode klinkers in halfsteensverband (tribunetrap, luchtfoto/Pagodebouw03): 20 x 10 cm, 1 textuur = 1 m."""
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    rij = (yy / (N / 10)).astype(int)
+    off = (rij % 2) * (N / 10)
+    kol = ((xx + off) / (N / 5)).astype(int)
+    rng2 = np.random.default_rng(9); kv = rng2.uniform(0.8, 1.15, 997)
+    v = kv[(rij * 31 + kol * 7) % 997]
+    k = np.zeros((N, N, 3), np.float32); k[:] = (150, 72, 52); k *= v[..., None]
+    voeg = ((yy % (N / 10)) < 5) | (((xx + off) % (N / 5)) < 5)
+    k[voeg] = (90, 84, 76)
+    k += ruis(1, 10)[..., None]
+    opslaan('klinker', k, np.where(voeg, 0.0, 0.6).astype(np.float32), 2.5)
+
+
+def bord():
+    """Toegangsbord PAGODE (Pagode-ingang-wachttijd.jpeg, Pagodebord.jpg): lichtblauw met donkerblauwe sierletters, gouden rand."""
+    from PIL import ImageFont
+    img = Image.new('RGB', (N, N // 4), (120, 196, 214)); d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, N - 1, N // 4 - 1], outline=(212, 170, 70), width=18)
+    d.rectangle([22, 22, N - 23, N // 4 - 23], outline=(30, 60, 110), width=6)
+    try: f = ImageFont.truetype('/System/Library/Fonts/Supplemental/Bodoni 72.ttc', 150)
+    except Exception: f = ImageFont.truetype('/System/Library/Fonts/Supplemental/Times New Roman Bold.ttf', 150)
+    d.text((N / 2, N // 8 + 4), 'PAGODE', font=f, fill=(28, 52, 104), anchor='mm', stroke_width=3, stroke_fill=(212, 170, 70))
+    k = np.zeros((N, N, 3), np.uint8); k[:] = (120, 196, 214); k[:N // 4] = np.asarray(img)
+    opslaan('bord', k.astype(np.float32), np.zeros((N, N), np.float32), 0.0)
+
+
+for f in (pannen, sierveld, windveer, trommel, sierrand, kernwand, arm, natuursteen, vlonder, klinker, bord):
     f(); print('textuur', f.__name__)

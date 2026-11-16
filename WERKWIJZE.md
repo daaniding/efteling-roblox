@@ -363,3 +363,11 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   Echte 3D-stenen alleen op plekken waar je heel dichtbij komt.
 - Blender-UV v=0 = onderste rij van het plaatje: texturen voor randstroken (alfa-verloop) daarop afstemmen.
 - Na nieuwe paden altijd checken op v1-planten en v1-padvlakken die op/onder het pad liggen (raycast op de padmap).
+
+## Lessen Pagode (16 nov)
+- Terrein rendert ~2 stud BOVEN de bovenkant van FillBlock (voxelraster): leg terrein onder vloeren/treden 2 stud lager plus marge.
+- Exportnamen moeten uniek zijn over alle FBX'en: dubbele namen krijgen in Roblox ".001" en dan faalt de rol-herkenning (rode delen).
+- In Blender zet `materials.clear()` alle material_index terug op 0: daarna de indices opnieuw toewijzen.
+- Luchtfoto's verplaatsen hoge dingen (reliefverplaatsing): plaats op wat op de grond ligt (sleuf, bak), niet op het dak.
+- Foto gaat voor op een schema als ze elkaar tegenspreken (arm 34 graden i.p.v. 43.5).
+- Geen commentaar midden in een regel invoegen bij tekstvervanging.
