@@ -607,7 +607,7 @@ def build(scene, args):
     # 5 palen op de kielen tussen de gevels (r 8.2) van dek tot plafond
     for i in range(N_GEVEL):
         a = (i + 0.5) / N_GEVEL * 2 * math.pi
-        cylinder(f"AR_Pagode_paal_{i:02d}", 0.12, 2.4, segments=8,
+        cylinder(f"AR_Pagode_paal_{i:02d}", 0.12, 2.5, segments=8,   # 5 cm in dek en plafond
                  location=(8.2 * math.cos(a), 8.2 * math.sin(a), Z(DEK + 1.2)))
     # 6 plat plafond boven de loopgang (r 5.4 -> 8.4) + groene goot
     profile_spin("AR_Pagode_plafond", [(5.4, Z(DEK + 2.4)), (8.45, Z(DEK + 2.4)), (8.45, Z(DEK + 2.65)), (5.4, Z(DEK + 2.65))], steps=seg)
@@ -631,7 +631,7 @@ def build(scene, args):
                  location=(8.45 * math.cos(a), 8.45 * math.sin(a), Z(DEK + 4.6 + 0.45)))
     # 7b rode binnenwand van de loopgang (r 5.4) met witte bank
     profile_spin("AR_Pagode_kernwand", [(5.4, Z(DEK)), (5.4, Z(DEK + 2.4)), (5.2, Z(DEK + 2.4)), (5.2, Z(DEK))], steps=seg)
-    profile_spin("AR_Pagode_bank", [(5.4, Z(DEK)), (5.85, Z(DEK)), (5.85, Z(DEK + 0.45)), (5.4, Z(DEK + 0.45))], steps=seg)
+    profile_spin("AR_Pagode_bank", [(5.35, Z(DEK - 0.03)), (5.85, Z(DEK - 0.03)), (5.85, Z(DEK + 0.45)), (5.35, Z(DEK + 0.45))], steps=seg)   # zakt in dek en wand
     # 8 binnenwand (groen) rond het open midden
     profile_spin("AR_Pagode_binnenwand", [(5.25, Z(3.6)), (5.25, Z(4.9)), (5.05, Z(4.9)), (5.05, Z(3.6))], steps=seg)
     # 9 rood kegeldak van de binnenwand naar de trommel
@@ -647,8 +647,8 @@ def build(scene, args):
     cylinder("AR_Pagode_trommel3", 0.7, 0.2, segments=24, location=(0, 0, Z(9.4 + 0.1)))
     profile_spin("AR_Pagode_dak3", [(1.25, Z(9.6)), (0.95, Z(9.75)), (0.55, Z(10.4)), (0.0, Z(10.4))], steps=24)
     # 14 gouden spits: getrapte schijven 10.4 -> 11.9 (brief 2), dan naald tot 13.7 (brief 1)
-    prof = [(0.0, Z(10.4))]
-    zz = 10.4
+    prof = [(0.0, Z(10.32))]
+    zz = 10.32   # voet zakt 8 cm in dak3
     for k, r in enumerate([0.42, 0.38, 0.34, 0.30, 0.26, 0.22]):
         prof += [(r, Z(zz)), (r, Z(zz + 0.15)), (r * 0.7, Z(zz + 0.25))]
         zz += 0.25

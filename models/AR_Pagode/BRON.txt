@@ -1,0 +1,9 @@
+Referenties en foto-texturen De Pagode (16 nov 2026)
+- ref/eftepedia/*: plaatjes van het Eftepedia-lemma "Pagode" (https://www.eftepedia.nl/lemma/Pagode), alleen als referentie.
+- ref/boven.jpg = eftepedia Pagode2012.jpg; ref/zijkant_onder.jpg = eftepedia Pagode.jpg; ref/station_zij.jpg = Megabonsai.jpg.
+- Video's (YouTube, alleen referentie, frames in de scratchpad): Efteling "Efteling Onride - Pagode" (_Wz0aORIVaM),
+  M&L Globetrotting 4K POV (5spp16f9Dfg), Eftelwesley "[Ontdek de #Efteling] PAGODE" (fmEZsIkqsl8).
+- FOTO-TEXTUREN (Daan koos "uit echte foto's"; bij publiceren eventueel vervangen door eigen tekenwerk, UV's blijven gelijk):
+  textures/PG_sierveld_* uit Eftelwesley-video fmEZsIkqsl8 op 6:45 (ref/video_405_gevels.jpg), middelste gevel rechtgetrokken;
+  textures/PG_trommel_* uit eftepedia Pagode-toren-close.jpg, middelste trommelpaneel rechtgetrokken.
+- Overige texturen (pannen, windveer, sierrand, kernwand) zijn eigen tekenwerk (build/04_texturen.py, 04b).

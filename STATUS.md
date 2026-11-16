@@ -76,8 +76,15 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   groene schutting (onder de gevelpunten: van opzij niet zichtbaar, van boven wel), rood ribbendak, 16-hoekige trommel met
   pilasters, drie klokdaken met ribben en 8 witte hoorns, open groen hek met spijlen, 24 ribben onder de schotel.
   Vergelijking: review/03_forms/blad.jpg (video-still, foto van onder, luchtfoto).
-- Volgende stukjes: materialen/texturen (pannen, sierveld, windveer-schubben, trommel-arabesken, goud), dan arm + knik,
-  voet/contragewicht, station; daarna export en Studio.
+- Stukje 3 (kleur en textuur gondel) klaar: build/04_texturen.py + 04b_fototexturen.py (sierveld uit video 6:45, trommel uit
+  Pagode-toren-close.jpg: Daan koos foto's; bronnen in models/AR_Pagode/BRON.txt), build/05_materials.py (14 rollen, UV per soort:
+  driehoek, veer, paneel per trommelzijde, cilinder, doos), build/06_render.py (Cycles onder de echte HDRI-lucht, Standard-weergave;
+  AgX bleekt rood/oranje uit). Trommel is ACHThoekig en onder wijder (close-up), niet 16-hoekig.
+- Z-fighting (Daan: "geen z-fighting"): build/07_zfighting.py zoekt samenvallende vlakken tussen onderdelen. Opgelost: krullen van
+  buurgevels vielen samen, pilasterdoppen op trommel/band, spijlen in palen, palen/bank/trommeltjes/spits precies tegen vlakken
+  (nu 3-8 cm overlap). Uitslag: 0 zichtbaar; 24 'tegen elkaar' = ribben die in het dak zakken (binnenin, onzichtbaar).
+  LET OP: geen commentaar midden in een regel zetten bij tekstvervanging (brak twee keer een aanroep).
+- Volgende stukjes: arm + knik (wit/creme met rood-oranje motief), voet/draaias, contragewicht, station/put; daarna export en Studio.
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).

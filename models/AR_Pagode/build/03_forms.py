@@ -690,7 +690,7 @@ def dakkapel(i):
                                                    (0, -0.25, z1 + 1.15), (0, -0.55, z1 + 1.28)], 0.12, 0.15, "vlam"))
     # 6 witte krullen (hang hong) onderaan de windveren + gouden hanger in de kiel
     for k, s in enumerate((-1, 1)):
-        x = s * (hw + 0.05)
+        x = s * (hw - 0.16)     # naast elkaar in de kiel, niet op de krul van de buurgevel (z-fighting)
         obs.append(krul(f"AR_Pagode_F_haak_{i:02d}_{k}", [(x, -0.05, z0 + 0.1), (x * 1.04, -0.28, z0 + 0.02), (x * 1.06, -0.42, z0 + 0.22),
                                                           (x * 1.03, -0.32, z0 + 0.42)], 0.07, 0.35, "vlam"))
     obs.append(mesh_uit(f"AR_Pagode_F_hanger_{i:02d}", [(hw - 0.07, -0.02, z0 - 0.02), (hw + 0.07, -0.02, z0 - 0.02), (hw, 0.1, z0 - 0.02),
@@ -721,8 +721,8 @@ def klokdak(name, r_goot, z_goot, r_top, z_top, n_hoek=8, horen=0.6, rib=True):
             pts = []
             for j in range(0, 9, 2):
                 t = j / 8
-                r = r_goot + (r_top - r_goot) * (1 - (1 - t) ** 1.8) + 0.04
-                z = z_goot + (z_top - z_goot) * t ** 1.35 + 0.05
+                r = r_goot + (r_top - r_goot) * (1 - (1 - t) ** 1.8) + 0.015   # rib zakt iets in het dak
+                z = z_goot + (z_top - z_goot) * t ** 1.35 + 0.02
                 pts.append((r * ca, r * sa, z))
             krul(f"{name}_rib_{k}", pts, 0.06 * (r_goot / 3.0) + 0.025, 0.6, "rib")
         h = horen * (r_goot / 3.0) + 0.25
@@ -754,20 +754,21 @@ def build(scene, args):
         a = k / 24 * 2 * math.pi
         krul(f"AR_Pagode_F_binnenrib_{k:02d}", [(5.35 * math.cos(a), 5.35 * math.sin(a), Z_GOOT + 1.05),
                                                (2.25 * math.cos(a), 2.25 * math.sin(a), Zr(4.62))], 0.07, 1.0, "rood")
-    # middentrommel: 16-hoek met pilasters (sierpanelen komen in de textuur)
-    t = cylinder("AR_Pagode_F_trommel", 2.15, 2.6, segments=16, location=(0, 0, Zr(4.5 + 1.3)))
+    # middentrommel: ACHThoek, onder iets wijder (Pagode-toren-close.jpg), gouden pilasters op de hoeken
+    t = cylinder("AR_Pagode_F_trommel", 2.30, 2.6, segments=8, radius_top=2.05, location=(0, 0, Zr(4.5 + 1.3)))
+    t.rotation_euler = (0, 0, math.pi / 8)
     t["rol"] = "trommel"
-    for k in range(16):
-        a = k / 16 * 2 * math.pi
-        p = box(f"AR_Pagode_F_pilaster_{k:02d}", (0.16, 0.12, 2.6), location=(2.13 * math.cos(a), 2.13 * math.sin(a), Zr(5.8)))
-        p.rotation_euler = (0, 0, a + math.pi / 2); p["rol"] = "goud"
+    for k in range(8):
+        a = (k + 0.5) / 8 * 2 * math.pi          # op de hoeken (trommel 22.5 graden gedraaid)
+        p = cylinder(f"AR_Pagode_F_pilaster_{k:02d}", 0.07, 2.54, segments=6, location=(2.20 * math.cos(a), 2.20 * math.sin(a), Zr(5.8)))
+        p["rol"] = "goud"
     band = profile_spin("AR_Pagode_F_trommelband", [(2.25, Zr(6.85)), (2.25, Zr(7.1)), (2.0, Zr(7.1)), (2.0, Zr(6.85))], steps=64)
     band["rol"] = "groen"
     # klokdaken (zijfoto: 7.1-8.3, 8.3-9.4, 9.4-10.4 boven de rand)
     klokdak("AR_Pagode_F_dak1", 3.1, Zr(7.1), 1.25, Zr(8.3), n_hoek=8, horen=0.9)
-    cylinder("AR_Pagode_F_trommel2", 1.15, 0.3, segments=16, location=(0, 0, Zr(8.45)))["rol"] = "trommel"
+    cylinder("AR_Pagode_F_trommel2", 1.15, 0.37, segments=16, location=(0, 0, Zr(8.435)))["rol"] = "trommel"   # overlapt dak1 en dak2
     klokdak("AR_Pagode_F_dak2", 1.95, Zr(8.6), 0.75, Zr(9.4), n_hoek=8, horen=0.6)
-    cylinder("AR_Pagode_F_trommel3", 0.7, 0.2, segments=16, location=(0, 0, Zr(9.5)))["rol"] = "trommel"
+    cylinder("AR_Pagode_F_trommel3", 0.7, 0.27, segments=16, location=(0, 0, Zr(9.485)))["rol"] = "trommel"   # overlapt dak2 en dak3
     klokdak("AR_Pagode_F_dak3", 1.25, Zr(9.6), 0.45, Zr(10.4), n_hoek=8, horen=0.45)
     # balustrade als open hek (video 6:45: groene spijlen, bovenregel, onderregel, rode palen op de kielen)
     for ob in list(bpy.data.objects):
@@ -779,8 +780,11 @@ def build(scene, args):
         o["rol"] = "groen"
     n_sp = int(2 * math.pi * rb / 0.13)
     bm = bmesh.new()
+    palen = [(i + 0.5) / N * 2 * math.pi for i in range(N)]
     for k in range(n_sp):
         a = k / n_sp * 2 * math.pi
+        if min(abs((a - pa + math.pi) % (2 * math.pi) - math.pi) for pa in palen) * rb < 0.16:
+            continue     # geen spijl in een paal (z-fighting)
         m = Matrix.Translation((rb * math.cos(a), rb * math.sin(a), DEK + 0.66)) @ Matrix.Rotation(a, 4, "Z")
         r = bmesh.ops.create_cube(bm, size=1.0)
         bmesh.ops.scale(bm, vec=(0.025, 0.025, 0.95), verts=r["verts"])
@@ -796,7 +800,7 @@ def build(scene, args):
         if ob.name.startswith("AR_Pagode_") and "rol" not in ob:
             n = ob.name
             ob["rol"] = ("onderkant" if "schotel" in n else "sierrand" if "sierrand" in n else "dek" if "dek" in n else
-                         "groen" if "balustrade" in n else "rood" if ("paal" in n or "plafond" in n or "kernwand" in n) else
+                         "groen" if "balustrade" in n else "kernwand" if "kernwand" in n else "rood" if ("paal" in n or "plafond" in n) else
                          "wit" if "bank" in n else "goud" if "spits" in n else "rood")
     log("vormen klaar:", len([o for o in bpy.data.objects if o.get("owner") == OWNER_TAG]), "objecten")
 
