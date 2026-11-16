@@ -14,7 +14,7 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
 - De bronbestanden in de repo (models/, tools/, reference/) zijn er nog. Alles hieronder is de stand van vóór 16 nov.
 - Tot Daan de place opslaat, staat de oude versie nog online (en daarna in de versiegeschiedenis van Roblox).
 
-## Lichtproef (16 nov 2026) — workspace.LichtProef (tijdelijk)
+## Lichtproef (16 nov 2026) — weggehaald (Daan), bevindingen hieronder
 22 blokbomen tussen camera en zon, huisje (deur naar de zon, raam zuid, warm PointLight binnen met schaduw), lantaarn
 (PointLight 20 stud, schaduw) en een witte muur. Bevindingen bij de schemering:
 - Lage zon geeft lange schaduwstrepen van stammen met zonlicht ertussen: werkt mooi. In een echt bos ligt bijna alles in
