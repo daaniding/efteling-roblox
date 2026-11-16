@@ -11,7 +11,7 @@ local L = game:GetService("Lighting")
 local STANDEN = {
 	middag = {   -- kloofendal_48d_partly_cloudy_puresky; zon 47,9 graden
 		lucht = { Ft = 107557028958026, Bk = 116621794851780, Lf = 112911982748978, Rt = 80272611932800, Up = 113896343777797, Dn = 103186968486026 },
-		zon = 8, sterren = 3000,
+		zon = 8, sterren = 3000, gras = Color3.fromRGB(98, 110, 56),
 		licht = { ClockTime = 14.1839, Brightness = 3, ExposureCompensation = 0, Ambient = Color3.fromRGB(18, 20, 24), OutdoorAmbient = Color3.fromRGB(106, 108, 114) },
 		atmosfeer = { Density = 0.25, Offset = 0.5, Color = Color3.fromRGB(226, 230, 238), Decay = Color3.fromRGB(196, 204, 218), Glare = 0.2, Haze = 0.8 },
 		kleur = { Contrast = 0.08, Saturation = -0.06, TintColor = Color3.fromRGB(255, 251, 245) },
@@ -21,14 +21,14 @@ local STANDEN = {
 	},
 	schemering = {   -- belfast_sunset_puresky; zon op de foto 2,1 graden, Roblox-zon 2,1 graden (ClockTime 17.8439)
 		lucht = { Ft = 106457871100289, Bk = 133107173128123, Lf = 130881222383257, Rt = 127070471178195, Up = 118986672181749, Dn = 130111079083953 },
-		zon = 10, sterren = 3000,
+		zon = 5, sterren = 0, gras = Color3.fromRGB(80, 116, 60),   -- kleine zon (gloed doet het werk), geen sterren zolang de zon op is, koeler gras
 		licht = { ClockTime = 17.8439, Brightness = 2.2, ExposureCompensation = 1.15, Ambient = Color3.fromRGB(40, 30, 54), OutdoorAmbient = Color3.fromRGB(168, 128, 205) },   -- lichter en paars (Daan)
 		-- dunne nevel = dromerige, lichtende lila horizon (zonder nevel: gouden horizonstreep, Daans eerdere keuze)
-		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(206, 182, 232), Glare = 1.8, Haze = 0.5 },
-		kleur = { Contrast = -0.06, Saturation = 0.02, TintColor = Color3.fromRGB(236, 220, 255) },   -- paarse waas, zacht contrast
+		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(198, 188, 216), Glare = 1.8, Haze = 0.5 },
+		kleur = { Contrast = -0.06, Saturation = 0.02, TintColor = Color3.fromRGB(244, 234, 255) },   -- lichte paarse waas, zacht contrast
 		gloed = { Intensity = 1.4, Size = 56, Threshold = 0.95 },
 		stralen = { Intensity = 0.18, Spread = 0.9 },
-		verte = 0.25, focus = 30, scherp = 50,
+		verte = 0.12, focus = 30, scherp = 50,
 	},
 }
 local S = STANDEN[STAND]
@@ -37,6 +37,8 @@ local vast = { GeographicLatitude = 51.65, EnvironmentDiffuseScale = 1, Environm
 	ShadowSoftness = 0.12, ColorShift_Top = Color3.new(0, 0, 0), ColorShift_Bottom = Color3.new(0, 0, 0), FogEnd = 100000 }
 for k, v in pairs(vast) do L[k] = v end
 for k, v in pairs(S.licht) do L[k] = v end
+-- graskleur hoort bij de stand (Roblox vermenigvuldigt de grasfoto met deze kleur; zie models/LI_Grond)
+workspace.Terrain:SetMaterialColor(Enum.Material.Grass, S.gras)
 
 local function maak(klasse, naam, props)
 	local o = L:FindFirstChild(naam) or Instance.new(klasse)

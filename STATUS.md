@@ -21,6 +21,9 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
   Daarna (Daan: "net iets te donker, denk aan paars"): belichting +0,85, paarse OutdoorAmbient en een paarse kleurwaas.
   Daarna ("dromeriger en iets lichter"): belichting +1,15, zacht contrast, sterke gloed, meer verte-waas en een dunne
   nevel -> lichtende lila horizon (de gouden streep is daardoor lila; terug = atmosfeer op nil in licht.luau).
+  Daarna mijn voorstellen (Daan: "doe"): geen sterren zolang de zon op is, kleinere zon, koeler groen gras (graskleur
+  hoort nu bij de lichtstand), minder verte-waas, lichtere paarse waas (zonbeschenen kanten werden fel roze).
+  Later: warme lantaarns/verlichte ramen tegen de paarse lucht zodra er paden en gebouwen staan.
 - Gemeten: onder ~5 graden kleurt Roblox de skybox zelf oranje/rood. Daan koos juist dat beeld. Een pastel-lila
   variant (ClockTime 17.3) staat klaar in textures/schemering/asset_ids.txt.
 - Gras: ruwheid Grass004 was te glad (0,26: nat-asfalt-streep bij lage zon) -> nu 0,75-0,95 (GR_gras004_ruwheid_mat).
