@@ -4,20 +4,15 @@
 
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
-## OPNIEUW BEGINNEN (16 nov 2026) — de wereld is helemaal leeg, ook het licht
-Daan: "alles ook de attracties en de paden, echt alles bij 0 beginnen behalve het licht". De bomenlaag uit stap 3 zag er niet uit.
-- workspace bevat nu alleen: Camera, Terrain (leeg), SpawnLocation. Daarna ook het licht weg (Daan): Lighting-kinderen
-  (lucht/effecten), Lichtbundels, Sfeer en de scripts LantaarnsDagNacht + Dagritme staan in Archief_16nov.Licht; de oude
-  Lighting-waarden zijn attributen op die map. Lighting staat op Roblox-standaard (Technology niet aangeraakt). Alleen het
-  script SpelerSchaal staat nog in ServerScriptService.
-- Alles wat er stond zit in **ServerStorage.Archief_16nov**: de 63 workspace-modellen/-mappen (attracties, omgevingen, water,
-  SprookjesbosPaden, VillaVolta*, EftelingLayout) en het terrein als TerrainRegion `Terrein_16nov`
-  (cellen −504..504 × −64..96 × −504..504, dus het hele terrein van −2000..2000 stud). Terugzetten:
-  `workspace.Terrain:PasteRegion(arch.Terrein_16nov, Vector3int16.new(-504,-64,-504), true)`.
-- De 1.803 nieuwe bomen en 791 zichtrand-struiken zijn verwijderd (data staat nog in models/VG_Bomen en ServerStorage.BomenVB).
-  Het v1-groen van het Sprookjesbos (31 mappen *Groen/*Bos) staat in ServerStorage.OudGroen.
-- Alles wat hieronder staat is de stand van vóór 16 nov; de bronbestanden in de repo zijn er nog.
-- De place is nog niet opgeslagen; dat doet Daan zelf.
+## OPNIEUW BEGINNEN (16 nov 2026) — de place is helemaal leeg
+Daan: "echt alles bij 0 beginnen", daarna ook het licht en het archief weg. In Studio is gewist: alle attracties, paden,
+water, bomen/groen, het terrein, het licht (Lighting op Roblox-standaard, Technology niet aangeraakt), heel ServerStorage
+(ook de terrein-backups), alle scripts (ServerScriptService en StarterPlayerScripts), geluiden en MaterialVariants.
+Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chatinstellingen.
+- **Niet meer met het Sprookjesbos beginnen** (Daan). De BOUWVOLGORDE in PLAN_REALISME.md (Sprookjesbos eerst) geldt niet meer;
+  waar we wél beginnen, beslist Daan.
+- De bronbestanden in de repo (models/, tools/, reference/) zijn er nog. Alles hieronder is de stand van vóór 16 nov.
+- Tot Daan de place opslaat, staat de oude versie nog online (en daarna in de versiegeschiedenis van Roblox).
 
 ## Doel en kwaliteitslat
 Daan bouwt de Efteling realistisch en op schaal na in Roblox, met modellen uit Blender. De lat ligt hoog:
