@@ -1,0 +1,7 @@
+# Skybox LI_lucht_kloofendal48 (build/01_skybox.py, zon gedraaid naar Roblox-zon ClockTime 14.1839 / lat 51.65)
+SkyboxFt 107557028958026
+SkyboxBk 116621794851780
+SkyboxLf 112911982748978
+SkyboxRt 80272611932800
+SkyboxUp 113896343777797
+SkyboxDn 103186968486026

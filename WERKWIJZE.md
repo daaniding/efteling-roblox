@@ -55,9 +55,11 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 ## Speelbaarheid en gevoel (Daan)
 - 3 studs = 1 m, maar looproutes ~1,5x breder dan echt (wachtrijbanen 1,6 m, galerij breder, paden ~3,4 m). Niets in de looproute.
 - Hagen/perken nooit tegen of door een pad; ~0,7 m gras ertussen. Groene stroken langs paden altijd beplanten (borders).
-- WalkSpeed 10 (16 = draven), speler 0,9x (ServerScriptService.SpelerSchaal). GEEN first-person. GEEN NPC-bezoekers.
+- WalkSpeed 10 (16 = draven). FIRST PERSON (Daan 16 nov, "voor de echte feeling"): speler/EerstePersoon.client.luau. GEEN NPC-bezoekers.
+  (SpelerSchaal 0,9x is bij het leegmaken op 16 nov vervallen; ooghoogte nu 1,55 m.)
 - Geluid en interieurs komen pas later (als het hele park staat).
-- Pretpark: felle kleuren mogen, maar materialen moeten echt ogen. Niet overbelichten (Brightness ~2,2, exposure negatief).
+- Pretpark: felle kleuren mogen, maar materialen moeten echt ogen. Niet overbelichten. Licht: models/LI_Licht/roblox/licht.luau
+  (echte foto-lucht, zon op de zon van de foto; tijd niet zomaar veranderen, dan klopt de lucht niet meer).
 - Lighting.Technology = Future moet Daan zelf zetten (Assistant mag het niet).
 
 ## Realisme: wat werkt

@@ -14,6 +14,20 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
 - De bronbestanden in de repo (models/, tools/, reference/) zijn er nog. Alles hieronder is de stand van vóór 16 nov.
 - Tot Daan de place opslaat, staat de oude versie nog online (en daarna in de versiegeschiedenis van Roblox).
 
+## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
+Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).
+- LightingStyle Realistic + PrioritizeLightingQuality (= oude Future, door Daan gezet). Kaatsheuvel 51,65 N, ClockTime 14,184.
+- Echte lucht: Poly Haven CC0-HDRI kloofendal_48d_partly_cloudy_puresky -> 6 skyboxvlakken (`build/01_skybox.py`, ACES-tonemap,
+  onder de horizon nevel i.p.v. gespiegelde 'zee'). Skyboxvlakken gemeten met testplaatjes: Lf=+X, Rt=-X, Ft=-Z, Bk=+Z.
+  De skybox is gedraaid zodat de Roblox-zon precies op de zon van de foto valt (gecontroleerd met een shot recht in de zon).
+- Atmosphere licht van kleur (donkere Decay gaf een blauwe band boven de horizon), ColorGrading Default, lichte ColorCorrection,
+  Bloom alleen op hele heldere dingen, subtiele SunRays en scherptediepte. Roblox-wolken uit (wolken zitten in de foto).
+- Gemeten: schaduw op gras 17% van zonlicht (echt 15-25%); wit in de zon niet uitgebrand; metaal weerspiegelt de echte lucht.
+- First person (Daan): StarterPlayer.CameraMode LockFirstPerson, eigen lichaam zichtbaar, FOV 78, lichte loopbeweging,
+  WalkSpeed 10. Script ook in `speler/EerstePersoon.client.luau`.
+- In de wereld staat nog de proefplek `workspace.LichtTest` + een stuk proefterrein (gras, grindpad, rotsen) om het licht te
+  beoordelen en rond te lopen. Weghalen zodra Daan het licht goedkeurt.
+
 ## Doel en kwaliteitslat
 Daan bouwt de Efteling realistisch en op schaal na in Roblox, met modellen uit Blender. De lat ligt hoog:
 procedurele blokkeringen worden afgekeurd. Werkwijze die wél werkt (skill `blender-image-to-3d`):
