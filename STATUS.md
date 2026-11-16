@@ -4,6 +4,19 @@
 
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
+## OPNIEUW BEGINNEN (16 nov 2026) — de wereld is leeg, behalve het licht
+Daan: "alles ook de attracties en de paden, echt alles bij 0 beginnen behalve het licht". De bomenlaag uit stap 3 zag er niet uit.
+- workspace bevat nu alleen: Camera, Terrain (leeg), SpawnLocation, Lichtbundels (18 parts), Sfeer (2 parts). Lighting en de
+  scripts LantaarnsDagNacht, Dagritme en SpelerSchaal zijn niet aangeraakt.
+- Alles wat er stond zit in **ServerStorage.Archief_16nov**: de 63 workspace-modellen/-mappen (attracties, omgevingen, water,
+  SprookjesbosPaden, VillaVolta*, EftelingLayout) en het terrein als TerrainRegion `Terrein_16nov`
+  (cellen −504..504 × −64..96 × −504..504, dus het hele terrein van −2000..2000 stud). Terugzetten:
+  `workspace.Terrain:PasteRegion(arch.Terrein_16nov, Vector3int16.new(-504,-64,-504), true)`.
+- De 1.803 nieuwe bomen en 791 zichtrand-struiken zijn verwijderd (data staat nog in models/VG_Bomen en ServerStorage.BomenVB).
+  Het v1-groen van het Sprookjesbos (31 mappen *Groen/*Bos) staat in ServerStorage.OudGroen.
+- Alles wat hieronder staat is de stand van vóór 16 nov; de bronbestanden in de repo zijn er nog.
+- De place is nog niet opgeslagen; dat doet Daan zelf.
+
 ## Doel en kwaliteitslat
 Daan bouwt de Efteling realistisch en op schaal na in Roblox, met modellen uit Blender. De lat ligt hoog:
 procedurele blokkeringen worden afgekeurd. Werkwijze die wél werkt (skill `blender-image-to-3d`):
