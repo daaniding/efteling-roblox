@@ -22,12 +22,13 @@ local STANDEN = {
 	schemering = {   -- belfast_sunset_puresky; zon op de foto 2,1 graden, Roblox-zon 2,1 graden (ClockTime 17.8439)
 		lucht = { Ft = 106457871100289, Bk = 133107173128123, Lf = 130881222383257, Rt = 127070471178195, Up = 118986672181749, Dn = 130111079083953 },
 		zon = 10, sterren = 3000,
-		licht = { ClockTime = 17.8439, Brightness = 2.2, ExposureCompensation = 0.85, Ambient = Color3.fromRGB(40, 30, 54), OutdoorAmbient = Color3.fromRGB(168, 128, 205) },   -- lichter en paars (Daan)
-		atmosfeer = nil,   -- zonder nevel: dan blijft de gouden horizonstreep zichtbaar
-		kleur = { Contrast = 0.04, Saturation = 0.04, TintColor = Color3.fromRGB(236, 220, 255) },   -- paarse waas
-		gloed = { Intensity = 0.8, Size = 40, Threshold = 1.2 },
-		stralen = { Intensity = 0.12, Spread = 0.8 },
-		verte = 0.15,
+		licht = { ClockTime = 17.8439, Brightness = 2.2, ExposureCompensation = 1.15, Ambient = Color3.fromRGB(40, 30, 54), OutdoorAmbient = Color3.fromRGB(168, 128, 205) },   -- lichter en paars (Daan)
+		-- dunne nevel = dromerige, lichtende lila horizon (zonder nevel: gouden horizonstreep, Daans eerdere keuze)
+		atmosfeer = { Density = 0.1, Offset = 0.8, Color = Color3.fromRGB(246, 204, 160), Decay = Color3.fromRGB(206, 182, 232), Glare = 1.8, Haze = 0.5 },
+		kleur = { Contrast = -0.06, Saturation = 0.02, TintColor = Color3.fromRGB(236, 220, 255) },   -- paarse waas, zacht contrast
+		gloed = { Intensity = 1.4, Size = 56, Threshold = 0.95 },
+		stralen = { Intensity = 0.18, Spread = 0.9 },
+		verte = 0.25, focus = 30, scherp = 50,
 	},
 }
 local S = STANDEN[STAND]
@@ -55,7 +56,7 @@ maak("ColorGradingEffect", "Tonemapper", { TonemapperPreset = Enum.TonemapperPre
 maak("ColorCorrectionEffect", "Kleur", { Brightness = 0, Contrast = S.kleur.Contrast, Saturation = S.kleur.Saturation, TintColor = S.kleur.TintColor })
 maak("BloomEffect", "Gloed", S.gloed)
 maak("SunRaysEffect", "Zonnestralen", S.stralen)
-maak("DepthOfFieldEffect", "Scherptediepte", { FarIntensity = S.verte, FocusDistance = 40, InFocusRadius = 70, NearIntensity = 0 })
+maak("DepthOfFieldEffect", "Scherptediepte", { FarIntensity = S.verte, FocusDistance = S.focus or 40, InFocusRadius = S.scherp or 70, NearIntensity = 0 })
 
 local wolk = workspace.Terrain:FindFirstChildOfClass("Clouds")
 if wolk then wolk.Enabled = false end   -- de wolken zitten in de foto-lucht
