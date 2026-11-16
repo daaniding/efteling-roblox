@@ -70,7 +70,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
 - Stukje 1 (gondel) BLOKKERING klaar: build/02_blockout.py -> AR_Pagode_master.blend; vergelijking review/02_blockout/blad.jpg.
   Silhouet hoogte/breedte 0.747 (foto 0.778, -4%: binnen de 5% voor blokkering). Schotel-onderkant 0.130 vs 0.152: kijkhoek
   van de foto onzeker, niet de vorm.
-- Volgende stukjes: gevels/daken/vlammen in vorm (03_forms), dan materialen/bake, arm + knik, voet/contragewicht, station.
+- Stukje 2 (vormen gondel) klaar: build/03_forms.py (draaien NA 02_blockout.py), 394 objecten met een 'rol' per onderdeel
+  voor de materialen. 22 dakkapellen (telling zijfoto 12 punten/180 graden) met sierveld, brede rode windveren, groene
+  binnenlijst, hol pannendak, nok, witte vlam (zwiept naar buiten), witte haken + gouden kielhanger; groene goot, ringdak,
+  groene schutting (onder de gevelpunten: van opzij niet zichtbaar, van boven wel), rood ribbendak, 16-hoekige trommel met
+  pilasters, drie klokdaken met ribben en 8 witte hoorns, open groen hek met spijlen, 24 ribben onder de schotel.
+  Vergelijking: review/03_forms/blad.jpg (video-still, foto van onder, luchtfoto).
+- Volgende stukjes: materialen/texturen (pannen, sierveld, windveer-schubben, trommel-arabesken, goud), dan arm + knik,
+  voet/contragewicht, station; daarna export en Studio.
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).

@@ -590,7 +590,7 @@ def build(scene, args):
     gemeten op ref/zijkant_onder.jpg (Pagode.jpg) boven de schotelrand RAND."""
     RAND = 1.5          # schotelrand boven de onderkant (inferred: tempel 15 m Eftepedia - 13.7 gemeten)
     R = 8.5             # straal schotelrand / sierrand (17 m doorsnede, Eftepedia)
-    N_GEVEL = 21        # video: palen om de 2.4 m -> 2*pi*8.2/2.4 = 21.5; inferred tot telling op de luchtfoto
+    N_GEVEL = 22        # zijfoto: 12 punten over 180 graden; hoek middelste gevels 15.5 graden; video ~21.5
     Z = lambda h: RAND + h      # hoogte boven de schotelrand -> z
     seg = 80
     # 1 schotel: ondiepe kegel van de armaansluiting (r 1.2) naar de rand
