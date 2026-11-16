@@ -1,0 +1,4 @@
+Grasfoto's: ambientCG Grass004 en Grass002 (2K-JPG), https://ambientcg.com/a/Grass004 , /Grass002 — CC0 1.0.
+Bosgrond: Poly Haven forrest_ground_01 (2k jpg: diff, nor_gl, rough, ao), https://polyhaven.com/a/forrest_ground_01 — CC0.
+Gedownload 16 nov 2026 met toestemming van Daan. Bronbestanden niet in de repo; de verwerkte 1024-texturen wel (textures/).
+Grasplukjes (exports/GR_plukje*.fbx) zijn eigen werk (build/02_grasplukjes.py), kleuren gemeten uit Grass004.

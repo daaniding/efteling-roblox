@@ -14,6 +14,15 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
 - De bronbestanden in de repo (models/, tools/, reference/) zijn er nog. Alles hieronder is de stand van vóór 16 nov.
 - Tot Daan de place opslaat, staat de oude versie nog online (en daarna in de versiegeschiedenis van Roblox).
 
+## Gras en grond (16 nov 2026)
+Daan: "gras is echt heel onrealistisch in roblox ... echt grasprietjes". Zie `models/LI_Grond/roblox/README_studio.md`.
+- Bodem: echte CC0-fotoscans als MaterialVariant (gras Grass004, bosgrond forrest_ground_01), patroon Organic (geen tegels).
+  De oude ambientCG-texturen (Grass001/005) vond Daan lelijk en laadden niet meer.
+- Roblox' eigen grassprieten (Terrain.Decoration) uit: plat en cartoonachtig. In plaats daarvan eigen 3D-grasplukjes
+  (Blender, 50 dunne gebogen sprieten, kleur gemeten uit de foto) die een clientscript alleen rond de speler neerzet.
+- Proefveld (terrein: gras, 2 heuveltjes, grindstrook) staat nog in de wereld om rond te lopen; weghalen na Daans oordeel.
+- Nog te doen: ruig/lang gras voor randen, bloemetjes/klaver, en de overgang 3D-gras -> foto nog zachter.
+
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
 Daan: "we beginnen met de lighting ... ultra realistisch". Script: `models/LI_Licht/roblox/licht.luau` (opnieuw toe te passen).
 - LightingStyle Realistic + PrioritizeLightingQuality (= oude Future, door Daan gezet). Kaatsheuvel 51,65 N, ClockTime 14,184.
