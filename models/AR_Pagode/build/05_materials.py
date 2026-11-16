@@ -66,6 +66,12 @@ ROLLEN = {
     "bloem":     ((1, 1, 1), 0.7, 0.0, "bloem", 0),
     "schors":    ((1, 1, 1), 0.9, 0.0, "schors", 0),
     "bamboestam": ((0.42, 0.45, 0.16), 0.45, 0.0, None, 0),
+    # 15_toko (video 1:02)
+    "tokorand":  ((1, 1, 1), 0.5, 0.0, "tokorand", 0),
+    "tokopaneel": ((1, 1, 1), 0.5, 0.0, "tokopaneel", 0),
+    "parasol":   ((1, 1, 1), 0.8, 0.0, "parasol", 0),
+    "dak_toko":  ((0.22, 0.23, 0.25), 0.7, 0.0, None, 0),
+    "rotan":     ((0.48, 0.34, 0.18), 0.8, 0.0, None, 0),
 }
 
 
@@ -252,6 +258,7 @@ def main():
             elif rol == "kernwand": uv_cilinder(ob, 1.2)
             elif rol in ("klinker", "natuursteen", "vlonder"): uv_doos(ob, 1.0 if rol == "klinker" else 2.0)
             elif rol == "breuksteen" and len(ob.data.vertices) > 60: uv_muur(ob, 2.0)     # muren (rotsblokken: doos)
+            elif rol == "tokopaneel": uv_doos(ob, 1.0)
             elif rol in ("breuksteen", "naald", "haag", "bloem", "schors"):
                 uv_doos(ob, {"breuksteen": 2.0, "naald": 1.0, "haag": 0.8, "bloem": 0.6, "schors": 1.0}[rol])
             elif rol == "bord": uv_bord(ob)

@@ -72,7 +72,7 @@ end
 -- rol -> textuur (SurfaceAppearance) of effen kleur + materiaal
 local TEX = {{pannen = true, sierveld = true, windveer = true, trommel = true, sierrand = true, kernwand = true, arm = true,
   natuursteen = true, vlonder = true, klinker = true, bord = true, ingangsbord = true, uitgangsbord = true, breuksteen = true,
-  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true}}
+  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true, tokorand = true, tokopaneel = true, parasol = true}}
 local ALPHA = {{bamboe = true, blad = true, spar = true}}       -- bladkaarten: transparantie uit de textuur
 local EFFEN = {{
   groen = {{Color3.fromRGB(22, 112, 86), Enum.Material.SmoothPlastic}}, rib = {{Color3.fromRGB(232, 228, 216), Enum.Material.SmoothPlastic}},
@@ -90,6 +90,7 @@ local EFFEN = {{
   dak_donker = {{Color3.fromRGB(46, 46, 50), Enum.Material.Slate}}, aarde = {{Color3.fromRGB(58, 40, 28), Enum.Material.Ground}},
   reling = {{Color3.fromRGB(20, 36, 26), Enum.Material.Metal}}, bord_blauw = {{Color3.fromRGB(128, 196, 212), Enum.Material.SmoothPlastic}},
   bamboestam = {{Color3.fromRGB(118, 122, 52), Enum.Material.SmoothPlastic}},
+  dak_toko = {{Color3.fromRGB(86, 88, 94), Enum.Material.Slate}}, rotan = {{Color3.fromRGB(150, 112, 64), Enum.Material.Fabric}},
 }}
 local LOOP = {{dek = true, vlonder = true, klinker = true, rooster = true, beton_groen = true, beton_groen_licht = true, natuursteen = true, grind = true,
   breuksteen = true, aarde = true, bloem = true}}
@@ -163,6 +164,7 @@ for j = 0, NY - 1 do
         or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
         or (r < 24.6 and (a < 89 or a > 306))                                                -- plein en oostpad
         or (r < 16.6 and a >= 88 and a < aL)                                                 -- kop van het laantje
+        or (r < 41.2 and a > 41 and a < 89)                                                  -- terras en Toko Pagode (15_toko)
       if bebouwd then nap = math.min(nap, 8.0)
       elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 9.5) end               -- tuin: niet boven het laantje
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)
@@ -171,6 +173,14 @@ for j = 0, NY - 1 do
       if n % 400 == 0 then task.wait() end
     end
   end
+end
+-- rand rondom het AHN-stuk (oost en noord, achter de Toko): vlak gras op NAP 9.5, behalve onder terras/kiosk
+do
+  local tp, bd = G + (9.5 - 10) * S - 2, G - 30
+  local function vul(x0, x1, y0, y1)
+    t:FillBlock(CFrame.new((x0 + x1) / 2 * S, (tp + bd) / 2, -(y0 + y1) / 2 * S), Vector3.new((x1 - x0) * S, tp - bd, (y1 - y0) * S), Enum.Material.Grass)
+  end
+  vul({X1}, 430, 15, 112); vul({X0}, {X1}, {Y1}, 112)
 end
 -- spawn bij de Pagode (oude spawn bewaard in attribuut)
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")

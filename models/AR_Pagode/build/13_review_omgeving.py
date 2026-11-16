@@ -47,6 +47,7 @@ CAMS = {
     "trap": (P(25.5, 110.5, 1.2), P(12.0, 115.0, 2.6), 26),
     "uitgang": (P(19.0, -10.0, 1.3), P(10.6, -20.0, 1.8), 24),
     "boven": ((322.0, 58.0, 47.0), (352.0, 56.0, 0.0), 30),
+    "toko": ((366.0, 58.0, 4.2), (380.6, 79.3, 3.0), 30),          # video 1:02 vanaf het bordes
 }
 for naam in arg.alleen.split(","):
     pos, doel, lens = CAMS[naam]

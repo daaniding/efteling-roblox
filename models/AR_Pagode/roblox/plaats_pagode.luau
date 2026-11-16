@@ -2,7 +2,7 @@
 -- Gondel+arm+voet: oorsprong = draaias, op park (320.5, 58.5), 4.2 m boven de grond, draaiing 164.44 graden.
 -- Station: oorsprong = middelpunt bak, park (360.0, 47.5); 180 graden gedraaid (Blender x oost/y noord -> Roblox).
 -- Hoogte: NAP 10.0 = Roblox Y 2. Terrein uit AHN (x 300..385, y 15..80), materiaal uit de luchtfoto.
-local ID = {AR_Pagode_gondel = 136098683069651, AR_Pagode_station = 124320247767428, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 72708170089065, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 85202062591978, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 114001507931809, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290}
+local ID = {AR_Pagode_gondel = 136098683069651, AR_Pagode_station = 124320247767428, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 72708170089065, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 123685848488293, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 114001507931809, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280}
 local S = 3
 local G = 2                                   -- Roblox Y van NAP 10.0
 local function park(x, y, nap) return Vector3.new(x * S, G + (nap - 10) * S, -y * S) end
@@ -25,7 +25,7 @@ end
 -- rol -> textuur (SurfaceAppearance) of effen kleur + materiaal
 local TEX = {pannen = true, sierveld = true, windveer = true, trommel = true, sierrand = true, kernwand = true, arm = true,
   natuursteen = true, vlonder = true, klinker = true, bord = true, ingangsbord = true, uitgangsbord = true, breuksteen = true,
-  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true}
+  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true, tokorand = true, tokopaneel = true, parasol = true}
 local ALPHA = {bamboe = true, blad = true, spar = true}       -- bladkaarten: transparantie uit de textuur
 local EFFEN = {
   groen = {Color3.fromRGB(22, 112, 86), Enum.Material.SmoothPlastic}, rib = {Color3.fromRGB(232, 228, 216), Enum.Material.SmoothPlastic},
@@ -43,6 +43,7 @@ local EFFEN = {
   dak_donker = {Color3.fromRGB(46, 46, 50), Enum.Material.Slate}, aarde = {Color3.fromRGB(58, 40, 28), Enum.Material.Ground},
   reling = {Color3.fromRGB(20, 36, 26), Enum.Material.Metal}, bord_blauw = {Color3.fromRGB(128, 196, 212), Enum.Material.SmoothPlastic},
   bamboestam = {Color3.fromRGB(118, 122, 52), Enum.Material.SmoothPlastic},
+  dak_toko = {Color3.fromRGB(86, 88, 94), Enum.Material.Slate}, rotan = {Color3.fromRGB(150, 112, 64), Enum.Material.Fabric},
 }
 local LOOP = {dek = true, vlonder = true, klinker = true, rooster = true, beton_groen = true, beton_groen_licht = true, natuursteen = true, grind = true,
   breuksteen = true, aarde = true, bloem = true}
@@ -116,6 +117,7 @@ for j = 0, NY - 1 do
         or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
         or (r < 24.6 and (a < 89 or a > 306))                                                -- plein en oostpad
         or (r < 16.6 and a >= 88 and a < aL)                                                 -- kop van het laantje
+        or (r < 41.2 and a > 41 and a < 89)                                                  -- terras en Toko Pagode (15_toko)
       if bebouwd then nap = math.min(nap, 8.0)
       elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 9.5) end               -- tuin: niet boven het laantje
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)
@@ -124,6 +126,14 @@ for j = 0, NY - 1 do
       if n % 400 == 0 then task.wait() end
     end
   end
+end
+-- rand rondom het AHN-stuk (oost en noord, achter de Toko): vlak gras op NAP 9.5, behalve onder terras/kiosk
+do
+  local tp, bd = G + (9.5 - 10) * S - 2, G - 30
+  local function vul(x0, x1, y0, y1)
+    t:FillBlock(CFrame.new((x0 + x1) / 2 * S, (tp + bd) / 2, -(y0 + y1) / 2 * S), Vector3.new((x1 - x0) * S, tp - bd, (y1 - y0) * S), Enum.Material.Grass)
+  end
+  vul(385, 430, 15, 112); vul(300, 385, 80, 112)
 end
 -- spawn bij de Pagode (oude spawn bewaard in attribuut)
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")

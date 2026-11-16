@@ -125,7 +125,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   muur 206,204,180) tegen het paarse schemerlicht in. Muren krijgen de textuur langs de muur (boog of hoofdrichting).
   Driehoeken op de klinkers opgelost: (1) textuur herhaalde niet in kleur -> stenen wisselden op de tegelrand halverwege van
   kleur; (2) UV's in parkmaat (~350) te groot voor Roblox -> nu per object en projectierichting een geheel getal eraf.
-- Nog te doen (volgende ronde): Toko Pagode
+- Toko Pagode + terras (16 nov): build/15_toko.py naar video 1:02 (ref/video_toko_102.jpg) en luchtfoto. Achthoekige kiosk
+  (midden park (380.6, 79.3), ~12 m), laag grijs dak, creme dakrand met rode zigzag, bolle lampjes, rode palen met groene
+  kapitelen, verkoopramen met toonbank en groene bloempanelen, witte klokkoepel met gouden band en spits; keuken erachter;
+  4 statafels; terras met 3 rode parasols, ronde tafels en rieten stoelen; klinkers tot r 41 (42-88 graden). Texturen
+  getekend in 04e_texturen_toko.py. Achter de Toko eindigde de wereld (AHN-stuk tot x 385 / y 80): nu vlak gras eromheen.
+- Nog te doen: rieten stoelen netter (nu blokjes), koepel iets minder spits, Gondoletta-oever en -station, bomen achter de
+  Toko, onzichtbare botsing langs de hekken. Eerder genoemd nog open:
   met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
