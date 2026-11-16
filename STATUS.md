@@ -4,10 +4,12 @@
 
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
-## OPNIEUW BEGINNEN (16 nov 2026) — de wereld is leeg, behalve het licht
+## OPNIEUW BEGINNEN (16 nov 2026) — de wereld is helemaal leeg, ook het licht
 Daan: "alles ook de attracties en de paden, echt alles bij 0 beginnen behalve het licht". De bomenlaag uit stap 3 zag er niet uit.
-- workspace bevat nu alleen: Camera, Terrain (leeg), SpawnLocation, Lichtbundels (18 parts), Sfeer (2 parts). Lighting en de
-  scripts LantaarnsDagNacht, Dagritme en SpelerSchaal zijn niet aangeraakt.
+- workspace bevat nu alleen: Camera, Terrain (leeg), SpawnLocation. Daarna ook het licht weg (Daan): Lighting-kinderen
+  (lucht/effecten), Lichtbundels, Sfeer en de scripts LantaarnsDagNacht + Dagritme staan in Archief_16nov.Licht; de oude
+  Lighting-waarden zijn attributen op die map. Lighting staat op Roblox-standaard (Technology niet aangeraakt). Alleen het
+  script SpelerSchaal staat nog in ServerScriptService.
 - Alles wat er stond zit in **ServerStorage.Archief_16nov**: de 63 workspace-modellen/-mappen (attracties, omgevingen, water,
   SprookjesbosPaden, VillaVolta*, EftelingLayout) en het terrein als TerrainRegion `Terrein_16nov`
   (cellen −504..504 × −64..96 × −504..504, dus het hele terrein van −2000..2000 stud). Terugzetten:
