@@ -14,6 +14,14 @@ Er staan alleen nog Camera, het lege terrein, SpawnLocation en de standaard-chat
 - De bronbestanden in de repo (models/, tools/, reference/) zijn er nog. Alles hieronder is de stand van vóór 16 nov.
 - Tot Daan de place opslaat, staat de oude versie nog online (en daarna in de versiegeschiedenis van Roblox).
 
+## Schemering (16 nov 2026) — Daans keuze: "echt die dusk"
+- Lichtstand `schemering` in `models/LI_Licht/roblox/licht.luau` (middag blijft als tweede stand). Echte foto-lucht
+  belfast_sunset_puresky (CC0), zon op de horizon (2,1 graden, ClockTime 17.8439), gouden horizonstreep, eerste sterren,
+  GEEN Atmosphere (die maakte de horizon melkwit), meer gloed en zonnestralen, iets verte-waas.
+- Gemeten: onder ~5 graden kleurt Roblox de skybox zelf oranje/rood. Daan koos juist dat beeld. Een pastel-lila
+  variant (ClockTime 17.3) staat klaar in textures/schemering/asset_ids.txt.
+- Gras: ruwheid Grass004 was te glad (0,26: nat-asfalt-streep bij lage zon) -> nu 0,75-0,95 (GR_gras004_ruwheid_mat).
+
 ## Gras en grond (16 nov 2026)
 Daan: "gras is echt heel onrealistisch in roblox ... echt grasprietjes". Zie `models/LI_Grond/roblox/README_studio.md`.
 - Bodem: echte CC0-fotoscans als MaterialVariant (gras Grass004, bosgrond forrest_ground_01), patroon Organic (geen tegels).

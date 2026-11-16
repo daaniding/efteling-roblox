@@ -32,3 +32,8 @@ for naam in SETS:
     tints[naam] = [int(round(v)) for v in tint]
 json.dump(tints, open(os.path.join(uit, 'tints.json'), 'w'))
 print('tints', tints)
+
+# Grass004-ruwheid is te glad (gem. 0,26 -> nat asfalt bij lage zon). Gras is mat: herschalen naar 0,75-0,95.
+a = np.asarray(Image.open(os.path.join(uit, 'GR_gras004_ruwheid.png'))).astype(np.float32)
+a = (a - a.min()) / max(1, a.max() - a.min())
+Image.fromarray((191 + a * 51).astype(np.uint8)).save(os.path.join(uit, 'GR_gras004_ruwheid_mat.png'))

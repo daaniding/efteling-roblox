@@ -34,7 +34,11 @@ def tonemap(v):
     a, b, cc, d, e = 2.51, 0.03, 2.43, 0.59, 0.14            # ACES-benadering (Narkowicz)
     v = np.clip((v * (a * v + b)) / (v * (cc * v + d) + e), 0, 1)
     return np.where(v <= 0.0031308, 12.92 * v, 1.055 * np.power(v, 1 / 2.4) - 0.055)
-HORIZON = im[int(H * 0.5 - H * 2 / 180): H // 2].reshape(-1, 3).mean(0)   # band 0-2 graden boven de horizon
+# horizonkleur per windrichting: mediaan van de band 1-4 graden boven de horizon, uitgesmeerd over ~10 graden
+band = im[int(H * 0.5 - H * 4 / 180): int(H * 0.5 - H * 1 / 180)]
+_m = np.median(band, axis=0).astype(np.float32); _p = W // 2
+HOR_LON = cv2.GaussianBlur(np.concatenate([_m[-_p:], _m, _m[:_p]])[None], (0, 0), sigmaX=W / 10)[0][_p:-_p]
+HOR_LON = np.minimum(HOR_LON, np.percentile(HOR_LON, 50, axis=0) * 4)   # zon-piek temmen
 os.makedirs(uit, exist_ok=True)
 for f in ('Ft', 'Bk', 'Lf', 'Rt', 'Up', 'Dn'):
     dx, dy, dz = richting(f, S, T)
@@ -46,7 +50,10 @@ for f in ('Ft', 'Bk', 'Lf', 'Rt', 'Up', 'Dn'):
     px = cv2.remap(im, u.astype(np.float32), v.astype(np.float32), cv2.INTER_LINEAR, borderMode=cv2.BORDER_WRAP)
     # onder de horizon: geen gespiegelde 'zee' maar de nevelkleur van de horizonband, iets donkerder naar beneden
     w = np.clip(-dy / 0.06, 0, 1)[..., None]
-    donker = 0.3 + 0.7 * np.exp(-np.clip(-dy, 0, 1) / 0.06)      # vlak onder de horizon nevel, verder omlaag 'grond'
-    px = px * (1 - w) + HORIZON * donker[..., None] * w
+    # vlak onder de horizon nevel, verder omlaag 'grond'. (Middaglucht kloofendal is gemaakt met 0.3 + 0.7*exp(-x/0.06)
+    # en een vaste horizonkleur; schemerlucht belfast met deze versie.)
+    donker = 0.15 + 0.85 * np.exp(-np.clip(-dy, 0, 1) / 0.04)
+    hor = HOR_LON[np.clip(u.round().astype(int), 0, W - 1) % W]
+    px = px * (1 - w) + hor * donker[..., None] * w
     Image.fromarray((tonemap(px) * 255 + 0.5).astype(np.uint8)).save(os.path.join(uit, f'{f}.png'))
 print('zon in HDRI lon %.1f elev %.1f; gedraaid %.1f graden; k=%.4f' % (math.degrees(lon_s), 90 - 180 * (y + 0.5) / H, math.degrees(rot), k))

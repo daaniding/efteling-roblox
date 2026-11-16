@@ -1,0 +1,10 @@
+# Schemerlucht (belfast_sunset_puresky), gedraaid voor de Roblox-zon bij ClockTime 17.8439 (zon 2,1 graden). Daans keuze.
+# PNG's hier = deze versie (01_skybox.py ... -0.88096 0.03602 0.47181 -0.3)
+SkyboxFt 106457871100289
+SkyboxBk 133107173128123
+SkyboxLf 130881222383257
+SkyboxRt 127070471178195
+SkyboxUp 118986672181749
+SkyboxDn 130111079083953
+# Pastelversie voor ClockTime 17.3 (zon 9,2 graden, geen Roblox-inkleuring): Ft 83987554939794 Bk 120908369309900
+# Lf 77260176768788 Rt 73731002620879 Up 105456585243278 Dn 104911909652568
