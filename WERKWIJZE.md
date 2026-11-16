@@ -381,3 +381,5 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   geheel getal eraf; NIET per vlak (dan krijg je in Roblox lijnen langs elke driehoek door de mipmap op de sprong).
 - In het schemerlicht (paars) worden mauve/roze kleuren lila: texturen naar daglicht-video kalibreren en in Studio een warme tint.
 - screen_capture geeft bij exact dezelfde camerapositie soms een oud beeld terug: verschuif de camera een fractie bij elke test.
+- Terreinwater rendert NIET 2 stud hoger zoals grond; het peil volgt de voxels (4 stud) niet-lineair. Meet het peil met een
+  raycast (IgnoreWater=false) en stel de bovenkant bij; leeg eerst de cellen (Air) voordat je opnieuw vult.

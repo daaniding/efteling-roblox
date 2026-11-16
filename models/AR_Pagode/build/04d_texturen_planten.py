@@ -182,8 +182,24 @@ def klinker_visgraat():
     Image.fromarray((np.stack([(-gx * nz + 1) / 2, (gy * nz + 1) / 2, (nz + 1) / 2], -1) * 255).astype(np.uint8)).save(os.path.join(T_, 'PG_klinker_normaal.png'))
 
 
+def wilg():
+    """Treurwilg (video 3:05, 6:41: geelgroen, hangende slierten): lange verticale twijgen met smalle blaadjes, transparant."""
+    W, H = 512, 1024
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    for k in range(70):
+        x = R.uniform(10, W - 10); y0 = R.uniform(0, 120); L = R.uniform(600, 980); bocht = R.uniform(-30, 30)
+        pts = [(x + bocht * (t / 20) ** 2, y0 + L * t / 20) for t in range(21)]
+        d.line(pts, fill=(120, 116, 60, 255), width=2)
+        for t in range(2, 21):
+            px, py = pts[t]
+            for s in (-1, 1):
+                kleur = jit((176, 190, 70) if R.random() < 0.6 else (140, 168, 60), 16) + (255,)
+                blad(d, px, py, math.pi / 2 + s * R.uniform(0.25, 0.6), R.uniform(22, 34), R.uniform(3.5, 5.5), kleur, 0.7)
+    im.save(os.path.join(T, 'PG_wilg_kleur.png'))
+
+
 if __name__ == '__main__':
-    klinker_visgraat(); spartak(); breuksteen(); bamboe(); loofblad()
+    wilg(); klinker_visgraat(); spartak(); breuksteen(); bamboe(); loofblad()
     tegel('PG_naald_kleur.png', (30, 50, 26), naald, 2600)
     tegel('PG_haag_kleur.png', (34, 58, 22), haagblad, 9000)
     tegel('PG_bloem_kleur.png', (44, 72, 30), bloem, 5000)

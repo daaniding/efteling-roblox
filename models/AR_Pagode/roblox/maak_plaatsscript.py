@@ -72,8 +72,8 @@ end
 -- rol -> textuur (SurfaceAppearance) of effen kleur + materiaal
 local TEX = {{pannen = true, sierveld = true, windveer = true, trommel = true, sierrand = true, kernwand = true, arm = true,
   natuursteen = true, vlonder = true, klinker = true, bord = true, ingangsbord = true, uitgangsbord = true, breuksteen = true,
-  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true, tokorand = true, tokopaneel = true, parasol = true}}
-local ALPHA = {{bamboe = true, blad = true, spar = true}}       -- bladkaarten: transparantie uit de textuur
+  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true, tokorand = true, tokopaneel = true, parasol = true, wilg = true}}
+local ALPHA = {{bamboe = true, blad = true, spar = true, wilg = true}}       -- bladkaarten: transparantie uit de textuur
 local EFFEN = {{
   groen = {{Color3.fromRGB(22, 112, 86), Enum.Material.SmoothPlastic}}, rib = {{Color3.fromRGB(232, 228, 216), Enum.Material.SmoothPlastic}},
   vlam = {{Color3.fromRGB(236, 232, 220), Enum.Material.SmoothPlastic}}, goud = {{Color3.fromRGB(214, 168, 70), Enum.Material.Metal}},
@@ -91,9 +91,11 @@ local EFFEN = {{
   reling = {{Color3.fromRGB(20, 36, 26), Enum.Material.Metal}}, bord_blauw = {{Color3.fromRGB(128, 196, 212), Enum.Material.SmoothPlastic}},
   bamboestam = {{Color3.fromRGB(118, 122, 52), Enum.Material.SmoothPlastic}},
   dak_toko = {{Color3.fromRGB(86, 88, 94), Enum.Material.Slate}}, rotan = {{Color3.fromRGB(150, 112, 64), Enum.Material.Fabric}},
+  rood_hek = {{Color3.fromRGB(150, 22, 28), Enum.Material.SmoothPlastic}}, beton_licht = {{Color3.fromRGB(150, 144, 132), Enum.Material.Concrete}},
+  asfalt = {{Color3.fromRGB(70, 70, 72), Enum.Material.Asphalt}},
 }}
 local LOOP = {{dek = true, vlonder = true, klinker = true, rooster = true, beton_groen = true, beton_groen_licht = true, natuursteen = true, grind = true,
-  breuksteen = true, aarde = true, bloem = true}}
+  breuksteen = true, aarde = true, bloem = true, beton_licht = true, asfalt = true}}
 
 local function aankleden(m, opstaan)
   for _, p in ipairs(m:GetChildren()) do

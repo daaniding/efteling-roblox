@@ -72,6 +72,11 @@ ROLLEN = {
     "parasol":   ((1, 1, 1), 0.8, 0.0, "parasol", 0),
     "dak_toko":  ((0.22, 0.23, 0.25), 0.7, 0.0, None, 0),
     "rotan":     ((0.48, 0.34, 0.18), 0.8, 0.0, None, 0),
+    # 16_gondoletta
+    "rood_hek":  ((0.55, 0.04, 0.05), 0.5, 0.0, None, 0),
+    "beton_licht": ((0.55, 0.52, 0.47), 0.85, 0.0, None, 0),
+    "asfalt":    ((0.22, 0.22, 0.22), 0.9, 0.0, None, 0),
+    "wilg":      ((1, 1, 1), 0.7, 0.0, "wilg", 0),
 }
 
 
@@ -86,7 +91,7 @@ def materiaal(rol):
     if tex:
         it = nt.nodes.new("ShaderNodeTexImage"); it.image = bpy.data.images.load(os.path.join(T, f"PG_{tex}_kleur.png"), check_existing=True)
         nt.links.new(it.outputs["Color"], b.inputs["Base Color"])
-        if tex in ("bamboe", "blad", "spar"):          # bladkaarten: alpha uit de textuur
+        if tex in ("bamboe", "blad", "spar", "wilg"):          # bladkaarten: alpha uit de textuur
             nt.links.new(it.outputs["Alpha"], b.inputs["Alpha"])
         if rol == "pannen":     # pannen: textuur x oranje is al in de textuur; vermenigvuldigen niet nodig
             pass

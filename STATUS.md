@@ -130,8 +130,15 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   kapitelen, verkoopramen met toonbank en groene bloempanelen, witte klokkoepel met gouden band en spits; keuken erachter;
   4 statafels; terras met 3 rode parasols, ronde tafels en rieten stoelen; klinkers tot r 41 (42-88 graden). Texturen
   getekend in 04e_texturen_toko.py. Achter de Toko eindigde de wereld (AHN-stuk tot x 385 / y 80): nu vlak gras eromheen.
-- Nog te doen: rieten stoelen netter (nu blokjes), koepel iets minder spits, Gondoletta-oever en -station, bomen achter de
-  Toko, onzichtbare botsing langs de hekken. Eerder genoemd nog open:
+- Gondoletta-oever + bomen (16 nov): build/16_gondoletta.py naar video 4:10-5:10 (vanuit de tempel) en luchtfoto. Rond
+  havenbekken (midden (397, 52.5), kade r 14.5, platform r 8.7), witte vakwerkloopbrug, rood-witte balustrades, uitstapsteiger
+  met vlonder en wit hokje, 8 Gondolettabootjes, asfalt paden langs het water, 2 eilandjes, treurwilgen (PG_wilg getekend),
+  bomenrand oost/noord/west. De witte tentkap van de luchtfoto staat NIET in de video (nieuwer): weggelaten.
+  Water = terrein (roblox/gondoletta_water.luau, draaien NA plaats_pagode.luau). Gemeten: water rendert niet +2 stud zoals
+  grond; bovenkant Y +0.28 geeft peil ~NAP 9.3.
+  Studio viel weg (instantie gesloten/gecrasht) voordat ik screenshots kon maken; render-check in Studio nog te doen.
+  Omgeving nu 84k driehoeken (40 delen): fps opnieuw meten.
+- Nog te doen: rieten stoelen netter (nu blokjes), koepel iets minder spits, onzichtbare botsing langs de hekken. Eerder genoemd nog open:
   met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 
 ## Licht (16 nov 2026) — eerste stap van de nieuwe opbouw
