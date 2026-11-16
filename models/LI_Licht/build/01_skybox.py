@@ -1,7 +1,7 @@
 """01_skybox: equirect-HDRI (Poly Haven, CC0) -> 6 Roblox-skyboxvlakken (1024 px), zon gedraaid naar de Roblox-zon.
 Vlakken (in Studio gemeten met testplaatjes, 16 nov): Lf=+X, Rt=-X, Ft=-Z, Bk=+Z, rechtop en niet gespiegeld;
 Up: beeld-boven=+X, beeld-rechts=-Z; Dn: beeld-boven=-X, beeld-rechts=-Z.
-Gebruik: python3 01_skybox.py <hdr> <uitmap> <zon_x> <zon_y> <zon_z> [belichting] [ophelder]
+Gebruik: python3 01_skybox.py <hdr> <uitmap> <zon_x> <zon_y> <zon_z> [belichting] [ophelder] [tint_r tint_g tint_b]
 ophelder: versterking van de lucht recht tegenover de zon (bv. 2.2), vloeiend naar 1 bij de zon (Daan: andere kant te donker)."""
 import sys, os, math
 import numpy as np, cv2
@@ -10,6 +10,7 @@ hdr, uit = sys.argv[1], sys.argv[2]
 zon = np.array([float(a) for a in sys.argv[3:6]]); zon /= np.linalg.norm(zon)
 EV = float(sys.argv[6]) if len(sys.argv) > 6 else 0.0
 OPH = float(sys.argv[7]) if len(sys.argv) > 7 else 1.0
+TINT = np.array([float(a) for a in sys.argv[8:11]], np.float32) if len(sys.argv) > 10 else None   # kleur van de lucht zelf (paars)
 N = 1024
 im = cv2.imread(hdr, cv2.IMREAD_ANYDEPTH | cv2.IMREAD_COLOR)[:, :, ::-1].astype(np.float32)
 im = np.nan_to_num(im, nan=0, posinf=1e5)
@@ -56,6 +57,7 @@ for f in ('Ft', 'Bk', 'Lf', 'Rt', 'Up', 'Dn'):
     # en een vaste horizonkleur; schemerlucht belfast met deze versie.)
     donker = 0.15 + 0.85 * np.exp(-np.clip(-dy, 0, 1) / 0.04)
     hor = HOR_LON[np.clip(u.round().astype(int), 0, W - 1) % W]
+    if TINT is not None: px = px * TINT
     px = px * (1 - w) + hor * donker[..., None] * w
     if OPH != 1.0:   # anti-zonkant ophelderen
         cosz = dx * zon[0] + dy * zon[1] + dz * zon[2]
