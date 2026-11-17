@@ -42,27 +42,34 @@ def build():
         c = math.radians(PT.park(alfa)); u = Vector((math.cos(c), math.sin(c), 0)); t = Vector((-u.y, u.x, 0))
         for s in (-1, 1):
             off = t * s * (PT.BREED / 2 + 0.05)
-            p0 = Vector((CX, CY, Z_I)) + u * 9.25 + off; p1 = Vector((CX, CY, Z_I)) + u * 12.6 + off
+            p0 = Vector((CX, CY, Z_I)) + u * 9.12 + off; p1 = Vector((CX, CY, Z_I)) + u * 12.6 + off   # tot tegen het stationshek (r 9.05)
             NS["spijlenhek"](f"AR_Pagode_R_gang_{naam}_{s + 1}", [p0, p1], h=1.0)
     # omheining: de route moet aan alle kanten dicht zijn (Daan: "hekjes soms en dan kan je er nog langs"); zwart spijlenhek 1.0 m
-    aL, A_ZUID, R_BO, A_RAIL, Z_P = NS["aL"], NS["A_ZUID"], NS["R_BO"], NS["A_RAIL"], NS["Z_P"]
+    aL, A_ZUID, R_BO, A_RAIL, Z_P, N_RIJ = NS["aL"], NS["A_ZUID"], NS["R_BO"], NS["A_RAIL"], NS["Z_P"], NS["N_RIJ"]
     pt, boog, hek = NS["pt"], NS["boog"], NS["spijlenhek"]
     # 1 aanlooppad: buitenrand (achter de granieten band) van de oostkant tot de reling langs het laantje; ingang = de oostkant (88 gr)
     hek("AR_Pagode_R_om_aanloop", boog(17.75, 88.3, aL(17.75) - math.degrees(0.15 / 17.75), Z_P, 1.0), h=1.0)
     # 2 eind laantje -> onderpad -> zuidkant tribune: buitenrand onderpad (r 26.95) en de zuidrand (A_ZUID) tot het bordes
-    a_onder = aL(25.9) - 0.2
-    hek("AR_Pagode_R_om_laaneind", [pt(25.0, aL(25.0) - math.degrees(0.15 / 25.0), Z_P), pt(26.95, a_onder, Z_P)], h=1.0)
-    hek("AR_Pagode_R_om_onderpad", boog(26.95, a_onder, A_ZUID + 0.3, Z_P, 1.0), h=1.0)
-    zuid = [pt(26.95, A_ZUID + 0.3, Z_P)] + [pt(r, A_ZUID + math.degrees(0.15 / r), NS["ztop"](int(r - 14.0))) for r in (24.5, 22.5, 20.5, 18.5, 16.5, 14.5)] + [pt(14.05, A_ZUID + 0.6, Z_I)]
+    a_onder = aL(25.0) - math.degrees(0.15 / 25.0)          # recht onder het eind van de reling langs het laantje
+    hek("AR_Pagode_R_om_laaneind", [pt(25.0, a_onder, Z_P), pt(26.95, a_onder, Z_P)], h=1.0)
+    hek("AR_Pagode_R_om_onderpad", boog(26.95, a_onder, A_ZUID - math.degrees(0.1 / 26.95), Z_P, 1.0), h=1.0)
+    # op de rand van de rijen (10 cm binnen A_ZUID), niet ernaast op het gras; per rij een knik zodat de voet op de rij staat
+    zuid = [pt(26.95, A_ZUID - math.degrees(0.1 / 26.95), Z_P)]
+    for t in range(N_RIJ - 1, -1, -1):
+        for r in (14.0 + t + 0.98, 14.0 + t + 0.02):
+            zuid.append(pt(r, A_ZUID - math.degrees(0.1 / r), NS["ztop"](t)))
+    zuid.append(pt(R_BO + 0.05, A_ZUID - math.degrees(0.1 / 14.05), Z_I))
     hek("AR_Pagode_R_om_zuid", zuid, h=1.0)
     # 3 bordes: hek tussen bordes en tribune doortrekken tot de zuidrand (anders langs de tourniquets via het zuidstrookje)
-    hek("AR_Pagode_R_om_bordeszuid", boog(R_BO + 0.05, A_RAIL - 2.0, A_ZUID + 0.6, Z_I, 1.0), h=1.0)
-    hek("AR_Pagode_R_om_bordeskop", [pt(R_BO + 0.05, A_ZUID + 0.6, Z_I), pt(9.3, A_ZUID + 0.6, Z_I)], h=1.0)     # dwars over bordes en vlonder tot de bak
+    a_kop = A_ZUID - math.degrees(0.1 / 14.05)
+    hek("AR_Pagode_R_om_bordeszuid", boog(R_BO + 0.05, A_RAIL - 2.0, a_kop, Z_I, 1.0), h=1.0)
+    hek("AR_Pagode_R_om_bordeskop", [pt(R_BO + 0.05, a_kop, Z_I), pt(9.05, a_kop, Z_I)], h=1.0)     # dwars over bordes en vlonder tot het stationshek (r 9.05)
+    hek("AR_Pagode_R_om_sleufzuid", [pt(9.05, 172.2, Z_I), pt(10.7, 172.2, Z_I)], h=1.0)            # andere kant van de armsleuf
     # 4 vlonder zuid/west (tussen sleuf en uitgangsmuur): open buitenrand -> hek op r 10.7
-    hek("AR_Pagode_R_om_vlonderzuid", boog(10.7, 172.2, 307.8, Z_I, 1.5), h=1.0)
+    hek("AR_Pagode_R_om_vlonderzuid", boog(10.7, 172.2, 308.3, Z_I, 1.5), h=1.0)                      # tot het begin van het oosthek
     # 5 uitgangskant en instapkant scheiden: dwars over de vlonder op 99.6 graden, en het perk afschermen (r 10.65, 54-99.6)
-    hek("AR_Pagode_R_om_scheiding", [pt(9.3, 99.6, Z_I), pt(10.65, 99.6, Z_I)], h=1.0)
-    hek("AR_Pagode_R_om_perk", boog(10.65, 54.3, 99.6, Z_I, 1.5), h=1.0)
+    hek("AR_Pagode_R_om_scheiding", [pt(9.05, 99.6, Z_I), pt(10.65, 99.6, Z_I)], h=1.0)
+    hek("AR_Pagode_R_om_perk", boog(10.65, 53.7, 99.6, Z_I, 1.5), h=1.0)                               # vanaf het eind van het oosthek
     # lampen en meubilair zonder de weggehaalde stukken
     def bestaat(x, y): return any(o.name.startswith("AR_Pagode_O_lamp") and (Vector((x, y)) - o.matrix_world.translation.xy).length < 0.6
                                   for o in bpy.data.objects)

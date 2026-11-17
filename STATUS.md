@@ -152,6 +152,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Gecontroleerd in Studio: gatenscan (1245 punten, vloer overal op hoogte; meldingen alleen meetartefacten bij muur en trap),
     ontsnappingsscan (vanuit het laantje 1250 cellen bereikbaar, 0 op gras behalve via ingang/uitgang) en sluiproutescan
     (tourniquets virtueel dicht -> bordes, poortjes, vlonder en uitgang onbereikbaar: geen weg om de tourniquets heen).
+  - Afwerking (17 nov), Daan: "er komt nog steeds gras doorheen en de hekjes connecten niet met de muur". Laantje is nu EEN
+    doorlopende klinkerstrook met vloeiende randen (losse stukken per rij gaven zaagtanden met gras ertussen), tuinkant 0.6 m door
+    tot onder rotsen en reling; onderpad tot r 27.15 onder het buitenhek; terrein daaronder omlaag (maak_plaatsscript: aL - 3 gr).
+    Zuidhek op de rand van de rijen (was 15 cm ernaast op het gras); hekeinden aansluitend gemaakt (gangetjes tot het stationshek,
+    hek op de laanmuur en trapreling tot r 25, uitgangstrap-leuningen met botsing en aansluiting op het muurhek, afsluiting aan de
+    andere kant van de armsleuf). Controle losse hekeinden (script): alleen nog bewuste openingen. Scans opnieuw: 0 lekken, geen
+    sluiproute langs de tourniquets.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

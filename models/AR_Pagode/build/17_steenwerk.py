@@ -241,7 +241,7 @@ def build():
 
     # 4 rotsblokken: tuinkant van het laantje (video 0:21-0:30) en buitenrand van het onderpad (0:24)
     rotsrij("AR_Pagode_S_laanrand", [pt(r, aL(r) - math.degrees(0.22 / r)) for r in [17.9 + 0.5 * i for i in range(16)]], Z_P, (0.28, 0.5))   # pas na het aanlooppad
-    rotsrij("AR_Pagode_S_onderrand", [pt(27.0, aL(25.9) + (A_ZUID - aL(25.9)) * i / 30) for i in range(31)], Z_P, (0.28, 0.5))
+    rotsrij("AR_Pagode_S_onderrand", [pt(27.35, aL(25.9) + (A_ZUID - aL(25.9)) * i / 30) for i in range(31)], Z_P, (0.28, 0.5))   # buiten het hek (r 26.95), half op de klinkerrand
 
     # rotsen in de tuin tussen laantje en bamboe (video 0:21-0:24), half in het gras
     bm = bmesh.new(); uv = bm.loops.layers.uv.verify()

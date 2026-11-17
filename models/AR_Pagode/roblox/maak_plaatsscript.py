@@ -164,7 +164,7 @@ for j = 0, NY - 1 do
       -- onder alle eigen bestrating/tribune/bordes ruim weg: terreinvoxels (4 stud) bollen anders door de klinkers heen
       local aL = 104.0 + (r - 14.2) * 0.95 - math.deg(1.5 / math.max(r, 1))                  -- tuinkant laantje (12_omgeving)
       local bebouwd = r < 11.2
-        or (r < 27.2 and a > aL - 1.0 and a < 157.5)                                         -- bordes, tribune, laantje, onderpad
+        or (r < 27.6 and a > aL - 3.0 and a < 157.5)                                         -- bordes, tribune, laantje (klinkers 0.6 m voorbij de reling), onderpad tot r 27.15
         or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
         or (r < 14.6 and (a > 306 or a < 1.5))                                               -- uitgangspad oost (pad_oost0/1)
         or (r < 17.9 and a >= 87.5 and a < aL)                                               -- aanlooppad naar het laantje

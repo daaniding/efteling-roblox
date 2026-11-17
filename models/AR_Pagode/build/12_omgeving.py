@@ -378,7 +378,6 @@ def build():
         r0, r1 = 14.0 + t, 15.0 + t; rm = (r0 + r1) / 2
         ringsector(f"AR_Pagode_O_rij_{t:02d}", r0 - 0.02, r1, -1.2, ztop(t), aW(rm) - 0.1, A_ZUID, "klinker")
         # laantje (klinkers, pleinhoogte)
-        ringsector(f"AR_Pagode_O_laan_{t:02d}", r0 - 0.01, r1, -0.9, Z_P, aL(rm) - 0.15, aR(rm) + 0.05, "klinker", seg=2)
     # muur tussen laantje en trapstrook: een stuk, bovenkant loopt schuin met de rijen mee (video 0:20-0:30)
     stations = [(R_BO, Z_I + 0.25)] + [(14.5 + t, ztop(t) + 0.3) for t in range(N_RIJ)] + [(25.0, ztop(N_RIJ - 1) + 0.3)]
     bm = bmesh.new(); rings = []
@@ -389,7 +388,26 @@ def build():
     bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1]); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     obj("AR_Pagode_O_laanmuur", bm, "breuksteen")
     ringsector("AR_Pagode_O_laan_kop", R_BO + 0.15, 14.0 + 0.01, -0.9, Z_P, aL(14.1) - 0.4, aR(14.1) + 0.05, "klinker", seg=2)
-    ringsector("AR_Pagode_O_onderpad", 25.0, 26.8, -0.9, Z_P + 0.02, aL(25.9) - 0.2, A_ZUID, "klinker")
+    # laantje als EEN doorlopende strook met vloeiende randen (losse stukken per rij gaven zaagtanden waar het gras doorkwam);
+    # tuinkant loopt 0.6 m door tot onder de rotsrand en de reling, tribunekant tot onder de laanmuur
+    def strook(naam, stations, z):
+        bm = bmesh.new(); rings = []
+        for r, al, ar in stations:
+            rings.append([bm.verts.new(pt(r, aa, zz)) for aa, zz in ((al, -0.9), (ar, -0.9), (ar, z), (al, z))])
+        for i in range(len(rings) - 1):
+            for q in range(4): bm.faces.new((rings[i][q], rings[i][(q + 1) % 4], rings[i + 1][(q + 1) % 4], rings[i + 1][q]))
+        bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1]); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        return obj(naam, bm, "klinker")
+    st_ = []
+    r = 14.0
+    while r < 25.0 + 1e-6:
+        links = aL(r) + 0.05 if r < 17.6 else aL(r) - math.degrees(0.6 / r)
+        if abs(r - 17.6) < 1e-6: st_.append((r, aL(r) + 0.05, aR(r) + 0.05))
+        st_.append((r, links, aR(r) + 0.05)); r = round(r + 0.25, 4)
+    for k in range(0, len(st_) - 1, 12):                     # in stukken (kleine UV-getallen per object)
+        strook(f"AR_Pagode_O_laan_{k // 12:02d}", st_[k:k + 13], Z_P)
+    a_onder0 = aL(25.0) - math.degrees(0.6 / 25.0)
+    ringsector("AR_Pagode_O_onderpad", 25.0, 27.15, -0.9, Z_P + 0.02, a_onder0, A_ZUID, "klinker")   # tot onder het buitenhek (r 26.95)
     # A3 keermuur langs het plein (1.7 m hoog, video 0:04-0:12) tot voorbij de kop van het laantje, met spijlenhek erop
     a_muur_eind = aW(14.5)
     ringsector("AR_Pagode_O_pleinmuur", 13.75, R_BO + 0.15, -0.95, Z_I + 0.25, 54.0, a_muur_eind, "breuksteen")
@@ -398,6 +416,7 @@ def build():
     lijn = [pt(R_BO + 0.15, (aR(14.2) + aW(14.2)) / 2, Z_I + 0.25)]
     for t in range(N_RIJ):
         rm = 14.5 + t; lijn.append(pt(rm, (aR(rm) + aW(rm)) / 2, ztop(t) + 0.3))
+    lijn.append(pt(25.0, (aR(25.0) + aW(25.0)) / 2, ztop(N_RIJ - 1) + 0.3))      # tot het eind van de laanmuur
     spijlenhek("AR_Pagode_O_hek_laan", lijn)
     # lage reling + rotsblokken aan de tuinkant van het laantje (video 0:22-0:35)
     reling("AR_Pagode_O_reling_tuin", [pt(r, aL(r) - math.degrees(0.15 / r), Z_P) for r in (16.0, 19.0, 22.0, 25.0)])
@@ -413,7 +432,7 @@ def build():
         if (t // 2) % 2: a1 -= gat
         else: a0 += gat
         reling(f"AR_Pagode_O_rij_reling_{t:02d}", boog(r, a0, a1, z))
-    rl = [pt(15.2, aS(15.2), ztop(1))] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(1, N_RIJ)]   # bovenste meter open: wachtrij -> trapstrook
+    rl = [pt(15.2, aS(15.2), ztop(1))] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(1, N_RIJ)] + [pt(24.95, aS(24.95), ztop(N_RIJ - 1))]   # bovenste meter open: wachtrij -> trapstrook; tot het eind van de rijen
     reling("AR_Pagode_O_trap_reling", rl, spijlen=True)          # paneel met spijlen langs de trapstrook (video 0:39-0:41)
     # hek tussen bordes en tribune (Pagode-landing.jpg), open bij de trapstrook en bij het zuidpad
     spijlenhek("AR_Pagode_O_hek_bordes", boog(R_BO + 0.05, aS(14.2) + 0.2, A_RAIL - 2.0, Z_I))     # dicht tot de trapstrook: alles via de tourniquets
@@ -509,6 +528,10 @@ def build():
         doos(f"AR_Pagode_O_uittrede_{k}", c, (0.35, 2.5, zt + 1.0), "klinker", rot)
     for s in (-1, 1):
         a_ = pt(R_VL, A_UIT, Z_I + 0.9) + tg * s * 1.15; b_ = pt(R_VL + 3.0, A_UIT, Z_P + 0.9) + tg * s * 1.15
+        HEKKEN.append([list(a_ - Vector((0, 0, 0.9))), list(b_ - Vector((0, 0, 0.9))), 1.0])     # leuning uitgangstrap: botsing
+        hb = pt(10.82, A_UIT + s * (gat + 0.3), Z_I + 0.12)                                       # aansluiting op het hek op de uitgangsmuur
+        HEKKEN.append([list(hb), list(a_ - Vector((0, 0, 0.9))), 1.0])
+        buis(f"AR_Pagode_O_uitleuning{s}_aansluiting", hb + Vector((0, 0, 0.9)), a_, 0.025, "hek", 6)
         buis(f"AR_Pagode_O_uitleuning{s}", a_, b_, 0.025, "hek", 6)
         for q in (0.0, 0.5, 1.0):
             p = a_ + (b_ - a_) * q

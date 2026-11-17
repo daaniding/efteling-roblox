@@ -407,4 +407,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   dek) pas bij het spelen boven kwamen. Botsingsonderzoek: Raycast met RespectCanCollide langs de looplijn op meerdere hoogtes.
 - Speler meenemen op een bewegend platform: alleen als het platform deze frame echt beweegt; elk frame hrp.CFrame zetten
   (ook bij stilstand) blokkeert het lopen.
+- Vloeren langs een gebogen rand niet in losse stukken per meter bouwen (zaagtand, gras ertussen): een strook met stations om de
+  25 cm, en de rand tot onder het hek/de rotsen door laten lopen. Terrein eronder minstens zo ver omlaag.
+- Na elke hekwijziging: losse hekeinden laten zoeken (eind verder dan 25 cm van ander hek) en elk eind verklaren of aansluiten.
 
