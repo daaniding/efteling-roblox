@@ -21,23 +21,31 @@ Z_PLAT, R_DEK = F["Z_PLAT"], F["R_DEK"]
 Z_VLONDER = Z_PLAT                    # wachtrij op dekhoogte
 
 # vijverrand (luchtfoto, tegen de klok in), modelmeters
-VIJVER = [(-5, 12.4), (0, 12.7), (5, 12.3), (8.6, 11.6), (9.4, 9.6), (12.4, 7.0), (14.6, 5.0), (15.1, 0), (14.8, -5.5), (13.0, -10.0),
-          (9.0, -12.8), (4.0, -14.0), (-1.0, -14.3), (-5.5, -14.6), (-9.8, -13.0), (-12.6, -9.5), (-14.2, -4.5), (-14.4, 0.5),
-          (-13.6, 4.5), (-12.6, 8.5), (-9.8, 12.2)]
+# vijverrand, nagetrokken op de luchtfoto (review/vijver_zoom.jpg, 1 m-raster), tegen de klok in vanaf het noordoosten:
+# smalle ring om het gebouw, ronde lob in het NW, plantvak dat er west in uitsteekt, inhammetje west (-14.9; 0), haven ZW tot de witte
+# gebogen muur, plantvak tussen haven en brug, onder/oost van de brug tot y -13.3, oostrand langs de wachtrijvlonder, schiereiland
+# (plantvak) binnen de haarspeld van de zeilkap
+VIJVER = [(10.5, 10.8), (8.6, 11.1), (7.0, 10.6), (5.0, 11.25), (1.75, 12.6), (-2.0, 12.5), (-5.5, 11.9), (-6.2, 12.6), (-7.2, 13.3),
+          (-8.9, 13.5), (-10.6, 13.2), (-11.6, 12.4), (-11.8, 11.2), (-11.2, 10.0), (-10.6, 8.9), (-11.0, 7.6), (-11.8, 6.0), (-12.8, 4.0),
+          (-13.3, 2.5), (-14.6, 1.0), (-14.9, 0.0), (-14.6, -0.9), (-14.0, -1.8), (-13.2, -3.2), (-12.6, -4.8), (-12.0, -6.0),
+          (-11.2, -7.6), (-11.6, -8.8), (-12.6, -10.0), (-13.8, -11.6), (-14.6, -12.3), (-13.0, -13.4), (-11.0, -14.8), (-9.8, -15.2),
+          (-9.6, -13.6), (-8.8, -12.0), (-7.5, -11.0), (-3.5, -11.0), (-3.4, -13.3), (7.5, -13.3), (10.0, -11.5), (12.25, -9.25),
+          (14.0, -6.25), (14.8, -2.5), (14.8, 1.25), (14.3, 3.8), (12.6, 4.0), (11.6, 6.0), (11.3, 9.3)]
+PLEINKANT = lambda x, y: (x < -11.0 and -13 < y < 7.0) or (x < -9.5 and y < -12.5)     # rand langs het plein (lichte band, witte muur)
 # wachtrij: begin bij het plein (zuidoost, naast Archipel), noord langs de oostkant, zeilkap vanaf ZEIL_VANAF, bocht van 180
 # graden en meebuigend met de draaischijf (r ~10.3) tot het opstappunt aan het dek
-WACHTRIJ = [(9.8, -16.2), (13.6, -12.0), (16.0, -6.6), (16.8, -1.0), (16.6, 4.0), (15.9, 6.6)]
-for a in range(0, 181, 20):                        # haarspeldbocht om het plantvak (luchtfoto: midden ~(12.3; 8.8))
-    WACHTRIJ.append((12.3 + 3.3 * math.cos(math.radians(a)), 8.8 + 3.3 * math.sin(math.radians(a))))
-for a in range(36, -61, -8):                       # meebuigend met de draaischijf naar het opstappunt
-    WACHTRIJ.append((10.3 * math.cos(math.radians(a)), 10.3 * math.sin(math.radians(a))))
+WACHTRIJ = [(5.8, -15.8), (8.0, -13.9), (11.0, -11.9), (13.8, -9.6), (15.6, -6.5), (15.9, -2.0), (15.9, 3.0), (15.75, 6.0)]
+for a in range(0, 181, 20):                        # haarspeldbocht om het plantvak (luchtfoto: midden (12.0; 8.0), r 3.75)
+    WACHTRIJ.append((12.0 + 3.75 * math.cos(math.radians(a)), 8.0 + 3.75 * math.sin(math.radians(a))))
+for a in range(30, -61, -8):                       # meebuigend met de draaischijf naar het opstappunt (luchtfoto r ~10.2)
+    WACHTRIJ.append((10.25 * math.cos(math.radians(a)), 10.25 * math.sin(math.radians(a))))
 WACHTRIJ.append((7.0 * math.cos(math.radians(-62)), 7.0 * math.sin(math.radians(-62))))          # het dek op (opening in het gaashek)
-ZEIL_VANAF = 5                                     # index in WACHTRIJ waar de zeilkap begint
+ZEIL_VANAF = 7                                     # index in WACHTRIJ waar de zeilkap begint
 B_RIJ = 2.0                                        # breedte vlonder (Roblox: looppaden ~1,5x echt)
-UITGANG_X = -2.05                                  # uitgangsbrug recht naar het zuiden (luchtfoto: muurtjes op x -3,2 en -0,9)
-UITGANG = [(UITGANG_X, -6.6), (UITGANG_X, -17.5)]
-HUT = (1.35, -8.9, 1.6)                             # rond hutje (luchtfoto: ronde lob aan de voorkant)
-BOOT_SINDBAD = (-8.3, -9.6, math.radians(-35))
+UITGANG_X = -2.0                                   # uitgangsbrug recht naar het zuiden (luchtfoto: muurtjes op x -3,5 en -0,5)
+UITGANG = [(UITGANG_X, -6.6), (UITGANG_X, -17.3)]
+HUT = (1.6, -8.5, 1.55)                             # rond hutje (luchtfoto: ronde lob aan de voorkant)
+BOOT_SINDBAD = (-7.9, -8.5, math.radians(35))   # luchtfoto: boot schuin, boeg naar het noordoosten
 
 
 def collectie(naam):
@@ -159,15 +167,15 @@ def hutje(bms):
 def brug(bms):
     """stenen uitgangsbrug met lage muurtjes en afdekstenen (f_133, f_136)"""
     a, b = UITGANG
-    links, rechts = strook(bms["bestrating"], [a, b], 2.0, Z_PLAT + 0.02, 0.6)
+    links, rechts = strook(bms["bestrating"], [a, b], 2.4, Z_PLAT + 0.02, 0.6)
     for zij in (-1, 1):
-        x = UITGANG_X + zij * 1.15
+        x = UITGANG_X + zij * 1.35
         doos(bms["muur"], ((x), (a[1] + b[1]) / 2, Z_PLAT + 0.35), (0.3, abs(b[1] - a[1]), 0.9))
         doos(bms["afdek"], ((x), (a[1] + b[1]) / 2, Z_PLAT + 0.84), (0.4, abs(b[1] - a[1]) + 0.1, 0.1))
     # hek van twee latten-deuren bij het hutje (f_136), opengeslagen tegen de muurtjes zodat de looproute vrij is
     y0 = -8.6
     for zij in (-1, 1):
-        x = UITGANG_X + zij * 0.88
+        x = UITGANG_X + zij * 1.05
         for k in range(7):
             yy = y0 - k * 0.16
             stam(bms["bamboe"], Vector((x, yy, Z_PLAT)), Vector((x, yy, Z_PLAT + 1.1)), 0.035, 0.035, 6, 0.0)
@@ -175,21 +183,23 @@ def brug(bms):
 
 
 def vijverrand(bms):
-    """rotsen langs de vijverrand; aan de zuidwestkant (haven) een zandstrand met losse rotsen (f_142)"""
+    """natuurstenen band langs de hele rand (licht langs het plein en de witte havenmuur, grijs langs de plantvakken), losse
+    keien alleen langs de plantvakken (luchtfoto: geen strand, het plein loopt tot aan de rand)"""
     pts = VIJVER + [VIJVER[0]]
-    for p, d in lijn_punten(pts, 0.9):
-        n = Vector((d.y, -d.x, 0))                     # naar buiten (rand loopt tegen de klok in)
-        r = random.uniform(0.28, 0.5)
-        c = p + n * random.uniform(0.0, 0.25) + Vector((0, 0, -0.05))
-        vv = bol(bms["steen"], c, r, 7)
-        for q in vv:
-            dd = q.co - c; q.co = c + Vector((dd.x * random.uniform(0.9, 1.3), dd.y * random.uniform(0.9, 1.3), dd.z * 0.55))
-    for _ in range(14):                                # losse rotsen op het strand
-        c = Vector((random.uniform(-13, -9.5), random.uniform(-12.5, -6.5), 0.25))
-        if math.hypot(c.x, c.y) < 9.5: continue
-        r = random.uniform(0.25, 0.6); vv = bol(bms["steen"], c, r, 7)
-        for q in vv:
-            dd = q.co - c; q.co = c + Vector((dd.x, dd.y, dd.z * 0.6))
+    for k in range(len(pts) - 1):
+        a, b = Vector((*pts[k], 0)), Vector((*pts[k + 1], 0)); m = (a + b) / 2
+        d = (b - a); L = d.length; d = d.normalized(); n = Vector((d.y, -d.x, 0))
+        plein = PLEINKANT(m.x, m.y)
+        rol = "afdek" if plein else "steen"
+        c = m + n * 0.2
+        doos(bms[rol], (c.x, c.y, 0.05 if plein else 0.0), (L + 0.35, 0.45 if plein else 0.5, 0.55 if plein else 0.5), math.atan2(d.y, d.x))
+        if not plein:
+            for p, _ in lijn_punten([pts[k], pts[k + 1]], 1.6)[:-1]:
+                if random.random() < 0.6:
+                    r = random.uniform(0.25, 0.42); cc = p + n * random.uniform(0.25, 0.5) + Vector((0, 0, 0.1))
+                    vv = bol(bms["steen"], cc, r, 7)
+                    for q in vv:
+                        dd = q.co - cc; q.co = cc + Vector((dd.x * random.uniform(0.9, 1.3), dd.y * random.uniform(0.9, 1.3), dd.z * 0.55))
 
 
 def haven(bms):
@@ -222,10 +232,10 @@ def haven(bms):
     for vs in (zeil, zeil[::-1]):
         bm3.faces.new([bm3.verts.new(v) for v in vs])
     bm3.transform(M); obj("SI_om_dhow_zeil", bm3, "zeil_dhow")
-    for (px, py) in ((-11.2, -6.8), (-5.2, -12.6), (3.5, -13.0), (12.8, -8.6)):     # meerpalen met touw (Meerpaal-pieck.jpg)
+    for (px, py) in ((-10.8, -7.0), (-5.5, -10.4), (3.5, -12.6), (11.8, -8.6)):     # meerpalen met touw (Meerpaal-pieck.jpg)
         stam(bms["stam"], Vector((px, py, -0.8)), Vector((px, py, 1.4)), 0.13, 0.11, 8, 0.12)
         cil(bms["touw"], (px, py, 0.9), 0.15, 0.18, 10)
-    for (px, py, kl) in ((-4.0, -11.6, "boei_geel"), (-10.8, 3.2, "boei_blauw"), (-6.8, 10.6, "boei_geel"), (12.2, -3.0, "boei_blauw"),
+    for (px, py, kl) in ((-5.0, -10.0, "boei_geel"), (-10.8, 3.2, "boei_blauw"), (-6.8, 10.6, "boei_geel"), (12.2, -3.0, "boei_blauw"),
                          (3.0, -11.8, "boei_blauw"), (-12.0, -2.5, "boei_geel")):
         bol(bms[kl], (px, py, 0.12), 0.38, 12)
         for k in range(4):                             # touwnet over de bal

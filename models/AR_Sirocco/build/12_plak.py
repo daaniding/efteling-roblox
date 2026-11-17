@@ -40,7 +40,8 @@ for jj in range(-35, 35):              # model-y van -35 tot 34 (cel-midden +0,5
         pi, pj = int(x + 456.5 - 420), int(223 - (y + 191.2))
         k = K[pj, pi] if 0 <= pi < 70 and 0 <= pj < 70 else 1
         if any(binnen(x, y, P) for P in BEDDEN): k = 1
-        if math.hypot(x, y) < 12 or (x < -12 and -6 < y < 6 and k == 1): k = 1 if math.hypot(x, y) < 12 else k
+        if math.hypot(x, y) < 17:      # band om de vijver: plein langs de west-/zuidkant, verder plantvak (luchtfoto)
+            k = 0 if ((x < -11 and -13 < y < 7) or (x < -9.5 and y < -12.5) or y < -15.5) else 1
         rij += "vgz"[k]
     rijen.append(rij)
 s = open(os.path.join(D, "roblox", "plaats_sirocco.luau")).read()

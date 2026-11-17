@@ -1442,5 +1442,12 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   Pavement / Grass / Sand; plaats_sirocco.luau vult zo het terrein (vijver uitgespaard). Review: review/paden_osm.jpg (OSM over
   luchtfoto, OSM ~4 m verschoven), review/paden_klassen.jpg, review/07_omgeving/*.png.
   Gemeten in Studio: vlonder Y 1.1, plein ernaast 0.6-1.0 (halve stud opstap), brug sluit gelijk aan op het plein.
+- Vijver v2 (17 nov), Daan: "tis nog lang niet goed, kijk eerst van het bovenaanzicht hoe de vijver echt vormt". Rand opnieuw
+  nagetrokken op review/vijver_zoom.jpg (luchtfoto met 1 m-raster): smalle ring om het gebouw, ronde NW-lob, plantvak dat er
+  west in steekt, inhammetje west, haven ZW tot de witte gebogen muur, plantvak tussen haven en brug, water oost van de brug tot
+  y -13.3, oostrand tegen de wachtrijvlonder, schiereiland binnen de haarspeld (49 punten). Rand = natuursteenband (licht langs
+  het plein, grijs met losse keien langs de plantvakken); geen strand. Wachtrij naar de foto: start (5.8; -15.8), oostvlonder op
+  x 15.9, haarspeld midden (12.0; 8.0) r 3.75, boog r 10.25. Brug muurtjes x -3.5/-0.5, hutje (1.6; -8.5), dhow (-7.9; -8.5) boeg
+  NO. Vergelijking: review/07_omgeving/vergelijk_boven.jpg. Omgeving 133616517213350.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
