@@ -2,8 +2,8 @@
 - laadt voet, arm en gondel (exports via build/11_export.py, ids in exports/asset_ids.json) met dezelfde aankleding als plaats_pagode.luau
 - workspace.Pagode = Model met Voet, Arm, Gondel, Cilinders, Station; AsFrame (CFrameValue, draaias stand omhoog)
 - afwerking (afwerking_pagode.luau) in de gondel, behalve de bakreling en de lantaarnlichten (Station)
-- gondel: alle delen gelast aan een Kern (niet verankerd) met starre AlignPosition/AlignOrientation
-- zet ServerScriptService.PagodeRit neer met de bron uit roblox/PagodeRit.server.luau
+- gondel: alles verankerd, Kern = draaipunt; de beweging draait op de client (StarterPlayerScripts.PagodeRitClient,
+  bron roblox/PagodeRitClient.client.luau), de server zet alleen de starttijd (ServerScriptService.PagodeRit)
 Draai NA maak_plaatsscript.py (gebruikt de kop van plaats_pagode.luau). Gebruik: python3 roblox/maak_ritscript.py"""
 import os, json
 
@@ -36,6 +36,7 @@ cil = '\n'.join(
 end''' for k, c in enumerate(info['cilinders']))
 
 bron = open(os.path.join(R, 'PagodeRit.server.luau')).read()
+bronc = open(os.path.join(R, 'PagodeRitClient.client.luau')).read()
 luau = '\n'.join(kop) + f'''
 
 -- ===== rijdende Pagode: opzet (gegenereerd door roblox/maak_ritscript.py) =====
@@ -43,6 +44,7 @@ local PIV = {PIV}
 local oudS = game:GetService("ServerScriptService"):FindFirstChild("PagodeRit"); if oudS then oudS:Destroy() end
 local oud = workspace:FindFirstChild("Pagode"); if oud then oud:Destroy() end
 local pag = Instance.new("Model"); pag.Name = "Pagode"; pag.Parent = workspace
+pag.ModelStreamingMode = Enum.ModelStreamingMode.Persistent       -- place streamt: anders mist de client delen van de gondel
 local av = Instance.new("CFrameValue"); av.Name = "AsFrame"; av.Value = PIV; av.Parent = pag
 pag:SetAttribute("GondelLokaal", Vector3.new({JL[0]:.4f}, {JL[1]:.4f}, {JL[2]:.4f}))
 local function zet(id, naam) local m = laad(id, naam); aankleden(m, true); m:PivotTo(PIV); m.Parent = pag; return m end
@@ -61,24 +63,16 @@ end
 -- hefcilinders (bewegen mee met de arm, zie PagodeRit)
 local cils = Instance.new("Folder"); cils.Name = "Cilinders"; cils.Parent = pag
 {cil}
--- gondel als een losse groep: alles gelast aan de kern, kern gestuurd door starre Align-constraints
+-- gondel: alle delen verankerd; de client verplaatst ze (PagodeRitClient). Kern = draaipunt van de gondel.
 local kern = Instance.new("Part"); kern.Name = "Kern"; kern.Size = Vector3.new(2, 2, 2); kern.Transparency = 1; kern.CanCollide = false
-kern.CanQuery = false; kern.CanTouch = false; kern.Anchored = false
+kern.CanQuery = false; kern.CanTouch = false; kern.Anchored = true
 kern.CFrame = CFrame.new(PIV:PointToWorldSpace(pag:GetAttribute("GondelLokaal"))) * PIV.Rotation; kern.Parent = gondel
-for _, p in ipairs(gondel:GetDescendants()) do
-  if p:IsA("BasePart") and p ~= kern then
-    p.Anchored = false; p.Massless = true
-    local w = Instance.new("WeldConstraint"); w.Part0 = kern; w.Part1 = p; w.Parent = p
-  end
-end
 gondel.PrimaryPart = kern
-local at = Instance.new("Attachment"); at.Name = "Doel"; at.Parent = kern
-local ap = Instance.new("AlignPosition"); ap.Mode = Enum.PositionAlignmentMode.OneAttachment; ap.Attachment0 = at
-ap.RigidityEnabled = true; ap.Position = kern.Position; ap.Parent = kern
-local ao = Instance.new("AlignOrientation"); ao.Mode = Enum.OrientationAlignmentMode.OneAttachment; ao.Attachment0 = at
-ao.RigidityEnabled = true; ao.CFrame = kern.CFrame.Rotation; ao.Parent = kern
 -- ritscript
 local sc = Instance.new("Script"); sc.Name = "PagodeRit"; sc.Source = [==[{bron}]==]; sc.Parent = game:GetService("ServerScriptService")
+local sps = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")
+local oudC = sps:FindFirstChild("PagodeRitClient"); if oudC then oudC:Destroy() end
+local lc = Instance.new("LocalScript"); lc.Name = "PagodeRitClient"; lc.Source = [==[{bronc}]==]; lc.Parent = sps
 local n = 0; for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") then n += 1 end end
 return "Pagode rijklaar: gondel " .. n .. " delen, cilinders " .. #cils:GetChildren()
 '''

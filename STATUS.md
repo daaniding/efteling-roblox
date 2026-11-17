@@ -116,7 +116,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     kleine schuif die pas onderin meetelt (t^4). Gondel botst niet met de wereld (botsgroep PagodeGondel), wel met spelers (PagodeSpeler).
   - Getest in Play: gondel exact in de bak (0.00 m), dek NAP 11.30 -> boven NAP 55.0, waterpas (0.000 gr), speler op het dek rijdt
     mee (op de client: vloer WoodPlanks, 1.0 m boven het dek); na de rit terug op dezelfde plek en stand, hekken weer open.
-  - Bekend: tijdens het stijgen schuift een speler ~1 m naar buiten tot tegen de reling (traagheid); geen geluid of ritbediening.
+  - Herzien (17 nov), Daan: "super overbelicht, hij trilt en ik zak weg". Oorzaken: losse physics-gondel wordt door Roblox anders
+    belicht (onderkant uitgebleekt), servergestuurde beweging komt met vertraging bij de client (trillen, speler loopt achter).
+    Nu: alles verankerd; ServerScriptService.PagodeRit zet alleen RitStart (servertijd); StarterPlayerScripts.PagodeRitClient
+    (bron roblox/PagodeRitClient.client.luau) rekent de stand uit GetServerTimeNow(), verplaatst gondel/arm met BulkMoveTo
+    (PreSimulation) en neemt de eigen speler mee als die op het dek staat (raycast omlaag). Pagode-model op
+    ModelStreamingMode Persistent (de place streamt; anders kwamen cilinders/gondeldelen niet op de client).
+    Getest in Play: speler blijft op 6.90 m uit het midden (was 1 m schuiven), 0.92-1.00 m boven het dek, max 5 cm per frame;
+    onderkant weer donker. Nog geen geluid of ritbediening.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

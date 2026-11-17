@@ -1,0 +1,121 @@
+--!strict
+-- PagodeRitClient (StarterPlayerScripts): laat de Pagode rijden op deze client.
+-- Ritverloop naar de on-ride video _Wz0aORIVaM (5 min): instappen 25 s (hekken open), sluiten 5 s, omhoog 55 s, boven 180 s,
+-- omlaag 55 s; een volle draai over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
+-- Alles verankerd en verplaatst met BulkMoveTo; de stand volgt uit workspace:GetServerTimeNow() - RitStart (zelfde voor iedereen).
+-- Wie op het dek staat wordt elk frame met de gondel meegenomen (geen wegzakken, geen trillen).
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+
+local S = 3
+local pag = workspace:WaitForChild("Pagode") :: Model
+local arm = pag:WaitForChild("Arm") :: Model
+local gondel = pag:WaitForChild("Gondel") :: Model
+local kern = gondel:WaitForChild("Kern") :: BasePart
+local PIV = (pag:WaitForChild("AsFrame") :: CFrameValue).Value
+local JL = pag:GetAttribute("GondelLokaal") :: Vector3
+local Y_INSTAP = 2 + 1.3 * S
+local DEK = 2.2 * S
+local BAK = Vector3.new(360.0 * S, 0, -47.5 * S)
+
+local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(JL) end
+local lo, hi = math.rad(70), math.rad(120)
+for _ = 1, 50 do
+	local m = (lo + hi) / 2
+	if Jw(m).Y + DEK > Y_INSTAP then lo = m else hi = m end
+end
+local TH_D = (lo + hi) / 2
+local jd = Jw(TH_D)
+local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- armmaat uit de foto komt 2.7 m tekort: schuif die pas onderin telt
+local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1); return CORR * t ^ 4 end
+
+-- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)
+local K0 = kern.CFrame
+local gDelen, gRel = {}, {}
+for _, p in gondel:GetDescendants() do
+	if p:IsA("BasePart") then p.Anchored = true; table.insert(gDelen, p); table.insert(gRel, K0:ToObjectSpace(p.CFrame)) end
+end
+local A0 = PIV
+local aDelen, aRel = {}, {}
+for _, p in arm:GetDescendants() do
+	if p:IsA("BasePart") then p.Anchored = true; table.insert(aDelen, p); table.insert(aRel, A0:ToObjectSpace(p.CFrame)) end
+end
+local relingen: {BasePart} = {}
+for _, p in gDelen do if p.Name == "reling" then table.insert(relingen, p) end end
+local st = pag:FindFirstChild("Station")
+if st then for _, p in st:GetDescendants() do if p:IsA("BasePart") and p.Name == "bakreling" then table.insert(relingen, p) end end end
+
+type Cil = {voet: Vector3, kop: Vector3, huis: BasePart, stang: BasePart, Lh: number, Ls: number}
+local cils: {Cil} = {}
+for _, c in (pag:WaitForChild("Cilinders") :: Folder):GetChildren() do
+	if c:IsA("Folder") then
+		local v, k = c:GetAttribute("Voet") :: Vector3, c:GetAttribute("Kop") :: Vector3
+		local Lup = (k - v).Magnitude
+		table.insert(cils, {voet = PIV:PointToWorldSpace(v), kop = k, huis = c:WaitForChild("Huis") :: BasePart,
+			stang = c:WaitForChild("Stang") :: BasePart, Lh = 0.62 * Lup + 0.9, Ls = 0.38 * Lup + 0.6})
+	end
+end
+local function staaf(p: BasePart, a: Vector3, r: Vector3, L: number)
+	p.Size = Vector3.new(L, p.Size.Y, p.Size.Z)
+	p.CFrame = CFrame.lookAt(a + r * (L / 2), a + r * L) * CFrame.Angles(0, math.pi / 2, 0)
+end
+
+local FASEN = {{"instappen", 25}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 180}, {"omlaag", 55}}
+local CYCLUS, T_RIT = 0, 55 + 180 + 55
+for _, f in FASEN do CYCLUS += f[2] :: number end
+local function e(t: number): number return (1 - math.cos(math.pi * math.clamp(t, 0, 1))) / 2 end
+
+local function stand(tc: number): (number, number, string)
+	local t0, t_rit = 0, 0
+	for _, f in FASEN do
+		local naam, duur = f[1] :: string, f[2] :: number
+		if tc < t0 + duur then
+			local t = (tc - t0) / duur
+			local th = TH_D
+			if naam == "omhoog" then th = TH_D * (1 - e(t)) elseif naam == "boven" then th = 0 elseif naam == "omlaag" then th = TH_D * e(t) end
+			local phi = 0
+			if naam == "omhoog" or naam == "boven" or naam == "omlaag" then phi = 2 * math.pi * e((t_rit + tc - t0) / T_RIT) end
+			return th, phi, naam
+		end
+		t0 += duur
+		if naam == "omhoog" or naam == "boven" or naam == "omlaag" then t_rit += duur end
+	end
+	return TH_D, 0, "instappen"
+end
+
+local plr = Players.LocalPlayer
+local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Include; ray.FilterDescendantsInstances = {gondel}
+local gK = K0
+local fase = ""
+local cfs = table.create(#gDelen)
+local acfs = table.create(#aDelen)
+
+RunService.PreSimulation:Connect(function()
+	local start = pag:GetAttribute("RitStart") :: number?
+	if not start then return end
+	local tc = (workspace:GetServerTimeNow() - start) % CYCLUS
+	local th, phi, naam = stand(tc)
+	local A = PIV * CFrame.Angles(0, 0, th)
+	local nieuwK = CFrame.new(Jw(th) + schuif(th)) * PIV.Rotation * CFrame.Angles(0, phi, 0)
+	-- speler op het dek: meenemen met de verplaatsing van de gondel
+	local ch = plr.Character
+	local hrp = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if hrp then
+		local r = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
+		if r then hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame end
+	end
+	for i, rel in gRel do cfs[i] = nieuwK * rel end
+	workspace:BulkMoveTo(gDelen, cfs, Enum.BulkMoveMode.FireCFrameChanged)
+	for i, rel in aRel do acfs[i] = A * rel end
+	workspace:BulkMoveTo(aDelen, acfs, Enum.BulkMoveMode.FireCFrameChanged)
+	for _, c in cils do
+		local k = A:PointToWorldSpace(c.kop); local u = (k - c.voet).Unit
+		staaf(c.huis, c.voet, u, c.Lh); staaf(c.stang, k, -u, c.Ls)
+	end
+	gK = nieuwK
+	pag:SetAttribute("FaseLokaal", naam)
+	if naam ~= fase then
+		fase = naam
+		for _, p in relingen do p.CanCollide = naam ~= "instappen" end
+	end
+end)

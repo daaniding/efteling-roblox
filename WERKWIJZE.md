@@ -396,4 +396,8 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Terreinhoogte: de raycast-hoogte is NIET wat je ziet. Gras op FillBlock-nap 8.95 (met de -2 stud in de formule) ligt zichtbaar
   gelijk met klinkers op NAP 9.62. Hoogtes van terrein dus met een screenshot controleren, niet met een raycast.
 - Fps meten met RenderStepped geeft precies 15 als Studio niet het voorste venster is: dat is de achtergrondrem, geen meting.
+- Bewegende attracties: NIET met losse physics-delen + AlignPosition vanaf de server (trilt op de client, spelers lopen achter,
+  en losse delen worden anders belicht). Wel: alles verankerd, beweging op elke client uit workspace:GetServerTimeNow()
+  (BulkMoveTo in PreSimulation) en de eigen speler meenemen met de vloer (delta-CFrame van het platform). Model op
+  ModelStreamingMode Persistent, want de place streamt.
 
