@@ -8,15 +8,15 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 94099909450699, bord_kleur = 138476476235233,
+local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 103724528563937, bord_kleur = 138476476235233,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
 	romp_blauw_kleur = 81733490640030, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, bamboe_kleur = 100311851570971}
 local LAMPEN = __LAMPEN__     -- export_info.json + omgeving_info.json, modelmeters (x oost, y noord, z boven water)
 local VIJVER = __VIJVER__     -- vijverrand (luchtfoto), modelmeters
-local KLASSEN = __KLASSEN__   -- per m (rij = model-y -35..34, teken = model-x -35..34): v verhard plein, g plantvak, z zand (luchtfoto)
-local MAT = {v = Enum.Material.Pavement, g = Enum.Material.Grass, z = Enum.Material.Sand}
+local KLASSEN = __KLASSEN__   -- per m (rij = model-y -35..34, teken = model-x -35..34): v verhard plein, g plantvak, z zand, a aarde (luchtfoto)
+local MAT = {v = Enum.Material.Pavement, g = Enum.Material.Grass, z = Enum.Material.Sand, a = Enum.Material.Ground}
 
 -- rol -> {textuur, normaal, kleur (tint of effen), materiaal, botsen, extra}
 local R = {
@@ -81,6 +81,12 @@ local R = {
 	-- zandstrand west van de haven (07_omgeving.strand)
 	zand = {nil, nil, Color3.fromRGB(218, 198, 158), Enum.Material.Sand, true},
 	kei = {nil, nil, Color3.fromRGB(168, 146, 136), Enum.Material.Slate, true},
+	-- witte plantvakrand en zandstenen havenmuur (07_omgeving.vijverrand / havenmuur)
+	witrand = {nil, nil, Color3.fromRGB(228, 226, 218), Enum.Material.Concrete, true},
+	zandsteen = {nil, nil, Color3.fromRGB(212, 186, 146), Enum.Material.Sandstone, true},
+	afdek_zand = {nil, nil, Color3.fromRGB(226, 208, 172), Enum.Material.Sandstone, true},
+	muursteen = {nil, nil, Color3.fromRGB(150, 132, 112), Enum.Material.Slate, false},
+	boog = {nil, nil, Color3.fromRGB(18, 16, 14), Enum.Material.SmoothPlastic, false},
 }
 
 local function inVijver(x, y)          -- punt-in-veelhoek (even-oneven)

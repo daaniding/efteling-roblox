@@ -41,6 +41,9 @@ def in_poly(x, y, P):
         if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi: c = not c
         j = i
     return c
+BEDRAND = [(-9.8, -15.2), (-9.6, -13.6), (-8.8, -12.0), (-7.5, -11.0), (-3.5, -11.0)]   # witte betonrand plantvak (World_of_Sinbad.jpg)
+HAVENMUUR = [(-13.8, -11.6), (-14.6, -12.3), (-13.0, -13.4), (-11.0, -14.8), (-9.8, -15.2)]   # zandstenen zitmuur met boogje
+BED_HAVEN = [(-9.8, -15.2), (-9.6, -13.6), (-8.8, -12.0), (-7.5, -11.0), (-3.5, -11.0), (-3.6, -16.8), (-8.4, -16.6)]
 PLEINKANT = lambda x, y: (x < -11.0 and -13 < y < 7.0) or (x < -9.5 and y < -12.5)     # rand langs het plein (lichte band, witte muur)
 # wachtrij: begin bij het plein (zuidoost, naast Archipel), noord langs de oostkant, zeilkap vanaf ZEIL_VANAF, bocht van 180
 # graden en meebuigend met de draaischijf (r ~10.3) tot het opstappunt aan het dek
@@ -205,6 +208,11 @@ def vijverrand(bms):
         a, b = Vector((*pts[k], 0)), Vector((*pts[k + 1], 0)); m = (a + b) / 2
         d = (b - a); L = d.length; d = d.normalized(); n = Vector((d.y, -d.x, 0))
         if m.x < -11.0 and -12.6 < m.y < -5.5: continue      # strand: geen rand, het zand loopt het water in
+        if pts[k] in HAVENMUUR and pts[k + 1] in HAVENMUUR: continue   # zandstenen muur, zie havenmuur()
+        if pts[k] in BEDRAND and pts[k + 1] in BEDRAND:      # gladde witte betonrand om het plantvak
+            c = m + n * 0.15
+            doos(bms["witrand"], (c.x, c.y, 0.12), (L + 0.32, 0.3, 0.62), math.atan2(d.y, d.x))
+            continue
         plein = PLEINKANT(m.x, m.y)
         rol = "afdek" if plein else "steen"
         c = m + n * 0.2
@@ -216,6 +224,37 @@ def vijverrand(bms):
                     vv = bol(bms["steen"], cc, r, 7)
                     for q in vv:
                         dd = q.co - cc; q.co = cc + Vector((dd.x * random.uniform(0.9, 1.3), dd.y * random.uniform(0.9, 1.3), dd.z * 0.55))
+
+
+def havenmuur(bms):
+    """zandstenen zitmuur langs het plein aan de zuidwestkant van de haven (World_of_Sinbad.jpg): ~0,5 m boven het plein, lichte
+    afdekstenen, losse ingemetselde stenen in de gevel en een boogje (donkere opening met boogstenen) waar het water onderdoor loopt"""
+    random.seed(11)
+    for k in range(len(HAVENMUUR) - 1):
+        a, b = Vector((*HAVENMUUR[k], 0)), Vector((*HAVENMUUR[k + 1], 0))
+        d = b - a; L = d.length; d.normalize(); n = Vector((d.y, -d.x, 0))       # naar buiten (van de vijver af)
+        if in_poly(((a + b) / 2 + n * 0.5).x, ((a + b) / 2 + n * 0.5).y, VIJVER): n = -n
+        hoek = math.atan2(d.y, d.x); m = (a + b) / 2
+        c = m + n * 0.3
+        doos(bms["zandsteen"], (c.x, c.y, 0.15), (L + 0.6, 0.6, 1.1), hoek)                  # muur z -0,4 .. 0,7
+        c2 = m + n * 0.28
+        doos(bms["afdek_zand"], (c2.x, c2.y, 0.76), (L + 0.7, 0.72, 0.12), hoek)            # afdekstenen
+        for _ in range(int(L * 2.2)):                                                         # ingemetselde stenen
+            t = random.uniform(0.08, 0.92); z = random.uniform(-0.05, 0.55); sx = random.uniform(0.18, 0.34); sz = random.uniform(0.12, 0.22)
+            p = a + (b - a) * t - n * 0.02
+            if k == 2 and abs(t - 0.5) * L < 0.75: continue                                 # niet in het boogje
+            doos(bms["muursteen"], (p.x, p.y, z), (sx, 0.06, sz), hoek)
+        if k == 2:                                                                            # boogje in het midden van de muur
+            p = m - n * 0.012; r = 0.42; zb = 0.05
+            boog = [Vector((p.x + d.x * r * math.cos(t), p.y + d.y * r * math.cos(t), zb + r * math.sin(t))) for t in [math.pi * i / 12 for i in range(13)]]
+            boog = [Vector((p.x + d.x * r, p.y + d.y * r, -0.2))] + boog + [Vector((p.x - d.x * r, p.y - d.y * r, -0.2))]
+            f = bms["boog"].faces.new([bms["boog"].verts.new(v) for v in boog]); f.normal_update()
+            if f.normal.dot(-n) < 0: f.normal_flip()
+            for i in range(7):                                                                # boogstenen
+                t = math.pi * (i + 0.5) / 7; rr = r + 0.09
+                q = Vector((p.x + d.x * rr * math.cos(t), p.y + d.y * rr * math.cos(t), zb + rr * math.sin(t))) - n * 0.02
+                v = doos(bms["afdek_zand"], (q.x, q.y, q.z), (0.15, 0.08, 0.24), hoek)
+                bmesh.ops.rotate(bms["afdek_zand"], cent=q, matrix=Matrix.Rotation((t - math.pi / 2), 3, n), verts=v)
 
 
 def strand(bms):
@@ -498,7 +537,7 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei")
+              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)
@@ -507,7 +546,7 @@ def main():
     leuning(bms, links[:ZEIL_VANAF + 1], Z_VLONDER); leuning(bms, rechts[:ZEIL_VANAF + 1], Z_VLONDER)
     leuning(bms, links[ZEIL_VANAF:-1], Z_VLONDER, True); leuning(bms, rechts[ZEIL_VANAF:-1], Z_VLONDER, True)
     zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-1], Z_VLONDER, lampen)
-    hutje(bms); brug(bms); vijverrand(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
+    hutje(bms); brug(bms); vijverrand(bms); havenmuur(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
     # waterplaat in de vorm van de vijver (dun, bovenkant omhoog)
     bmw = bmesh.new()
     vs = [bmw.verts.new((x, y, -0.04)) for x, y in VIJVER]
@@ -518,7 +557,7 @@ def main():
     obj("SI_om_water", bmw, "water")
     for rol, bm in bms.items():
         if not bm.verts: bm.free(); continue
-        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand"):
+        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand", "boog"):
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         obj(f"SI_om_{rol}", bm, rol)
     info = {"vijver": VIJVER, "wachtrij": WACHTRIJ, "zeil_vanaf": ZEIL_VANAF, "uitgang": UITGANG, "hut": HUT, "lampen": lampen,

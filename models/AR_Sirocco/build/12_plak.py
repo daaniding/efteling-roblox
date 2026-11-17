@@ -43,6 +43,8 @@ for jj in range(-35, 35):              # model-y van -35 tot 34 (cel-midden +0,5
         STRAND = [(-12.0, -6.0), (-11.2, -7.6), (-11.6, -8.8), (-12.6, -10.0), (-13.8, -11.6), (-14.6, -12.3), (-16.0, -11.7), (-17.0, -10.2),
                   (-17.3, -8.0), (-16.6, -6.0), (-14.6, -4.9), (-12.9, -4.6)]       # = 07_omgeving.STRAND
         if binnen(x, y, STRAND): rij += "z"; continue
+        if binnen(x, y, [(-9.8, -15.2), (-9.6, -13.6), (-8.8, -12.0), (-7.5, -11.0), (-3.5, -11.0), (-3.6, -16.8), (-8.4, -16.6)]):
+            rij += "a"; continue                                # plantvak met witte rand: donkere aarde (= 07_omgeving.BED_HAVEN)
         if math.hypot(x, y) < 17:      # band om de vijver: plein langs de west-/zuidkant, verder plantvak (luchtfoto)
             k = 0 if ((x < -11 and -13 < y < 7) or (x < -9.5 and y < -12.5) or y < -15.5) else 1
         rij += "vgz"[k]

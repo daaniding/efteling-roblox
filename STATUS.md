@@ -1475,7 +1475,10 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Zandstrand (17 nov), Daan: "maak het strandje goed". Plek uit de luchtfoto (keien als donkere vlekken op licht zand, x -17..-11,
   y -12.3..-4.6 = west van de haven) en foto's (eftepedia/Storm_effect_sindbad.jpg, videoframe 284 s): zand op pleinhoogte dat 1,3 m
   schuin het water in loopt (geen randband daar), 14 ronde granieten keien (onregelmatig, half in het zand), twee meerpalen met
-  koepelkap; terrein eronder Sand (12_plak). Ook gezien: het bed tussen haven en brug heeft een witte betonrand, en de havenmuur
-  aan het plein is zandsteen met een boogje (World_of_Sinbad.jpg) - nog niet nagebouwd. Omgeving 94099909450699.
+  koepelkap; terrein eronder Sand (12_plak). Omgeving 94099909450699.
+- Plantvakrand + havenmuur (17 nov), Daan: "ja, doe maar". Naar World_of_Sinbad.jpg: gladde witte betonrand om het plantvak
+  tussen haven en brug (BEDRAND, terrein in het vak Ground/aarde); zandstenen zitmuur langs het plein aan de ZW-kant van de haven
+  (HAVENMUUR, top ~0,5 m boven het plein, lichte afdekstenen, ingemetselde stenen, boogje met boogstenen waar het water onder
+  door loopt). Omgeving 103724528563937.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
