@@ -141,12 +141,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Bewuste afwijking: wachtrijbanen 1.945 m vrij (2.0 hart op hart; tribune ligt vast op 11 rijen van 1 m uit de AHN).
   - Onzichtbare botsing langs alle hekken/relingen (exports/omgeving_hekken.json, 67 stukken) en klaphekjes in de gondel die bij
     het instappen 85 graden naar binnen draaien (PagodeRitClient); reling/bakrand in 1.25-graden-stukken met poortopeningen.
-  - Getest in Play: de hele ingangsroute (spawn, aanlooppad, onder het bord, laantje, onderpad, trapstrook, tourniquets, bordes,
-    gangetje) loopt. NOG NIET GELUKT: door het poortje de gondel in; de avatar blijft op r 8.45 staan (ook met open hekjes en
-    fijnere reling). Oorzaak nog niet gevonden: Studio viel weg tijdens het onderzoek. Daarna: dek -> uitstappoortje -> vlonder ->
-    uitgangstrap testen.
-  - LET OP: Studio-wijzigingen van deze ronde zijn mogelijk niet opgeslagen; opnieuw neerzetten met roblox/pagode_rit.luau
-    (+ station/omgeving herladen, terrein waar het plein lag gras, scripts PagodeRit + PagodeRitClient).
+  - Blokkade bij het poortje was het meeneemscript: het zette elk frame de CFrame van de speler op het dek, ook bij stilstand,
+    en dat blokkeert lopen. Nu alleen als de gondel echt beweegt.
+  - Getest in Play, ALLES OK: spawn -> aanlooppad -> onder het bord -> laantje -> onderpad -> trapstrook -> tourniquets -> bordes
+    -> gangetje in0 -> poortje (hekjes open) -> dek rond -> uitstappoortje uit0 -> vlonder -> uitgangstrap -> uitgangspad.
+    Met dichte hekjes kom je de gondel niet uit; tijdens het stijgen staat de speler 0.97 m boven het dek (rijdt mee).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

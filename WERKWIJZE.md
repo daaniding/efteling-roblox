@@ -402,4 +402,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   ModelStreamingMode Persistent, want de place streamt.
 - Lichten op bewegende delen: zonder Shadows lekken PointLights door alles heen (bewegende objecten hebben geen eigen
   occlusie). Weinig lichten, laag Brightness/Range, en Shadows = true; Neon iets transparant tegen te veel bloom.
+- Elk stuk route direct na het neerzetten met de avatar belopen (Humanoid:MoveTo, per punt ok/vast + wat er botst), niet pas
+  aan het eind: Daan vond het "slordig" omdat fouten (spawn tussen stoelen, paal in het laantje, grove reling, geblokkeerd
+  dek) pas bij het spelen boven kwamen. Botsingsonderzoek: Raycast met RespectCanCollide langs de looplijn op meerdere hoogtes.
+- Speler meenemen op een bewegend platform: alleen als het platform deze frame echt beweegt; elk frame hrp.CFrame zetten
+  (ook bij stilstand) blokkeert het lopen.
 

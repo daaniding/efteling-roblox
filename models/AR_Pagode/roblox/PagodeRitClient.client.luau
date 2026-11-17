@@ -113,7 +113,9 @@ RunService.PreSimulation:Connect(function()
 	-- speler op het dek: meenemen met de verplaatsing van de gondel
 	local ch = plr.Character
 	local hrp = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
-	if hrp then
+	-- alleen als de gondel echt beweegt: elk frame de CFrame zetten (ook bij stilstand) blokkeert het lopen op het dek
+	local beweegt = (nieuwK.Position - gK.Position).Magnitude > 1e-4 or nieuwK.LookVector:Dot(gK.LookVector) < 0.9999999
+	if hrp and beweegt then
 		local r = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
 		if r then hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame end
 	end
