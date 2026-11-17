@@ -30,17 +30,36 @@ def blad(d, x, y, ang, L, B, kleur, punt=0.5):
 
 
 def bamboe():
+    """Fijne bamboeveren (video 0:24-0:28): veel dunne twijgjes met smalle hangende bladeren van ~12-15 cm (kaart = 1 m)."""
     W = H = 1024
     im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    for k in range(46):
-        x0, y0 = R.uniform(80, 940), R.uniform(60, 900)
-        ang0 = R.uniform(-2.6, -0.6)
-        d.line([(x0, y0), (x0 + 120 * math.cos(ang0), y0 + 120 * math.sin(ang0))], fill=(96, 110, 52, 255), width=4)
-        for j in range(R.randint(5, 8)):
-            a = math.pi / 2 + R.uniform(-1.1, 1.1)          # bamboebladeren hangen
-            blad(d, x0 + R.uniform(-20, 20), y0 + R.uniform(-20, 20), a, R.uniform(110, 170), R.uniform(12, 18),
-                 jit((88, 124, 44) if R.random() < 0.6 else (122, 146, 58), 22) + (255,), 0.45)
+    for k in range(130):
+        x0, y0 = R.uniform(60, 960), R.uniform(40, 900)
+        ang0 = R.uniform(-2.4, -0.7); L0 = R.uniform(70, 130)
+        d.line([(x0, y0), (x0 + L0 * math.cos(ang0), y0 + L0 * math.sin(ang0))], fill=(110, 118, 58, 255), width=2)
+        for j in range(R.randint(4, 7)):
+            t = R.uniform(0, 1); bx, by = x0 + L0 * t * math.cos(ang0), y0 + L0 * t * math.sin(ang0)
+            a = math.pi / 2 + R.uniform(-1.2, 1.2)          # bamboebladeren hangen
+            licht = R.random()
+            kleur = (76, 112, 38) if licht < 0.45 else (112, 142, 52) if licht < 0.85 else (150, 166, 70)
+            blad(d, bx, by, a, R.uniform(80, 120), R.uniform(8, 12), jit(kleur, 18) + (255,), 0.45)
     im.save(os.path.join(T, 'PG_bamboe_kleur.png'))
+
+
+def pluk():
+    """Dennenpluk voor de niwaki (video 0:20-0:24, Japanse zwarte den): waaier van naalden uit een punt onderaan, donker,
+    lichtere toppen; transparant. Kaart staat schuin in een wolk: veel plukken samen = een gesnoeide naaldwolk."""
+    W = H = 512
+    im = Image.new('RGBA', (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    for k in range(9):                                       # een paar plukken per kaart, naast elkaar
+        bx, by = R.uniform(90, 420), R.uniform(330, 470)
+        for j in range(70):
+            a = -math.pi / 2 + R.uniform(-1.35, 1.35); L = R.uniform(90, 190) * (1 - abs(a + math.pi / 2) * 0.25)
+            x1, y1 = bx + L * math.cos(a), by + L * math.sin(a)
+            c = jit((30, 52, 30) if R.random() < 0.55 else (44, 72, 38), 10)
+            d.line([(bx, by), (x1, y1)], fill=c + (255,), width=3)
+            d.line([((bx + x1 * 2) / 3, (by + y1 * 2) / 3), (x1, y1)], fill=jit((70, 100, 52), 12) + (255,), width=2)   # lichtere toppen
+    im.save(os.path.join(T, 'PG_pluk_kleur.png'))
 
 
 def loofblad():
@@ -166,7 +185,8 @@ def klinker_visgraat():
     pp = (sc + sr) % 16; qq = (sc - sr) % 16
     sid = pp * 16 + qq + hor * 256
     pal = np.array([(132, 104, 102), (140, 98, 88), (116, 98, 106), (98, 80, 82), (152, 128, 122), (126, 110, 108)], float)
-    kl = pal[rng.integers(0, len(pal), 512)][sid] * rng.uniform(0.88, 1.1, 512)[sid][..., None]
+    pal = pal * 0.55 + pal.mean(0) * 0.45                    # video 0:28: vaal mauvebruin, weinig verschil per steen
+    kl = pal[rng.integers(0, len(pal), 512)][sid] * rng.uniform(0.92, 1.07, 512)[sid][..., None]
     fx, fy = cx - c, cy - r                                   # positie binnen de cel
     lx = np.where(hor, (fx + (d == 1)) / 2, fx); ly = np.where(hor, fy, (fy + 1 - (d == 3)) / 2)   # 0..1 binnen de steen
     lx = np.where(hor, lx, fx); ly = np.where(hor, fy, np.where(d == 3, fy / 2, (fy + 1) / 2))
@@ -199,7 +219,7 @@ def wilg():
 
 
 if __name__ == '__main__':
-    wilg(); klinker_visgraat(); spartak(); breuksteen(); bamboe(); loofblad()
+    wilg(); klinker_visgraat(); spartak(); breuksteen(); bamboe(); loofblad(); pluk()
     tegel('PG_naald_kleur.png', (30, 50, 26), naald, 2600)
     tegel('PG_haag_kleur.png', (34, 58, 22), haagblad, 9000)
     tegel('PG_bloem_kleur.png', (44, 72, 30), bloem, 5000)

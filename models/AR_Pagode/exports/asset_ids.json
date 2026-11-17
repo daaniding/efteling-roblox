@@ -19,15 +19,15 @@
  "natuursteen_normaal": 71110702105863,
  "vlonder_kleur": 114168670349764,
  "vlonder_normaal": 105858881415149,
- "klinker_kleur": 72708170089065,
+ "klinker_kleur": 76036336782300,
  "klinker_normaal": 132177172189347,
  "bord_kleur": 107214009738343,
- "AR_Pagode_omgeving": 90134024900622,
+ "AR_Pagode_omgeving": 114105517753084,
  "ingangsbord_kleur": 106758910462500,
  "uitgangsbord_kleur": 71715100841980,
  "breuksteen_kleur": 74939119820853,
  "breuksteen_normaal": 96183299144764,
- "bamboe_kleur": 114001507931809,
+ "bamboe_kleur": 100311851570971,
  "blad_kleur": 75105356130828,
  "spar_kleur": 91377517844234,
  "naald_kleur": 72168876031761,
@@ -37,5 +37,8 @@
  "tokorand_kleur": 115150839917312,
  "tokopaneel_kleur": 109978993367892,
  "parasol_kleur": 116141934527280,
- "wilg_kleur": 100412416431599
+ "wilg_kleur": 100412416431599,
+ "steen_kleur": 116600353020198,
+ "steen_normaal": 95927671453559,
+ "pluk_kleur": 82875106386837
 }

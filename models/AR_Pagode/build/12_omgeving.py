@@ -303,10 +303,10 @@ def build():
     afvalbak("AR_Pagode_O_bak_zuid", pt(13.4, 151.0, Z_I), math.radians(151 + 180))
     afvalbak("AR_Pagode_O_bak_onder", pt(25.9, 155.6, Z_P + 0.02), math.radians(155.6 + 180))
     # bloempot met bamboe naast het bord (video 0:04-0:12); de bamboe zelf komt met de beplanting
-    buis("AR_Pagode_O_pot", pt(14.5, 95.5, Z_P), pt(14.5, 95.5, Z_P + 0.62), 0.36, "rood", 12, 0.28)
+    buis("AR_Pagode_O_pot", pt(15.7, 95.0, Z_P), pt(15.7, 95.0, Z_P + 0.62), 0.36, "rood", 12, 0.28)   # voor het plantvak (17)
     # rode bankjes langs de pleinmuur (Pagode-landing.jpg)
     for k, aa in enumerate((70.0, 82.0)):
-        bankje(f"AR_Pagode_O_bank{k}", pt(14.6, aa, Z_P), math.radians(aa))
+        bankje(f"AR_Pagode_O_bank{k}", pt(15.75, aa, Z_P), math.radians(aa))
 
     # C uitgang aan de oostkant (video 6:15-6:45): keermuur langs de vlonder, trap naar het pad, hek, uitgangsbord
     A_UIT = -20.0; gat = math.degrees(1.3 / 10.8)

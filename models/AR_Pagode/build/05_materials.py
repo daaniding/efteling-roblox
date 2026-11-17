@@ -77,6 +77,12 @@ ROLLEN = {
     "beton_licht": ((0.55, 0.52, 0.47), 0.85, 0.0, None, 0),
     "asfalt":    ((0.22, 0.22, 0.22), 0.9, 0.0, None, 0),
     "wilg":      ((1, 1, 1), 0.7, 0.0, "wilg", 0),
+    # 17_steenwerk (losse 3D-stenen, video 0:04-0:39)
+    "steen":     ((1, 1, 1), 0.9, 0.0, "steen", 0.6),
+    "pluk":      ((1, 1, 1), 0.8, 0.0, "pluk", 0),               # naaldplukken niwaki (alpha)
+    "naald_donker": ((0.025, 0.045, 0.025), 0.9, 0.0, None, 0),  # kern van de niwakiwolken
+    "voeg":      ((0.045, 0.04, 0.035), 0.95, 0.0, None, 0),     # achterwand tussen de stenen
+    "graniet":   ((0.34, 0.33, 0.31), 0.8, 0.0, None, 0),        # neuzen tribunerijen
 }
 
 
@@ -91,7 +97,7 @@ def materiaal(rol):
     if tex:
         it = nt.nodes.new("ShaderNodeTexImage"); it.image = bpy.data.images.load(os.path.join(T, f"PG_{tex}_kleur.png"), check_existing=True)
         nt.links.new(it.outputs["Color"], b.inputs["Base Color"])
-        if tex in ("bamboe", "blad", "spar", "wilg"):          # bladkaarten: alpha uit de textuur
+        if tex in ("bamboe", "blad", "spar", "wilg", "pluk"):          # bladkaarten: alpha uit de textuur
             nt.links.new(it.outputs["Alpha"], b.inputs["Alpha"])
         if rol == "pannen":     # pannen: textuur x oranje is al in de textuur; vermenigvuldigen niet nodig
             pass

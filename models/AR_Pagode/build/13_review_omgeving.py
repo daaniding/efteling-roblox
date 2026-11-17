@@ -47,6 +47,9 @@ CAMS = {
     "trap": (P(25.5, 110.5, 1.2), P(12.0, 115.0, 2.6), 26),
     "uitgang": (P(19.0, -10.0, 1.3), P(10.6, -20.0, 1.8), 24),
     "boven": ((322.0, 58.0, 47.0), (352.0, 56.0, 0.0), 30),
+    "v005": (P(21.0, 80.0, 1.25), P(14.5, 96.0, 1.5), 22),           # video 0:05 (plein, muur, bord rechts)
+    "v021": (P(15.3, 102.8, 1.3), P(24.0, 117.0, 0.6), 22),          # video 0:21 (begin laantje, muur links)
+    "v024": (P(21.0, 110.2, 1.2), P(23.5, 100.0, 1.5), 22),          # video 0:24 (laantje, kijkt naar de bamboe)
     "toko": ((366.0, 58.0, 4.2), (380.6, 79.3, 3.0), 30),          # video 1:02 vanaf het bordes
 }
 for naam in arg.alleen.split(","):

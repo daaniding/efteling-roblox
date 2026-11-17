@@ -89,44 +89,72 @@ def kaarten(naam, lijst, rol):
     return obj(naam, bm, rol, uv_vast=True)
 
 
-def bamboebos(naam, c, z, n=7, h=4.5):
+def bamboebos(naam, c, z, n=10, h=5.0):
+    """Bamboebos (video 0:24-0:28): veel dunne geelgroene stengels, bladveren vanaf ~30 % van de hoogte, dicht en fijn."""
     c = Vector(c); stengels = []
     for k in range(n):
-        p = c + Vector((rnd.uniform(-0.5, 0.5), rnd.uniform(-0.5, 0.5), z))
-        hh = h * rnd.uniform(0.8, 1.15); top = p + Vector((rnd.uniform(-0.4, 0.4), rnd.uniform(-0.4, 0.4), hh))
-        buis(f"{naam}_stengel{k}", p, top, rnd.uniform(0.018, 0.03), "bamboestam", 6, 0.012)
+        p = c + Vector((rnd.uniform(-0.6, 0.6), rnd.uniform(-0.6, 0.6), z))
+        hh = h * rnd.uniform(0.75, 1.15); top = p + Vector((rnd.uniform(-0.5, 0.5), rnd.uniform(-0.5, 0.5), hh))
+        buis(f"{naam}_stengel{k}", p, top, rnd.uniform(0.014, 0.024), "bamboestam", 5, 0.008)
         stengels.append((p, top))
     lijst = []
     for p, top in stengels:
-        for q in (0.45, 0.62, 0.8, 0.95):
+        for q in (0.32, 0.45, 0.58, 0.7, 0.82, 0.94):
             m = p + (top - p) * q
-            lijst.append((m + Vector((rnd.uniform(-0.2, 0.2), rnd.uniform(-0.2, 0.2), 0)), rnd.uniform(1.0, 1.4), rnd.uniform(1.2, 1.7),
-                          rnd.uniform(0, 3.14), rnd.uniform(-0.15, 0.15)))
+            lijst.append((m + Vector((rnd.uniform(-0.25, 0.25), rnd.uniform(-0.25, 0.25), 0)), rnd.uniform(0.8, 1.1), rnd.uniform(0.9, 1.2),
+                          rnd.uniform(0, 3.14), rnd.uniform(-0.25, 0.25)))
     kaarten(f"{naam}_blad", lijst, "bamboe")
 
 
-def niwaki(naam, voet, h=4.2, n_wolk=6):
-    """Gesnoeide den: kronkelende stam, takken met platte naaldwolken (video 0:20-0:26)."""
-    voet = Vector(voet); p = voet.copy(); punten = [p.copy()]
-    richting = Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), 0)).normalized()
-    for k in range(5):
-        q = p + Vector((0, 0, h / 5)) + richting * rnd.uniform(0.15, 0.4) * (1 if k % 2 else -0.6)
-        buis(f"{naam}_stam{k}", p, q, 0.16 * (1 - k / 7), "schors", 8, 0.16 * (1 - (k + 1) / 7))
-        p = q; punten.append(p.copy())
-    sprays = []
-    for k in range(n_wolk):
-        z = h * (0.35 + 0.65 * k / max(1, n_wolk - 1))
-        basis = punten[min(5, int(z / h * 5))]
-        hoek = rnd.uniform(0, 6.28) if k < n_wolk - 1 else 0
-        L = rnd.uniform(0.9, 1.6) * (1.0 - 0.4 * k / n_wolk) if k < n_wolk - 1 else 0
-        eind = Vector((basis.x + math.cos(hoek) * L, basis.y + math.sin(hoek) * L, voet.z + z))
-        if L > 0: buis(f"{naam}_tak{k}", basis, eind, 0.06, "schors", 6, 0.035)
-        s = rnd.uniform(0.7, 1.05) * (1.15 - 0.4 * k / n_wolk)
-        wc = eind + Vector((0, 0, 0.12))
-        blob(f"{naam}_wolk{k}", wc, (s * 0.85, s * 0.8, s * 0.32), "naald", 2, 0.1)
-        sprays.extend((wc + Vector((0, 0, rnd.uniform(-0.05, 0.12))), j * 0.785 + rnd.uniform(-0.3, 0.3), s * 1.15, s * 0.7, 0.08) for j in range(8))
+def pad(lijst, c, s, n):
+    """Gesnoeide naaldwolk: n plukkaarten op een afgeplatte koepel, schuin naar buiten gekanteld (zijkant leest als dikte)."""
+    for i in range(n):
+        u = rnd.uniform(0, 6.28); rr = math.sqrt(rnd.random())
+        x, y = math.cos(u) * rr * s[0], math.sin(u) * rr * s[1]
+        zt = s[2] * (1 - rr * rr) * 0.8
+        kant = 1.35 - rr * 0.65                              # midden bijna plat, rand steiler
+        lijst.append((c + Vector((x, y, zt)), rnd.uniform(0.34, 0.5), rnd.uniform(0.26, 0.36), u + math.pi / 2 + rnd.uniform(-0.4, 0.4),
+                      kant * (1 if rnd.random() < 0.5 else -1)))
 
-    takken(f"{naam}_naalden", sprays)
+
+def niwaki(naam, voet, h=4.2, n_wolk=6):
+    """Gesnoeide Japanse den (video 0:20-0:26): scheve kronkelstam, kale takken naar platte wolken van naaldplukken
+    met een donkere kern (geen doorkijk), wolken in duidelijke lagen."""
+    voet = Vector(voet); p = voet.copy(); punten = [p.copy()]
+    leun = Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), 0)).normalized()
+    for k in range(7):
+        bocht = Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), 0)) * 0.18
+        q = p + Vector((0, 0, h / 7)) + leun * 0.12 * (1 - k / 7) + bocht
+        buis(f"{naam}_stam{k}", p, q, 0.2 * (1 - k / 9), "schors", 8, 0.2 * (1 - (k + 1) / 9))
+        p = q; punten.append(p.copy())
+    lijst = []
+    for k in range(n_wolk):
+        top = k == n_wolk - 1
+        t = 0.32 + 0.68 * k / max(1, n_wolk - 1)
+        basis = punten[min(7, int(t * 7))]
+        hoek = rnd.uniform(0, 6.28) + k * 2.4
+        L = 0 if top else rnd.uniform(0.9, 1.7) * (1.0 - 0.35 * k / n_wolk)
+        eind = Vector((basis.x + math.cos(hoek) * L, basis.y + math.sin(hoek) * L, voet.z + h * t + rnd.uniform(-0.1, 0.15)))
+        if L > 0:
+            knik = basis + (eind - basis) * 0.5 + Vector((0, 0, rnd.uniform(-0.15, 0.2)))
+            buis(f"{naam}_tak{k}a", basis, knik, 0.07, "schors", 6, 0.05)
+            buis(f"{naam}_tak{k}b", knik, eind, 0.05, "schors", 6, 0.03)
+        s = rnd.uniform(0.75, 1.05) * (1.2 - 0.45 * k / n_wolk)
+        wc = eind + Vector((0, 0, 0.05))
+        blob(f"{naam}_kern{k}", wc + Vector((0, 0, 0.06)), (s * 0.7, s * 0.65, s * 0.2), "naald_donker", 1, 0.12)
+        pad(lijst, wc, (s * 0.85, s * 0.8, s * 0.4), int(42 * s * s) + 14)
+    kaarten(f"{naam}_plukken", lijst, "pluk")
+
+
+def struik(naam, c, d=0.9, h=0.7):
+    """Lage heester (video 0:21-0:24, tuin langs het laantje): donkere kern en bladkaarten eromheen."""
+    c = Vector(c)
+    blob(f"{naam}_kern", c + Vector((0, 0, h * 0.45)), (d * 0.42, d * 0.42, h * 0.4), "naald_donker", 1, 0.15)
+    lijst = []
+    for i in range(int(10 * d) + 6):
+        u = rnd.uniform(0, 6.28); rr = d * 0.4 * math.sqrt(rnd.random())
+        lijst.append((c + Vector((math.cos(u) * rr, math.sin(u) * rr, h * rnd.uniform(0.35, 0.8))), d * 0.6, h * 0.65, rnd.uniform(0, 3.14), rnd.uniform(-0.4, 0.4)))
+    kaarten(f"{naam}_blad", lijst, "blad")
 
 
 def spar(naam, voet, h=19.0):
@@ -197,15 +225,21 @@ def build():
     k = 0
     for aa in range(103, 140, 3):
         bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(27.6 + rnd.uniform(-0.2, 0.4), aa), Z_P); k += 1
-    for r in (19.5, 21.5, 23.5, 25.5):
-        bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(r, aL(r) - math.degrees(5.6 / r)), Z_P - 0.1, 8, 4.0); k += 1
-    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(14.5, 95.5, Z_P + 0.5), 0.0, 6, 1.6)     # in de pot naast het bord
+    r = 20.5                                   # doorlopende bamboewand achter de tuin (video 0:24-0:28), 4-5 m van het laantje
+    while r < 27.0:
+        bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(r, aL(r) - math.degrees(rnd.uniform(4.2, 5.4) / r)), Z_P - 0.1, 10, 4.8); k += 1
+        r += 1.3
+    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(15.7, 95.0, Z_P + 0.5), 0.0, 8, 1.6)     # in de pot naast het bord
     # niwaki: tuin (2), achter het bord, bij het oostpad
-    niwaki("AR_Pagode_P_niwaki0", pt(20.0, aL(20.0) - math.degrees(2.6 / 20), Z_P - 0.1), 4.6, 7)
+    niwaki("AR_Pagode_P_niwaki0", pt(20.0, aL(20.0) - math.degrees(2.2 / 20), Z_P - 0.1), 6.2, 7)       # video 0:21: hoog, vlak naast het laantje
     niwaki("AR_Pagode_P_niwaki1", pt(23.8, aL(23.8) - math.degrees(2.0 / 23.8), Z_P - 0.1), 3.4, 5)
     niwaki("AR_Pagode_P_niwaki2", pt(18.0, aL(18.0) - math.degrees(3.4 / 18), Z_P - 0.1), 3.8, 6)
     niwaki("AR_Pagode_P_niwaki3", pt(12.4, 24.0, Z_P + 0.03), 3.6, 6)
     niwaki("AR_Pagode_P_niwaki4", pt(12.4, 44.0, Z_P + 0.03), 2.8, 5)
+    # lage struiken tussen laantje en bamboe, en aan de pleinkant van de tuin
+    for j in range(16):
+        r = rnd.uniform(15.5, 26.0); aa = aL(r) - math.degrees(rnd.uniform(1.0, 3.6) / r)
+        struik(f"AR_Pagode_P_struik{j:02d}", pt(r, aa, Z_P - 0.05), rnd.uniform(0.7, 1.3), rnd.uniform(0.5, 0.9))
     # stenen in de tuin
     for j in range(10):
         r = rnd.uniform(16.5, 25); aa = aL(r) - math.degrees(rnd.uniform(0.8, 4.5) / r)

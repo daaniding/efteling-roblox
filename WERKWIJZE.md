@@ -383,3 +383,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - screen_capture geeft bij exact dezelfde camerapositie soms een oud beeld terug: verschuif de camera een fractie bij elke test.
 - Terreinwater rendert NIET 2 stud hoger zoals grond; het peil volgt de voxels (4 stud) niet-lineair. Meet het peil met een
   raycast (IgnoreWater=false) en stel de bovenkant bij; leeg eerst de cellen (Air) voordat je opnieuw vult.
+- Roblox tekent ALLEEN de voorkant van een vlak (Blender toont beide): bij zelfgebouwde meshes de normaal per vlak naar buiten
+  controleren (vlakmidden min objectmidden), anders vallen er in Studio gaten die je in de Blender-render niet ziet. Een
+  rotatiematrix uit (raaklijn, normaal, omhoog) kan gespiegeld zijn (det -1) en keert dan alle vlakken om.
+- Muren met textuur alleen lijken vlak: echte losse stenen (24 driehoeken per steen, per muur een object, tegel per steen in een
+  atlas) maken het verschil. Maten uit de video tellen (lagen per meter), en vulstenen zetten waar een steen de laag niet vult.
+

@@ -138,6 +138,16 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   grond; bovenkant Y +0.28 geeft peil ~NAP 9.3.
   Studio viel weg (instantie gesloten/gecrasht) voordat ik screenshots kon maken; render-check in Studio nog te doen.
   Omgeving nu 84k driehoeken (40 delen): fps opnieuw meten.
+- Ingang en wachtrij opnieuw op attractieniveau (17 nov), Daan: "de scene is zo niet het niveau van wat ik wil, de attractie wel".
+  build/17_steenwerk.py (na 12 en 14, voor 05): breuksteenmuren als LOSSE 3D-stenen in horizontale lagen (maatmix 9-50 cm,
+  vulstenen in de rest van de laag, 0-4.5 cm uitstekend, rafelige dekstenen), steenatlas 4x4 (04f_texturen_steen.py), gladde muren
+  van 12 = donkere achterwand (rol voeg). Plantvak voor de pleinmuur (lage voormuur 0.5 m, video 0:05), rotsrijen langs het laantje en
+  het onderpad, rotsen in de tuin, grijze natuurstenen neuzen op de tribunerijen (0:39). 14_planten: niwaki = scheve stam, kale
+  takken, wolken van naaldplukken (PG_pluk) met donkere kern; bamboe als doorlopende wand 4-5 m (fijnere bladveren); lage struiken.
+  Klinkers valer (video). Bank en pot naar voren (r 15.7). Vergelijk: models/AR_Pagode/review/17_steen/vergelijk.jpg (v005, v021).
+  In Studio geladen (omgeving 54 delen, 183k driehoeken, waarvan ~82k stenen): roblox/herlaad_omgeving.luau laadt alleen de
+  omgeving. Fps nog niet gemeten. Gondoletta-water staat nog op het oude peil (raycast NAP ~8.6): gondoletta_water.luau opnieuw draaien.
+  Nog open voor ingang/wachtrij: hekken en relingen (kragen, bolletjes), lantaarns, PAGODE-bord, controlehuisje, banken (nu blokken).
 - Nog te doen: rieten stoelen netter (nu blokjes), koepel iets minder spits, onzichtbare botsing langs de hekken. Eerder genoemd nog open:
   met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 
