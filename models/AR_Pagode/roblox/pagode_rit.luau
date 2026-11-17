@@ -278,6 +278,50 @@ do
       p.CFrame = CFrame.lookAt(c, c + Vector3.new(pb.X - pa.X, 0, pb.Z - pa.Z)); p.Parent = fe
     end
   end
+  -- geluid (Daan 17 nov: "het geluid uit boxen, zodat je het aan de andere kant van het park niet meer hoort"): alles
+  -- ruimtelijk (InverseTapered, harde grens RollOffMaxDistance). Gelicentieerde Creator Store-audio (APM / ProSoundEffects);
+  -- vervangen = alleen de ID hieronder aanpassen. De client (PagodeRitClient) speelt de ritgeluiden synchroon met de rit.
+  do
+    local GELUID = {
+      muziek = 1837145328,   -- APM "Milarepa" (wachtrij, Oosters getint)
+      brom = 9125767459,     -- PSE constante machinetoon (hydrauliek arm), toonhoogte/volume volgen de armsnelheid
+      hek = 9116875342,      -- PSE metalen hekje open/dicht
+      bel = 9119642644,      -- PSE dubbele bel (vertrek)
+      wind = 9112777914,     -- PSE wind (alleen voor meerijders, hoog)
+    }
+    local oudG = pag:FindFirstChild("Geluid"); if oudG then oudG:Destroy() end
+    local fg = Instance.new("Folder"); fg.Name = "Geluid"; fg.Parent = pag
+    local function snd(ouder, naam, id, vol, minA, maxA, lus)
+      local so = Instance.new("Sound"); so.Name = naam; so.SoundId = "rbxassetid://" .. id; so.Volume = vol; so.Looped = lus
+      so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = minA; so.RollOffMaxDistance = maxA; so.Parent = ouder
+      return so
+    end
+    local function box(naam, pos, kijk)
+      local p = Instance.new("Part"); p.Name = naam; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+      p.Size = Vector3.new(0.75, 1.05, 0.6); p.Color = Color3.fromRGB(28, 28, 30); p.Material = Enum.Material.SmoothPlastic
+      p.CFrame = CFrame.lookAt(pos, Vector3.new(kijk.X, pos.Y, kijk.Z)); p.Parent = fg
+      local d = Instance.new("Part"); d.Name = "grill"; d.Anchored = true; d.CanCollide = false; d.CanQuery = false; d.CanTouch = false
+      d.Size = Vector3.new(0.62, 0.9, 0.05); d.Color = Color3.fromRGB(55, 55, 58); d.Material = Enum.Material.DiamondPlate
+      d.CFrame = p.CFrame * CFrame.new(0, 0, -0.31); d.Parent = p
+      return p
+    end
+    -- speakers langs de wachtrij aan de lantaarnpalen (LAMPEN uit omgeving_lampen.json, 0.7 m onder de kap), naar het pad gericht
+    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {352.65, 59.94, 4.43}, {351.08, 62.56, 3.98}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}}
+    for i, l in ipairs(LAMPEN) do
+      local pos = Vector3.new(l[1] * S, 2 + (l[3] - 0.95) * S, -l[2] * S)
+      local sp = box("speaker" .. i, pos + Vector3.new(0.45, 0, 0), Vector3.new(360 * S, 0, -47.5 * S))
+      snd(sp, "muziek", GELUID.muziek, 0.55, 10, 75, true).Playing = true      -- ~25 m hoorbaar, daarna stil
+    end
+    -- machinegeluid bij de draaias van de arm en de cilinders; bel en hekjes bij het station
+    local as = Instance.new("Part"); as.Name = "machine"; as.Anchored = true; as.CanCollide = false; as.CanQuery = false; as.CanTouch = false
+    as.Transparency = 1; as.Size = Vector3.new(1, 1, 1); as.CFrame = PIV; as.Parent = fg
+    snd(as, "brom", GELUID.brom, 0, 20, 160, true)
+    local st0 = Instance.new("Part"); st0.Name = "station"; st0.Anchored = true; st0.CanCollide = false; st0.CanQuery = false; st0.CanTouch = false
+    st0.Transparency = 1; st0.Size = Vector3.new(1, 1, 1); st0.Position = W(9.3, math.rad(140), 12.5); st0.Parent = fg
+    snd(st0, "bel", GELUID.bel, 0.8, 12, 110, false)
+    snd(st0, "hek", GELUID.hek, 0.7, 8, 60, false)
+    local wind = Instance.new("Sound"); wind.Name = "wind"; wind.SoundId = "rbxassetid://" .. GELUID.wind; wind.Volume = 0; wind.Looped = true; wind.Parent = fg
+  end
   local station = pag:FindFirstChild("Station") or pag
   local oud = station:FindFirstChild("Stationpoorten"); if oud then oud:Destroy() end
   local map = Instance.new("Folder"); map.Name = "Stationpoorten"; map.Parent = station
@@ -477,12 +521,21 @@ local eenrichting = pag:FindFirstChild("Eenrichting")
 local schotT = eenrichting and eenrichting:FindFirstChild("tourniquet") :: BasePart?
 local schotU = eenrichting and eenrichting:FindFirstChild("uitgang") :: BasePart?
 local voorbijT, voorbijU = false, true
+-- geluid (maak_ritscript: Pagode.Geluid): machinebrom volgt de armsnelheid, bel bij vertrek, hekjes bij open/dicht, wind hoog
+local geluid = pag:FindFirstChild("Geluid")
+local brom = geluid and geluid:FindFirstChild("machine") and geluid.machine:FindFirstChild("brom") :: Sound?
+local bel = geluid and geluid:FindFirstChild("station") and geluid.station:FindFirstChild("bel") :: Sound?
+local hekG = geluid and geluid:FindFirstChild("station") and geluid.station:FindFirstChild("hek") :: Sound?
+local wind = geluid and geluid:FindFirstChild("wind") :: Sound?
+if brom then brom:Play() end
+if wind then wind:Play() end
+local vorigeFase, vorigOpen, thVorig = "", false, TH_D
 local huidigeGroep = "Default"
 plr.CharacterAdded:Connect(function() huidigeGroep = "Default" end)
 local cfs = table.create(#gDelen)
 local acfs = table.create(#aDelen)
 
-RunService.PreSimulation:Connect(function()
+RunService.PreSimulation:Connect(function(dtF: number)
 	local start = pag:GetAttribute("RitStart") :: number?
 	if not start then return end
 	local tc = (workspace:GetServerTimeNow() - start) % CYCLUS
@@ -538,6 +591,25 @@ RunService.PreSimulation:Connect(function()
 		if r > 11.6 then voorbijU = true elseif r < 10.6 and a > -40 and a < 0 then voorbijU = false end
 		if schotT then schotT.CanCollide = voorbijT end
 		if schotU then schotU.CanCollide = voorbijU end
+	end
+	-- geluid
+	local snel = math.abs(th - thVorig) / math.max(dtF, 1 / 240)                      -- hoeksnelheid arm (rad/s)
+	thVorig = th
+	if brom then
+		local doel = math.clamp(snel / 0.05, 0, 1)                                     -- 0.05 rad/s = volle beweging
+		brom.Volume = brom.Volume + (0.9 * doel - brom.Volume) * 0.05
+		brom.PlaybackSpeed = 0.55 + 0.25 * doel
+	end
+	if naam ~= vorigeFase then
+		if naam == "sluiten" and bel then bel:Play() end
+		vorigeFase = naam
+	end
+	local nuOpen = open > 0.02
+	if nuOpen ~= vorigOpen and hekG then hekG:Play() end
+	vorigOpen = nuOpen
+	if wind then
+		local hoog = rijdt and math.clamp((nieuwK.Position.Y - K0.Position.Y) / 90, 0, 1) or 0
+		wind.Volume = wind.Volume + (0.5 * hoog - wind.Volume) * 0.03
 	end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)

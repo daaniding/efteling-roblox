@@ -205,6 +205,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     geblokkeerd; meerijden drift 0.1 stud. Omgeving 115622496482577, station 118332205413998.
   - Plafondlampen gondel (17 nov, Daan: "overbelicht"): mat creme i.p.v. Neon, PointLights 0.12 / bereik 12 (waren 0.6 / 9);
     lichtsnoeren gedempt (190,150,100, transp 0.4). Lighting zelf (Brightness 3, Exposure 1.25, Bloom 0.9) is van Daan.
+  - Geluid (17 nov, Daan: "het echte geluid ... uit boxen, niet aan de andere kant van het park"): de echte Efteling-audio
+    (muziek/opnames uit video's) mag niet geupload worden (auteursrecht, Roblox-moderatie); daarom gelicentieerde Creator
+    Store-audio, vervangbaar via de ID's in maak_ritscript (GELUID-tabel). Pagode.Geluid: 6 zwarte speakerkastjes aan de
+    lantaarnpalen langs de wachtrij met muziek (APM "Milarepa" 1837145328, InverseTapered 10-75 studs = stil na ~25 m,
+    synchroon), machinebrom bij de draaias (PSE 9125767459, volume/toonhoogte volgen de armsnelheid, tot 160 studs), bel bij
+    vertrek (PSE 9119642644, begin "sluiten") en hekgeluid bij open/dicht (PSE 9116875342) bij het station, wind voor
+    meerijders hoog (PSE 9112777914, 2D). Play: alles geladen, bel en hek op tc 25, brom 0 -> 0.88 tijdens omhoog,
+    speakers binnen 0.06 s gelijk. Daan moet de muziekkeuze nog beluisteren.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

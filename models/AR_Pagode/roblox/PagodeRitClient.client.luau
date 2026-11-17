@@ -117,12 +117,21 @@ local eenrichting = pag:FindFirstChild("Eenrichting")
 local schotT = eenrichting and eenrichting:FindFirstChild("tourniquet") :: BasePart?
 local schotU = eenrichting and eenrichting:FindFirstChild("uitgang") :: BasePart?
 local voorbijT, voorbijU = false, true
+-- geluid (maak_ritscript: Pagode.Geluid): machinebrom volgt de armsnelheid, bel bij vertrek, hekjes bij open/dicht, wind hoog
+local geluid = pag:FindFirstChild("Geluid")
+local brom = geluid and geluid:FindFirstChild("machine") and geluid.machine:FindFirstChild("brom") :: Sound?
+local bel = geluid and geluid:FindFirstChild("station") and geluid.station:FindFirstChild("bel") :: Sound?
+local hekG = geluid and geluid:FindFirstChild("station") and geluid.station:FindFirstChild("hek") :: Sound?
+local wind = geluid and geluid:FindFirstChild("wind") :: Sound?
+if brom then brom:Play() end
+if wind then wind:Play() end
+local vorigeFase, vorigOpen, thVorig = "", false, TH_D
 local huidigeGroep = "Default"
 plr.CharacterAdded:Connect(function() huidigeGroep = "Default" end)
 local cfs = table.create(#gDelen)
 local acfs = table.create(#aDelen)
 
-RunService.PreSimulation:Connect(function()
+RunService.PreSimulation:Connect(function(dtF: number)
 	local start = pag:GetAttribute("RitStart") :: number?
 	if not start then return end
 	local tc = (workspace:GetServerTimeNow() - start) % CYCLUS
@@ -178,6 +187,25 @@ RunService.PreSimulation:Connect(function()
 		if r > 11.6 then voorbijU = true elseif r < 10.6 and a > -40 and a < 0 then voorbijU = false end
 		if schotT then schotT.CanCollide = voorbijT end
 		if schotU then schotU.CanCollide = voorbijU end
+	end
+	-- geluid
+	local snel = math.abs(th - thVorig) / math.max(dtF, 1 / 240)                      -- hoeksnelheid arm (rad/s)
+	thVorig = th
+	if brom then
+		local doel = math.clamp(snel / 0.05, 0, 1)                                     -- 0.05 rad/s = volle beweging
+		brom.Volume = brom.Volume + (0.9 * doel - brom.Volume) * 0.05
+		brom.PlaybackSpeed = 0.55 + 0.25 * doel
+	end
+	if naam ~= vorigeFase then
+		if naam == "sluiten" and bel then bel:Play() end
+		vorigeFase = naam
+	end
+	local nuOpen = open > 0.02
+	if nuOpen ~= vorigOpen and hekG then hekG:Play() end
+	vorigOpen = nuOpen
+	if wind then
+		local hoog = rijdt and math.clamp((nieuwK.Position.Y - K0.Position.Y) / 90, 0, 1) or 0
+		wind.Volume = wind.Volume + (0.5 * hoog - wind.Volume) * 0.03
 	end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)
