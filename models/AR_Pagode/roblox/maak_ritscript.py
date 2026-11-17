@@ -35,6 +35,61 @@ assert 'i = 0, 255' in afw and 'i = 0, 287' in afw, 'fijne reling niet toegepast
 _r2 = 'deel("bakreling", CFrame.lookAt((p0 + p1) / 2, p1), Vector3.new(0.6, 1.1 * S, (p1 - p0).Magnitude + 0.3), ONZ)'
 assert _r2 in afw
 afw = afw.replace(_r2, 'deel(inpoort(m + DRAAI, 8.95) and "bakpoort" or "bakreling", CFrame.lookAt((p0 + p1) / 2, p1), Vector3.new(0.6, 1.1 * S, (p1 - p0).Magnitude + 0.3), ONZ)')
+stpoort = """-- klaphekjes in het stationshek (Daan 17 nov: "als de attractie omhoog is hoort niemand erdoor te kunnen; als hij er is gaan
+-- er 2 hekjes open, die van de attractie en die van de wachtrij"): per poortje twee bladen op de poortpalen (r 9.05), draaien
+-- naar buiten open (het gangetje / de vlonder in), tegelijk met de bladen van de gondel; vast in de wereld
+do
+  local S = 3
+  local function W(r, a, nap) return Vector3.new((360 + r * math.cos(a)) * S, 2 + (nap - 10) * S, -(47.5 + r * math.sin(a)) * S) end
+  local M = W(0, 0, 11.3)
+  local PS = game:GetService("PhysicsService")
+  for _, g in ipairs({"Routemuur", "Rijdend"}) do if not PS:IsCollisionGroupRegistered(g) then PS:RegisterCollisionGroup(g) end end
+  PS:CollisionGroupSetCollidable("Routemuur", "Rijdend", false)
+  -- onzichtbare botsing van bakrand en gondelbalustrade 24 studs hoog (niet de bak in springen, niet over de balustrade);
+  -- bakrand in groep Routemuur (de gondel zwaait met meerijders laag over de bak), balustrade gewoon (houdt meerijders binnen)
+  local station0 = pag:FindFirstChild("Station") or pag
+  for _, p in ipairs(station0:GetDescendants()) do
+    if p:IsA("BasePart") and (p.Name == "bakreling" or p.Name == "bakpoort") then
+      local onder = p.CFrame * CFrame.new(0, -p.Size.Y / 2, 0); p.Size = Vector3.new(p.Size.X, 24, p.Size.Z); p.CFrame = onder * CFrame.new(0, 12, 0)
+      p.CollisionGroup = "Routemuur"
+    end
+  end
+  for _, p in ipairs(gondel:GetDescendants()) do
+    if p:IsA("BasePart") and (p.Name == "reling" or p.Name == "poortreling") then
+      local onder = p.CFrame * CFrame.new(0, -p.Size.Y / 2, 0); p.Size = Vector3.new(p.Size.X, 24, p.Size.Z); p.CFrame = onder * CFrame.new(0, 12, 0)
+    end
+  end
+  local station = pag:FindFirstChild("Station") or pag
+  local oud = station:FindFirstChild("Stationpoorten"); if oud then oud:Destroy() end
+  local map = Instance.new("Folder"); map.Name = "Stationpoorten"; map.Parent = station
+  local GROEN = Color3.fromRGB(22, 112, 86)
+  local h = 0.85 / 9.05
+  for _, pa in ipairs(POORT_ALFA) do
+    local c = math.rad(pa - DRAAI)
+    local Cp = W(9.05, c, 11.3)
+    for _, sz in ipairs({-1, 1}) do
+      local Hp = W(9.05, c + sz * h, 11.3)
+      local hcf = CFrame.lookAt(Hp, Vector3.new(Cp.X, Hp.Y, Cp.Z))
+      local L = (Hp - Cp).Magnitude - 0.1
+      local blad = Instance.new("Folder"); blad.Name = "Blad"; blad.Parent = map
+      blad:SetAttribute("Scharnier", hcf)
+      local function stuk(naam, cf, size, zicht)
+        local p = Instance.new("Part"); p.Name = naam; p.Anchored = true; p.Size = size; p.Color = GROEN; p.Material = Enum.Material.SmoothPlastic
+        p.CanTouch = false; p.CastShadow = zicht; p.CanCollide = not zicht; p.Transparency = zicht and 0 or 1; p.CanQuery = zicht
+        p.CFrame = hcf * cf; p:SetAttribute("Rel", cf); p.Parent = blad; return p
+      end
+      stuk("regel", CFrame.new(0, 1.1 * S, -L / 2), Vector3.new(0.2, 0.2, L), true)
+      stuk("regel", CFrame.new(0, 0.12 * S, -L / 2), Vector3.new(0.2, 0.2, L), true)
+      stuk("stijl", CFrame.new(0, 0.6 * S, -L + 0.1), Vector3.new(0.2, 1.0 * S, 0.2), true)
+      for k = 1, 5 do stuk("spijl", CFrame.new(0, 0.6 * S, -L * k / 6), Vector3.new(0.08, 0.98 * S, 0.08), true) end
+      stuk("poortblad", CFrame.new(0, 12, -L / 2), Vector3.new(0.4, 24, L), false).CollisionGroup = "Routemuur"   -- hoog: niet overheen springen
+      -- naar buiten open: het einde van het blad gaat van het stationsmidden af
+      local e0 = (hcf * CFrame.Angles(0, math.rad(80), 0) * CFrame.new(0, 0, -L)).Position
+      local e1 = (hcf * CFrame.Angles(0, math.rad(-80), 0) * CFrame.new(0, 0, -L)).Position
+      blad:SetAttribute("Teken", ((e0 - M) * Vector3.new(1, 0, 1)).Magnitude > ((e1 - M) * Vector3.new(1, 0, 1)).Magnitude and 1 or -1)
+    end
+  end
+end"""
 import sys as _sys; _sys.path.insert(0, os.path.join(D, 'build')); import poorten as PT
 hek = json.load(open(os.path.join(D, 'exports', 'omgeving_hekken.json')))
 cil = '\n'.join(
@@ -102,7 +157,7 @@ do
       stuk("regel", CFrame.new(0, 0.12 * S, -L / 2), Vector3.new(0.2, 0.2, L), true)
       stuk("stijl", CFrame.new(0, 0.66 * S, -L + 0.1), Vector3.new(0.2, 1.1 * S, 0.2), true)
       for k = 1, 5 do stuk("spijl", CFrame.new(0, 0.66 * S, -L * k / 6), Vector3.new(0.08, 1.05 * S, 0.08), true) end
-      stuk("poortblad", CFrame.new(0, 0.66 * S, -L / 2), Vector3.new(0.4, 1.3 * S, L), false)
+      stuk("poortblad", CFrame.new(0, 12, -L / 2), Vector3.new(0.4, 24, L), false)   -- hoog: niet over het dichte hekje springen
       -- naar binnen open: kies de draairichting waarbij het einde van het blad dichter bij het gondelmidden komt
       local eind0 = (hcf * CFrame.Angles(0, math.rad(80), 0) * CFrame.new(0, 0, -L)).Position
       local eind1 = (hcf * CFrame.Angles(0, math.rad(-80), 0) * CFrame.new(0, 0, -L)).Position
@@ -111,6 +166,7 @@ do
     end
   end
 end
+{stpoort}
 -- onzichtbare botsing langs alle hekken en relingen (12_omgeving / 18_route -> exports/omgeving_hekken.json)
 do
   -- onzichtbare muren tot 24 studs boven de vloer: niet over hekken springen, je MOET de route volgen (Daan 17 nov).

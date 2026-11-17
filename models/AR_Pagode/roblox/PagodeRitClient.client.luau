@@ -56,8 +56,21 @@ local poortBots: {BasePart} = {}
 for _, p in gDelen do if p.Name == "poortreling" then table.insert(poortBots, p) end end
 local st = pag:FindFirstChild("Station")
 if st then for _, p in st:GetDescendants() do if p:IsA("BasePart") and p.Name == "bakpoort" then table.insert(poortBots, p) end end end
+-- klaphekjes in het stationshek (maak_ritscript: Station.Stationpoorten), scharnier in wereldcoordinaten
+local stBladen: {Blad} = {}
+local stMap = st and st:FindFirstChild("Stationpoorten")
+if stMap then
+	for _, f in stMap:GetChildren() do
+		local b: Blad = {sch = f:GetAttribute("Scharnier") :: CFrame, teken = f:GetAttribute("Teken") :: number, delen = {}, rel = {}}
+		for _, p in f:GetChildren() do
+			if p:IsA("BasePart") then table.insert(b.delen, p); table.insert(b.rel, p:GetAttribute("Rel") :: CFrame) end
+		end
+		table.insert(stBladen, b)
+	end
+end
 local bladBots: {BasePart} = {}
 for _, b in bladen do for _, p in b.delen do if p.Name == "poortblad" then table.insert(bladBots, p) end end end
+for _, b in stBladen do for _, p in b.delen do if p.Name == "poortblad" then table.insert(bladBots, p) end end end
 
 type Cil = {voet: Vector3, kop: Vector3, huis: BasePart, stang: BasePart, Lh: number, Ls: number}
 local cils: {Cil} = {}
@@ -142,6 +155,10 @@ RunService.PreSimulation:Connect(function()
 	local hoek = math.rad(85) * e(open)
 	for _, b in bladen do
 		local scharnier = nieuwK * b.sch * CFrame.Angles(0, b.teken * hoek, 0)
+		for i, p in b.delen do p.CFrame = scharnier * b.rel[i] end
+	end
+	for _, b in stBladen do                        -- stationshekjes: vast in de wereld, gaan tegelijk open
+		local scharnier = b.sch * CFrame.Angles(0, b.teken * hoek, 0)
 		for i, p in b.delen do p.CFrame = scharnier * b.rel[i] end
 	end
 	local dicht = open < 0.5
