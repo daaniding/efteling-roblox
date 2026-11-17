@@ -84,6 +84,7 @@ def planken(kleur, donker, n_plank=8, horizontaal=True):
     return arr
 opslaan(planken((150, 34, 30), (60, 12, 10), 10, horizontaal=False), "romp_kleur")
 opslaan(planken((168, 128, 80), (70, 48, 26), 7, horizontaal=True), "romp_hout_kleur")
+opslaan(planken((44, 72, 128), (16, 28, 54), 9, horizontaal=False), "romp_blauw_kleur")      # blauw geschilderde planken (Siro-boot-voor.jpg, boot rechts)
 
 # 4 schubben: blauwe vissenschubben met donkere randen (Siro-boot-voor.jpg)
 im = Image.new("RGB", (N, N), (40, 80, 150)); d = ImageDraw.Draw(im)

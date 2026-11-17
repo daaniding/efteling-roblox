@@ -209,124 +209,211 @@ def platform():
     obj("SI_tonnen", bm, "ton")
 
 
-# --- boten ---
-def romp_punt(t, z_rel, schaal):
-    """plattegrond van de romp: ovaal met een spitse boeg (t=0 = boeg, langs +x)"""
-    L, B = 0.98, 0.74
+# --- boten v2 (Daan 17 nov: "eerst nog even de boten verbeteren"; Siro-boot-voor/achter.jpg, Sirocco-bootjes.jpg, Sirocco-binnen.jpg)
+# romp: tobbe die naar boven uitloopt, spitse boeg (lokaal +x), planken (hout / rood / blauw per boot); boeg: rode voorsteven die
+# boven de rand omkrult, twee rode banden in een V met een driehoek blauwe schubben ertussen, witte golf aan de voet; dikke rode
+# rand; achter een hoog blauw paneel met golvende bovenkant en gouden krullen; binnen donkerrood met bank rondom; midden een
+# draaitafel met mast, ring met opgebonden zeildoek en vlaggetje; kist sinaasappels + fles achterin tegen het paneel.
+BL, BB, BH = 0.95, 0.76, 0.86          # halve lengte, halve breedte (boven), randhoogte boven de voet
+Z_VOET = 0.12
+
+
+def romp_xy(t, u, krimp=0.0):
+    """plattegrond op hoogte u (0 onder, 1 rand): ovaal met spitse boeg, naar boven uitlopend"""
+    s = 0.80 + 0.20 * u ** 0.8 - krimp
     x = math.cos(t); y = math.sin(t)
-    if x > 0: x = x * (1 + 0.30 * x ** 3)          # boeg puntiger/langer
-    bol_ = 1 + 0.04 * (1 - abs(z_rel - 0.6) * 1.6)   # bijna rechte wanden (foto: lage tobbe)
-    return Vector((L * x * schaal * bol_, B * y * schaal * bol_, 0))
+    if x > 0: x = x * (1 + 0.28 * x ** 4)
+    return Vector((BL * x * s, BB * y * s, 0))
 
 
-def boot(naam, c, rot, romp_rol="romp"):
-    bms = {r: bmesh.new() for r in ("romp", "schubben", "sierpaneel", "goud", "voet", "zeil", "mast", "kist", "fruit_oranje", "fles", "touw")}
+def rand_z(t):
+    x = math.cos(t)
+    return Z_VOET + BH + 0.10 * max(0, x) ** 8 + 0.04 * max(0, -x) ** 2
+
+
+def boeg_half(u):
+    """halve breedte (m, in y) van de schubbendriehoek op hoogte u"""
+    return 0.06 + 0.46 * u
+
+
+def buis(bm, pts, r, seg=6):
+    for k in range(len(pts) - 1):
+        stam(bm, pts[k], pts[k + 1], r, r, seg, 0.0)
+
+
+def boot(naam, c, rot, romp_rol="romp_hout"):
+    bms = {r: bmesh.new() for r in ("romp", "schubben", "rood", "binnen", "sierpaneel", "goud", "golf", "voet", "zeil", "mast", "kist",
+                                     "fruit_oranje", "fles")}
     M = Matrix.Translation(Vector(c)) @ Matrix.Rotation(rot, 4, "Z")
-    NT, NZ = 40, 7
-    # voet: blauwe schijf
-    cil(bms["voet"], (0, 0, 0), 1.05, 0.14, 40)
-    # romp: buiten- en binnenschil, randhoogte loopt op naar de achtersteven
-    def rand_h(t):
-        x = math.cos(t)
-        return 0.88 + 0.12 * max(0, -x) ** 2 + 0.28 * max(0, x) ** 6     # achter iets hoger, boeg punt
-    buiten, binnen = [], []
-    for k in range(NZ + 1):
-        zr = k / NZ
-        sb = 0.86 + 0.14 * math.sin(zr * math.pi / 2)        # iets smaller onderaan
-        rb, rbin = [], []
+    NT, NU = 48, 8
+    cil(bms["voet"], (0, 0, 0), 1.08, Z_VOET, 48)
+    # buitenschil, per vlak: schubben (driehoek op de boeg) of planken
+    P = [[None] * NT for _ in range(NU + 1)]
+    for k in range(NU + 1):
+        u = k / NU
         for i in range(NT):
             t = 2 * math.pi * i / NT
-            z = 0.14 + zr * (rand_h(t) - 0.14)
-            p = romp_punt(t, zr, sb); rb.append((p.x, p.y, z))
-            q = romp_punt(t, zr, sb - 0.09); rbin.append((q.x, q.y, max(0.32, z)))
-        buiten.append(rb); binnen.append(rbin)
-    # rode romp (onderste deel) en blauwe schubben (bovenste voorste deel) als aparte rollen
-    for k in range(NZ):
+            p = romp_xy(t, u); p.z = Z_VOET + 0.02 + u * (rand_z(t) - Z_VOET - 0.02)
+            P[k][i] = p
+    for k in range(NU):
         for i in range(NT):
             j = (i + 1) % NT
-            t = 2 * math.pi * (i + 0.5) / NT
-            rol = "schubben" if (math.cos(t) > 0.62 and 2 <= k <= NZ - 2) else "romp"     # schubben alleen op de boeg
-            bm = bms[rol]
-            vs = [bm.verts.new(v) for v in (buiten[k][i], buiten[k][j], buiten[k + 1][j], buiten[k + 1][i])]
-            bm.faces.new(vs)
-            vi = [bm.verts.new(v) for v in (binnen[k][j], binnen[k][i], binnen[k + 1][i], binnen[k + 1][j])]
-            bm.faces.new(vi)
-    bm = bms["romp"]                                   # bodem binnen + randkap
-    vloer = [bm.verts.new((binnen[0][i][0], binnen[0][i][1], 0.32)) for i in range(NT)]
-    bm.faces.new(vloer)
-    # gouden rand bovenop (krullen = getande rand)
-    bm = bms["goud"]
-    for i in range(NT):
-        j = (i + 1) % NT
-        a0, a1 = Vector(buiten[-1][i]), Vector(buiten[-1][j]); b0, b1 = Vector(binnen[-1][i]), Vector(binnen[-1][j])
-        h = 0.07 + 0.04 * (i % 2)
-        vs = [bm.verts.new(v) for v in (a0, a1, b1, b0)]; bm.faces.new(vs)
-        vs = [bm.verts.new(v) for v in (a0 + Vector((0, 0, h)), b0 + Vector((0, 0, h)), b1 + Vector((0, 0, h)), a1 + Vector((0, 0, h)))]; bm.faces.new(vs)
-        vs = [bm.verts.new(v) for v in (a0, a0 + Vector((0, 0, h)), a1 + Vector((0, 0, h)), a1)]; bm.faces.new(vs)
-    # blauw sierpaneel achter (achtersteven), golvende bovenkant met gouden krullen
-    bm = bms["sierpaneel"]
-    NP = 14
-    pts_o, pts_b = [], []
+            q = (P[k][i] + P[k][j] + P[k + 1][j] + P[k + 1][i]) / 4
+            u = (k + 0.5) / NU
+            bm = bms["romp"]
+            bm.faces.new([bm.verts.new(v) for v in (P[k][i], P[k][j], P[k + 1][j], P[k + 1][i])])
+    # schubbendriehoek als eigen vlak precies tussen de rode banden, net voor de romp (geen trapjes)
+    def t_bij_y(y, u):
+        lo, hi = -math.pi / 2, math.pi / 2
+        for _ in range(30):
+            m = (lo + hi) / 2
+            if romp_xy(m, u).y < y: lo = m
+            else: hi = m
+        return (lo + hi) / 2
+    NUS, NYS = 12, 8
+    G = []
+    for k in range(NUS + 1):
+        u = k / NUS; h = boeg_half(u); rij = []
+        for j in range(NYS + 1):
+            y = -h + 2 * h * j / NYS; t = t_bij_y(y, u)
+            p = romp_xy(t, u); p.z = Z_VOET + 0.02 + u * (rand_z(t) - Z_VOET - 0.02)
+            rij.append(p + Vector((p.x, p.y, 0)).normalized() * 0.025)      # 2,5 cm voor de romp (minder geeft z-gevecht in Roblox)
+        G.append(rij)
+    bm = bms["schubben"]
+    uvl = bm.loops.layers.uv.verify()
+    for k in range(NUS):
+        for j in range(NYS):
+            hoeken = (G[k][j], G[k][j + 1], G[k + 1][j + 1], G[k + 1][j])
+            for volgorde in (hoeken, hoeken[::-1]):    # tweezijdig (achterkant zit in de romp, zie je niet)
+                f = bm.faces.new([bm.verts.new(v) for v in volgorde])
+                for lp in f.loops:                     # vlakke UV langs de boeg (lokaal y, z), altijd positief: 0,6 m per textuur
+                    lp[uvl].uv = (2 + lp.vert.co.y / 0.6, lp.vert.co.z / 0.6)
+    # binnenschil (donkerrood) + vloer + bank rondom
+    Q = [[None] * NT for _ in range(NU + 1)]
+    for k in range(NU + 1):
+        u = k / NU
+        for i in range(NT):
+            t = 2 * math.pi * i / NT
+            p = romp_xy(t, u, 0.09); p.z = max(Z_VOET + 0.25, Z_VOET + 0.02 + u * (rand_z(t) - Z_VOET - 0.02)); Q[k][i] = p
+    bm = bms["binnen"]
+    for k in range(NU):
+        for i in range(NT):
+            j = (i + 1) % NT
+            bm.faces.new([bm.verts.new(v) for v in (Q[k][j], Q[k][i], Q[k + 1][i], Q[k + 1][j])])
+    bm.faces.new([bm.verts.new(Vector((Q[0][i].x, Q[0][i].y, Z_VOET + 0.25))) for i in range(NT)])
+    for i in range(NT):                                # bank: 0,45 m hoog, 0,35 m diep, niet voorin (boeg)
+        t = 2 * math.pi * i / NT; t2 = 2 * math.pi * (i + 1) / NT
+        if math.cos(t) > 0.45: continue
+        a0 = romp_xy(t, 0.5, 0.10); a1 = romp_xy(t2, 0.5, 0.10)
+        b0 = a0 * 0.62; b1 = a1 * 0.62
+        z = Z_VOET + 0.45
+        bm.faces.new([bm.verts.new(Vector((v.x, v.y, z))) for v in (a0, a1, b1, b0)])
+        bm.faces.new([bm.verts.new(Vector((v.x, v.y, zz))) for v, zz in ((b0, z), (b1, z), (b1, Z_VOET + 0.25), (b0, Z_VOET + 0.25))])
+    # dikke rode rand rondom (ook over de rand van de binnenschil)
+    rand = [(P[NU][i] + Q[NU][i]) / 2 + Vector((0, 0, 0.02)) for i in range(NT)]
+    buis(bms["rood"], rand + [rand[0]], 0.055, 8)
+    # rode banden langs de schubbendriehoek (iets naar buiten) en de voorsteven met krul
+    for s in (-1, 1):
+        lijn = []
+        for k in range(17):                            # exact op de rand van de driehoek: t zoeken waar y = boeg_half(u)
+            u = k / 16; yb = boeg_half(u)
+            lo, hi = 0.0, math.pi / 2
+            for _ in range(30):
+                m = (lo + hi) / 2
+                if romp_xy(m, u).y < yb: lo = m
+                else: hi = m
+            t = s * (lo + hi) / 2
+            p = romp_xy(t, u); p.z = Z_VOET + 0.02 + u * (rand_z(t) - Z_VOET - 0.02)
+            n = Vector((p.x, p.y, 0)).normalized(); lijn.append(p + n * 0.03)
+        buis(bms["rood"], lijn, 0.05, 8)
+    voor = [P[k][0] + Vector((0.03, 0, 0)) for k in range(NU + 1)]
+    top = voor[-1]
+    krul = [top + Vector((0.02, 0, 0.12)), top + Vector((-0.02, 0, 0.26)), top + Vector((-0.12, 0, 0.32)), top + Vector((-0.2, 0, 0.26)),
+            top + Vector((-0.17, 0, 0.17))]
+    buis(bms["rood"], voor + krul, 0.06, 8)
+    # witte golf aan de voet van de boeg (gekrulde schuimkop)
+    for k in range(7):
+        h = (k - 3) * 0.16
+        p = romp_xy(h, 0.05) * 1.06; p.z = Z_VOET + 0.08 + 0.05 * (1 - abs(k - 3) / 3)
+        v = bol(bms["golf"], p, 0.11 - 0.012 * abs(k - 3), 8)
+        for vv in v: vv.co.z = p.z + (vv.co.z - p.z) * 0.6
+    # achterpaneel: gebogen plank langs de achtersteven, golvende bovenkant (hoog in het midden), blauw met goud
+    NP = 16
+    tp0, tp1 = math.pi - 1.15, math.pi + 1.15
+    rij_o, rij_b, rij_ob, rij_bb = [], [], [], []
     for k in range(NP + 1):
-        u = k / NP
-        t = math.pi + (u - 0.5) * math.radians(95)
-        p = romp_punt(t, 1.0, 1.02)
-        top = 1.0 + 0.24 * math.sin(u * math.pi) + 0.06 * math.sin(u * math.pi * 5)     # Siro-boot-achter.jpg: paneel net boven de rand
-        pts_o.append((p.x, p.y, 0.85)); pts_b.append((p.x, p.y, top))
+        f = k / NP; t = tp0 + (tp1 - tp0) * f
+        p = romp_xy(t, 1.0, -0.01)
+        top_z = rand_z(t) + 0.12 + 0.46 * math.sin(f * math.pi) ** 1.3 + 0.07 * math.sin(f * math.pi * 4)   # hoog achterpaneel
+        rij_o.append(Vector((p.x, p.y, rand_z(t) - 0.25))); rij_b.append(Vector((p.x, p.y, top_z)))
+        pi_ = romp_xy(t, 1.0, 0.07); rij_ob.append(Vector((pi_.x, pi_.y, rand_z(t) - 0.25))); rij_bb.append(Vector((pi_.x, pi_.y, top_z)))
+    bm = bms["sierpaneel"]
     for k in range(NP):
-        vs = [bm.verts.new(v) for v in (pts_o[k], pts_o[k + 1], pts_b[k + 1], pts_b[k])]; bm.faces.new(vs)
-        vs = [bm.verts.new(Vector(v) * Vector((0.93, 0.93, 1))) for v in (pts_o[k + 1], pts_o[k], pts_b[k], pts_b[k + 1])]; bm.faces.new(vs)
-    for k in (0, NP // 2, NP):                          # gouden krullen op het paneel
-        bol(bms["goud"], (pts_b[k][0] * 1.01, pts_b[k][1] * 1.01, pts_b[k][2] - 0.02), 0.07, 8)
-    # mast met opgerold zeil (paraplu-vorm uit de foto) en vlaggetje
-    mx = 0.1
-    stam(bms["mast"], (mx, 0, 0.3), (mx, 0, 2.55), 0.04, 0.03, 6, 0.0)
-    stam(bms["mast"], (mx, -0.55, 2.25), (mx, 0.55, 2.25), 0.025, 0.025, 6, 0.0)      # rondhout dwars
-    for k in range(5):                                 # opgerold zeil: dikke bundel doek onder het rondhout, hangt door
-        u = (k - 2) / 2.0
-        v = bol(bms["zeil"], (mx + 0.02, u * 0.42, 2.12 - 0.12 * (1 - abs(u))), 0.15 - 0.03 * abs(u), 8)
-        for vv in v: vv.co.z = 2.12 + (vv.co.z - 2.12) * 1.5
-    v = bol(bms["zeil"], (mx + 0.03, 0.05, 1.82), 0.13, 8)                 # afhangende punt
-    doos(bms["zeil"], (mx + 0.14, 0, 2.5), (0.24, 0.01, 0.12))           # vlaggetje
-    stam(bms["touw"], (mx, 0, 2.5), (0.85, 0, 1.0), 0.01, 0.01, 4, 0.0)
-    stam(bms["touw"], (mx, 0, 2.5), (-0.85, 0, 1.05), 0.01, 0.01, 4, 0.0)
-    # bakje handelswaar achterop: houten kist met sinaasappels en flessen (Siro-fruitkistje.jpg)
-    kc = romp_punt(math.pi, 1.0, 0.62); kc.z = 1.0
-    doos(bms["kist"], kc, (0.3, 0.75, 0.28), 0)
-    for i in range(7):
-        bol(bms["fruit_oranje"], kc + Vector((random.uniform(-0.08, 0.08), -0.3 + i * 0.1, 0.18 + random.uniform(0, 0.05))), 0.07, 8)
-    for s in (-0.12, 0.2):
-        cil(bms["fles"], kc + Vector((0, s, 0.14)), 0.045, 0.32, 8, 0.02)
-    # bankje rondom binnen (rood)
-    for i in range(NT):
-        j = (i + 1) % NT
-        a = Vector(binnen[2][i]) * Vector((0.97, 0.97, 0)) + Vector((0, 0, 0.62)); b = Vector(binnen[2][j]) * Vector((0.97, 0.97, 0)) + Vector((0, 0, 0.62))
-        a2 = a * Vector((0.72, 0.72, 1)); b2 = b * Vector((0.72, 0.72, 1))
-        if math.cos(2 * math.pi * i / NT) < 0.55:
-            vs = [bms["romp"].verts.new(v) for v in (a, b, b2, a2)]; bms["romp"].faces.new(vs)
-    # stuurwiel in het midden (draaitafel van de teacup)
-    cil(bms["goud"], (0.1, 0, 0.32), 0.07, 0.45, 8)
-    cil(bms["goud"], (0.1, 0, 0.77), 0.32, 0.05, 16)
+        bm.faces.new([bm.verts.new(v) for v in (rij_o[k], rij_o[k + 1], rij_b[k + 1], rij_b[k])])
+        bm.faces.new([bm.verts.new(v) for v in (rij_ob[k + 1], rij_ob[k], rij_bb[k], rij_bb[k + 1])])
+        bm.faces.new([bm.verts.new(v) for v in (rij_b[k], rij_b[k + 1], rij_bb[k + 1], rij_bb[k])])
+    rand_goud = [(rij_b[k] + rij_bb[k]) / 2 + Vector((0, 0, 0.02)) for k in range(NP + 1)]
+    buis(bms["goud"], rand_goud, 0.045, 8)
+    for e, s in ((rand_goud[0], 1), (rand_goud[-1], -1)):      # gouden krullen aan de uiteinden
+        d = (Vector((0, 0, 0)) - Vector((e.x, e.y, 0))).normalized() * 0.0
+        spir = [e + Vector((0, 0, -0.08 * j)) + Vector((math.cos(j * 1.4) * 0.07 * (1 - j / 6), math.sin(j * 1.4) * 0.07 * (1 - j / 6) * s, 0)) for j in range(6)]
+        buis(bms["goud"], [e] + spir, 0.035, 6)
+    # draaitafel in het midden + mast met ring van opgebonden zeildoek en vlaggetje
+    cil(bms["goud"], (0.05, 0, Z_VOET + 0.25), 0.09, 0.45, 10)
+    cil(bms["goud"], (0.05, 0, Z_VOET + 0.70), 0.34, 0.05, 20)
+    stam(bms["mast"], (0.05, 0, Z_VOET + 0.75), (0.05, 0, 3.05), 0.035, 0.028, 8, 0.0)
+    ring = [Vector((0.05 + 0.48 * math.cos(2 * math.pi * i / 10), 0.48 * math.sin(2 * math.pi * i / 10), 2.55)) for i in range(10)]
+    buis(bms["mast"], ring + [ring[0]], 0.02, 5)
+    mid = Vector((0.05, 0, 2.55))
+    bmz = bms["zeil"]
+    for i in range(10):                                # doek in gedrapeerde bogen tussen de ringpunten (Sirocco-bootjes.jpg)
+        a, b = ring[i], ring[(i + 1) % 10]
+        boven, onder = [], []
+        for k in range(7):
+            f = k / 6; zak = math.sin(f * math.pi)
+            q = a.lerp(b, f); uit = (Vector((q.x, q.y, 0)) - Vector((mid.x, mid.y, 0))).normalized()
+            rand_p = Vector((mid.x, mid.y, 0)) + uit * 0.5; rand_p.z = mid.z + 0.01      # vast aan de rand van het doekdak
+            boven.append(rand_p)
+            onder.append(rand_p + uit * (0.03 + 0.06 * zak) + Vector((0, 0, -0.08 - 0.22 * zak)))    # hangt door in een boog
+        for k in range(6):                             # tweezijdig doek
+            bmz.faces.new([bmz.verts.new(v) for v in (onder[k], onder[k + 1], boven[k + 1], boven[k])])
+            bmz.faces.new([bmz.verts.new(v) for v in (boven[k], boven[k + 1], onder[k + 1], onder[k])])
+    # plat doekdak over de ring (licht bol, iets overhangend): het opgerolde zeil als parasol (Sirocco-bootjes.jpg)
+    NK = 20
+    rand_d = [Vector((0.05 + 0.5 * math.cos(2 * math.pi * i / NK), 0.5 * math.sin(2 * math.pi * i / NK), 2.56 + 0.02 * math.sin(i * 2.7))) for i in range(NK)]
+    tp = bmz.verts.new((0.05, 0, 2.68))
+    for i in range(NK):
+        bmz.faces.new((tp, bmz.verts.new(rand_d[i]), bmz.verts.new(rand_d[(i + 1) % NK])))
+        bmz.faces.new((bmz.verts.new((0.05, 0, 2.67)), bmz.verts.new(rand_d[(i + 1) % NK] - Vector((0, 0, 0.01))), bmz.verts.new(rand_d[i] - Vector((0, 0, 0.01)))))
+    doos(bms["zeil"], (0.05 + 0.13, 0, 2.98), (0.22, 0.012, 0.12))   # vlaggetje
+    # kist met sinaasappels en een fles, achterin tegen het paneel
+    kc = romp_xy(math.pi, 0.9, 0.16); kc.z = Z_VOET + 0.86
+    doos(bms["kist"], kc, (0.28, 0.62, 0.24))
+    for i in range(9):
+        bol(bms["fruit_oranje"], kc + Vector((random.uniform(-0.08, 0.08), -0.26 + i * 0.065, 0.16 + random.uniform(0, 0.06))), 0.06, 8)
+    cil(bms["fles"], kc + Vector((0.02, 0.2, 0.12)), 0.04, 0.3, 8, 0.015)
     out = []
     for rol, bm in bms.items():
         if not bm.verts: bm.free(); continue
-        if rol == "romp": rol = romp_rol
         bm.transform(M)
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-        out.append(obj(f"SI_{naam}_{rol}", bm, rol))
+        if rol not in ("romp", "schubben", "binnen", "sierpaneel", "zeil"):    # losse vlakken: richting klopt al (recalc draait ze willekeurig om)
+            bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        echte_rol = romp_rol if rol == "romp" else rol
+        out.append(obj(f"SI_{naam}_{rol}", bm, echte_rol))
     return out
 
 
 def boten():
+    kleuren = ["romp_hout", "romp", "romp_blauw"]
     n = 0
     for s in range(3):
         a = VOOR + math.radians(90 + 120 * s)
         c = Vector((R_SUBMID * math.cos(a), R_SUBMID * math.sin(a), Z_PLAT + 0.06))
         for b in range(3):
             ab = a + math.radians(120 * b + 40)
-            boot(f"boot{n:02d}", c + Vector((1.25 * math.cos(ab), 1.25 * math.sin(ab), 0)), ab + random.uniform(-1, 1), "romp_hout" if n % 2 else "romp"); n += 1
+            boot(f"boot{n:02d}", c + Vector((1.25 * math.cos(ab), 1.25 * math.sin(ab), 0)), ab + random.uniform(-1, 1), kleuren[n % 3]); n += 1
         a2 = a + math.radians(60)
-        boot(f"boot{n:02d}", (5.75 * math.cos(a2), 5.75 * math.sin(a2), Z_PLAT), a2 + math.pi / 2, "romp_hout" if n % 2 else "romp"); n += 1
+        boot(f"boot{n:02d}", (5.75 * math.cos(a2), 5.75 * math.sin(a2), Z_PLAT), a2 + math.pi / 2, kleuren[n % 3]); n += 1
 
 
 def main():

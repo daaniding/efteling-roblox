@@ -46,7 +46,9 @@ for o in list(bpy.data.objects):
         for f in bm.faces:
             for lp in f.loops:
                 w = M @ lp.vert.co; lp[uvl].uv = ((w.x + 7) / 14, (w.y + 7) / 14)
-    elif rol in ("romp", "romp_hout", "schubben", "sierpaneel"):
+    elif rol == "schubben":
+        pass                                           # UV's al gezet in 03_forms (vlak langs de boeg)
+    elif rol in ("romp", "romp_hout", "romp_blauw", "sierpaneel"):
         ws = [M @ v.co for v in bm.verts]
         c = sum(ws, Vector()) / len(ws)
         if rol == "sierpaneel":

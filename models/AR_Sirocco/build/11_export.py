@@ -15,7 +15,7 @@ os.makedirs(uit, exist_ok=True)
 LIMIT = 9500
 bpy.ops.wm.open_mainfile(filepath=master)
 dg = bpy.context.evaluated_depsgraph_get()
-RIT_ROLLEN = {"platform", "subschijf", "ton", "voet", "romp", "romp_hout", "schubben", "sierpaneel", "goud", "zeil", "mast", "kist",
+RIT_ROLLEN = {"platform", "subschijf", "ton", "voet", "romp", "romp_hout", "romp_blauw", "rood", "binnen", "golf", "schubben", "sierpaneel", "goud", "zeil", "mast", "kist",
               "fruit_oranje", "fles"}
 info = {"delen": {}, "lampen": []}
 

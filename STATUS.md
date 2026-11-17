@@ -1420,6 +1420,14 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   water Y 0,2 (gras NAP 9,8 = Y 1,4 zoals bij de Pagode, terrein 70x70 m vlak gras, vijver r 13,6 m leeg), materialen per rol,
   5 lantaarnlichten (0,8 / 14 studs, schaduw), donkere waterplaat + onzichtbare vijverbodem. Texturen eerst 0/16 geladen
   (nieuwe uploads), na preload + ColorMap opnieuw zetten 16/16.
+- Boten v2 (17 nov, Daan: "eerst nog even de boten verbeteren"; Siro-boot-voor/achter.jpg, Sirocco-bootjes.jpg): tobbe die naar boven
+  uitloopt met spitse boeg; planken hout / rood / blauw (romp_blauw, nieuwe textuur); rode voorsteven die boven de rand omkrult;
+  twee rode V-banden (exact uitgerekend, vloeiend) met een eigen schubbenvlak precies ertussen (2,5 cm voor de romp, vaste UV);
+  witte golf aan de voet; dikke rode rand; hoog blauw achterpaneel met golvende bovenkant, gouden rand en krullen; donkerrode
+  binnenkant met bank; draaitafel met mast tot 3 m, plat doekdak op 2,55 m met gedrapeerde slingers, vlaggetje; kist met
+  sinaasappels en fles. Lessen: (1) recalc_face_normals op losse vlakken draait ze willekeurig om (gaten in Roblox) -> niet doen,
+  richting bij het bouwen goedzetten en meten (0 van 5760 verkeerd); (2) kleine delen in grote meshes verdwijnen op afstand ->
+  RenderFidelity Precise (plaatsscript); (3) bamboepalen effen (Pagode-bamboetextuur is een plant). Rit 110k driehoeken.
 - VOLGENDE: scène (vijvervorm en oevers uit de luchtfoto, wachtrij-vlonder met ruwe palen, gaashekken en turquoise zeilkap met
   lantaarns, steiger/uitgangsbrug, haven met Sindbads boot), botsing (hek rond de schijf, routemuren), looptest, bezoekers
   (Park.VOLGORDE na de Pagode), rit pas als Daan erom vraagt.

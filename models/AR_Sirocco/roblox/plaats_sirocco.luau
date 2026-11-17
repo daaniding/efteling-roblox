@@ -7,11 +7,11 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 130218947819308, rit = 135702591963256,
+local ID = {gebouw = 130218947819308, rit = 118252639030237,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
-	vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, bamboe_kleur = 100311851570971}
+	romp_blauw_kleur = 81733490640030, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, bamboe_kleur = 100311851570971}
 local LAMPEN = __LAMPEN__     -- exports/export_info.json, modelmeters (x oost, y noord, z boven water)
 
 -- rol -> {textuur, normaal, kleur (tint of effen), materiaal, botsen, extra}
@@ -24,11 +24,15 @@ local R = {
 	subschijf = {"platform_kleur", nil, Color3.fromRGB(225, 235, 255), Enum.Material.SmoothPlastic, true},
 	romp = {"romp_kleur", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true},
 	romp_hout = {"romp_hout_kleur", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true},
+	romp_blauw = {"romp_blauw_kleur", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true},
+	rood = {nil, nil, Color3.fromRGB(168, 34, 30), Enum.Material.SmoothPlastic, false},       -- rode rand, banden, voorsteven
+	binnen = {nil, nil, Color3.fromRGB(92, 18, 20), Enum.Material.SmoothPlastic, true},      -- donkerrode binnenkant en bank
+	golf = {nil, nil, Color3.fromRGB(232, 240, 248), Enum.Material.SmoothPlastic, false},    -- witte golf aan de boeg
 	schubben = {"schubben_kleur", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true},
 	sierpaneel = {"sierpaneel_kleur", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false},
 	mand = {"mand_kleur", nil, Color3.new(1, 1, 1), Enum.Material.Fabric, false},
 	net = {"net_kleur", nil, Color3.new(1, 1, 1), Enum.Material.Metal, false, "alfa"},
-	bamboe = {"bamboe_kleur", nil, Color3.new(1, 1, 1), Enum.Material.Wood, true},
+	bamboe = {nil, nil, Color3.fromRGB(196, 160, 96), Enum.Material.Wood, true},   -- effen (de Pagode-textuur is een plant met blaadjes)
 	voet = {nil, nil, Color3.fromRGB(32, 78, 150), Enum.Material.SmoothPlastic, true},
 	goud = {nil, nil, Color3.fromRGB(205, 160, 64), Enum.Material.Metal, false},
 	zeil = {nil, nil, Color3.fromRGB(214, 200, 172), Enum.Material.Fabric, false},
@@ -85,6 +89,7 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit}) do
 		local rol = string.match(p.Name, "^SI_(.-)_%d+_%a+$") or "?"
 		local r = R[rol]
 		p.Anchored = true; p.CanTouch = false
+		pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end)   -- anders vallen kleine delen (schubben, golf, fruit) op afstand weg
 		if not r then table.insert(onbekend, p.Name); continue end
 		p.Color = r[3]; p.Material = r[4]; p.CanCollide = r[5]; p.CanQuery = r[5]
 		p.CastShadow = rol ~= "net" and rol ~= "lantaarnglas"
