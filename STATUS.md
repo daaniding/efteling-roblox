@@ -235,6 +235,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     grille, 0.3 m) laag aan de voet van de 6 lantaarnpalen (posities = exports/omgeving_lampen.json, vloer via straal),
     muziek RollOffMode Inverse 4-50 studs (1/afstand vanaf 1.3 m, stil na ~17 m), vol 0.4. Twee lantaarnlichten
     (afwerking LAMPEN) ook naar de nieuwe sierlantaarnposities.
+  - 17 nov (Daan: "haal deze lantaarnpaal weg", "ik hoor de lopende en pratende mensen nog niet", "lucht blijer maar
+    wel schemeren en realistisch"): lamp_zuid (r 20.12 op de rail, stond midden tussen de rijen) weg uit 12_omgeving, met
+    speaker en licht; omgeving 98408927485280. Mensen harder: praten 0.45-0.6, lopen 0.5-0.55 (alles laadt en speelt).
+    Lucht (place-instellingen in Studio, geen script): ClockTime 17.8, Exposure 0.5, OutdoorAmbient (140,122,118),
+    Atmosfeer Color (255,184,132) Decay (72,96,150) Glare 1.4 Haze 0.9 Density 0.28 Offset 0.2, Sky "Lucht" = standaard
+    Roblox-lucht zonder sterren, wolken (255,214,190) cover 0.5. Oude avondlucht: skybox in ServerStorage.Lucht_oud_avond,
+    oude waarden als attributen Oud_* op Lighting.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

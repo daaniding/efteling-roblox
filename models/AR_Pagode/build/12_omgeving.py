@@ -474,7 +474,7 @@ def build():
         p = pt(r, aW(r) + math.degrees(0.2 / r), ztop(int(r - 14.0))); lantaarn(f"AR_Pagode_O_lamp_trap{k}", p); vrij(f"lamp_trap{k}", p, 0.13)
     for k, r in enumerate((R_OPEN + 0.08, 18.6)):     # sierlijk brons, op de trapreling (0:39-0:46); niet meer in de doorgang
         p = pt(r, aS(r), ztop(int(r - 14.0))); lantaarn_sier(f"AR_Pagode_O_lamp_sier{k}", p); vrij(f"lamp_sier{k}", p, 0.2)
-    p = pt(20.12, A_RAIL, ztop(6)); lantaarn("AR_Pagode_O_lamp_zuid", p)   # op het eind van de reling, naast het zuidpad; vrij("lamp_zuid", p, 0.13)
+    # lamp_zuid (r 20.12 op de rail) weg: staat sinds de verlengde relingen midden tussen de rijen (Daan 17 nov: "haal deze weg")
     p = pt(13.8, 140.0, Z_I); lantaarn("AR_Pagode_O_lamp_bordes", p); vrij("lamp_bordes", p, 0.13)
     p = pt(17.8, 89.0, Z_P); lantaarn("AR_Pagode_O_lamp_plein", p); vrij("lamp_plein", p, 0.13)      # hoek plein/tuin (0:02)
 

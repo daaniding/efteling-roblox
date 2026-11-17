@@ -125,7 +125,7 @@ do
     end
     -- speakers bij de voet van de lantaarnpalen langs de wachtrij (exports/omgeving_lampen.json: x, y, z van de kap);
     -- grond onder de paal via een straal omlaag naast de paal, kastje richting de wachtrij (het stationsmidden)
-    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}}
+    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {349.43, 56.37, 4.22}}
     local rpG = RaycastParams.new(); rpG.FilterType = Enum.RaycastFilterType.Include
     rpG.FilterDescendantsInstances = {workspace:FindFirstChild("PagodeOmgeving"), workspace:FindFirstChild("PagodeStation"), workspace.Terrain}
     local VLOER = {klinker = true, graniet = true, natuursteen = true, vlonder = true, breuksteen = true, steen = true, voeg = true, beton_groen = true, grind = true}

@@ -175,7 +175,7 @@ for i = 0, 47 do
     {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 40, 40), CanCollide = false, CanQuery = false})
 end
 -- 4 lantaarns van de omgeving (12_omgeving.py -> exports/omgeving_lampen.json, park x, y, z = NAP - 10): warm licht
-local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}, {370.20, 42.08, 2.57}}   -- = exports/omgeving_lampen.json
+local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {349.43, 56.37, 4.22}, {370.20, 42.08, 2.57}}   -- = exports/omgeving_lampen.json
 for i, l in ipairs(LAMPEN) do
   local p = Instance.new("Part"); p.Name = "lantaarnlicht"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
   p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3); p.Position = Vector3.new(l[1] * S, 2 + l[3] * S, -l[2] * S); p.Parent = map
@@ -313,7 +313,7 @@ do
     end
     -- speakers bij de voet van de lantaarnpalen langs de wachtrij (exports/omgeving_lampen.json: x, y, z van de kap);
     -- grond onder de paal via een straal omlaag naast de paal, kastje richting de wachtrij (het stationsmidden)
-    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}}
+    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {349.43, 56.37, 4.22}}
     local rpG = RaycastParams.new(); rpG.FilterType = Enum.RaycastFilterType.Include
     rpG.FilterDescendantsInstances = {workspace:FindFirstChild("PagodeOmgeving"), workspace:FindFirstChild("PagodeStation"), workspace.Terrain}
     local VLOER = {klinker = true, graniet = true, natuursteen = true, vlonder = true, breuksteen = true, steen = true, voeg = true, beton_groen = true, grind = true}
