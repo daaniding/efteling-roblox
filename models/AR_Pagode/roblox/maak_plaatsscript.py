@@ -162,15 +162,15 @@ for j = 0, NY - 1 do
     local weg = r < 9.0 or (lx > -9.8 and lx < 6.8 and math.abs(ly) < 3.6) or (lx > 6.5 and lx < 30.0 and math.abs(ly) < 1.5)
     if not weg then
       -- onder alle eigen bestrating/tribune/bordes ruim weg: terreinvoxels (4 stud) bollen anders door de klinkers heen
-      local aL = 104.0 + (r - 14.2) * 0.95 - math.deg(0.9 / math.max(r, 1))                  -- tuinkant laantje (12_omgeving)
+      local aL = 104.0 + (r - 14.2) * 0.95 - math.deg(1.5 / math.max(r, 1))                  -- tuinkant laantje (12_omgeving)
       local bebouwd = r < 11.2
         or (r < 27.2 and a > aL - 1.0 and a < 157.5)                                         -- bordes, tribune, laantje, onderpad
         or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
         or (r < 24.6 and (a < 89 or a > 306))                                                -- plein en oostpad
-        or (r < 16.6 and a >= 88 and a < aL)                                                 -- kop van het laantje
+        or (r < 17.9 and a >= 87.5 and a < aL)                                               -- aanlooppad naar het laantje
         or (r < 41.2 and a > 41 and a < 89)                                                  -- terras en Toko Pagode (15_toko)
       if bebouwd then nap = math.min(nap, 8.0)
-      elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 9.5) end               -- tuin: niet boven het laantje
+      elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 8.95) end              -- tuin: zichtbaar net onder de klinkers (terrein tekent ~0.6 m hoger dan nap; raycast meet lager dan je ziet)
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)
       t:FillBlock(CFrame.new(x * S, (top + (G - 30)) / 2, -y * S), Vector3.new(S, top - (G - 30), S), Enum.Material.Grass)   -- Ground zag eruit als zand
       n += 1
@@ -190,7 +190,7 @@ end
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")
 if sp then
   if not sp:GetAttribute("OudeCFrame") then sp:SetAttribute("OudeCFrame", tostring(sp.CFrame)) end
-  sp.CFrame = CFrame.new(park(366.5, 68.5, 9.75))      -- op het plein, voor het ingangsbord (video 0:05)
+  sp.CFrame = CFrame.new(park(362.9, 68.3, 9.75)) * CFrame.Angles(0, math.rad(137), 0)   -- open plein, kijkt naar het ingangsbord (zuidwest)
 end
 return "Pagode geplaatst, terrein " .. n .. " kolommen"
 '''

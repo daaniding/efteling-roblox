@@ -17,7 +17,7 @@ rnd = random.Random(11)
 
 
 def a_c(r): return 104.0 + (r - 14.2) * 0.95
-def aL(r): return a_c(r) - math.degrees(0.9 / r)
+def aL(r): return a_c(r) - math.degrees(1.5 / r)        # zelfde breedte als 12_omgeving (B_LAAN)
 
 
 def col():
@@ -225,20 +225,20 @@ def build():
     k = 0
     for aa in range(103, 140, 3):
         bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(27.6 + rnd.uniform(-0.2, 0.4), aa), Z_P); k += 1
-    r = 20.5                                   # doorlopende bamboewand achter de tuin (video 0:24-0:28), 4-5 m van het laantje
+    r = 22.5                                   # doorlopende bamboewand achter de tuin (video 0:24-0:28), 4-5 m van het laantje
     while r < 27.0:
         bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(r, aL(r) - math.degrees(rnd.uniform(4.2, 5.4) / r)), Z_P - 0.1, 10, 4.8); k += 1
         r += 1.3
-    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(14.62, 98.4, Z_P + 0.62), 0.0, 8, 1.6, 0.2)     # in de pot naast het bord
+    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(14.62, aL(14.38) - math.degrees(0.3 / 14.38) - 1.7, Z_P + 0.62), 0.0, 8, 1.6, 0.2)     # in de pot naast het bord
     # niwaki: tuin (2), achter het bord, bij het oostpad
     niwaki("AR_Pagode_P_niwaki0", pt(20.0, aL(20.0) - math.degrees(2.2 / 20), Z_P - 0.1), 6.2, 7)       # video 0:21: hoog, vlak naast het laantje
     niwaki("AR_Pagode_P_niwaki1", pt(23.8, aL(23.8) - math.degrees(2.0 / 23.8), Z_P - 0.1), 3.4, 5)
-    niwaki("AR_Pagode_P_niwaki2", pt(18.0, aL(18.0) - math.degrees(3.4 / 18), Z_P - 0.1), 3.8, 6)
+    niwaki("AR_Pagode_P_niwaki2", pt(19.0, aL(19.0) - math.degrees(3.4 / 19), Z_P - 0.1), 3.8, 6)
     niwaki("AR_Pagode_P_niwaki3", pt(12.4, 24.0, Z_P + 0.03), 3.6, 6)
     niwaki("AR_Pagode_P_niwaki4", pt(12.4, 44.0, Z_P + 0.03), 2.8, 5)
     # lage struiken tussen laantje en bamboe, en aan de pleinkant van de tuin
     for j in range(16):
-        r = rnd.uniform(15.5, 26.0); aa = aL(r) - math.degrees(rnd.uniform(1.0, 3.6) / r)
+        r = rnd.uniform(18.2, 26.0); aa = aL(r) - math.degrees(rnd.uniform(1.0, 3.6) / r)
         struik(f"AR_Pagode_P_struik{j:02d}", pt(r, aa, Z_P - 0.05), rnd.uniform(0.7, 1.3), rnd.uniform(0.5, 0.9))
     # stenen in de tuin
     for j in range(10):

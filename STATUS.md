@@ -160,6 +160,16 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   met lijsten en embleem, banken met latten en gietijzeren zijstukken. Rotsen ontwijken het meubilair (exports/omgeving_meubilair.json).
   Lichten in Studio bijgewerkt (afwerking_pagode.luau LAMPEN). Vergelijk: models/AR_Pagode/review/18_meubilair/.
   Omgeving 58 delen, 191k driehoeken; fps nog niet gemeten.
+- Looppaden breder voor Roblox-avatars (17 nov), Daan: "ik kom niet door de ingang, breder en goed afgewerkt". Avatar is 3.8 stud
+  = 1.27 m breed (echt mens ~0.5 m): laantje 1.8 -> 3.0 m (B_LAAN), trapstrook 1.5 -> 2.2 m (B_TRAP), wachtrijreling op elke tweede
+  rij (banen ~2 m, keerpunten 2 m), tourniquets 1.6 m uit elkaar, huisje 1.2 m erachter, 2 paaltjes 1.6 m uit elkaar.
+  Aanlooppad plein -> laantje nu een brede klinkerstrook (r 14.15-17.5) met granieten opsluitbanden langs het gras; lantaarn,
+  bak, pot en bordpalen in de randstroken (looppadcontrole kent nu ook "aanlooppad"). Bamboe pas vanaf r 22.5, struiken en
+  tuinrotsen vanaf r 18.2, randrotsen pas na het aanlooppad. Spawn stond tussen een terrastafel met stoelen: nu op het open
+  plein (362.9, 68.3), kijkend naar het bord; derde parasol naar het terras (372.5, 68.9). Gondoletta-water opnieuw: peil NAP 9.43.
+  Looptest in Play met Humanoid:MoveTo: spawn -> aanlooppad -> onder het bord -> laantje -> onderpad -> trapstrook -> tourniquets ->
+  bordes: alles bereikt. Fps: Studio meet 15.0 als het venster niet vooraan staat (rem); echte meting met Shift+F5 door Daan.
+  Let op: de hele PagodeOmgeving stond geselecteerd en was ~13 m verschoven; teruggezet op pivot (1080, 2, -142.5), 180 graden.
 - Nog te doen: rieten stoelen netter (nu blokjes), koepel iets minder spits, onzichtbare botsing langs de hekken. Eerder genoemd nog open:
   met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 

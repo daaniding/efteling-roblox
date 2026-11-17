@@ -2,7 +2,7 @@
 -- Gondel+arm+voet: oorsprong = draaias, op park (320.5, 58.5), 4.2 m boven de grond, draaiing 164.44 graden.
 -- Station: oorsprong = middelpunt bak, park (360.0, 47.5); 180 graden gedraaid (Blender x oost/y noord -> Roblox).
 -- Hoogte: NAP 10.0 = Roblox Y 2. Terrein uit AHN (x 300..385, y 15..80), materiaal uit de luchtfoto.
-local ID = {AR_Pagode_gondel = 136098683069651, AR_Pagode_station = 124320247767428, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 76036336782300, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 122540641504294, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 100311851570971, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280, wilg_kleur = 100412416431599, steen_kleur = 116600353020198, steen_normaal = 95927671453559, pluk_kleur = 82875106386837, huisrand_kleur = 74245754818603}
+local ID = {AR_Pagode_gondel = 136098683069651, AR_Pagode_station = 124320247767428, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 76036336782300, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 114216309813465, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 100311851570971, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280, wilg_kleur = 100412416431599, steen_kleur = 116600353020198, steen_normaal = 95927671453559, pluk_kleur = 82875106386837, huisrand_kleur = 74245754818603}
 local S = 3
 local G = 2                                   -- Roblox Y van NAP 10.0
 local function park(x, y, nap) return Vector3.new(x * S, G + (nap - 10) * S, -y * S) end
@@ -115,15 +115,15 @@ for j = 0, NY - 1 do
     local weg = r < 9.0 or (lx > -9.8 and lx < 6.8 and math.abs(ly) < 3.6) or (lx > 6.5 and lx < 30.0 and math.abs(ly) < 1.5)
     if not weg then
       -- onder alle eigen bestrating/tribune/bordes ruim weg: terreinvoxels (4 stud) bollen anders door de klinkers heen
-      local aL = 104.0 + (r - 14.2) * 0.95 - math.deg(0.9 / math.max(r, 1))                  -- tuinkant laantje (12_omgeving)
+      local aL = 104.0 + (r - 14.2) * 0.95 - math.deg(1.5 / math.max(r, 1))                  -- tuinkant laantje (12_omgeving)
       local bebouwd = r < 11.2
         or (r < 27.2 and a > aL - 1.0 and a < 157.5)                                         -- bordes, tribune, laantje, onderpad
         or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
         or (r < 24.6 and (a < 89 or a > 306))                                                -- plein en oostpad
-        or (r < 16.6 and a >= 88 and a < aL)                                                 -- kop van het laantje
+        or (r < 17.9 and a >= 87.5 and a < aL)                                               -- aanlooppad naar het laantje
         or (r < 41.2 and a > 41 and a < 89)                                                  -- terras en Toko Pagode (15_toko)
       if bebouwd then nap = math.min(nap, 8.0)
-      elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 9.5) end               -- tuin: niet boven het laantje
+      elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 8.95) end              -- tuin: zichtbaar net onder de klinkers (terrein tekent ~0.6 m hoger dan nap; raycast meet lager dan je ziet)
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)
       t:FillBlock(CFrame.new(x * S, (top + (G - 30)) / 2, -y * S), Vector3.new(S, top - (G - 30), S), Enum.Material.Grass)   -- Ground zag eruit als zand
       n += 1
@@ -143,6 +143,6 @@ end
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")
 if sp then
   if not sp:GetAttribute("OudeCFrame") then sp:SetAttribute("OudeCFrame", tostring(sp.CFrame)) end
-  sp.CFrame = CFrame.new(park(366.5, 68.5, 9.75))      -- op het plein, voor het ingangsbord (video 0:05)
+  sp.CFrame = CFrame.new(park(362.9, 68.3, 9.75)) * CFrame.Angles(0, math.rad(137), 0)   -- open plein, kijkt naar het ingangsbord (zuidwest)
 end
 return "Pagode geplaatst, terrein " .. n .. " kolommen"

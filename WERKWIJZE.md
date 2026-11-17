@@ -391,4 +391,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Meubilair (lantaarns, bakken, palen) nooit "ongeveer" neerzetten: per stuk de videoframe zoeken, en in het bouwscript een
   looppadcontrole draaien die de build laat falen als iets op een looppad staat. Een plattegrond (ortho-render met labels) laat
   meteen zien wat er mis staat. Een bord oriënteren op de looprichting van wie eraan komt, niet op de lengteas van het pad.
+- Echte maat (3 stud/m) is te krap voor Roblox-avatars (1.27 m breed): looppaden minstens 3 m, wachtrijbanen ~2 m, doorgangen 1.5 m.
+  Altijd een looptest in Play doen (Humanoid:MoveTo langs de route, per punt "bereikt" of "vast") voordat iets af is.
+- Terreinhoogte: de raycast-hoogte is NIET wat je ziet. Gras op FillBlock-nap 8.95 (met de -2 stud in de formule) ligt zichtbaar
+  gelijk met klinkers op NAP 9.62. Hoogtes van terrein dus met een screenshot controleren, niet met een raycast.
+- Fps meten met RenderStepped geeft precies 15 als Studio niet het voorste venster is: dat is de achtergrondrem, geen meting.
 

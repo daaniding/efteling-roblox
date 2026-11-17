@@ -197,7 +197,7 @@ def build():
         buis(f"AR_Pagode_T_pot{k}", p, p + Vector((0, 0, 0.6)), 0.32, "rood", 12, 0.25)
         bol(f"AR_Pagode_T_struik{k}", p + Vector((0, 0, 1.0)), 0.5, "haag")
     # terras: 3 parasols met tafels en stoelen (luchtfoto)
-    for k, (x, y) in enumerate(((365.8, 79.0), (370.0, 73.8), (364.8, 68.0))):
+    for k, (x, y) in enumerate(((365.8, 79.0), (370.0, 73.8), (372.5, 68.9))):   # derde parasol naar het terras (stond op het Pagodeplein bij de spawn)
         parasol(f"AR_Pagode_T_parasol{k}", Vector((x, y, Z_P)))
     # bestrating terras + kiosk (klinkers), in stukken (kleine UV's)
     for k in range(4):                          # 42..88 graden: blijft van het Gondolettawater af

@@ -30,10 +30,15 @@ def a_c(r):                           # hartlijn laantje (graden)
     return 104.0 + (r - 14.2) * 0.95
 
 
-def aL(r): return a_c(r) - math.degrees(0.9 / r)          # laantje, tuinkant
-def aR(r): return a_c(r) + math.degrees(0.9 / r)          # laantje, tribunekant
+B_LAAN = 1.5                          # halve breedte laantje: 3 m (echt 1.8 m; Roblox-avatar is 1.27 m breed, Daan 17 nov: "breder")
+B_TRAP = 2.2                          # breedte trapstrook (echt ~1.5 m)
+RAIL_T = (2, 4, 6, 8, 10)             # wachtrijreling op elke tweede rij: banen van ~2 m (echt elke rij, 1 m)
+
+
+def aL(r): return a_c(r) - math.degrees(B_LAAN / r)       # laantje, tuinkant
+def aR(r): return a_c(r) + math.degrees(B_LAAN / r)       # laantje, tribunekant
 def aW(r): return aR(r) + math.degrees(0.42 / r)          # einde muur
-def aS(r): return aW(r) + math.degrees(1.5 / r)           # einde trapstrook (begin zigzag)
+def aS(r): return aW(r) + math.degrees(B_TRAP / r)        # einde trapstrook (begin zigzag)
 
 
 PLAATS = []
@@ -49,9 +54,10 @@ def looppad(q):
     en het pad langs de uitgangsmuur. Randstroken tegen muren en hekken tellen niet mee (daar mag meubilair staan)."""
     r = math.hypot(q.x - CX, q.y - CY); a = math.degrees(math.atan2(q.y - CY, q.x - CX))
     if 14.15 < r < 25.0 and aL(r) < a < aR(r): return "laantje"
+    if 14.95 < r < 17.0 and 88.3 < a < aL(r): return "aanlooppad"          # randstroken langs muur en gras vrij voor pot, bak, palen
     if 14.2 < r < 25.0 and aW(r) + math.degrees(0.35 / r) < a < aS(r) - math.degrees(0.1 / r): return "trapstrook"
     if 14.2 < r < 25.0 and aS(r) + math.degrees(0.1 / r) < a < A_ZUID - math.degrees(0.1 / r):
-        if abs(r - (14.12 + round(r - 14.12))) > 0.12: return "wachtrijbaan"
+        if min(abs(r - (14.12 + t)) for t in RAIL_T) > 0.12: return "wachtrijbaan"
     if R_VL + 0.05 < r < 13.55 and 99.5 < a < A_ZUID: return "bordes"
     if 25.0 < r < 26.45 and aL(25.9) < a < A_ZUID: return "onderpad"
     if 11.75 < r < R_BO + 0.15 and -52.0 < a < 54.0: return "pad uitgang"
@@ -396,12 +402,12 @@ def build():
         r = 16.0 + k * 0.45
         steen(f"AR_Pagode_O_rand_{k:02d}", pt(r, aL(r) - math.degrees(0.35 / r), Z_P + 0.05), (0.28, 0.22, 0.16))
     # A4 wachtrijrelingen: zigzag over de rijen (keerpunten om en om), radiale reling langs de trapstrook
-    for t in range(1, N_RIJ + 1):
+    for t in RAIL_T:
         r = 14.0 + t + 0.12
         z = ztop(t) if t < N_RIJ else Z_P + 0.02
-        gat = math.degrees(1.4 / r)
+        gat = math.degrees(2.0 / r)                   # keerpunten 2 m breed
         a0, a1 = aS(r) + 0.3, A_RAIL
-        if t % 2: a1 -= gat
+        if (t // 2) % 2: a1 -= gat
         else: a0 += gat
         reling(f"AR_Pagode_O_rij_reling_{t:02d}", boog(r, a0, a1, z))
     rl = [pt(R_BO + 0.2, aS(14.2), Z_I)] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(N_RIJ)]
@@ -416,23 +422,24 @@ def build():
         p = pt(r, aS(r), ztop(int(r - 14.0))); lantaarn_sier(f"AR_Pagode_O_lamp_sier{k}", p); vrij(f"lamp_sier{k}", p, 0.2)
     p = pt(20.12, A_RAIL, ztop(6)); lantaarn("AR_Pagode_O_lamp_zuid", p)   # op het eind van de reling, naast het zuidpad; vrij("lamp_zuid", p, 0.13)
     p = pt(13.8, 140.0, Z_I); lantaarn("AR_Pagode_O_lamp_bordes", p); vrij("lamp_bordes", p, 0.13)
-    p = pt(16.45, 89.0, Z_P); lantaarn("AR_Pagode_O_lamp_plein", p); vrij("lamp_plein", p, 0.13)      # hoek plein/tuin (0:02)
+    p = pt(17.8, 89.0, Z_P); lantaarn("AR_Pagode_O_lamp_plein", p); vrij("lamp_plein", p, 0.13)      # hoek plein/tuin (0:02)
 
     # B1 dubbele tourniquet bovenaan de trapstrook, controlehuisje er vlak achter (video 0:44-0:47: trap loopt recht op de
     # tourniquets af, het huisje staat erachter, daarna splitst de rij naar links en rechts)
     a_t = (aW(14.2) + aS(14.2)) / 2
     for k, s_ in enumerate((-1, 1)):
-        aa = a_t + s_ * math.degrees(0.19 / 13.5); p = pt(13.5, aa, Z_I)
+        aa = a_t + s_ * math.degrees(0.8 / 13.5); p = pt(13.5, aa, Z_I)          # 1.6 m uit elkaar: doorgang ertussen
         tourniquet(f"AR_Pagode_O_tourniquet{k}", p, math.radians(aa)); vrij(f"tourniquet{k}", p, 0.13, bewust=True)
-    a_h = a_t + math.degrees(0.25 / 12.05); hc = pt(12.05, a_h, Z_I)
+    a_h = a_t; hc = pt(11.55, a_h, Z_I)                                       # 1.2 m achter de tourniquets: ruimte om erlangs
     controlehuisje("AR_Pagode_O_huis", hc, math.radians(a_h)); vrij("huis", hc, 0.8, bewust=True)
 
     # B2 ingangsbord PAGODE over de kop van het laantje (video 0:13-0:19): linkerpaal tegen de laanmuur, rechterpaal in de
     # tuinrand met het regelbordje; bord een kwartslag naar het plein gedraaid (gezien vanaf het plein, 0:02-0:12)
     # je loopt over het plein naar het westen, onder het bord door, en slaat dan rechtsaf het laantje in (0:02-0:20):
     # bord staat dwars op die looprichting, voorkant naar het plein; linkerpaal tegen de pleinmuur, rechterpaal aan de tuinrand
-    pl = pt(14.38, 100.3, Z_P)
-    pr = pt(16.65, 100.3, Z_P)
+    A_BORD = aL(14.38) - math.degrees(0.3 / 14.38)                 # beide palen buiten het laantje
+    pl = pt(14.38, A_BORD, Z_P)
+    pr = pt(17.3, A_BORD, Z_P)
     as_ = pr - pl; as_.z = 0; breed = as_.length + 0.3
     fz = Vector((-as_.y, as_.x, 0)).normalized()
     if fz.dot(pt(18.0, 88.0) - pl) < 0: fz = -fz                       # voorkant naar het plein
@@ -444,13 +451,14 @@ def build():
     bord_mesh("AR_Pagode_O_ingangsbord", tex.BORD_OMTREK(48), breed, 1.05, 0.07, mid + Vector((0, 0, 2.2)), rot, "ingangsbord")
     doos("AR_Pagode_O_regelbord", pr + fz * 0.05 + Vector((0, 0, 1.45)), (0.02, 0.3, 0.55), "bord_blauw", rot)
     for k, dt in enumerate((-0.55, 0.0, 0.55)):                     # paaltjes in de mond van het laantje (0:04-0:13)
-        p = pt(15.5 + dt, 101.6, Z_P); paaltje(f"AR_Pagode_O_paaltje{k}", p); vrij(f"paaltje{k}", p, 0.05, bewust=True)
+        if dt == 0.0: continue                                        # twee paaltjes, 1.6 m ertussen (avatar 1.27 m)
+        p = pt(16.2, a_c(16.2) + math.degrees(dt * 1.45 / 16.2), Z_P); paaltje(f"AR_Pagode_O_paaltje{k}", p); vrij(f"paaltje{k}", p, 0.05, bewust=True)
     # afvalbakken: hoge bak rechts van het bord op het plein (0:02), groene bakken met embleem tegen de hekken (0:49-0:52)
-    p = pt(16.05, 99.3, Z_P); afvalbak("AR_Pagode_O_bak_plein", p, math.radians(99.3 - 90), hoog=True); vrij("bak_plein", p, 0.3)   # rechts voor het bord
+    aa = A_BORD - 1.2; p = pt(17.15, aa, Z_P); afvalbak("AR_Pagode_O_bak_plein", p, math.radians(aa - 90), hoog=True); vrij("bak_plein", p, 0.3)   # rechts voor het bord
     for naam, r, aa, z in (("bak_bordes", 13.72, 101.5, Z_I), ("bak_zuid", 13.72, 151.0, Z_I), ("bak_onder", 26.65, 155.6, Z_P + 0.02)):
         p = pt(r, aa, z); afvalbak(f"AR_Pagode_O_{naam}", p, math.radians(aa + 180)); vrij(naam, p, 0.3)
     # grote donkerrode pot met bamboe links van het bord, tegen de pleinmuur (0:02-0:12); bamboe zelf in 14_planten
-    p = pt(14.62, 98.4, Z_P)
+    p = pt(14.62, A_BORD - 1.7, Z_P)
     buis("AR_Pagode_O_pot", p, p + Vector((0, 0, 0.2)), 0.26, "rood", 16, 0.38)
     buis("AR_Pagode_O_pot_buik", p + Vector((0, 0, 0.2)), p + Vector((0, 0, 0.62)), 0.38, "rood", 16, 0.3)
     buis("AR_Pagode_O_pot_rand", p + Vector((0, 0, 0.62)), p + Vector((0, 0, 0.68)), 0.32, "rood", 16)
@@ -468,7 +476,25 @@ def build():
         ringsector(f"AR_Pagode_O_pad_oost{k}", 11.0, R_BO + 0.15, -0.9, Z_P + 0.03, -52.0 + 26.5 * k, -52.0 + 26.5 * (k + 1), "klinker")
     for k in range(5):
         ringsector(f"AR_Pagode_O_plein{k}", R_BO + 0.15, 24.0, -0.9, Z_P, -52.0 + 28.0 * k, -52.0 + 28.0 * (k + 1), "klinker")
-    ringsector("AR_Pagode_O_plein_kop", R_BO + 0.15, 16.2, -0.9, Z_P, 88.0, aL(15.2) - 0.1, "klinker", seg=3)
+    # aanlooppad van het plein naar het laantje: brede klinkerstrook (r 14.15-17.5) die het laantje naadloos raakt
+    bm = bmesh.new(); rings = []
+    rs = [R_BO + 0.15 + (17.5 - R_BO - 0.15) * i / 6 for i in range(7)]
+    for r in rs:
+        rings.append([bm.verts.new(pt(r, aa, z)) for aa, z in ((88.0, -0.9), (aL(r) + 0.05, -0.9), (aL(r) + 0.05, Z_P), (88.0, Z_P))])
+    for i in range(len(rings) - 1):
+        for q in range(4): bm.faces.new((rings[i][q], rings[i][(q + 1) % 4], rings[i + 1][(q + 1) % 4], rings[i + 1][q]))
+    bm.faces.new(rings[0][::-1]); bm.faces.new(rings[-1]); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    obj("AR_Pagode_O_plein_kop", bm, "klinker")
+    # granieten opsluitband waar de klinkers aan het gras grenzen (nette rand, video 0:02: rand langs de tuin)
+    ringsector("AR_Pagode_O_band_kop", 17.5, 17.68, -0.6, Z_P + 0.03, 88.0, aL(17.6), "graniet", seg=6)
+    bm = bmesh.new(); a0 = math.radians(88.0); u = Vector((math.cos(a0), math.sin(a0), 0)); n = Vector((-u.y, u.x, 0))
+    vs = []
+    for r, z in ((17.5, -0.6), (24.0, -0.6), (24.0, Z_P + 0.03), (17.5, Z_P + 0.03)):
+        c = Vector((CX, CY, z)) + u * r
+        vs.append((c - n * 0.0, c + n * 0.18))
+    ring = [bm.verts.new(a) for a, _ in vs] + [bm.verts.new(b) for _, b in vs]
+    for qd in ((0, 1, 2, 3), (7, 6, 5, 4), (0, 4, 5, 1), (1, 5, 6, 2), (2, 6, 7, 3), (3, 7, 4, 0)): bm.faces.new([ring[i] for i in qd])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces); obj("AR_Pagode_O_band_tuin", bm, "graniet")
     rot = math.radians(A_UIT); f = Vector((math.cos(rot), math.sin(rot), 0)); tg = Vector((-f.y, f.x, 0))
     for k in range(9):
         r0 = R_VL - 0.02 + 0.33 * k

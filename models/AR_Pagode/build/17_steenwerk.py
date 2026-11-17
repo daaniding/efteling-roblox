@@ -240,13 +240,13 @@ def build():
         rotsrij(f"AR_Pagode_S_oostvoet{k}", [pt(11.35, a0 + (a1 - a0) * i / 12) for i in range(13)], Z_P + 0.03, (0.3, 0.6))
 
     # 4 rotsblokken: tuinkant van het laantje (video 0:21-0:30) en buitenrand van het onderpad (0:24)
-    rotsrij("AR_Pagode_S_laanrand", [pt(r, aL(r) - math.degrees(0.22 / r)) for r in [14.8 + 0.5 * i for i in range(22)]], Z_P, (0.28, 0.5))
+    rotsrij("AR_Pagode_S_laanrand", [pt(r, aL(r) - math.degrees(0.22 / r)) for r in [17.9 + 0.5 * i for i in range(16)]], Z_P, (0.28, 0.5))   # pas na het aanlooppad
     rotsrij("AR_Pagode_S_onderrand", [pt(27.0, aL(25.9) + (A_ZUID - aL(25.9)) * i / 30) for i in range(31)], Z_P, (0.28, 0.5))
 
     # rotsen in de tuin tussen laantje en bamboe (video 0:21-0:24), half in het gras
     bm = bmesh.new(); uv = bm.loops.layers.uv.verify()
     for j in range(14):
-        r = rnd.uniform(16.0, 25.0); aa = aL(r) - math.degrees(rnd.uniform(0.8, 4.5) / r); L = rnd.uniform(0.35, 0.8)
+        r = rnd.uniform(18.2, 25.0); aa = aL(r) - math.degrees(rnd.uniform(0.8, 4.5) / r); L = rnd.uniform(0.35, 0.8)
         if botst(pt(r, aa), L): continue
         blok(bm, uv, pt(r, aa, Z_P + L * 0.1), (L, L * rnd.uniform(0.6, 0.9), L * rnd.uniform(0.45, 0.7)),
              Matrix.Rotation(rnd.uniform(0, 6.3), 3, "Z") @ Matrix.Rotation(rnd.uniform(-0.3, 0.3), 3, "X"), afrond=0.6, bodem=-L * 0.2)
