@@ -217,6 +217,7 @@ bron = open(os.path.join(R, 'PagodeRit.server.luau')).read()
 bronc = open(os.path.join(R, 'PagodeRitClient.client.luau')).read()
 bronv = open(os.path.join(R, 'Voetstappen.client.luau')).read()
 bronm = open(os.path.join(R, 'MuziekKiezer.client.luau')).read()
+bronb = open(os.path.join(R, 'PagodeBeleving.client.luau')).read()
 luau = '\n'.join(kop) + f'''
 
 -- ===== rijdende Pagode: opzet (gegenereerd door roblox/maak_ritscript.py) =====
@@ -332,9 +333,10 @@ local sc = Instance.new("Script"); sc.Name = "PagodeRit"; sc.Source = [==[{bron}
 local sps = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")
 local oudC = sps:FindFirstChild("PagodeRitClient"); if oudC then oudC:Destroy() end
 local lc = Instance.new("LocalScript"); lc.Name = "PagodeRitClient"; lc.Source = [==[{bronc}]==]; lc.Parent = sps
-for _, n in ipairs({{"Voetstappen", "MuziekKiezer"}}) do local o = sps:FindFirstChild(n); if o then o:Destroy() end end
+for _, n in ipairs({{"Voetstappen", "MuziekKiezer", "PagodeBeleving"}}) do local o = sps:FindFirstChild(n); if o then o:Destroy() end end
 local lv = Instance.new("LocalScript"); lv.Name = "Voetstappen"; lv.Source = [==[{bronv}]==]; lv.Parent = sps
 local lm = Instance.new("LocalScript"); lm.Name = "MuziekKiezer"; lm.Source = [==[{bronm}]==]; lm.Parent = sps
+local lb = Instance.new("LocalScript"); lb.Name = "PagodeBeleving"; lb.Source = [==[{bronb}]==]; lb.Parent = sps
 local n = 0; for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") then n += 1 end end
 return "Pagode rijklaar: gondel " .. n .. " delen, cilinders " .. #cils:GetChildren()
 '''

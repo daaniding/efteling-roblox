@@ -278,6 +278,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     met passagier vertrokken. Attribuut Pagode.Wacht = true tijdens het wachten.
   - Bomen tijdelijk uit (Daan: "haal voor nu de bebossing weg"): workspace.PagodeBomen -> ServerStorage.PagodeBomen_uit
     (terugzetten = map terug naar workspace, of bomen_pagode.luau opnieuw draaien). Tuin langs het laantje blijft.
+  - Rit-ervaring (17 nov, Daan): PagodeBeleving (LocalScript, roblox/PagodeBeleving.client.luau): omroepteksten onderin
+    beeld voor wie op het dek staat (welkom, hekjes sluiten, omhoog, uitzicht, dalen, welkom terug + uitgang), fade in/uit;
+    camera deint licht mee met de versnelling van de gondel (max ~0.7 gr), alleen tijdens het rijden. Play: teksten op
+    tc 54 (welkom), 60 (sluiten), 65 (omhoog), geen scriptfouten. Geen zitbanken: in de on-ride video staan mensen langs de
+    reling. Fotomoment: pas als het uitzicht (buurattracties) er is. Echte omroepstem: niet mogelijk (geen TTS in Roblox).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
