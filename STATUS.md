@@ -1449,5 +1449,10 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   het plein, grijs met losse keien langs de plantvakken); geen strand. Wachtrij naar de foto: start (5.8; -15.8), oostvlonder op
   x 15.9, haarspeld midden (12.0; 8.0) r 3.75, boog r 10.25. Brug muurtjes x -3.5/-0.5, hutje (1.6; -8.5), dhow (-7.9; -8.5) boeg
   NO. Vergelijking: review/07_omgeving/vergelijk_boven.jpg. Omgeving 133616517213350.
+- Vlakke ondergrond + z-fighting (17 nov), Daan: "gewoon de ondergrond plat, niet dit rare relief dat komt overal doorheen" en
+  "in de blauwe ondergrond van de attractie is best wat z-fighting". Terrein nu met WriteVoxels op het 4-stud-raster, volle
+  voxels: bovenkant precies Y 0 (geen halve voxels = geen bobbels door vlonder/brug/water); vijverkolommen tot Y -4, waterplaat
+  op Y 0,35, onzichtbare bodem Y -4,5. Z-fighting: subschijven en bootvoeten lagen exact op de draaischijf; subschijven nu
+  Z_PLAT -0,03 .. +0,10, voeten 3 cm in de vloer, boten op de subschijven op +0,10 (03_forms). Rit 83505201461300.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

@@ -186,7 +186,7 @@ def platform():
     bm = bmesh.new()
     for s in range(3):
         a = VOOR + math.radians(90 + 120 * s)
-        cil(bm, (R_SUBMID * math.cos(a), R_SUBMID * math.sin(a), Z_PLAT), R_SUB, 0.06, 64)
+        cil(bm, (R_SUBMID * math.cos(a), R_SUBMID * math.sin(a), Z_PLAT - 0.03), R_SUB, 0.13, 64)   # zakt 3 cm in de schijf: geen samenvallende vlakken (z-fighting)
     obj("SI_subschijven", bm, "subschijf")
     # vlonderdek rond de schijf (vast) tot onder de dakrand
     bm = bmesh.new(); seg = 128
@@ -246,7 +246,7 @@ def boot(naam, c, rot, romp_rol="romp_hout"):
                                      "fruit_oranje", "fles")}
     M = Matrix.Translation(Vector(c)) @ Matrix.Rotation(rot, 4, "Z")
     NT, NU = 48, 8
-    cil(bms["voet"], (0, 0, 0), 1.08, Z_VOET, 48)
+    cil(bms["voet"], (0, 0, -0.03), 1.08, Z_VOET + 0.03, 48)   # 3 cm in de vloer: geen z-fighting met schijf/subschijf
     # buitenschil, per vlak: schubben (driehoek op de boeg) of planken
     P = [[None] * NT for _ in range(NU + 1)]
     for k in range(NU + 1):
@@ -408,7 +408,7 @@ def boten():
     n = 0
     for s in range(3):
         a = VOOR + math.radians(90 + 120 * s)
-        c = Vector((R_SUBMID * math.cos(a), R_SUBMID * math.sin(a), Z_PLAT + 0.06))
+        c = Vector((R_SUBMID * math.cos(a), R_SUBMID * math.sin(a), Z_PLAT + 0.10))
         for b in range(3):
             ab = a + math.radians(120 * b + 40)
             boot(f"boot{n:02d}", c + Vector((1.25 * math.cos(ab), 1.25 * math.sin(ab), 0)), ab + random.uniform(-1, 1), kleuren[n % 3]); n += 1

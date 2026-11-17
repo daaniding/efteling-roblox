@@ -8,7 +8,7 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 140043470117648, rit = 118252639030237, omgeving = 133616517213350,
+local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 133616517213350,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -83,18 +83,31 @@ end
 -- 1 terrein: vlak in een vierkant van 70 m; per vierkante meter plein (Pavement), plantvak (gras) of zand zoals op de luchtfoto;
 -- de vijver (vorm uit de luchtfoto) leeg tot ver onder het water
 local t = workspace.Terrain
-local G = 2
-local top = G + (9.8 - 10) * S - 2
-t:FillBlock(CFrame.new(MIDDEN.X, 6, MIDDEN.Z), Vector3.new(70 * S, 112, 70 * S), Enum.Material.Air)
-for i = -35, 34 do
-	for j = -35, 34 do
-		local x, y = i + 0.5, j + 0.5
-		if not inVijver(x, y) then
-			local k = string.sub(KLASSEN[j + 36], i + 36, i + 36)
-			t:FillBlock(CFrame.new(MIDDEN.X + x * S, (top + (G - 30)) / 2, MIDDEN.Z - y * S), Vector3.new(S, top - (G - 30), S), MAT[k] or Enum.Material.Grass)
+-- Daan 17 nov: "gewoon de ondergrond plat, niet dit rare relief". Terrein op het voxelraster (4 studs) met volle voxels, dus
+-- vlak: bovenkant Y 0 (plein/plantvak/zand), vijverkolommen tot Y -4 (onder de waterplaat), water 0,35 erboven.
+t:FillBlock(CFrame.new(MIDDEN.X, 40, MIDDEN.Z), Vector3.new(70 * S + 8, 80, 70 * S + 8), Enum.Material.Air)
+local x0 = math.floor((MIDDEN.X - 35 * S) / 4) * 4; local z0 = math.floor((MIDDEN.Z - 35 * S) / 4) * 4
+local nx = math.ceil((MIDDEN.X + 35 * S - x0) / 4); local nz = math.ceil((MIDDEN.Z + 35 * S - z0) / 4)
+local NY = 8                                     -- lagen van Y -32 tot 0
+local mat, occ = {}, {}
+for ix = 1, nx do
+	mat[ix], occ[ix] = {}, {}
+	local cx = x0 + (ix - 0.5) * 4
+	for iy = 1, NY do mat[ix][iy], occ[ix][iy] = {}, {} end
+	for iz = 1, nz do
+		local cz = z0 + (iz - 0.5) * 4
+		local x, y = (cx - MIDDEN.X) / S, -(cz - MIDDEN.Z) / S
+		local water = inVijver(x, y)
+		local rij = KLASSEN[math.clamp(math.floor(y) + 36, 1, 70)]
+		local k = string.sub(rij, math.clamp(math.floor(x) + 36, 1, 70), math.clamp(math.floor(x) + 36, 1, 70))
+		for iy = 1, NY do
+			local vol = not (water and iy == NY)
+			mat[ix][iy][iz] = vol and (iy == NY and (MAT[k] or Enum.Material.Grass) or Enum.Material.Ground) or Enum.Material.Air
+			occ[ix][iy][iz] = vol and 1 or 0
 		end
 	end
 end
+t:WriteVoxels(Region3.new(Vector3.new(x0, -32, z0), Vector3.new(x0 + nx * 4, 0, z0 + nz * 4)), 4, mat, occ)
 
 -- 2 modellen
 local oud = workspace:FindFirstChild("Sirocco"); if oud then oud:Destroy() end
@@ -133,7 +146,7 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit, Omgeving = ID.omgeving}
 			sa.Parent = p
 		end
 		if r[6] == "glas" then p.Transparency = 0.15 end
-		if r[6] == "water" then p.Transparency = 0.12; p.Reflectance = 0.05; p.CastShadow = false end
+		if r[6] == "water" then p.Transparency = 0.12; p.Reflectance = 0.05; p.CastShadow = false; p.Position += Vector3.new(0, 0.27, 0) end   -- Y 0,35: vrij boven het vlakke terrein
 		if naam == "Omgeving" and rol == "net" then p.CanCollide = true; p.CanQuery = true end   -- wachtrijhek: niet doorheen lopen
 		if p.CanCollide then pcall(function() p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end) end
 	end
@@ -151,7 +164,7 @@ end
 -- 4 water: de waterplaat zit in de omgeving (vijvervorm, donker en troebel; Glass spiegelt de lucht, WERKWIJZE); hier alleen een
 -- onzichtbare bodem onder de hele vijver zodat je niet wegvalt
 local b = Instance.new("Part"); b.Name = "Vijverbodem"; b.Anchored = true; b.Transparency = 1; b.CanCollide = true; b.CanQuery = false
-b.Size = Vector3.new(32 * S, 1, 32 * S); b.CFrame = CFrame.new(MIDDEN - Vector3.new(0, 4, 0)); b.Parent = sir
+b.Size = Vector3.new(32 * S, 1, 32 * S); b.CFrame = CFrame.new(MIDDEN - Vector3.new(0, 4.7, 0)); b.Parent = sir
 
 local n = 0
 for _, d in ipairs(sir:GetDescendants()) do if d:IsA("BasePart") then n += 1 end end
