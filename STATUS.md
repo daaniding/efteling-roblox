@@ -247,6 +247,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (maak_ritscript na de Kern, map Gondel.Randbotsing): 256 delen op r 8.32 m vanaf het dek (6.58 studs), 24 hoog;
     poortjes op kernhoek 180 - alfa (gemeten aan de scharnieren). Play: rand stopt op r 7.9-8.0 (120/250/40 gr), poortjes
     in0 en in1 open tijdens instappen in beide richtingen, dicht tijdens de rit.
+  - Draaien (17 nov, Daan: "moet de pagode niet een beetje draaien", keuze aan Claude): twee hele rondjes per rit
+    (RONDJES = 2 in PagodeRitClient; heel getal zodat de poortjes weer voor het station eindigen), piek ~3.6 gr/s
+    halverwege. Meenemen van meerijders: de "beweegt"-check zag de langzame draai als stilstand; nu exact via
+    ToObjectSpace + ToAxisAngle (drempel 1e-5 stud / 1e-7 rad). Play: drift 0.1 stud tijdens omhoog met draaien.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

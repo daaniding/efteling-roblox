@@ -463,7 +463,7 @@ local oudC = sps:FindFirstChild("PagodeRitClient"); if oudC then oudC:Destroy() 
 local lc = Instance.new("LocalScript"); lc.Name = "PagodeRitClient"; lc.Source = [==[--!strict
 -- PagodeRitClient (StarterPlayerScripts): laat de Pagode rijden op deze client.
 -- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 25 s, sluiten 5 s, omhoog 55 s, boven 200 s,
--- omlaag 55 s; een volle draai over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
+-- omlaag 55 s; twee volle draaien over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
 -- Alles verankerd en verplaatst met BulkMoveTo; de stand volgt uit workspace:GetServerTimeNow() - RitStart (zelfde voor iedereen).
 -- Wie op het dek staat wordt elk frame met de gondel meegenomen (geen wegzakken, geen trillen).
 local RunService = game:GetService("RunService")
@@ -551,6 +551,7 @@ end
 
 local FASEN = {{"instappen", 25}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
 local CYCLUS, T_RIT = 0, 55 + 200 + 55
+local RONDJES = 2                                   -- twee hele rondjes per rit (Daan: "moet hij niet wat draaien"); heel getal: poortjes eindigen weer voor het station
 for _, f in FASEN do CYCLUS += f[2] :: number end
 local function e(t: number): number return (1 - math.cos(math.pi * math.clamp(t, 0, 1))) / 2 end
 
@@ -563,7 +564,7 @@ local function stand(tc: number): (number, number, string)
 			local th = TH_D
 			if naam == "omhoog" then th = TH_D * (1 - e(t)) elseif naam == "boven" then th = 0 elseif naam == "omlaag" then th = TH_D * e(t) end
 			local phi = 0
-			if naam == "omhoog" or naam == "boven" or naam == "omlaag" then phi = 2 * math.pi * e((t_rit + tc - t0) / T_RIT) end
+			if naam == "omhoog" or naam == "boven" or naam == "omlaag" then phi = RONDJES * 2 * math.pi * e((t_rit + tc - t0) / T_RIT) end
 			return th, phi, naam
 		end
 		t0 += duur
@@ -604,7 +605,9 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	local ch = plr.Character
 	local hrp = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
 	-- alleen als de gondel echt beweegt: elk frame de CFrame zetten (ook bij stilstand) blokkeert het lopen op het dek
-	local beweegt = (nieuwK.Position - gK.Position).Magnitude > 1e-4 or nieuwK.LookVector:Dot(gK.LookVector) < 0.9999999
+	local delta = gK:ToObjectSpace(nieuwK)
+	local _, draai = delta:ToAxisAngle()
+	local beweegt = delta.Position.Magnitude > 1e-5 or math.abs(draai) > 1e-7   -- ook de langzame draai (twee rondjes) telt mee
 	local rijdt = false
 	if hrp and beweegt then
 		local r = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
