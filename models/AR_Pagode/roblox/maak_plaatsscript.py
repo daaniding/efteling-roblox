@@ -146,6 +146,7 @@ end
 local HB = b64("{h_b64}")
 local MB = b64("{m_b64}")
 local NX, NY = {NX}, {NY}
+local VLAK = true
 local function hoogte(i, j) return 8.5 + string.byte(HB, j * NX + i + 1) * 0.015 end
 local function verhard(i, j) local k = j * NX + i; return bit32.btest(string.byte(MB, k // 8 + 1), bit32.lshift(1, 7 - k % 8)) end
 local t = workspace.Terrain
@@ -156,7 +157,7 @@ local n = 0
 for j = 0, NY - 1 do
   for i = 0, NX - 1 do
     local x, y = {X0} + i + 0.5, {Y1} - j - 0.5
-    local nap = hoogte(i, j)
+    local nap = VLAK and 9.8 or hoogte(i, j)        -- Daan 17 nov: gewoon vlak gras rond de Pagode (AHN gaf bulten en heuveltjes)
     local dx, dy = x - 360.0, y - 47.5; local r = math.sqrt(dx * dx + dy * dy); local a = math.deg(math.atan2(dy, dx)) % 360
     local lx, ly = (x - ASX) * ux + (y - ASY) * uy, -(x - ASX) * uy + (y - ASY) * ux    -- langs/dwars de arm vanaf de as
     local weg = r < 9.0 or (lx > -9.8 and lx < 6.8 and math.abs(ly) < 3.6) or (lx > 6.5 and lx < 30.0 and math.abs(ly) < 1.5)
@@ -179,12 +180,15 @@ for j = 0, NY - 1 do
 end
 -- rand rondom het AHN-stuk (oost en noord, achter de Toko): vlak gras op NAP 9.5, behalve onder terras/kiosk
 do
-  local tp, bd = G + (9.5 - 10) * S - 2, G - 30
+  local tp, bd = G + ((VLAK and 9.8 or 9.5) - 10) * S - 2, G - 30
   local function vul(x0, x1, y0, y1)
     t:FillBlock(CFrame.new((x0 + x1) / 2 * S, (tp + bd) / 2, -(y0 + y1) / 2 * S), Vector3.new((x1 - x0) * S, tp - bd, (y1 - y0) * S), Enum.Material.Grass)
   end
   vul({X1}, 430, 15, 112); vul({X0}, {X1}, {Y1}, 112)
 end
+-- donkergroen gras met sprieten (Daan 17 nov: "gewoon mooi donker groenig gras, dit is zo somber")
+t:SetMaterialColor(Enum.Material.Grass, Color3.fromRGB(46, 92, 38)); t.Decoration = true
+pcall(function() t.GrassLength = 0.5 end)
 -- spawn bij de Pagode (oude spawn bewaard in attribuut)
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")
 if sp then
