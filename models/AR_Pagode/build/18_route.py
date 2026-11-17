@@ -23,6 +23,11 @@ WEG_12 = ("AR_Pagode_O_plein0", "AR_Pagode_O_plein1", "AR_Pagode_O_plein2", "AR_
           "AR_Pagode_O_pad_oost2", "AR_Pagode_O_pad_oost3", "AR_Pagode_O_lamp_uit1")
 WEG_17 = ("AR_Pagode_S_pleinvoor", "AR_Pagode_S_plantvak", "AR_Pagode_S_tuinrotsen")
 WEG_EIGENAAR = ("phase:14_planten", "phase:15_toko", "phase:16_gondoletta")
+# uit 14_planten blijft (Daan 17 nov: "bamboe en gesnoeide dennen langs het laantje"): bamboe, niwaki in de tuin, struiken,
+# tuinstenen, hagen langs de sleuf en het bloemenperk; weg: de oude bomen (vervangen door Creator Store-bomen), de pot-bamboe
+# en de niwaki bij het oostpad (zouden op het uitgangspad staan)
+BEWAAR_14 = ("AR_Pagode_P_bamboe", "AR_Pagode_P_niwaki", "AR_Pagode_P_struik", "AR_Pagode_P_tuinsteen", "AR_Pagode_P_haag", "AR_Pagode_P_perk", "AR_Pagode_P_pol")
+WEG_14 = ("AR_Pagode_P_niwaki3", "AR_Pagode_P_niwaki4")
 
 
 def build():
@@ -34,7 +39,8 @@ def build():
     n = 0
     for o in list(bpy.data.objects):
         e = o.get("owner", "")
-        if e in WEG_EIGENAAR or (e == "phase:12_omgeving" and o.name.startswith(WEG_12)) or (e == "phase:17_steenwerk" and o.name.startswith(WEG_17)):
+        bewaar = e == "phase:14_planten" and o.name.startswith(BEWAAR_14) and not o.name.startswith(WEG_14)
+        if (e in WEG_EIGENAAR and not bewaar) or (e == "phase:12_omgeving" and o.name.startswith(WEG_12)) or (e == "phase:17_steenwerk" and o.name.startswith(WEG_17)):
             bpy.data.objects.remove(o, do_unlink=True); n += 1
     # gangetjes naar de instappoortjes: twee zwarte hekjes (1.0 m) van de stationsrand (r 9.25) tot r 12.6, BREED + 0.1 uit elkaar
     for naam, alfa, soort in PT.POORTEN:

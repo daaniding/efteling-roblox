@@ -61,10 +61,10 @@ for _ in range(60000):
     groenkroon = kroon[i, j]
     if not (groenkroon or kaal[i, j]) or bebouwd(x, y): continue
     if any(math.hypot(x - p[0], y - p[1]) < (4.5 if groenkroon else 6.0) for p in pts): continue
-    if bij_hek(x, y): continue
     win = im[max(0, i - 20):i + 20, max(0, j - 20):j + 20].reshape(-1, 3)
     v, bl = win.mean(), (win[:, 2] / (win[:, 1] + 1)).mean()
     soort = "den" if groenkroon and (v < 62 or bl > 0.92) else "loof"
+    if bij_hek(x, y, 4.5 if soort == "den" else 1.5): continue                 # dennen zijn tot onderaan breed: niet over paden
     r_ = math.hypot(x - CX, y - CY)
     hoogte = float(rng.uniform(24, 30) if soort == "den" and r_ < 24 else rng.uniform(19, 25) if soort == "den" else rng.uniform(16, 23))   # video: sparren naast het station zo hoog als de gondel
     pts.append([round(x, 2), round(y, 2), soort, round(hoogte, 1), round(float(rng.uniform(0, 6.283)), 2)])

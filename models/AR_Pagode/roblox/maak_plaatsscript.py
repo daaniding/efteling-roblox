@@ -170,7 +170,7 @@ for j = 0, NY - 1 do
         or (r < 14.6 and (a > 306 or a < 1.5))                                               -- uitgangspad oost (pad_oost0/1)
         or (r < 17.9 and a >= 87.5 and a < aL)                                               -- aanlooppad naar het laantje
       if bebouwd then nap = math.min(nap, 8.0)
-      elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 8.95) end              -- tuin: zichtbaar net onder de klinkers (terrein tekent ~0.6 m hoger dan nap; raycast meet lager dan je ziet)
+      elseif not VLAK and r < 29 and a > 85 and a < 160 then nap = math.min(nap, 8.95) end   -- vlak: tuin op hetzelfde niveau (planten 18_route)              -- tuin: zichtbaar net onder de klinkers (terrein tekent ~0.6 m hoger dan nap; raycast meet lager dan je ziet)
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)
       t:FillBlock(CFrame.new(x * S, (top + (G - 30)) / 2, -y * S), Vector3.new(S, top - (G - 30), S), Enum.Material.Grass)   -- Ground zag eruit als zand
       n += 1

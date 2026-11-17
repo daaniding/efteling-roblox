@@ -257,7 +257,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     aan het oostpad. Video: sparren naast het station 24-30 m (zo hoog als de gondel), loofbomen 16-23 m. Gondelbaan-check:
     geen boom raakt de gondel. Modellen: Creator Store PBR-packs van Letaij (Ponderosa Pine 130515502281374, Realistic Oak
     Trees 114023396228594), gecontroleerd: geen scripts; bron in ServerStorage.BoomBronnen; plaatsen = roblox/
-    bomen_pagode.luau (maak_bomenscript.py). Play: 55-60 fps. Nog niet: bamboe en gesnoeide dennen langs het laantje.
+    bomen_pagode.luau (maak_bomenscript.py). Play: 55-60 fps. Dennen minstens 4.5 m van hekken/paden (tot onderaan breed,
+    hingen over de aanloop), loofbomen 1.5 m: nu 60 bomen (20 den, 40 loof).
+  - Tuin terug (17 nov, Daan: "ja, doe dat" = bamboe en gesnoeide dennen langs het laantje): 18_route bewaart uit 14_planten
+    bamboe, niwaki 0-2 (tuin), struiken, tuinstenen, hagen langs de sleuf en het bloemenperk (vult de "modder" naast het
+    huisje); weg: oude bomen, pot-bamboe, niwaki 3-4 (stonden op het uitgangspad). Keten nu 12, 14, 17, 18, 05, 19.
+    Omgeving 77125367267740 (43 delen, 141k driehoeken). Terrein in de tuin naar NAP 9.8 (was 8.95, planten zweefden);
+    maak_plaatsscript: tuincap alleen als niet VLAK. Vergelijking video 0:20: laanmuur, niwaki, struiken, bamboewand, bomen
+    erboven klopt. fps-meting in Studio onbetrouwbaar (venster niet in focus: 15 fps-rem).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

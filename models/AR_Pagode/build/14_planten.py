@@ -229,7 +229,7 @@ def build():
     while r < 27.0:
         bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(r, aL(r) - math.degrees(rnd.uniform(4.2, 5.4) / r)), Z_P - 0.1, 10, 4.8); k += 1
         r += 1.3
-    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(14.62, aL(14.38) - math.degrees(0.3 / 14.38) - 1.7, Z_P + 0.62), 0.0, 8, 1.6, 0.2)     # in de pot naast het bord
+    # (bamboe in de pot naast het bord: weg, de pot is weg sinds 18_route)
     # niwaki: tuin (2), achter het bord, bij het oostpad
     niwaki("AR_Pagode_P_niwaki0", pt(20.0, aL(20.0) - math.degrees(2.2 / 20), Z_P - 0.1), 6.2, 7)       # video 0:21: hoog, vlak naast het laantje
     niwaki("AR_Pagode_P_niwaki1", pt(23.8, aL(23.8) - math.degrees(2.0 / 23.8), Z_P - 0.1), 3.4, 5)
