@@ -1411,6 +1411,15 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Aankleding (build/04_decor.py): 40 hangende dingen (rieten schalen met fruit, eikelmanden, 5 lantaarns = lichtpunten, lampions),
   touwen naar het dak, touwslingers, touwladder in het midden (handelaar zelf later), gaashek met bamboepalen op r 7,25 met
   openingen voor in- en uitstappen. Vergelijking: review/cmp_vormen.jpg (binnen + buiten naast de foto's).
-- VOLGENDE: scène
-  (water en oevers uit de luchtfoto, wachtrij-vlonder met turquoise zeilkap, steiger/uitgang, haven met Sindbads boot), texturen,
-  export, plaatsen op park (456,5; 191,2) m, looptest, bezoekers (Park.VOLGORDE na de Pagode).
+- Texturen (build/04t_texturen.py): riet = Poly Haven riet_01 (CC0) grijzer gemaakt; zelf getekend: draaischijf (blauwgroen water
+  met golfkrullen, planair over de hele schijf), rode en houten planken met nerf, blauwe schubben, blauw sierpaneel met gouden
+  krullen, vlechtwerk, gaas (alfa), donker beschot, ruw stamhout. Vlonder en bamboe = Pagode-texturen.
+- Materialen/UV's (build/05_materials.py), export (build/11_export.py): AR_Sirocco_gebouw.fbx (61.7k) en AR_Sirocco_rit.fbx (34.1k,
+  draaischijf + boten, apart zodat hij later kan draaien). Ids in exports/asset_ids.json (gebouw 130218947819308, rit 135702591963256).
+- In Studio (roblox/plaats_sirocco.luau, met lampen ingevuld = plaats_sirocco_plak.luau): workspace.Sirocco op park (456,5; 191,2) m,
+  water Y 0,2 (gras NAP 9,8 = Y 1,4 zoals bij de Pagode, terrein 70x70 m vlak gras, vijver r 13,6 m leeg), materialen per rol,
+  5 lantaarnlichten (0,8 / 14 studs, schaduw), donkere waterplaat + onzichtbare vijverbodem. Texturen eerst 0/16 geladen
+  (nieuwe uploads), na preload + ColorMap opnieuw zetten 16/16.
+- VOLGENDE: scène (vijvervorm en oevers uit de luchtfoto, wachtrij-vlonder met ruwe palen, gaashekken en turquoise zeilkap met
+  lantaarns, steiger/uitgangsbrug, haven met Sindbads boot), botsing (hek rond de schijf, routemuren), looptest, bezoekers
+  (Park.VOLGORDE na de Pagode), rit pas als Daan erom vraagt.

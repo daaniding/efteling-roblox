@@ -1,0 +1,69 @@
+{
+ "delen": {
+  "AR_Sirocco_gebouw": {
+   "SI_stam_0_gb": 9500,
+   "SI_stam_1_gb": 3372,
+   "SI_beschot_0_gb": 9440,
+   "SI_riet_0_gb": 9500,
+   "SI_riet_1_gb": 260,
+   "SI_bamboe_0_gb": 1232,
+   "SI_fruit_geel_0_gb": 1548,
+   "SI_fruit_groen_0_gb": 2664,
+   "SI_fruit_oranje_0_gb": 1980,
+   "SI_lampion_oranje_0_gb": 360,
+   "SI_lampion_petrol_0_gb": 240,
+   "SI_lampion_rood_0_gb": 360,
+   "SI_lantaarn_0_gb": 424,
+   "SI_lantaarnglas_0_gb": 100,
+   "SI_mand_0_gb": 9500,
+   "SI_mand_1_gb": 3992,
+   "SI_net_0_gb": 336,
+   "SI_touw_0_gb": 6164,
+   "SI_vlonder_0_gb": 768
+  },
+  "AR_Sirocco_rit": {
+   "SI_fles_0_rt": 672,
+   "SI_fruit_oranje_0_rt": 4032,
+   "SI_goud_0_rt": 5664,
+   "SI_kist_0_rt": 144,
+   "SI_mast_0_rt": 912,
+   "SI_romp_0_rt": 6120,
+   "SI_schubben_0_rt": 2304,
+   "SI_sierpaneel_0_rt": 672,
+   "SI_touw_0_rt": 672,
+   "SI_voet_0_rt": 1872,
+   "SI_zeil_0_rt": 3600,
+   "SI_romp_hout_0_rt": 6120,
+   "SI_platform_0_rt": 380,
+   "SI_subschijf_0_rt": 756,
+   "SI_ton_0_rt": 228
+  }
+ },
+ "lampen": [
+  [
+   -0.3778934251597297,
+   -2.162206579494992,
+   4.128078793676796
+  ],
+  [
+   -2.530989016506305,
+   -2.3864950717325617,
+   5.704743140894821
+  ],
+  [
+   -1.067216127625014,
+   5.067496148267144,
+   3.6489504341012116
+  ],
+  [
+   -4.8391520459184205,
+   3.6194475877455203,
+   3.35
+  ],
+  [
+   5.677862858137164,
+   -2.567040923023653,
+   3.35
+  ]
+ ]
+}
