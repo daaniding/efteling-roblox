@@ -293,7 +293,7 @@ def lantaarn(bms, top, kap, lampen):
 def ingangsbord(bms, lampen):
     """ingangsbord naar de video (xloCDJYf-Tw 12-16 s): donkerbruine metalen paal met sokkel, ringen en spits; pluimvormig bord
     met "Sirocco" en medaillon naar links boven de ingang; arm naar rechts met drie hangende lantaarns (groen, rood, groen);
-    infobord met spitsboog op de paal. Tekst en tekening zitten in textures/SI_bord_kleur.png (07t_bord.py)."""
+    infobord met spitsboog op de paal. (Vazen en citroenmand weggehaald: Daan, stonden voor het pad.) Tekst en tekening zitten in textures/SI_bord_kleur.png (07t_bord.py)."""
     px, py = BORD_PAAL; g = Z_GROND
     m = "paalmetaal"
     cil(bms[m], (px, py, g), 0.24, 0.12, 12); cil(bms[m], (px, py, g + 0.12), 0.19, 0.7, 12)      # sokkel
@@ -358,17 +358,6 @@ def ingangsbord(bms, lampen):
     vs = [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
     uv_vlak("SI_om_infobord", "bordvlak", [([Vector((x, iy - 0.002, z)) for x, z in vs], [uvC(x, z) for x, z in vs], (0, -1, 0))])
     doos(bms[m], (px, iy + 0.03, (z0 + z1) / 2), (0.56, 0.05, 1.04))
-    # vazen en een schaal citroenen naast de ingang (video 12 s)
-    for (vx, vy, r, h) in ((4.3, -17.5, 0.26, 0.95), (3.7, -16.9, 0.2, 0.6)):
-        v = cil(bms["vaas"], (vx, vy, g), r * 0.55, h, 12)
-        for q in v:
-            t = (q.co.z - g) / h; f = 0.55 + 0.75 * math.sin(math.pi * min(1, t * 1.15)) if t < 0.85 else 0.45
-            q.co.x = vx + (q.co.x - vx) / 0.55 * f; q.co.y = vy + (q.co.y - vy) / 0.55 * f
-        cil(bms["kurk"], (vx, vy, g + h), r * 0.42, 0.1, 10)
-    cil(bms["mand"], (4.9, -17.9, g), 0.35, 0.3, 14, 0.42)
-    for k in range(26):
-        a = random.uniform(0, 2 * math.pi); rr = random.uniform(0, 0.33)
-        bol(bms["fruit_geel"], (4.9 + rr * math.cos(a), -17.9 + rr * math.sin(a), g + 0.33 + 0.1 * (1 - rr / 0.33) + random.uniform(0, 0.05)), 0.065, 6)
 
 
 def main():
@@ -381,7 +370,7 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand", "vaas", "kurk", "mand", "fruit_geel")
+              "bordrand")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)

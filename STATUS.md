@@ -1466,5 +1466,6 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   Arabische lantaarns (groen/rood/groen, koepel, zeskantig glas, gouden banden, punt) met licht; infobord met spitsboog en
   pictogrammen op de paal; twee vazen en een mand citroenen. Atlas textures/SI_bord_kleur.png (07t_bord.py, 110695007842617);
   objecten met eigen UV's krijgen o["uv_klaar"] en 05 laat ze staan. Omgeving 137519536283770.
+- Vazen + citroenmand bij de ingang weggehaald (Daan: "haal die gekke assets voor het pad weg"). Omgeving 71267590010421.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
