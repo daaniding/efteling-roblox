@@ -218,6 +218,7 @@ bronc = open(os.path.join(R, 'PagodeRitClient.client.luau')).read()
 bronv = open(os.path.join(R, 'Voetstappen.client.luau')).read()
 bronm = open(os.path.join(R, 'MuziekKiezer.client.luau')).read()
 bronb = open(os.path.join(R, 'PagodeBeleving.client.luau')).read()
+interieur = open(os.path.join(R, 'interieur_gondel.luau')).read()
 luau = '\n'.join(kop) + f'''
 
 -- ===== rijdende Pagode: opzet (gegenereerd door roblox/maak_ritscript.py) =====
@@ -307,6 +308,7 @@ local kern = Instance.new("Part"); kern.Name = "Kern"; kern.Size = Vector3.new(2
 kern.CanQuery = false; kern.CanTouch = false; kern.Anchored = true
 kern.CFrame = CFrame.new(PIV:PointToWorldSpace(pag:GetAttribute("GondelLokaal"))) * PIV.Rotation; kern.Parent = gondel
 gondel.PrimaryPart = kern
+{interieur}
 -- botsrand van de groene balustrade opnieuw t.o.v. de kern (Daan 17 nov: "ik kan door de groene hekjes"): de reling-delen uit
 -- de afwerking stonden ~120 studs te hoog (oud draaipunt van de gondel). 256 stukken op r 8.32 m vanaf het dek, 24 studs hoog;
 -- in de poortjes (kernhoek = 180 - gondelhoek alfa) heten ze poortreling en wisselen ze met de hekjes (PagodeRitClient)
