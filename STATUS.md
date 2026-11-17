@@ -311,7 +311,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     2.2 m ruimte; sturen 4 studs vooruit (vloeiend door de bochten). Gangetje in alleen als het dek ruim voor het sluiten
     gehaald wordt (tc < T_IN - 8). Op het dek altijd met een boog om de kern (rechtdoor = op de zitrand vast); plek aan de
     reling (r 7.1-7.7 m, binnen 35 graden van in0), draaien naar buiten. Na het losmaken SetNetworkOwner(nil) opnieuw (anders
-    neemt de client ze over en lopen ze vast op het eenrichtingsschot); Eenrichting-schotten in groep Poortdeel. Meerijden: server verankert de HumanoidRootPart (attribuut Rijdt), elke client zet ze elk frame op
+    neemt de client ze over en lopen ze vast op het eenrichtingsschot); Eenrichting-schotten in groep Poortdeel.
+  - Twee instappoortjes en verspreid op het dek (17 nov, Daan: "ze gebruiken de tweede ingang niet", "ze staan in elkaar,
+    verspreid dat meer"): de rij (RIJ_S) loopt tot de splitsing op het bordes (r 12.4, 128 gr); wie vooraan staat kiest het
+    gangetje met de minste mensen (gang1 = in0 131.7 gr, gang2 = in1 148.1 gr via r 13.1 buiten het in0-hekje om), elk gangetje
+    is een eigen rij. Op het dek: 36 vaste plekken aan de reling rondom (elke 9 gr, niet in de poortjes), elk 1 bezoeker,
+    willekeurige vrije plek, met een boog om de kern. Uitstappen via het dichtstbijzijnde uitstappoortje (uit0 of uit1).
+    Spelers lopen 6.5 studs/s (bezoekers 5.5-7.5; Daan: "laat mij even snel lopen als zij"), gezet in PagodeBezoekers.
+    Play: beide gangetjes vullen om en om, 11 meerijders verspreid van -176 tot 134 gr op r 7.3-7.8, uit via uit0 en uit1. Meerijden: server verankert de HumanoidRootPart (attribuut Rijdt), elke client zet ze elk frame op
     K_onder -> nieuwK (PagodeRitClient). NPC op het dek (OpDek) laat de ritklok ook doorlopen. Botsgroep Bezoekers botst niet
     met Spelers, Rijdend, Bezoekers, Routemuur, Poortdeel. Play: afwijking van de looplijn max 0.44 m; rij staat ~0.9 m hart op hart vanaf het poortje; meerijders vast op r 6.4 m,
     hoogte 9.70 boven de kern, kijkrichting 1.00 naar buiten; uitstappen -> trap -> park -> ommetje -> terug bij de aanloop.

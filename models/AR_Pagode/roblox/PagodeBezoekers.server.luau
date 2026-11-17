@@ -19,6 +19,7 @@ local CX, CY = 360.0, 47.5
 local Z_I, Z_P = 1.3, -0.38
 local ROUTE: {{number}} = __ROUTE__
 local MAX_BEZOEKERS = 14
+local SPELER_SNELHEID = 6.5                      -- spelers lopen even snel als de bezoekers (5.5-7.5)
 local TUSSENPOOS = {6, 12}                       -- seconden tussen nieuwe bezoekers (tot MAX_BEZOEKERS)
 local ANIM = {loop = "rbxassetid://913402848", stil = "rbxassetid://507766388"}   -- standaard R15 lopen / stilstaan
 
@@ -132,9 +133,9 @@ local function projecteer(ln: Lijn, pos: Vector3, s0: number): number
 	end
 	return best
 end
-local RIJ = (function()
+local RIJ_S = (function()
 	local pts = {}
-	for i = 1, #ROUTE - 1 do pts[i] = wereld(ROUTE[i]) end      -- tot in het gangetje voor het poortje (r 9.6)
+	for i = 1, #ROUTE - 3 do pts[i] = wereld(ROUTE[i]) end      -- tot de splitsing op het bordes (r 12.4, 128 gr)
 	return lijn(pts)
 end)()
 local GAT = 0.85 * S              -- hart op hart in de rij: recht achter elkaar
@@ -158,15 +159,21 @@ local function volg(b: Bezoeker, ln: Lijn, grens: () -> number, klaar: () -> boo
 	end
 end
 
--- wie staat direct voor je in de rij: verder op de lijn (gelijk: wie eerder aansloot)
+-- wie staat direct voor je in dezelfde rij (rij, gang1, gang2): verder op de lijn (gelijk: wie eerder aansloot)
 local function voorganger(b: Bezoeker): Bezoeker?
 	local voor: Bezoeker? = nil
 	for _, o in rij do
-		if o ~= b and o.fase == "rij" and o.model.Parent and (o.s > b.s or (o.s == b.s and o.nr < b.nr)) then
+		if o ~= b and o.fase == b.fase and o.model.Parent and (o.s > b.s or (o.s == b.s and o.nr < b.nr)) then
 			if voor == nil or o.s < voor.s or (o.s == voor.s and o.nr > voor.nr) then voor = o end
 		end
 	end
 	return voor
+end
+-- laatste in een gangetje (om te kiezen waar je aansluit)
+local function staart(fase: string): (number, number)
+	local n, laagste = 0, math.huge
+	for _, o in rij do if o.fase == fase and o.model.Parent then n += 1; laagste = math.min(laagste, o.s) end end
+	return n, laagste
 end
 
 local function zetVast(b: Bezoeker, vast: boolean)
@@ -202,29 +209,67 @@ local function hoekNu(b: Bezoeker): number
 	return math.deg(math.atan2(-h.Position.Z / S - CY, h.Position.X / S - CX))
 end
 
+-- twee gangetjes vanaf de splitsing op het bordes (Daan: "ze gebruiken de tweede ingang niet"); in1 via een boog buiten
+-- het hekje van in0 om (die hekjes lopen tot r 12.6)
+local A_IN1 = 10 * 360 / 22 - 15.5615            -- 148.07
+local A_UIT1 = -360 / 22 - 15.5615               -- -31.93
+local SPLITS = ROUTE[#ROUTE - 3]
+local GANG = {
+	{poort = A_IN0, ln = lijn({wereld(SPLITS), wereld(pp(11.6, A_IN0, Z_I)), wereld(pp(9.6, A_IN0, Z_I))})},
+	{poort = A_IN1, ln = lijn({wereld(SPLITS), wereld(pp(13.1, A_IN0, Z_I)), wereld(pp(13.1, 140, Z_I)), wereld(pp(12.9, A_IN1, Z_I)),
+		wereld(pp(11.6, A_IN1, Z_I)), wereld(pp(9.6, A_IN1, Z_I))})},
+}
+-- plekken aan de reling rondom de hele gondel, elk 1 bezoeker (Daan: "verspreid dat meer"); niet in de poortjes
+local PLEKKEN: {{a: number, b: Bezoeker?}} = {}
+for k = 0, 39 do
+	local a = k * 9 + 4.5 - 180
+	local vrij = true
+	for _, pa in {A_IN0, A_IN1, A_UIT0, A_UIT1} do if math.abs((a - pa + 180) % 360 - 180) < 6 then vrij = false end end
+	if vrij then table.insert(PLEKKEN, {a = a}) end
+end
+
 local function rijEnRit(b: Bezoeker)
 	local m, hum = b.model, b.hum
-	-- 1 de rij: aansluiten achter de laatste, recht op de lijn; de rij vult van voren (bij het poortje) naar achteren
+	-- 1 de rij tot de splitsing op het bordes: recht op de lijn, vult van voren naar achteren
 	b.fase = "rij"; b.s = 0
-	volg(b, RIJ, function()
+	local keus = 1
+	volg(b, RIJ_S, function()
 		local voor = voorganger(b)
-		return if voor then voor.s - GAT else RIJ.L
+		return if voor then voor.s - GAT else RIJ_S.L
 	end, function()
-		local t = tc()      -- alleen instappen als je het dek ruim voor het sluiten haalt
-		return b.s > RIJ.L - 1.5 and voorganger(b) == nil and t > 2 and t < T_IN - 8
+		if b.s < RIJ_S.L - 1.5 or voorganger(b) ~= nil then return false end
+		-- vooraan: naar het gangetje met de minste mensen, als daar achteraan plek is
+		local n1, s1 = staart("gang1"); local n2, s2 = staart("gang2")
+		keus = if n2 < n1 then 2 else 1
+		local laagste = if keus == 1 then s1 else s2
+		return laagste > GAT + 1
 	end)
 	if not m.Parent then return end
-	-- 2 door het poortje naar een eigen plek aan de reling
+	-- 2 het gangetje in tot het poortje; instappen als het dek ruim voor het sluiten gehaald wordt
+	local gang = GANG[keus]
+	b.fase = "gang" .. keus; b.s = 0
+	volg(b, gang.ln, function()
+		local voor = voorganger(b)
+		return if voor then voor.s - GAT else gang.ln.L
+	end, function()
+		local t = tc()
+		return b.s > gang.ln.L - 1.5 and voorganger(b) == nil and t > 2 and t < T_IN - 8
+	end)
+	if not m.Parent then return end
+	-- 3 over het dek naar een vrije plek aan de reling (willekeurig rondom), naar buiten kijken
 	b.fase = "dek"; m:SetAttribute("OpDek", true)
-	local plek = A_IN0 + (math.random() * 2 - 1) * 35            -- aan de reling (rand 8.3 m), uitkijken
-	local naarPlek = {pp(7.4, A_IN0, Z_I)}
-	for _, q in boog(A_IN0, plek, 7.4) do table.insert(naarPlek, q) end
-	table.insert(naarPlek, pp(7.1 + math.random() * 0.6, plek, Z_I))
+	local vrije = {}
+	for _, p in PLEKKEN do if p.b == nil or not p.b.model.Parent or p.b.fase ~= "dek" and p.b.fase ~= "rit" then p.b = nil; table.insert(vrije, p) end end
+	local plek = if #vrije > 0 then vrije[math.random(#vrije)] else PLEKKEN[math.random(#PLEKKEN)]
+	plek.b = b
+	local naarPlek = {pp(7.4, gang.poort, Z_I)}
+	for _, q in boog(gang.poort, plek.a, 7.4) do table.insert(naarPlek, q) end
+	table.insert(naarPlek, pp(7.3 + math.random() * 0.4, plek.a, Z_I))
 	vrijLopen(b, naarPlek)
 	hum:Move(Vector3.zero)
 	task.wait(0.6)
 	local hh = m:FindFirstChild("HumanoidRootPart") :: BasePart?
-	if hh then   -- naar buiten kijken (weg van de kern), zoals op de echte Pagode
+	if hh then
 		local uit = Vector3.new(hh.Position.X - CX * S, 0, hh.Position.Z + CY * S).Unit
 		hum.AutoRotate = false
 		hh.CFrame = CFrame.lookAt(hh.Position, hh.Position + uit)
@@ -237,11 +282,14 @@ local function rijEnRit(b: Bezoeker)
 	if not m.Parent then return end
 	zetVast(b, false); m:SetAttribute("OpDek", false)
 	hum.AutoRotate = true
-	-- 3 uitstappen via uit0 en de uitgangstrap, door het park terug naar het begin van de rij (later: andere attractie)
-	b.fase = "uit"
+	-- 4 uitstappen via het dichtstbijzijnde uitstappoortje en de uitgangstrap, ommetje, weer achter in de rij
+	b.fase = "uit"; plek.b = nil
 	task.wait(math.random() * 4)
-	local uitweg = boog(hoekNu(b), A_UIT0, 7.3)
-	for _, q in UIT do table.insert(uitweg, q) end
+	local a = hoekNu(b)
+	local poort = if math.abs((a - A_UIT0 + 180) % 360 - 180) <= math.abs((a - A_UIT1 + 180) % 360 - 180) then A_UIT0 else A_UIT1
+	local uitweg = boog(a, poort, 7.3)
+	for _, q in {pp(9.6, poort, Z_I), pp(10.25, poort, Z_I)} do table.insert(uitweg, q) end
+	for k = 4, #UIT do table.insert(uitweg, UIT[k]) end
 	vrijLopen(b, uitweg)
 	b.fase = "park"
 	vrijLopen(b, OMMETJE)
@@ -259,7 +307,7 @@ local function nieuw()
 		if d:IsA("BasePart") then d.Anchored = false; d.CollisionGroup = "Bezoekers"; d.CanTouch = false end
 		if d:IsA("Script") or d:IsA("LocalScript") then d:Destroy() end
 	end
-	hum.WalkSpeed = 5 + math.random() * 2.5
+	hum.WalkSpeed = 5.5 + math.random() * 2
 	hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 	m:PivotTo(CFrame.new(wereld(ROUTE[1])))
 	m.Parent = map
@@ -281,6 +329,8 @@ local function speler(plr: Player)
 	plr.CharacterAdded:Connect(function(ch)
 		task.wait(0.5)
 		for _, d in ch:GetDescendants() do if d:IsA("BasePart") then d.CollisionGroup = "Spelers" end end
+		local h = ch:FindFirstChildOfClass("Humanoid")
+		if h then h.WalkSpeed = SPELER_SNELHEID end      -- Daan: "laat mij even snel lopen als zij"
 		ch.DescendantAdded:Connect(function(d) if d:IsA("BasePart") then d.CollisionGroup = "Spelers" end end)
 	end)
 end
