@@ -1,8 +1,9 @@
 --!strict
--- PagodeBeleving (StarterPlayerScripts): rit-ervaring voor wie op de gondel staat (Daan 17 nov: "rit-ervaring").
--- Korte tekst in beeld (Daan: "gewoon in je beeld alleen de tekst"): welkom, hekjes gaan dicht, uitgang. Geen camera-effect
--- (Daan: "die camera is niet top").
--- Leest Pagode.FaseLokaal (gezet door PagodeRitClient) en de positie van Gondel.Kern; verandert niets aan de rit zelf.
+-- PagodeBeleving (StarterPlayerScripts): tekst in beeld voor wie op de gondel staat (Daan 17 nov: "gewoon in het beeld,
+-- iets vets en natuurlijk, in het Engels en dan vertalen"). Bij het instappen een titel: groot PAGODE in goudkleurige
+-- schreefletters met daaronder "Welcome aboard"; vlak voor vertrek "Gates closing"; na de rit "Exit: follow the signs".
+-- Teksten zijn Engels; de vertaling (nl) staat in LocalizationService.PagodeTeksten (maak_ritscript), Roblox vertaalt
+-- automatisch naar de taal van de speler (AutoLocalize). Leest Pagode.FaseLokaal en Gondel.Kern; verandert niets aan de rit.
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -12,32 +13,37 @@ local pag = workspace:WaitForChild("Pagode") :: Model
 local kern = (pag:WaitForChild("Gondel") :: Model):WaitForChild("Kern") :: BasePart
 local plr = Players.LocalPlayer
 
-local TEKST = {
-	welkom = "Welkom in de Pagode",
-	sluiten = "De hekjes gaan dicht",
-	terug = "Uitgang: volg de borden",
-}
-
--- alleen tekst in beeld, met een lichte schaduw voor leesbaarheid
+local GOUD = Color3.fromRGB(232, 196, 120)
 local gui = Instance.new("ScreenGui"); gui.Name = "PagodeOmroep"; gui.ResetOnSpawn = false; gui.IgnoreGuiInset = true
-local lab = Instance.new("TextLabel"); lab.AnchorPoint = Vector2.new(0.5, 1); lab.Position = UDim2.new(0.5, 0, 1, -120)
-lab.Size = UDim2.fromOffset(600, 30); lab.BackgroundTransparency = 1; lab.Font = Enum.Font.SourceSansSemibold; lab.TextSize = 24
-lab.TextColor3 = Color3.new(1, 1, 1); lab.TextStrokeColor3 = Color3.new(0, 0, 0); lab.TextStrokeTransparency = 1
-lab.TextTransparency = 1; lab.Text = ""; lab.Parent = gui
+
+local function label(tekst: string, font: Enum.Font, grootte: number, y: number, kleur: Color3): TextLabel
+	local l = Instance.new("TextLabel"); l.AnchorPoint = Vector2.new(0.5, 0.5); l.Position = UDim2.new(0.5, 0, y, 0)
+	l.Size = UDim2.new(1, 0, 0, grootte + 8); l.BackgroundTransparency = 1; l.Font = font; l.TextSize = grootte
+	l.TextColor3 = kleur; l.TextStrokeColor3 = Color3.new(0, 0, 0); l.TextStrokeTransparency = 1; l.TextTransparency = 1
+	l.Text = tekst; l.Parent = gui
+	return l
+end
+-- titel (eigennaam, niet vertalen) en onderregel; korte meldingen onderin
+local titel = label("P A G O D E", Enum.Font.Bodoni, 64, 0.30, GOUD); titel.AutoLocalize = false
+local onder = label("Welcome aboard", Enum.Font.Bodoni, 26, 0.30 + 0.075, Color3.fromRGB(250, 244, 230))
+local melding = label("", Enum.Font.SourceSansSemibold, 24, 0.84, Color3.new(1, 1, 1))
 gui.Parent = plr:WaitForChild("PlayerGui")
 
 local volg = 0
-local function zeg(sleutel: string)
+local function toon(labels: {TextLabel}, duur: number)
 	volg += 1; local mijn = volg
-	lab.Text = TEKST[sleutel]
-	local inn = TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	TweenService:Create(lab, inn, {TextTransparency = 0, TextStrokeTransparency = 0.7}):Play()
-	task.delay(4, function()
+	for k, l in labels do
+		local inn = TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out, 0, false, (k - 1) * 0.5)
+		TweenService:Create(l, inn, {TextTransparency = 0, TextStrokeTransparency = 0.75}):Play()
+	end
+	task.delay(duur, function()
 		if mijn ~= volg then return end
-		local uit = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-		TweenService:Create(lab, uit, {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
+		for _, l in labels do
+			TweenService:Create(l, TweenInfo.new(1.0, Enum.EasingStyle.Sine, Enum.EasingDirection.In), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
+		end
 	end)
 end
+local function meld(tekst: string) melding.Text = tekst; toon({melding}, 3.5) end
 
 -- staat de speler op het dek? (binnen de rand, op dekhoogte t.o.v. de kern)
 local function opDek(): boolean
@@ -48,7 +54,6 @@ local function opDek(): boolean
 	return math.sqrt(rel.X * rel.X + rel.Z * rel.Z) < 8.3 * S and rel.Y > 6 and rel.Y < 16
 end
 
--- fasen volgen: teksten alleen voor wie aan boord is
 local vorige, welkomGezegd, gereden = "", false, false
 RunService.Heartbeat:Connect(function()
 	local fase = pag:GetAttribute("FaseLokaal") :: string?
@@ -58,11 +63,11 @@ RunService.Heartbeat:Connect(function()
 		if vorige ~= "instappen" then welkomGezegd = false end
 		if aanBoord and not welkomGezegd then
 			welkomGezegd = true
-			zeg(gereden and "terug" or "welkom")
+			if gereden then meld("Exit: follow the signs") else toon({titel, onder}, 4.5) end
 		end
 		if not aanBoord then gereden = false end
 	elseif fase ~= vorige and aanBoord then
-		if fase == "sluiten" then zeg("sluiten") end
+		if fase == "sluiten" then meld("Gates closing") end
 		if fase == "omhoog" then gereden = true end
 	end
 	vorige = fase

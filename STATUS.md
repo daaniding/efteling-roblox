@@ -280,8 +280,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (terugzetten = map terug naar workspace, of bomen_pagode.luau opnieuw draaien). Tuin langs het laantje blijft.
   - Rit-ervaring (17 nov, Daan): PagodeBeleving (LocalScript, roblox/PagodeBeleving.client.luau): omroepteksten onderin
     beeld voor wie op het dek staat. Na Daan ("camera niet top", "tekst te AI, gewoon alleen de tekst"): camera-effect weg;
-    alleen losse witte tekst met lichte schaduw, kort: "Welkom in de Pagode", "De hekjes gaan dicht", "Uitgang: volg de
-    borden" (na de rit). Eerdere test: teksten op het juiste moment, geen scriptfouten. Geen zitbanken: in de on-ride video staan mensen langs de
+    alleen tekst in beeld. Daarna (Daan: "iets vets en natuurlijk, in het Engels en dan vertalen"): bij het instappen een
+    titel "P A G O D E" (Bodoni, goud, 64) met "Welcome aboard"; "Gates closing" voor vertrek; "Exit: follow the signs"
+    na de rit. Engels als bron, vertaling nl in LocalizationService.PagodeTeksten (AutoLocalize). Play: titel zichtbaar
+    bij instappen, nl-vertaling werkt ("Welkom aan boord", "De hekjes gaan dicht"). Geen zitbanken: in de on-ride video staan mensen langs de
     reling. Fotomoment: pas als het uitzicht (buurattracties) er is. Echte omroepstem: niet mogelijk (geen TTS in Roblox).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"

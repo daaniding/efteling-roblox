@@ -337,6 +337,18 @@ for _, n in ipairs({{"Voetstappen", "MuziekKiezer", "PagodeBeleving"}}) do local
 local lv = Instance.new("LocalScript"); lv.Name = "Voetstappen"; lv.Source = [==[{bronv}]==]; lv.Parent = sps
 local lm = Instance.new("LocalScript"); lm.Name = "MuziekKiezer"; lm.Source = [==[{bronm}]==]; lm.Parent = sps
 local lb = Instance.new("LocalScript"); lb.Name = "PagodeBeleving"; lb.Source = [==[{bronb}]==]; lb.Parent = sps
+-- vertalingen voor de Engelse teksten in PagodeBeleving (Roblox vertaalt automatisch naar de taal van de speler)
+do
+  local LS = game:GetService("LocalizationService")
+  local oudT = LS:FindFirstChild("PagodeTeksten"); if oudT then oudT:Destroy() end
+  local lt = Instance.new("LocalizationTable"); lt.Name = "PagodeTeksten"; lt.SourceLocaleId = "en-us"
+  lt:SetEntries({{
+    {{Key = "", Source = "Welcome aboard", Context = "", Values = {{nl = "Welkom aan boord"}}}},
+    {{Key = "", Source = "Gates closing", Context = "", Values = {{nl = "De hekjes gaan dicht"}}}},
+    {{Key = "", Source = "Exit: follow the signs", Context = "", Values = {{nl = "Uitgang: volg de borden"}}}},
+  }})
+  lt.Parent = LS
+end
 local n = 0; for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") then n += 1 end end
 return "Pagode rijklaar: gondel " .. n .. " delen, cilinders " .. #cils:GetChildren()
 '''
