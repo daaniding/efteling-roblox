@@ -57,7 +57,7 @@ end
 
 -- muziek aan boord: speelt vanuit de gondel (hangt aan de kern, reist mee), zwelt aan bij vertrek en sterft weg bij aankomst
 -- (Daan 17 nov: "waar is de muziek in de pagode zelf"). Ruimtelijk: aan boord duidelijk, vanaf de grond niet als hij hoog is.
-local RIT_MUZIEK = 1845854732          -- APM "Plum Blossoms" (rustig, Oosters); wachtrij heeft "Fortune's Smiling"
+local RIT_MUZIEK = 1840841073          -- APM "Fortune's Smiling", zelfde als de wachtrij (Daan)
 local aanBoordMuziek = Instance.new("Sound"); aanBoordMuziek.Name = "RitMuziek"
 aanBoordMuziek.SoundId = "rbxassetid://" .. RIT_MUZIEK; aanBoordMuziek.Looped = true; aanBoordMuziek.Volume = 0
 aanBoordMuziek.RollOffMode = Enum.RollOffMode.InverseTapered; aanBoordMuziek.RollOffMinDistance = 30; aanBoordMuziek.RollOffMaxDistance = 90
