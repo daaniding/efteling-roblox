@@ -1387,3 +1387,15 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
 - Zichtrand: build/04_zichtrand.py: 2 rijen struiken op 1,9 en 3,2 m achter elke padrand (niet in attractiescenes, niet tussen dicht naast elkaar liggende paden, niet in water) = 2.335 plekken; roblox/plaats_zichtrand.luau slaat een plek over als er al een struik binnen 2 m staat -> 791 nieuwe struiken (BomenBronV3 rododendron/taxus/struik, 2,2-3,2 m) in workspace.SprookjesbosZichtrand.
 - Meting (ooghoogte, padpunt naar padpunt 13-65 m, lijn door het bos): buiten het Herautenplein 8 van 746 zichtlijnen vrij (1,1%), alle bij attractiescenes (Magische Klok/Prinsenpoort, Doornroosje, Kogeloog/Langnek, Trollenkoning) -> stap 5. Herautenplein zelf is een open plein met tuinen.
 - NOG: in Studio overdag bekijken (alleen avond-screenshots), fps-test in Play, de soortverdeling is benaderd (luchtfoto april onderscheidt loofsoorten niet). Place nog niet opgeslagen.
+
+## Sirocco (17 nov 2026) — tweede attractie van de nieuwe opbouw (models/AR_Sirocco)
+- Daan wilde Monsieur Cannibale; die is in 2021 na kritiek omgebouwd tot Sirocco (opening 26 jan 2022, zelfde rit en gebouw
+  van 1988, thema Sindbad de Zeeman). Daan: "Ja, Sirocco + foto's", "en natuurlijk de video's", "zoek ook nog blueprints".
+- Referenties: ref/eftepedia (24, lemma Sirocco), ref/eftepedia_mc (43, lemma Monsieur Cannibale: bouw 1988, dak zonder riet,
+  bovenaanzicht draaischijf), ref/commons (21 + BRON.json met licenties), ref/luchtfoto (tools/uitsnede.py: PDOK + AHN + OSM),
+  ref/osm_omgeving.json, 6 YouTube-video's (ref/video, niet in git; frames elke 2 s; contactbladen in review/).
+- Bouwtekeningen: geen openbare (eftelist 404, overheidsbijlagen gingen over iets anders). Wel de ontwerpdoorsnede B-B op
+  Eftepedia (Sirocco_doorsnede.jpg): draaischijf 14 m = 60,7 px/m -> nok 11,6 m, dakrand 3,0 m, voorvleugel 7,4 m, totaal 18,5 m.
+- Plek: dakmidden park (456,5; 191,2) m uit de luchtfoto (OSM-dak ligt ~4 m verschoven), dak 17,7 m doorsnede, voorkant
+  (opgekrulde dakvleugel, steiger) naar het ZZW, wachtrij met turquoise zeilkap om de oostkant. Brief: models/AR_Sirocco/asset-brief.md.
+- VOLGENDE: plan op de luchtfoto, blockout gebouw + draaischijf in Blender, overlay op doorsnede en luchtfoto.

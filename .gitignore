@@ -16,3 +16,4 @@ models/PR_Paden/exports/*.fbm/
 models/PR_Paden/exports/verbandveld.npz
 models/VG_Bomen/exports/*.fbm/
 models/VG_Bomen/*.blend1
+models/*/ref/video/*.mp4
