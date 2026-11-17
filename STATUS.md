@@ -298,8 +298,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Play: geladen, 0.24 bij sluiten, 0.45 tijdens omhoog. Start synchroon met de wachtrijspeakers (verschil 0.09 s).
   - Rit korter (17 nov, Daan: "elke draai duurt echt heel lang"): omhoog 35 s, boven 70 s, omlaag 35 s (was 55/200/55);
     cyclus 205 s. Staat gelijk in PagodeRitClient (FASEN), PagodeRit (CYCLUS) en PagodeBezoekers (CYCLUS).
-  - Servergondel in de stationsstand: PagodeRit zet bij de start de hele Gondel (BulkMoveTo) van de bouwstand (hoog in de
-    lucht, kern Y 130) naar de instapstand (kern Y -0.7, dek op NAP 11.3), zelfde berekening als de client. Nodig voor NPC's.
+  - Servergondel blijft in de bouwstand (kern Y 130): hem op de server naar de instapstand zetten gaf een losse arm (Daan 17 nov:
+    "de stok zit niet aan de attractie vast"; de client las de gondel half-verplaatst in). Bezoekers staan in het station op een
+    eigen onzichtbare schijf PagodeBezoekersDek (r 8.3 m, top NAP 11.3, groep Bezoekersvloer, botst alleen met Bezoekers).
+    Play: arm vast onder de gondel tijdens de rit, bezoeker op het dek op z 1.32.
   - NPC-bezoekers (17 nov, Daan: "mensen in de rij", "ze blijven gewoon bezoekers, gaan daarna naar een andere attractie",
     "een wachtrij vullen dan de ander, recht erin staan", "het stoppen om te draaien is irritant"):
     ServerScriptService.PagodeBezoekers (bron roblox/PagodeBezoekers.server.luau + route build/22_bezoekersroute.py ->

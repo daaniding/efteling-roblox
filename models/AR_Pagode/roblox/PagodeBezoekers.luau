@@ -55,6 +55,22 @@ end
 local eenrichting = pag:FindFirstChild("Eenrichting")
 if eenrichting then for _, p in eenrichting:GetDescendants() do if p:IsA("BasePart") and p.CollisionGroup == "Default" then p.CollisionGroup = "Poortdeel" end end end
 
+-- dekvloer alleen voor bezoekers: de gondel zelf blijft op de server in de bouwstand (de clients laten hem rijden; de
+-- servergondel verplaatsen gaf een losse arm als de client hem half-verplaatst inlas, Daan 17 nov). Onzichtbare schijf op
+-- instaphoogte (NAP 11.3) in het station, botst alleen met groep Bezoekers.
+if not PhysicsService:IsCollisionGroupRegistered("Bezoekersvloer") then PhysicsService:RegisterCollisionGroup("Bezoekersvloer") end
+for _, g in PhysicsService:GetRegisteredCollisionGroups() do
+	if g.name ~= "Bezoekersvloer" then PhysicsService:CollisionGroupSetCollidable("Bezoekersvloer", g.name, g.name == "Bezoekers") end
+end
+do
+	local oud = workspace:FindFirstChild("PagodeBezoekersDek"); if oud then oud:Destroy() end
+	local d = Instance.new("Part"); d.Name = "PagodeBezoekersDek"; d.Shape = Enum.PartType.Cylinder
+	d.Size = Vector3.new(1, 8.3 * 2 * S, 8.3 * 2 * S); d.Anchored = true; d.Transparency = 1; d.CanQuery = false; d.CanTouch = false
+	d.CastShadow = false; d.CollisionGroup = "Bezoekersvloer"
+	d.CFrame = CFrame.new(CX * S, 2 + Z_I * S - 0.5, -CY * S) * CFrame.Angles(0, 0, math.rad(90))
+	d.Parent = workspace
+end
+
 local function wereld(p: {number}): Vector3
 	return Vector3.new(p[1] * S, 2 + p[3] * S + 3, -p[2] * S)
 end

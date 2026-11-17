@@ -521,33 +521,6 @@ local R_DEK = 8.2 * S                          -- binnen de groene rand van de g
 
 local pag = workspace:WaitForChild("Pagode") :: Model
 
--- gondel op de server in de stationsstand zetten (zelfde berekening als PagodeRitClient, stand "instappen"): de clients
--- laten hem rijden, maar NPC-bezoekers (PagodeBezoekers) lopen op de server en hebben daar een vloer nodig.
--- De bouwstand hangt hoog in de lucht; zonder dit zakten de bezoekers door de gondel (Daan 17 nov).
-do
-	local gondel = pag:WaitForChild("Gondel") :: Model
-	local kern = gondel:WaitForChild("Kern") :: BasePart
-	local PIV = (pag:WaitForChild("AsFrame") :: CFrameValue).Value
-	local JL = pag:GetAttribute("GondelLokaal") :: Vector3
-	local DEK = 2.2 * S
-	local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(JL) end
-	local lo, hi = math.rad(70), math.rad(120)
-	for _ = 1, 50 do
-		local m = (lo + hi) / 2
-		if Jw(m).Y + DEK > Y_DEK then lo = m else hi = m end
-	end
-	local TH_D = (lo + hi) / 2
-	local jd = Jw(TH_D)
-	local CORR = Vector3.new(MIDDEN.X - jd.X, 0, MIDDEN.Z - jd.Z)
-	local onder = CFrame.new(jd + CORR) * PIV.Rotation
-	local delta = onder * kern.CFrame:Inverse()
-	local delen, cfs = {}, {}
-	for _, d in gondel:GetDescendants() do
-		if d:IsA("BasePart") then d.Anchored = true; table.insert(delen, d); table.insert(cfs, delta * d.CFrame) end
-	end
-	workspace:BulkMoveTo(delen, cfs, Enum.BulkMoveMode.FireCFrameChanged)
-end
-
 pag:SetAttribute("RitStart", workspace:GetServerTimeNow())
 
 local function iemandAanBoord(): boolean
