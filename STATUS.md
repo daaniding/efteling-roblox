@@ -296,6 +296,25 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     "RitMuziek" aan de Gondel.Kern (reist mee), zelfde nummer als de wachtrij: APM "Fortune's Smiling" 1840841073 (Daan),
     InverseTapered 30-90 studs; volume zwelt aan bij sluiten (0.25), rijden 0.4-0.45, sterft weg bij aankomst.
     Play: geladen, 0.24 bij sluiten, 0.45 tijdens omhoog. Start synchroon met de wachtrijspeakers (verschil 0.09 s).
+  - Rit korter (17 nov, Daan: "elke draai duurt echt heel lang"): omhoog 35 s, boven 70 s, omlaag 35 s (was 55/200/55);
+    cyclus 205 s. Staat gelijk in PagodeRitClient (FASEN), PagodeRit (CYCLUS) en PagodeBezoekers (CYCLUS).
+  - Servergondel in de stationsstand: PagodeRit zet bij de start de hele Gondel (BulkMoveTo) van de bouwstand (hoog in de
+    lucht, kern Y 130) naar de instapstand (kern Y -0.7, dek op NAP 11.3), zelfde berekening als de client. Nodig voor NPC's.
+  - NPC-bezoekers (17 nov, Daan: "mensen in de rij", "ze blijven gewoon bezoekers, gaan daarna naar een andere attractie",
+    "een wachtrij vullen dan de ander, recht erin staan", "het stoppen om te draaien is irritant"):
+    ServerScriptService.PagodeBezoekers (bron roblox/PagodeBezoekers.server.luau + route build/22_bezoekersroute.py ->
+    exports/bezoekersroute.json, samengevoegd met roblox/maak_bezoekers.py -> PagodeBezoekers.luau). Uiterlijk: 9 R15-modellen
+    in ServerStorage.PagodeBezoekers (HumanoidDescription, gratis catalogusitems). Tot 14 bezoekers, die blijven leven:
+    rij -> eigen plek op het dek, kijken naar buiten -> meerijden -> uitstappen via uit0 en de uitgangstrap -> ommetje door het
+    park -> weer achter in de rij (later: naar een andere attractie). De rij is een looplijn met afgelegde lengte: iedereen
+    staat 0.85 m achter zijn voorganger op de middellijn van de baan, vult van het poortje naar achteren, schuift pas op bij
+    2.2 m ruimte; sturen 4 studs vooruit (vloeiend door de bochten). Gangetje in alleen als het dek ruim voor het sluiten
+    gehaald wordt (tc < T_IN - 8). Op het dek altijd met een boog om de kern (rechtdoor = op de zitrand vast); plek aan de
+    reling (r 7.1-7.7 m, binnen 35 graden van in0), draaien naar buiten. Na het losmaken SetNetworkOwner(nil) opnieuw (anders
+    neemt de client ze over en lopen ze vast op het eenrichtingsschot); Eenrichting-schotten in groep Poortdeel. Meerijden: server verankert de HumanoidRootPart (attribuut Rijdt), elke client zet ze elk frame op
+    K_onder -> nieuwK (PagodeRitClient). NPC op het dek (OpDek) laat de ritklok ook doorlopen. Botsgroep Bezoekers botst niet
+    met Spelers, Rijdend, Bezoekers, Routemuur, Poortdeel. Play: afwijking van de looplijn max 0.44 m; rij staat ~0.9 m hart op hart vanaf het poortje; meerijders vast op r 6.4 m,
+    hoogte 9.70 boven de kern, kijkrichting 1.00 naar buiten; uitstappen -> trap -> park -> ommetje -> terug bij de aanloop.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

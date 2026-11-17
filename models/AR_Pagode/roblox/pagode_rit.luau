@@ -514,12 +514,40 @@ local Players = game:GetService("Players")
 local S = 3
 local T_IN = 60                                -- = PagodeRitClient T_IN
 local WACHT_TC = 40                            -- hier wacht hij (uitstappers hebben dan 40 s gehad); daarna nog 20 s
-local CYCLUS = T_IN + 5 + 55 + 200 + 55        -- = som van FASEN in PagodeRitClient
+local CYCLUS = T_IN + 5 + 35 + 70 + 35         -- = som van FASEN in PagodeRitClient
 local MIDDEN = Vector3.new(360.0 * S, 0, -47.5 * S)
 local Y_DEK = 2 + 1.3 * S                      -- instapniveau (NAP 11.3)
 local R_DEK = 8.2 * S                          -- binnen de groene rand van de gondel
 
 local pag = workspace:WaitForChild("Pagode") :: Model
+
+-- gondel op de server in de stationsstand zetten (zelfde berekening als PagodeRitClient, stand "instappen"): de clients
+-- laten hem rijden, maar NPC-bezoekers (PagodeBezoekers) lopen op de server en hebben daar een vloer nodig.
+-- De bouwstand hangt hoog in de lucht; zonder dit zakten de bezoekers door de gondel (Daan 17 nov).
+do
+	local gondel = pag:WaitForChild("Gondel") :: Model
+	local kern = gondel:WaitForChild("Kern") :: BasePart
+	local PIV = (pag:WaitForChild("AsFrame") :: CFrameValue).Value
+	local JL = pag:GetAttribute("GondelLokaal") :: Vector3
+	local DEK = 2.2 * S
+	local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(JL) end
+	local lo, hi = math.rad(70), math.rad(120)
+	for _ = 1, 50 do
+		local m = (lo + hi) / 2
+		if Jw(m).Y + DEK > Y_DEK then lo = m else hi = m end
+	end
+	local TH_D = (lo + hi) / 2
+	local jd = Jw(TH_D)
+	local CORR = Vector3.new(MIDDEN.X - jd.X, 0, MIDDEN.Z - jd.Z)
+	local onder = CFrame.new(jd + CORR) * PIV.Rotation
+	local delta = onder * kern.CFrame:Inverse()
+	local delen, cfs = {}, {}
+	for _, d in gondel:GetDescendants() do
+		if d:IsA("BasePart") then d.Anchored = true; table.insert(delen, d); table.insert(cfs, delta * d.CFrame) end
+	end
+	workspace:BulkMoveTo(delen, cfs, Enum.BulkMoveMode.FireCFrameChanged)
+end
+
 pag:SetAttribute("RitStart", workspace:GetServerTimeNow())
 
 local function iemandAanBoord(): boolean
@@ -533,6 +561,9 @@ local function iemandAanBoord(): boolean
 			if r < R_DEK and p.Y > Y_DEK and p.Y < Y_DEK + 9 then return true end
 		end
 	end
+	-- NPC-bezoekers op het dek tellen ook (PagodeBezoekers: attribuut OpDek)
+	local b = workspace:FindFirstChild("PagodeBezoekersActief")
+	if b then for _, m in b:GetChildren() do if m:GetAttribute("OpDek") then return true end end end
 	return false
 end
 
@@ -551,8 +582,8 @@ local sps = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"
 local oudC = sps:FindFirstChild("PagodeRitClient"); if oudC then oudC:Destroy() end
 local lc = Instance.new("LocalScript"); lc.Name = "PagodeRitClient"; lc.Source = [==[--!strict
 -- PagodeRitClient (StarterPlayerScripts): laat de Pagode rijden op deze client.
--- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 60 s (Daan), sluiten 5 s, omhoog 55 s, boven 200 s,
--- omlaag 55 s; twee volle draaien over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
+-- Ritverloop naar de on-ride video _Wz0aORIVaM: instappen 60 s (Daan), sluiten 5 s, omhoog 35 s, boven 70 s, omlaag 35 s
+-- (echte rit 5:10, ingekort: Daan 17 nov "elke draai duurt echt heel lang"); twee volle draaien over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
 -- Alles verankerd en verplaatst met BulkMoveTo; de stand volgt uit workspace:GetServerTimeNow() - RitStart (zelfde voor iedereen).
 -- Wie op het dek staat wordt elk frame met de gondel meegenomen (geen wegzakken, geen trillen).
 local RunService = game:GetService("RunService")
@@ -582,6 +613,7 @@ local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1)
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)
 local K0 = kern.CFrame
+local K_ONDER = CFrame.new(Jw(TH_D) + schuif(TH_D)) * PIV.Rotation      -- stationsstand (= servergondel, PagodeRit)
 local poorten = gondel:WaitForChild("Poorten")
 local gDelen, gRel = {}, {}
 for _, p in gondel:GetDescendants() do
@@ -639,8 +671,8 @@ local function staaf(p: BasePart, a: Vector3, r: Vector3, L: number)
 end
 
 local T_IN = 60                                       -- instappen: hekjes open (Daan 17 nov: "doe maar zestig")
-local FASEN = {{"instappen", T_IN}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
-local CYCLUS, T_RIT = 0, 55 + 200 + 55
+local FASEN = {{"instappen", T_IN}, {"sluiten", 5}, {"omhoog", 35}, {"boven", 70}, {"omlaag", 35}}   -- = PagodeRit en PagodeBezoekers
+local CYCLUS, T_RIT = 0, 35 + 70 + 35
 local RONDJES = 2                                   -- twee hele rondjes per rit (Daan: "moet hij niet wat draaien"); heel getal: poortjes eindigen weer voor het station
 for _, f in FASEN do CYCLUS += f[2] :: number end
 local function e(t: number): number return (1 - math.cos(math.pi * math.clamp(t, 0, 1))) / 2 end
@@ -679,9 +711,11 @@ local wind = geluid and geluid:FindFirstChild("wind") :: Sound?
 if brom then brom:Play() end
 if wind then wind:Play() end
 local vorigeFase, vorigOpen, thVorig = "", false, TH_D
-local huidigeGroep = "Default"
-plr.CharacterAdded:Connect(function() huidigeGroep = "Default" end)
+local huidigeGroep = ""
+plr.CharacterAdded:Connect(function() huidigeGroep = "" end)
 local cfs = table.create(#gDelen)
+-- NPC-bezoekers die meerijden (PagodeBezoekers: attribuut Rijdt, verankerd op de servergondel in de stationsstand = K_ONDER)
+local meeRel: {[Model]: CFrame} = {}      -- geen zwakke sleutels: Instance-sleutels worden dan weggegooid (rel drijft weg)
 local acfs = table.create(#aDelen)
 
 RunService.PreSimulation:Connect(function(dtF: number)
@@ -704,13 +738,24 @@ RunService.PreSimulation:Connect(function(dtF: number)
 		if r then hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame; rijdt = true end
 	end
 	-- wie meerijdt botst niet met de onzichtbare routemuren (de gondel zwaait door de stationshekken)
-	local groep = rijdt and "Rijdend" or "Default"
+	local groep = rijdt and "Rijdend" or "Spelers"                -- Spelers: NPC-bezoekers lopen erdoorheen (PagodeBezoekers)
 	if ch and groep ~= huidigeGroep then
 		for _, p in ch:GetDescendants() do if p:IsA("BasePart") then p.CollisionGroup = groep end end
 		huidigeGroep = groep
 	end
 	for i, rel in gRel do cfs[i] = nieuwK * rel end
 	workspace:BulkMoveTo(gDelen, cfs, Enum.BulkMoveMode.FireCFrameChanged)
+	local bezoekers = workspace:FindFirstChild("PagodeBezoekersActief")
+	if bezoekers then
+		for _, m in bezoekers:GetChildren() do
+			if m:IsA("Model") and m:GetAttribute("Rijdt") then
+				local rel = meeRel[m]
+				if not rel then rel = K_ONDER:ToObjectSpace(m:GetPivot()); meeRel[m] = rel end
+				m:PivotTo(nieuwK * rel)
+			elseif m:IsA("Model") and meeRel[m] then meeRel[m] = nil end
+		end
+		for m in meeRel do if m.Parent ~= bezoekers then meeRel[m] = nil end end
+	end
 	for i, rel in aRel do acfs[i] = A * rel end
 	workspace:BulkMoveTo(aDelen, acfs, Enum.BulkMoveMode.FireCFrameChanged)
 	for _, c in cils do
