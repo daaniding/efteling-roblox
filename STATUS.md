@@ -178,6 +178,9 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (r 11.42, 106 gr, recht op het station), 1.2 m vrij, met botsing rondom. Play: avatar loopt bovenste rij -> trapkop ->
     tourniquets -> gangetje -> poortje zonder vast te lopen; meerijden met de nieuwe muren: drift < 0.1 stud.
     Omgeving 83791895400022.
+  - Laanmond (17 nov, Daan: "die paaltjes weg en die fence moet niet zo ver doorlopen"): de twee paaltjes in de mond van
+    het laantje weg; tuinreling begint nu op de hoek met het aanloophek (r 17.75, was r 16 en stak de doorgang in).
+    Omgeving 87273054965086.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

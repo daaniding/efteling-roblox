@@ -419,7 +419,7 @@ def build():
     lijn.append(pt(25.0, (aR(25.0) + aW(25.0)) / 2, ztop(N_RIJ - 1) + 0.3))      # tot het eind van de laanmuur
     spijlenhek("AR_Pagode_O_hek_laan", lijn)
     # lage reling + rotsblokken aan de tuinkant van het laantje (video 0:22-0:35)
-    reling("AR_Pagode_O_reling_tuin", [pt(r, aL(r) - math.degrees(0.15 / r), Z_P) for r in (16.0, 19.0, 22.0, 25.0)])
+    reling("AR_Pagode_O_reling_tuin", [pt(r, aL(r) - math.degrees(0.15 / r), Z_P) for r in (17.75, 19.5, 22.0, 25.0)])   # begint op de hoek met het aanloophek (Daan: "niet zo ver doorlopen")
     for k in range(22):
         r = 16.0 + k * 0.45
         steen(f"AR_Pagode_O_rand_{k:02d}", pt(r, aL(r) - math.degrees(0.35 / r), Z_P + 0.05), (0.28, 0.22, 0.16))
@@ -481,9 +481,7 @@ def build():
         vrij(f"bordpaal{k}", p, 0.06)
     bord_mesh("AR_Pagode_O_ingangsbord", tex.BORD_OMTREK(48), breed, 1.05, 0.07, mid + Vector((0, 0, 2.2)), rot, "ingangsbord")
     doos("AR_Pagode_O_regelbord", pr + fz * 0.05 + Vector((0, 0, 1.45)), (0.02, 0.3, 0.55), "bord_blauw", rot)
-    for k, dt in enumerate((-0.55, 0.0, 0.55)):                     # paaltjes in de mond van het laantje (0:04-0:13)
-        if dt == 0.0: continue                                        # twee paaltjes, 1.6 m ertussen (avatar 1.27 m)
-        p = pt(16.2, a_c(16.2) + math.degrees(dt * 1.45 / 16.2), Z_P); paaltje(f"AR_Pagode_O_paaltje{k}", p); vrij(f"paaltje{k}", p, 0.05, bewust=True)
+    # paaltjes in de mond van het laantje weg (Daan 17 nov: "die paaltjes weg", zaten in de doorgang)
     # afvalbakken: hoge bak rechts van het bord op het plein (0:02), groene bakken met embleem tegen de hekken (0:49-0:52)
     aa = A_BORD - 1.2; p = pt(17.15, aa, Z_P); afvalbak("AR_Pagode_O_bak_plein", p, math.radians(aa - 90), hoog=True); vrij("bak_plein", p, 0.3)   # rechts voor het bord
     for naam, r, aa, z in (("bak_bordes", 13.72, 101.5, Z_I), ("bak_zuid", 13.72, 151.0, Z_I), ("bak_onder", 26.65, 155.6, Z_P + 0.02)):
