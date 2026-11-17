@@ -14,7 +14,7 @@ OWNER = "phase:10_station"
 CX, CY = 360.0, 47.5
 AS = (320.5, 58.5)
 R_BIN, R_RAND, R_VL = 8.1, 8.9, 10.6
-Z_VLOER, Z_INSTAP = -0.65, 1.3
+Z_VLOER, Z_INSTAP = 0.45, 1.3          # bakvloer NAP 10.45: 10 cm onder de gondel (Daan 17 nov: "het midden hoeft geen gat te zijn"; was -0.65)
 A_SLEUF = math.degrees(math.atan2(AS[1] - CY, AS[0] - CX))       # ~164.4 graden
 
 

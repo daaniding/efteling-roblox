@@ -265,6 +265,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Omgeving 77125367267740 (43 delen, 141k driehoeken). Terrein in de tuin naar NAP 9.8 (was 8.95, planten zweefden);
     maak_plaatsscript: tuincap alleen als niet VLAK. Vergelijking video 0:20: laanmuur, niwaki, struiken, bamboewand, bomen
     erboven klopt. fps-meting in Studio onbetrouwbaar (venster niet in focus: 15 fps-rem).
+  - Bak (17 nov, Daan: "het midden hoeft geen gat te zijn"): bakvloer van NAP 9.35 naar 10.45 (10_station Z_VLOER 0.45),
+    10 cm onder de laagste onderkant van de gondel in het station (gemeten: PG_onderkant NAP 10.55; arm komt niet lager
+    boven de bak). Station 103886626413495.
+  - LATER (Daan: "de bebossing is voor nu goed, maar moet later misschien beter"): bomen verfijnen (meer soorten, beuken,
+    exacte posities/hoogtes uit AHN-boomhoogtes of een zomerluchtfoto, ondergroei).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
