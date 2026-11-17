@@ -73,6 +73,10 @@ def build():
     # 5 uitgangskant en instapkant scheiden: dwars over de vlonder op 99.6 graden, en het perk afschermen (r 10.65, 54-99.6)
     hek("AR_Pagode_R_om_scheiding", [pt(9.05, 99.6, Z_I), pt(10.65, 99.6, Z_I)], h=1.0)
     hek("AR_Pagode_R_om_perk", boog(10.65, 53.7, 99.6, Z_I, 1.5), h=1.0)                               # vanaf het eind van het oosthek
+    # perk (modder) ook aan de zijkanten dicht (Daan 17 nov: "links van het huisje moeten ook hekjes bij die modder"):
+    # bordes-kant op 99.6 graden en uitgangspad-kant op 53.7 graden, van het vlonderhek tot de pleinmuur
+    hek("AR_Pagode_R_om_perk_bordes", [pt(10.65, 99.6, Z_I), pt(14.2, 99.6, Z_I)], h=1.0)
+    hek("AR_Pagode_R_om_perk_uitgang", [pt(10.9, 54.2, Z_P), pt(14.2, 54.2, Z_P)], h=1.0)        # uitgangspad ligt op padhoogte
     # lampen en meubilair zonder de weggehaalde stukken
     def bestaat(x, y): return any(o.name.startswith("AR_Pagode_O_lamp") and (Vector((x, y)) - o.matrix_world.translation.xy).length < 0.6
                                   for o in bpy.data.objects)

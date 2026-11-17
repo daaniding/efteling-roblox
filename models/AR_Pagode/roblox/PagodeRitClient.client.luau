@@ -1,6 +1,6 @@
 --!strict
 -- PagodeRitClient (StarterPlayerScripts): laat de Pagode rijden op deze client.
--- Ritverloop naar de on-ride video _Wz0aORIVaM (5 min): instappen 25 s (hekken open), sluiten 5 s, omhoog 55 s, boven 180 s,
+-- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 25 s, sluiten 5 s, omhoog 55 s, boven 200 s,
 -- omlaag 55 s; een volle draai over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
 -- Alles verankerd en verplaatst met BulkMoveTo; de stand volgt uit workspace:GetServerTimeNow() - RitStart (zelfde voor iedereen).
 -- Wie op het dek staat wordt elk frame met de gondel meegenomen (geen wegzakken, geen trillen).
@@ -87,8 +87,8 @@ local function staaf(p: BasePart, a: Vector3, r: Vector3, L: number)
 	p.CFrame = CFrame.lookAt(a + r * (L / 2), a + r * L) * CFrame.Angles(0, math.pi / 2, 0)
 end
 
-local FASEN = {{"instappen", 25}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 180}, {"omlaag", 55}}
-local CYCLUS, T_RIT = 0, 55 + 180 + 55
+local FASEN = {{"instappen", 25}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
+local CYCLUS, T_RIT = 0, 55 + 200 + 55
 for _, f in FASEN do CYCLUS += f[2] :: number end
 local function e(t: number): number return (1 - math.cos(math.pi * math.clamp(t, 0, 1))) / 2 end
 
@@ -113,6 +113,10 @@ end
 local plr = Players.LocalPlayer
 local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Include; ray.FilterDescendantsInstances = {gondel}
 local gK = K0
+local eenrichting = pag:FindFirstChild("Eenrichting")
+local schotT = eenrichting and eenrichting:FindFirstChild("tourniquet") :: BasePart?
+local schotU = eenrichting and eenrichting:FindFirstChild("uitgang") :: BasePart?
+local voorbijT, voorbijU = false, true
 local huidigeGroep = "Default"
 plr.CharacterAdded:Connect(function() huidigeGroep = "Default" end)
 local cfs = table.create(#gDelen)
@@ -164,6 +168,17 @@ RunService.PreSimulation:Connect(function()
 	local dicht = open < 0.5
 	for _, p in poortBots do p.CanCollide = dicht end
 	for _, p in bladBots do p.CanCollide = dicht end
+	-- eenrichting: een schot is alleen dicht als je er al voorbij bent (niet terug door de tourniquets, niet terug de uitgang op)
+	if hrp and eenrichting then
+		local x, y = hrp.Position.X / S - 360, -hrp.Position.Z / S - 47.5
+		local r, a = math.sqrt(x * x + y * y), math.deg(math.atan2(y, x))
+		-- schakelaar: dicht zodra je voorbij bent, pas weer open als je echt aan de goede kant terug bent (teleport/respawn)
+		if r < 12.9 and a > 95 and a < 160 then voorbijT = true elseif r > 14.2 or a < 90 or a > 165 then voorbijT = false end
+		-- uitgang: standaard dicht (ook niet van buitenaf de uitgang op), alleen open als je boven op de vlonder staat
+		if r > 11.6 then voorbijU = true elseif r < 10.6 and a > -40 and a < 0 then voorbijU = false end
+		if schotT then schotT.CanCollide = voorbijT end
+		if schotU then schotU.CanCollide = voorbijU end
+	end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)
 end)

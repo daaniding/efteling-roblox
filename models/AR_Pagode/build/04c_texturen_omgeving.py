@@ -78,5 +78,17 @@ def uitgangsbord():
     im.save(os.path.join(T, 'PG_uitgangsbord_kleur.png'))
 
 
+def uitgangsboog():
+    """breed bord boven de uitgangstrap (Daan 17 nov: "het moet duidelijk zijn waar de exit is"): zelfde huisstijl, pijl naar beneden."""
+    W, H = 1024, 320
+    im = Image.new('RGB', (W, H), TEAL); d = ImageDraw.Draw(im)
+    d.rectangle([14, 14, W - 15, H - 15], fill=ORANJE); d.rectangle([26, 26, W - 27, H - 27], fill=BLAUW)
+    tekst(d, (512, 130), 'UITGANG', ImageFont.truetype(FONT, 104), WIJN, ORANJE, 3)
+    tekst(d, (512, 245), 'EXIT  ·  AUSGANG  ·  SORTIE', ImageFont.truetype(FONT, 40), DONKER)
+    for x in (96, 928):                      # groene pijlen naar beneden (de trap af)
+        d.rectangle([x - 16, 70, x + 16, 170], fill=(30, 140, 70)); d.polygon([(x - 44, 165), (x + 44, 165), (x, 250)], fill=(30, 140, 70))
+    im.save(os.path.join(T, 'PG_uitgangsboog_kleur.png'))
+
+
 if __name__ == '__main__':
-    ingangsbord(); uitgangsbord(); print('[04c] borden klaar')
+    ingangsbord(); uitgangsbord(); uitgangsboog(); print('[04c] borden klaar')

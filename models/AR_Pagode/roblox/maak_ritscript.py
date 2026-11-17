@@ -59,6 +59,37 @@ do
       local onder = p.CFrame * CFrame.new(0, -p.Size.Y / 2, 0); p.Size = Vector3.new(p.Size.X, 24, p.Size.Z); p.CFrame = onder * CFrame.new(0, 12, 0)
     end
   end
+  -- gondel dicht (Daan 17 nov: "je kan door het midden en als je springt door het dak"): massieve kern en een plafond,
+  -- onzichtbaar, bewegen mee (PagodeRitClient verplaatst alle delen van de gondel)
+  do
+    local K = gondel:FindFirstChild("Kern") and gondel.Kern.CFrame or (CFrame.new(PIV:PointToWorldSpace(pag:GetAttribute("GondelLokaal"))) * PIV.Rotation)
+    for _, d in ipairs({{"kernbots", 16.4, 6.4, 24.0}, {"plafondbots", 26.5, 14.0, 14.8}}) do
+      local oud = gondel:FindFirstChild(d[1]); if oud then oud:Destroy() end
+      local p = Instance.new("Part"); p.Name = d[1]; p.Shape = Enum.PartType.Cylinder; p.Anchored = true; p.Transparency = 1
+      p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.CastShadow = false
+      p.Size = Vector3.new(d[4] - d[3], d[2] * 2, d[2] * 2)
+      p.CFrame = K * CFrame.new(0, (d[3] + d[4]) / 2, 0) * CFrame.Angles(0, 0, math.pi / 2); p.Parent = gondel
+    end
+  end
+  -- eenrichting (Daan 17 nov: "zorg dat je niet via de ingang eruit kan"): schotten die de client alleen dichtzet als je er
+  -- al voorbij bent (PagodeRitClient): tourniquets (r 13.5) en de kop van de uitgangstrap (r 10.95, -20 gr)
+  do
+    local oudE = pag:FindFirstChild("Eenrichting"); if oudE then oudE:Destroy() end
+    local fe = Instance.new("Folder"); fe.Name = "Eenrichting"; fe.Parent = pag
+    local a_t = 104.0 + math.deg(1.5 / 14.2) + math.deg(0.42 / 14.2) + math.deg(2.2 / 14.2) / 2
+    local d = math.deg(0.93 / 13.5)
+    local schotten = {
+      {"tourniquet", W(13.5, math.rad(a_t - d), 11.3), W(13.5, math.rad(a_t + d), 11.3)},
+      {"uitgang", W(10.95, math.rad(-20), 11.3) + Vector3.new(-math.sin(math.rad(-20)), 0, -math.cos(math.rad(-20))) * 1.45 * S,
+                  W(10.95, math.rad(-20), 11.3) - Vector3.new(-math.sin(math.rad(-20)), 0, -math.cos(math.rad(-20))) * 1.45 * S},
+    }
+    for _, sc in ipairs(schotten) do
+      local pa, pb = sc[2], sc[3]; local c = (pa + pb) / 2 + Vector3.new(0, 11.5, 0)
+      local p = Instance.new("Part"); p.Name = sc[1]; p.Anchored = true; p.Transparency = 1; p.CanCollide = false; p.CanQuery = false
+      p.CanTouch = false; p.Size = Vector3.new(0.4, 24, (pb - pa).Magnitude)
+      p.CFrame = CFrame.lookAt(c, c + Vector3.new(pb.X - pa.X, 0, pb.Z - pa.Z)); p.Parent = fe
+    end
+  end
   local station = pag:FindFirstChild("Station") or pag
   local oud = station:FindFirstChild("Stationpoorten"); if oud then oud:Destroy() end
   local map = Instance.new("Folder"); map.Name = "Stationpoorten"; map.Parent = station

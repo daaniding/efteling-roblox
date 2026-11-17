@@ -112,20 +112,7 @@ def build():
         for nm, z in (("boven", 1.1), ("midden", 0.6), ("onder", 0.12)):
             ringsector(f"AR_Pagode_S_hekregel_{nm}_{k}", R_RAND + 0.11, R_RAND + 0.19, Z_INSTAP + z - 0.03, Z_INSTAP + z + 0.03, b0, b1, "groen")
     # 3 tribunetrap: verhuisd naar 12_omgeving.py (11 rijen naar video + AHN)
-    # 4 stalen trap + bordes in de bak (Pagode-bak-2023.jpg): kolom, bordes 2.4 x 2.4 op z 3.6, trap vanaf de vloer
-    bx, by = CX - 1.5, CY + 1.0
-    buis("AR_Pagode_S_kolom", (bx, by, Z_VLOER - 0.05), (bx, by, 3.55), 0.25, "staal_groen", 16)
-    doos("AR_Pagode_S_bordes", (bx, by, 3.6), (2.4, 2.4, 0.12), "rooster")
-    for nm, c, s in (("n", (bx, by + 1.2, 4.15), (2.4, 0.05, 1.1)), ("o", (bx + 1.2, by, 4.15), (0.05, 2.4, 1.1)), ("z", (bx, by - 1.2, 4.15), (2.4, 0.05, 1.1))):
-        doos(f"AR_Pagode_S_bordeshek_{nm}", c, s, "hek_open")
-    # trap: 22 treden van (bx-6.5, by) op de vloer naar het bordes (west)
-    for k in range(22):
-        t = k / 21
-        x = bx - 1.2 - 5.0 * (1 - t); z = Z_VLOER + (3.6 - Z_VLOER) * t
-        doos(f"AR_Pagode_S_traptrede_{k:02d}", (x, by, z), (0.26, 1.0, 0.05), "rooster")
-    for s in (-1, 1):
-        buis(f"AR_Pagode_S_trapboom_{s}", (bx - 6.3, by + s * 0.55, Z_VLOER), (bx - 1.15, by + s * 0.55, 3.6), 0.08, "staal_groen", 8)
-        buis(f"AR_Pagode_S_trapleuning_{s}", (bx - 6.3, by + s * 0.55, Z_VLOER + 1.0), (bx - 1.15, by + s * 0.55, 4.6), 0.03, "hek", 8)
+    # 4 stalen trap + bordes in de bak: weg (Daan 17 nov: "die trap in het midden moet weg, de gondel gaat daar doorheen als hij daalt of stijgt")
     # 5 bord PAGODE: verhuisd naar 12_omgeving.py (staat bij het plein, video 0:13)
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=m)

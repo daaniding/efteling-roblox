@@ -291,7 +291,19 @@ def controlehuisje(naam, hc, rot):
     een opengeklapt raam aan de voorkant, toonbank, rode kroonrand met witte motieven (PG_huisrand) en gouden knoppen."""
     f = Vector((math.cos(rot), math.sin(rot), 0)); tg = Vector((-f.y, f.x, 0)); B, D = 1.7, 1.5
     doos(f"{naam}_vloer", hc + Vector((0, 0, 0.05)), (D + 0.06, B + 0.06, 0.1), "groen", rot)
-    doos(f"{naam}_binnen", hc + Vector((0, 0, 1.35)), (D - 0.2, B - 0.2, 2.5), "onderkant", rot)
+    # binnen: geen dichte blok meer maar een echte bediening (video 0:44: man achter de lessenaar, lamp aan het plafond)
+    doos(f"{naam}_achterwand", hc - f * (D / 2 - 0.08) + Vector((0, 0, 1.3)), (0.04, B - 0.2, 2.4), "onderkant", rot)
+    doos(f"{naam}_plafond", hc + Vector((0, 0, 2.45)), (D - 0.1, B - 0.1, 0.04), "onderkant", rot)
+    doos(f"{naam}_lessenaar", hc + f * (D / 2 - 0.35) + Vector((0, 0, 0.5)), (0.45, B - 0.3, 1.0), "groen", rot)
+    doos(f"{naam}_paneel", hc + f * (D / 2 - 0.4) + Vector((0, 0, 1.03)), (0.5, B - 0.4, 0.06), "staal", rot)
+    for k, dt in enumerate((-0.45, -0.25, -0.05, 0.15, 0.35)):
+        rol_k = ("rood", "lamp_groen", "goud", "lamp_groen", "rood")[k]
+        buis(f"{naam}_knop{k}", hc + f * (D / 2 - 0.42) + tg * dt + Vector((0, 0, 1.06)), hc + f * (D / 2 - 0.42) + tg * dt + Vector((0, 0, 1.1)), 0.035, rol_k, 8)
+    doos(f"{naam}_scherm", hc + f * (D / 2 - 0.5) + tg * 0.45 + Vector((0, 0, 1.25)), (0.04, 0.36, 0.26), "dak_donker", rot - 0.35)
+    doos(f"{naam}_stoelzit", hc - f * 0.15 + Vector((0, 0, 0.55)), (0.45, 0.45, 0.06), "rood", rot)
+    doos(f"{naam}_stoelrug", hc - f * 0.38 + Vector((0, 0, 0.85)), (0.05, 0.45, 0.55), "rood", rot)
+    buis(f"{naam}_stoelpoot", hc - f * 0.15 + Vector((0, 0, 0.1)), hc - f * 0.15 + Vector((0, 0, 0.52)), 0.03, "staal", 8)
+    buis(f"{naam}_lamp", hc + Vector((0, 0, 2.3)), hc + Vector((0, 0, 2.43)), 0.16, "lamp", 12, 0.06)
     for zijde, (n, breed) in enumerate(((f, B), (-f, B), (tg, D), (-tg, D))):
         t2 = Vector((-n.y, n.x, 0)); c = hc + n * ((D if breed == B else B) / 2)
         r2 = math.atan2(n.y, n.x)
@@ -334,7 +346,26 @@ def controlehuisje(naam, hc, rot):
         for sy in (-1, 1):
             p_ = hc + f * sx * (D / 2 + 0.12) + tg * sy * (B / 2 + 0.12)
             buis(f"{naam}_pinakel{sx}{sy}", p_ + Vector((0, 0, 2.9)), p_ + Vector((0, 0, 3.12)), 0.04, "goud", 6, 0.005)
-    bol(f"{naam}_knop", hc + Vector((0, 0, 3.08)), 0.09)
+    # getrapt kroondak (video 0:44): groene en rode treden, rode band, groene koepel, gouden spits; witte vlamhoorns op de hoeken
+    z = 3.0
+    for k, (sch, h, rol_t) in enumerate(((0.92, 0.14, "groen"), (0.78, 0.2, "rood"), (0.64, 0.1, "goud"), (0.56, 0.16, "groen"), (0.44, 0.14, "rood"))):
+        doos(f"{naam}_kroon{k}", hc + Vector((0, 0, z + h / 2)), ((D + 0.2) * sch, (B + 0.2) * sch, h), rol_t, rot); z += h
+    buis(f"{naam}_koepel", hc + Vector((0, 0, z)), hc + Vector((0, 0, z + 0.32)), 0.42, "groen", 16, 0.12); z += 0.32
+    buis(f"{naam}_spitsvoet", hc + Vector((0, 0, z)), hc + Vector((0, 0, z + 0.12)), 0.1, "goud", 12, 0.07); z += 0.12
+    buis(f"{naam}_spits", hc + Vector((0, 0, z)), hc + Vector((0, 0, z + 0.55)), 0.06, "goud", 10, 0.004)
+    bol(f"{naam}_knop", hc + Vector((0, 0, z + 0.2)), 0.07)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            p_ = hc + f * sx * (D / 2 + 0.1) + tg * sy * (B / 2 + 0.1) + Vector((0, 0, 2.86))
+            uit_ = (f * sx + tg * sy).normalized()
+            buis(f"{naam}_hoorn{sx}{sy}a", p_, p_ + uit_ * 0.08 + Vector((0, 0, 0.3)), 0.07, "wit", 8, 0.04)
+            buis(f"{naam}_hoorn{sx}{sy}b", p_ + uit_ * 0.08 + Vector((0, 0, 0.3)), p_ + uit_ * 0.22 + Vector((0, 0, 0.52)), 0.04, "wit", 8, 0.008)
+            bol(f"{naam}_hoornbol{sx}{sy}", p_ + uit_ * 0.03 + Vector((0, 0, 0.12)), 0.06, "rood")
+    # witte binnenlijsten in de ramen (video: wit kozijn binnen het groene frame)
+    for zijde, (n, breed) in enumerate(((f, B), (-f, B), (tg, D), (-tg, D))):
+        c = hc + n * ((D if breed == B else B) / 2 + 0.03); r2 = math.atan2(n.y, n.x)
+        for nm, zz in (("o", 1.14), ("b", 2.24)):
+            doos(f"{naam}_witlijst{zijde}{nm}", c + Vector((0, 0, zz)), (0.02, breed - 0.16, 0.04), "wit", r2)
 
 
 def bord_mesh(naam, omtrek, breed, hoog, dik, oorsprong, rot, rol):
@@ -543,6 +574,18 @@ def build():
     bord_mesh("AR_Pagode_O_uitgangsbord", [(0, 0), (1, 0), (1, 0.82), (0.5, 0.96), (0, 0.82)], 0.55, 1.15, 0.05,
               pt(10.5, A_UIT - 12.0, Z_I + 0.75), rot + math.pi, "uitgangsbord")     # tegen het hek, rand van de vlonder
     buis("AR_Pagode_O_uitgangspaal", pt(10.5, A_UIT - 12.0, Z_I) - f * 0.04, pt(10.5, A_UIT - 12.0, Z_I + 0.8) - f * 0.04, 0.035, "hek", 6)
+    # uitgang duidelijk (Daan 17 nov): tweede staand bord bij uitstappoortje uit0, en een poort met breed UITGANG-bord over de trap
+    bord_mesh("AR_Pagode_O_uitgangsbord2", [(0, 0), (1, 0), (1, 0.82), (0.5, 0.96), (0, 0.82)], 0.55, 1.15, 0.05,
+              pt(10.5, A_UIT + 7.0, Z_I + 0.75), rot + math.pi, "uitgangsbord")
+    buis("AR_Pagode_O_uitgangspaal2", pt(10.5, A_UIT + 7.0, Z_I) - f * 0.04, pt(10.5, A_UIT + 7.0, Z_I + 0.8) - f * 0.04, 0.035, "hek", 6)
+    pz = []
+    for s in (-1, 1):
+        p_ = pt(10.95, A_UIT, Z_I + 0.12) + tg * s * 1.45; pz.append(p_)
+        buis(f"AR_Pagode_O_uitgangspoort_paal{s + 1}", p_ - Vector((0, 0, 0.12)), p_ + Vector((0, 0, 3.15)), 0.07, "hek", 10)
+        paalkop(f"AR_Pagode_O_uitgangspoort_kop{s + 1}", p_ + Vector((0, 0, 3.12)), 0.11, "hek", 0.1)
+    midden = (pz[0] + pz[1]) / 2
+    doos("AR_Pagode_O_uitgangspoort_balk", midden + Vector((0, 0, 3.0)), (0.08, 3.0, 0.08), "hek", rot)
+    bord_mesh("AR_Pagode_O_uitgangsboog", [(0, 0), (1, 0), (1, 1), (0, 1)], 2.6, 0.81, 0.05, midden - f * 0.02 + Vector((0, 0, 2.12)), rot + math.pi, "uitgangsboog")
     for k, aa in enumerate((A_UIT - 8.0, A_UIT + 30.0)):          # aan de voet van de keermuur, niet midden op het pad
         p = pt(11.55, aa, Z_P + 0.03); lantaarn(f"AR_Pagode_O_lamp_uit{k}", p); vrij(f"lamp_uit{k}", p, 0.13)
     p = pt(11.6, A_UIT + 9.0, Z_P + 0.03); afvalbak("AR_Pagode_O_bak_uit", p, rot); vrij("bak_uit", p, 0.3)

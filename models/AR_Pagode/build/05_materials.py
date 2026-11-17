@@ -56,6 +56,7 @@ ROLLEN = {
     "bord_blauw": ((0.48, 0.74, 0.80), 0.4, 0.0, None, 0),
     "ingangsbord": ((1, 1, 1), 0.4, 0.0, "ingangsbord", 0),
     "uitgangsbord": ((1, 1, 1), 0.4, 0.0, "uitgangsbord", 0),
+    "uitgangsboog": ((1, 1, 1), 0.4, 0.0, "uitgangsboog", 0),
     "breuksteen": ((1, 1, 1), 0.9, 0.0, "breuksteen", 0.9),      # keermuren wachtrij (video 0:04-0:30)
     # 14_planten
     "bamboe":    ((1, 1, 1), 0.6, 0.0, "bamboe", 0),             # bladkaart (alpha)
