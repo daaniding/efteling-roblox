@@ -1467,5 +1467,11 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   pictogrammen op de paal; twee vazen en een mand citroenen. Atlas textures/SI_bord_kleur.png (07t_bord.py, 110695007842617);
   objecten met eigen UV's krijgen o["uv_klaar"] en 05 laat ze staan. Omgeving 137519536283770.
 - Vazen + citroenmand bij de ingang weggehaald (Daan: "haal die gekke assets voor het pad weg"). Omgeving 71267590010421.
+- Sindbads boot (17 nov), Daan: "maak deze boot goed". 07_omgeving.dhow_sindbad naar ref/commons/Sinbad_in_Efteling.jpg,
+  World_of_Sinbad.jpg, Sirocco_Efteling_World_of_Sinbad.jpg: 4,4 m, banaanvormige zeeg (boeg +1,25 m, achtersteven +0,95 m), ronde
+  spanten, binnenwand en dek; rode planken (romp_kleur), blauwe schubben onder aan de boeg, blauw sierpaneel met goud achter, gouden
+  rand; achtersteven krult omhoog met grote gouden veer; schuine mast, lange ra, latijnzeil met rood embleem (atlas gebied D,
+  bord_kleur 138476476235233); balen met touw, kruiken, tonnetje. Sindbad zelf nog niet (figuur later). Omgeving 74474002198959.
+  NB: op de foto's ligt rechts van de haven ook een zandstrandje met keien (World_of_Sinbad.jpg) - eerder weggehaald, nog terugzetten.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

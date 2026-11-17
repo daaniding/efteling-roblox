@@ -1,6 +1,7 @@
 """07t_bord: atlas voor het ingangsbord van de Sirocco (videoframes xloCDJYf-Tw 12-16 s: pluimvormig cremekleurig bord met
 "Sirocco" in blauw, goudbruine rand, rond gouden medaillon met schip eronder, infobord op de paal met spitsboog en pictogrammen).
-Indeling (1024 px): A bord voorkant y 0-320 | B medaillon x 0-256, y 320-576 | C infobord x 256-512, y 320-832.
+Indeling (1024 px): A bord voorkant y 0-320 | B medaillon x 0-256, y 320-576 | C infobord x 256-512, y 320-832 |
+D zeil van Sindbads dhow x 512-1024, y 320-1024 (foto's ref/commons/Sinbad_in_Efteling.jpg, World_of_Sinbad.jpg).
 De omtrek van het bord komt uit 07_omgeving (BORD_OMTREK) zodat rand en tekst precies op de vorm vallen.
 Schrijft textures/SI_bord_kleur.png. Gebruik: python3 build/07t_bord.py"""
 import os, math, random
@@ -59,6 +60,19 @@ for k, kl in enumerate(kleuren):
     x = 350 + (k % 2) * 68; y = 500 + (k // 2) * 70
     d.ellipse([x - 22, y - 22, x + 22, y + 22], fill=(250, 246, 236), outline=kl, width=6)
     d.ellipse([x - 8, y - 8, x + 8, y + 8], fill=kl)
+# D: zeil van Sindbads dhow (x 512-1024, y 320-1024): creme doek met naden en zoom, donkerrood rond embleem met gouden ring
+d.rectangle([512, 320, 1024, 1024], fill=(232, 222, 196))
+for k in range(9):                                       # naden
+    x = 520 + k * 58; d.line([(x, 324), (x, 1020)], fill=(214, 202, 172), width=3)
+d.rectangle([514, 322, 1022, 1022], outline=(196, 180, 146), width=10)
+ex, ey, er = 760, 700, 120
+d.ellipse([ex - er - 14, ey - er - 14, ex + er + 14, ey + er + 14], fill=(176, 132, 52))
+d.ellipse([ex - er, ey - er, ex + er, ey + er], fill=(120, 34, 36))
+for k in range(8):                                       # ornament in het embleem
+    a = 2 * math.pi * k / 8
+    d.ellipse([ex + 70 * math.cos(a) - 16, ey + 70 * math.sin(a) - 16, ex + 70 * math.cos(a) + 16, ey + 70 * math.sin(a) + 16], outline=(200, 150, 70), width=4)
+d.ellipse([ex - 38, ey - 38, ex + 38, ey + 38], outline=(200, 150, 70), width=6)
+d.ellipse([ex - 12, ey - 12, ex + 12, ey + 12], fill=(200, 150, 70))
 im = im.filter(ImageFilter.GaussianBlur(0.6))
 im.save(os.path.join(D, "textures", "SI_bord_kleur.png"))
 print("[07t_bord] textures/SI_bord_kleur.png")

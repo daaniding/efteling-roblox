@@ -207,36 +207,108 @@ def vijverrand(bms):
                         dd = q.co - cc; q.co = cc + Vector((dd.x * random.uniform(0.9, 1.3), dd.y * random.uniform(0.9, 1.3), dd.z * 0.55))
 
 
+def dhow_sindbad(bms):
+    """Sindbads boot naar de foto's (ref/commons/Sinbad_in_Efteling.jpg, World_of_Sinbad.jpg, Sirocco_Efteling_World_of_Sinbad.jpg,
+    eftepedia/Storm_effect_sindbad.jpg): 4,4 m lang, banaanvormige zeeg met hoge boeg en hogere achtersteven, ronde spanten;
+    donkerrode planken, blauwe schubben onder aan de boeg, blauw sierpaneel met goud langs de achterzijde, gouden rand; achtersteven
+    krult omhoog met een grote gouden veer; schuine mast met lange ra en creme latijnzeil met rood embleem (atlas gebied D);
+    lading: gebonden balen, kruiken en een tonnetje op een houten dek. Sindbad zelf komt later als figuur."""
+    x0, y0, rot = BOOT_SINDBAD
+    M = Matrix.Translation((x0, y0, 0)) @ Matrix.Rotation(rot, 4, "Z")
+    L, B = 2.2, 0.78
+    def top(x): t = abs(x) / L; return 0.55 + (1.25 if x > 0 else 0.95) * t ** 2.4
+    def bod(x): return -0.25 + 0.55 * (abs(x) / L) ** 2.2
+    def w(x): return B * max(0.0, 1 - (abs(x) / L) ** 2.2) ** 0.55
+    def p(x, f): return Vector((x, w(x) * math.sin(f), bod(x) + (top(x) - bod(x)) * (1 - math.cos(f))))
+    NX, NF = 48, 20
+    xs = [-L + 2 * L * k / NX for k in range(NX + 1)]
+    xs[0] += 0.02; xs[-1] -= 0.02
+    fs = [-math.pi / 2 + math.pi * k / NF for k in range(NF + 1)]
+    uvbm = {}
+    def vlak(rol, pts, uvs, richting=None, binnen=False):
+        bm = uvbm.setdefault(rol, bmesh.new()); uvl = bm.loops.layers.uv.verify()
+        f = bm.faces.new([bm.verts.new(M @ v) for v in pts])
+        for lp, uv in zip(f.loops, uvs): lp[uvl].uv = uv
+        f.normal_update()
+        if richting is not None and f.normal.dot(richting) < 0: f.normal_flip()
+    for a in range(NX):
+        for b in range(NF):
+            q = [p(xs[a], fs[b]), p(xs[a + 1], fs[b]), p(xs[a + 1], fs[b + 1]), p(xs[a], fs[b + 1])]
+            c = sum(q, Vector()) / 4
+            buiten = M.to_3x3() @ Vector((0, c.y, c.z - (bod(c.x) + 0.6 * (top(c.x) - bod(c.x)))))
+            zt = top(c.x); xm = c.x
+            if xm > 0.25 * L and c.z < zt - 0.22 - 0.15 * (xm / L):
+                rol, uvs = "schubben", [(v.x / 0.55, v.z / 0.55) for v in q]
+            elif -0.85 * L < xm < -0.1 * L and zt - 0.34 < c.z < zt - 0.06:
+                rol = "sierpaneel"; uvs = [((v.x + 0.85 * L) / (0.75 * L), (v.z - (top(v.x) - 0.34)) / 0.28) for v in q]
+            else:
+                rol, uvs = "romp", [(v.x / 1.2, v.z / 0.9) for v in q]
+            vlak(rol, q, uvs, buiten)
+            qi = [v + (Vector((0, -v.y, 0.6 - v.z)).normalized() * 0.05) for v in q[::-1]]        # binnenkant
+            vlak("romp", qi, [(v.x / 1.2, v.z / 0.9) for v in qi], -buiten)
+    for a in range(NX):                               # boord (bovenkant van de wand) + gouden rand
+        for zij in (-1, 1):
+            f0, f1 = zij * math.pi / 2, zij * math.pi / 2
+            u0, u1 = p(xs[a], f0), p(xs[a + 1], f0)
+            i0 = u0 + Vector((0, -zij * 0.05, 0)); i1 = u1 + Vector((0, -zij * 0.05, 0))
+            stam(bms["goud"], M @ (u0 + Vector((0, 0, 0.02))), M @ (u1 + Vector((0, 0, 0.02))), 0.035, 0.035, 6, 0.0)
+    # dek
+    zd = 0.22; dek = []
+    for k in range(NX + 1):
+        x = xs[k]
+        if bod(x) < zd - 0.02:
+            f = math.acos(max(-1, min(1, 1 - (zd - bod(x)) / (top(x) - bod(x)))))
+            dek.append((x, w(x) * math.sin(f) - 0.04))
+    for k in range(len(dek) - 1):
+        (xa, wa), (xb, wb) = dek[k], dek[k + 1]
+        q = [Vector((xa, -wa, zd)), Vector((xb, -wb, zd)), Vector((xb, wb, zd)), Vector((xa, wa, zd))]
+        vlak("dhowdek", q, [(v.x / 1.0, v.y / 1.0) for v in q], M.to_3x3() @ Vector((0, 0, 1)))
+    # boeg: punt die doorloopt; achtersteven krult omhoog met gouden veer
+    bt = p(L - 0.02, 0); stam(bms["dhow"], M @ bt, M @ (bt + Vector((0.18, 0, 0.35))), 0.06, 0.03, 6, 0.0)
+    st = p(-L + 0.02, 0); vorig = st
+    for k in range(1, 9):
+        t = k / 8; q = st + Vector((-0.25 * math.sin(t * 1.6), 0, 0.95 * t))
+        stam(bms["dhow"], M @ vorig, M @ q, 0.07 - 0.03 * t, 0.07 - 0.03 * (t + 0.125), 6, 0.0); vorig = q
+    vb = vorig                                        # veer: blad met nerf, licht gebogen, tweezijdig
+    veer = [vb + Vector((0.12 * math.sin(math.pi * t) * (1 if z else -1) * 1.0 - 0.15 * t, 0, 1.6 * t)) for t in [k / 10 for k in range(11)] for z in (0, 1)]
+    for k in range(10):
+        a, b, c2, d2 = veer[2 * k], veer[2 * k + 2], veer[2 * k + 3], veer[2 * k + 1]
+        for vs in ((a, b, c2, d2), (d2, c2, b, a)):
+            bms["goud"].faces.new([bms["goud"].verts.new(M @ v) for v in vs])
+    stam(bms["goud"], M @ vb, M @ (vb + Vector((-0.15, 0, 1.6))), 0.02, 0.008, 5, 0.0)
+    # mast, ra, zeil
+    mv = Vector((0.35, 0, zd)); mt = Vector((0.15, 0, 3.5))
+    stam(bms["dhow"], M @ mv, M @ mt, 0.07, 0.05, 8, 0.0)
+    ra0, ra1 = Vector((1.75, 0, 1.15)), Vector((-1.55, 0, 4.25))
+    stam(bms["dhow"], M @ ra0, M @ ra1, 0.05, 0.035, 6, 0.0)
+    stam(bms["touw"], M @ mt, M @ ra0.lerp(ra1, 0.55), 0.015, 0.015, 4, 0.0)
+    schoot = Vector((-1.25, 0, 1.05))
+    zeil = [ra0 + Vector((0, 0.06, 0)), ra1 + Vector((0, 0.06, 0)), schoot + Vector((0, 0.06, 0))]
+    uvD = [(0.52, 1 - 1000 / 1024), (0.98, 1 - 340 / 1024), (0.98, 1 - 1000 / 1024)]
+    uv_vlak("SI_om_dhow_zeil", "bordvlak", [([M @ v for v in zeil], uvD, M.to_3x3() @ Vector((0, -1, 0))),
+                                            ([M @ (v + Vector((0, 0.01, 0))) for v in zeil], uvD, M.to_3x3() @ Vector((0, 1, 0)))])
+    stam(bms["touw"], M @ schoot, M @ Vector((-1.6, 0, top(-1.6))), 0.012, 0.012, 4, 0.0)
+    # lading: balen (gebonden), kruiken, tonnetje
+    for (bx, by, bz, sx, sy, sz) in ((-0.55, 0.0, zd, 0.5, 0.42, 0.3), (-0.55, 0.0, zd + 0.3, 0.46, 0.4, 0.28), (-0.55, 0.0, zd + 0.58, 0.42, 0.36, 0.26),
+                                     (-1.05, 0.05, zd, 0.4, 0.36, 0.28)):
+        v = doos(bms["baal"], (bx, by, bz + sz / 2), (sx, sy, sz))
+        bmesh.ops.transform(bms["baal"], matrix=M, verts=v)
+        for t in (-0.25, 0.25):
+            v = doos(bms["touw"], (bx + t * sx, by, bz + sz / 2), (0.03, sy + 0.02, sz + 0.02)); bmesh.ops.transform(bms["touw"], matrix=M, verts=v)
+    for (kx, ky, h, r) in ((-0.05, 0.25, 0.6, 0.15), (0.05, -0.28, 0.45, 0.12), (-1.0, -0.3, 0.5, 0.13)):
+        v = cil(bms["kruik"], (kx, ky, zd), r, h, 12)
+        for q in v:
+            t = (q.co.z - zd) / h; f = 0.55 + 0.6 * math.sin(math.pi * min(1.0, t * 1.2)) if t < 0.83 else 0.5
+            q.co.x = kx + (q.co.x - kx) * f; q.co.y = ky + (q.co.y - ky) * f
+        bmesh.ops.transform(bms["kruik"], matrix=M, verts=v)
+    v = cil(bms["ton"], (0.75, 0.15, zd), 0.2, 0.42, 14); bmesh.ops.transform(bms["ton"], matrix=M, verts=v)
+    for rol, bm in uvbm.items():
+        o = obj(f"SI_om_dhow_{rol}", bm, rol); o["uv_klaar"] = 1
+
+
 def haven(bms):
-    """Sindbads zeilboot (dhow, latijnzeil) in de haven, meerpalen, boeien (gele en blauwe stuiterballen)"""
-    x, y, rot = BOOT_SINDBAD
-    M = Matrix.Translation((x, y, 0)) @ Matrix.Rotation(rot, 4, "Z")
-    bm = bmesh.new()
-    NT, L, B = 24, 2.6, 0.95
-    ringen = []
-    for k, (zz, sch) in enumerate(((-0.25, 0.55), (0.15, 0.9), (0.6, 1.0))):
-        ring = []
-        for i in range(NT):
-            t = 2 * math.pi * i / NT; cx, cy = math.cos(t), math.sin(t)
-            punt = abs(cx) ** 0.6 * (1 if cx >= 0 else -1)
-            ring.append(Vector((L * punt * sch, B * cy * sch * (1 - 0.35 * abs(cx) ** 4), zz + 0.35 * abs(cx) ** 3 * (k / 2))))
-        ringen.append(ring)
-    for k in range(2):
-        for i in range(NT):
-            j = (i + 1) % NT
-            bm.faces.new([bm.verts.new(v) for v in (ringen[k][i], ringen[k][j], ringen[k + 1][j], ringen[k + 1][i])])
-    bm.faces.new([bm.verts.new(v + Vector((0, 0, -0.25))) for v in ringen[1]])     # dek
-    bm.transform(M); obj("SI_om_dhow_romp", bm, "dhow")
-    bm2 = bmesh.new()
-    stam(bm2, Vector((0.2, 0, 0.3)), Vector((0.2, 0, 4.2)), 0.07, 0.05, 8, 0.0)
-    ra, rb = Vector((-2.4, 0, 1.4)), Vector((1.9, 0, 4.6))                        # ra van het latijnzeil
-    stam(bm2, ra, rb, 0.05, 0.04, 6, 0.0)
-    bm2.transform(M); obj("SI_om_dhow_mast", bm2, "mast")
-    bm3 = bmesh.new()
-    zeil = [ra + Vector((0.1, 0, 0)), rb - Vector((0.1, 0, 0.05)), Vector((0.4, 0, 0.95))]
-    for vs in (zeil, zeil[::-1]):
-        bm3.faces.new([bm3.verts.new(v) for v in vs])
-    bm3.transform(M); obj("SI_om_dhow_zeil", bm3, "zeil_dhow")
+    """Sindbads zeilboot in de haven (dhow_sindbad), meerpalen, boeien (gele en blauwe stuiterballen)"""
+    dhow_sindbad(bms)
     for (px, py) in ((-10.8, -7.0), (-5.5, -10.4), (3.5, -12.6), (11.8, -8.6)):     # meerpalen met touw (Meerpaal-pieck.jpg)
         stam(bms["stam"], Vector((px, py, -0.8)), Vector((px, py, 1.4)), 0.13, 0.11, 8, 0.12)
         cil(bms["touw"], (px, py, 0.9), 0.15, 0.18, 10)
@@ -370,7 +442,7 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand")
+              "bordrand", "dhow", "baal", "kruik", "ton")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)

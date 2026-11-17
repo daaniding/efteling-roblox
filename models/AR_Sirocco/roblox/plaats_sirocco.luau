@@ -8,7 +8,7 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 71267590010421, bord_kleur = 110695007842617,
+local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 74474002198959, bord_kleur = 138476476235233,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -74,8 +74,10 @@ local R = {
 	lamp_rood = {nil, nil, Color3.fromRGB(150, 44, 38), Enum.Material.Metal, false},
 	bordrand = {nil, nil, Color3.fromRGB(160, 120, 62), Enum.Material.Wood, false},
 	bordvlak = {"bord_kleur", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false},
-	vaas = {nil, nil, Color3.fromRGB(70, 118, 112), Enum.Material.Slate, true},
-	kurk = {nil, nil, Color3.fromRGB(196, 150, 100), Enum.Material.Wood, false},
+	-- Sindbads boot (07_omgeving.dhow_sindbad); romp/schubben/sierpaneel gebruiken de rittexturen, eigen UV's
+	dhowdek = {nil, nil, Color3.fromRGB(130, 92, 58), Enum.Material.WoodPlanks, false},
+	baal = {nil, nil, Color3.fromRGB(226, 212, 178), Enum.Material.Fabric, false},
+	kruik = {nil, nil, Color3.fromRGB(168, 96, 58), Enum.Material.SmoothPlastic, false},
 }
 
 local function inVijver(x, y)          -- punt-in-veelhoek (even-oneven)
