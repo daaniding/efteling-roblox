@@ -8,7 +8,7 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 103724528563937, bord_kleur = 138476476235233,
+local ID = {gebouw = 90330949979433, rit = 83505201461300, omgeving = 91728363827329, bord_kleur = 138476476235233,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -87,6 +87,8 @@ local R = {
 	afdek_zand = {nil, nil, Color3.fromRGB(226, 208, 172), Enum.Material.Sandstone, true},
 	muursteen = {nil, nil, Color3.fromRGB(150, 132, 112), Enum.Material.Slate, false},
 	boog = {nil, nil, Color3.fromRGB(18, 16, 14), Enum.Material.SmoothPlastic, false},
+	zandsteenvlak = {nil, nil, Color3.fromRGB(212, 186, 146), Enum.Material.Sandstone, true},
+	blauwglas = {nil, nil, Color3.fromRGB(90, 200, 225), Enum.Material.Neon, false},
 }
 
 local function inVijver(x, y)          -- punt-in-veelhoek (even-oneven)
@@ -156,7 +158,7 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit, Omgeving = ID.omgeving}
 		pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end)   -- anders vallen kleine delen (schubben, golf, fruit) op afstand weg
 		if not r then table.insert(onbekend, p.Name); continue end
 		p.Color = r[3]; p.Material = r[4]; p.CanCollide = r[5]; p.CanQuery = r[5]
-		p.CastShadow = rol ~= "net" and rol ~= "lantaarnglas"
+		p.CastShadow = rol ~= "net" and rol ~= "lantaarnglas" and rol ~= "blauwglas"
 		if r[1] then
 			local sa = Instance.new("SurfaceAppearance")
 			sa.ColorMap = "rbxassetid://" .. ID[r[1]]

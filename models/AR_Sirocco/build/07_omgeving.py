@@ -50,13 +50,13 @@ PLEINKANT = lambda x, y: (x < -11.0 and -13 < y < 7.0) or (x < -9.5 and y < -12.
 WACHTRIJ = [(5.8, -15.8), (8.0, -13.9), (11.0, -11.9), (13.8, -9.6), (15.6, -6.5), (15.9, -2.0), (15.9, 3.0), (15.75, 6.0)]
 for a in range(0, 181, 20):                        # haarspeldbocht om het plantvak (luchtfoto: midden (12.0; 8.0), r 3.75)
     WACHTRIJ.append((12.0 + 3.75 * math.cos(math.radians(a)), 8.0 + 3.75 * math.sin(math.radians(a))))
-for a in range(30, -61, -8):                       # meebuigend met de draaischijf naar het opstappunt (luchtfoto r ~10.2)
+for a in range(30, -59, -8):                       # meebuigend met de draaischijf naar het opstappunt (luchtfoto r ~10.2)
     WACHTRIJ.append((10.25 * math.cos(math.radians(a)), 10.25 * math.sin(math.radians(a))))
-WACHTRIJ.append((7.0 * math.cos(math.radians(-62)), 7.0 * math.sin(math.radians(-62))))          # het dek op (opening in het gaashek)
+WACHTRIJ.append((8.62 * math.cos(math.radians(-62)), 8.62 * math.sin(math.radians(-62))))        # tot de dekrand (R_DEK 8,6): niet over het dek heen (z-fighting)
 ZEIL_VANAF = 7                                     # index in WACHTRIJ waar de zeilkap begint
 B_RIJ = 2.0                                        # breedte vlonder (Roblox: looppaden ~1,5x echt)
 UITGANG_X = -2.0                                   # uitgangsbrug recht naar het zuiden (luchtfoto: muurtjes op x -3,5 en -0,5)
-UITGANG = [(UITGANG_X, -6.6), (UITGANG_X, -17.3)]
+UITGANG = [(UITGANG_X, -8.1), (UITGANG_X, -17.3)]   # begint aan de dekrand; dek iets lager dan het gebouwdek (geen z-fighting)
 HUT = (1.6, -8.5, 1.55)                             # rond hutje (luchtfoto: ronde lob aan de voorkant)
 BOOT_SINDBAD = (-7.9, -8.5, math.radians(35))   # luchtfoto: boot schuin, boeg naar het noordoosten
 
@@ -158,6 +158,23 @@ def zeilkap(bms, pts, z, lampen):
         stam(bms["stam"], a, b, 0.07, 0.07, 6, 0.06); stam(bms["stam"], e, c, 0.07, 0.07, 6, 0.06)
 
 
+def dekhek(bms):
+    """hek rond de buitenrand van het vlonderdek (r 8,5) zodat niemand van het dek het water in loopt; open bij de instap
+    (einde wachtrij, -62 graden) en de uitstap (brug, -106 graden)"""
+    R = 8.5; open_ = [(-62, 8.5), (-106, 9.5)]
+    def vrij(a): return all(abs((a - o + 180) % 360 - 180) > h for o, h in open_)
+    stukken, huidig = [], []
+    for k in range(361):
+        a = -180 + k
+        if vrij(a): huidig.append(Vector((R * math.cos(math.radians(a)), R * math.sin(math.radians(a)), 0)))
+        elif huidig: stukken.append(huidig); huidig = []
+    if huidig:
+        if stukken and abs(math.degrees(math.atan2(stukken[0][0].y, stukken[0][0].x)) + 180) < 1.5: stukken[0] = huidig + stukken[0]
+        else: stukken.append(huidig)
+    for st in stukken:
+        if len(st) > 3: leuning(bms, st, Z_PLAT)
+
+
 def hutje(bms):
     """rond hutje aan de voorkant (f_004, f_136): bamboewand met ovale raampjes, rieten kegeldak met spitsje, hek naar de brug"""
     x, y, r = HUT
@@ -185,7 +202,7 @@ def hutje(bms):
 def brug(bms):
     """stenen uitgangsbrug met lage muurtjes en afdekstenen (f_133, f_136)"""
     a, b = UITGANG
-    links, rechts = strook(bms["bestrating"], [a, b], 2.4, Z_PLAT + 0.02, 0.6)
+    links, rechts = strook(bms["bestrating"], [a, b], 2.4, Z_PLAT - 0.05, 0.6)
     for zij in (-1, 1):
         x = UITGANG_X + zij * 1.35
         doos(bms["muur"], ((x), (a[1] + b[1]) / 2, Z_PLAT + 0.35), (0.3, abs(b[1] - a[1]), 0.9))
@@ -227,34 +244,105 @@ def vijverrand(bms):
 
 
 def havenmuur(bms):
-    """zandstenen zitmuur langs het plein aan de zuidwestkant van de haven (World_of_Sinbad.jpg): ~0,5 m boven het plein, lichte
-    afdekstenen, losse ingemetselde stenen in de gevel en een boogje (donkere opening met boogstenen) waar het water onderdoor loopt"""
+    """zandstenen brug langs het plein aan de zuidwestkant van de haven (World_of_Sinbad.jpg: bezoekers zitten op de borstwering,
+    het water loopt onder een boog door): muur 0,8 m dik tot 1,0 m boven het water, brede afdekstenen, vierkante pijlers met kap aan
+    beide einden, ingemetselde stenen; in het midden een echte boogopening (r 0,8 m) met tunnel door de muur, boogstenen en sluitsteen;
+    links en rechts van de boog een roostervenster met blauw licht"""
     random.seed(11)
+    DIK, TOP = 0.8, 1.0
+    segs = []
     for k in range(len(HAVENMUUR) - 1):
         a, b = Vector((*HAVENMUUR[k], 0)), Vector((*HAVENMUUR[k + 1], 0))
         d = b - a; L = d.length; d.normalize(); n = Vector((d.y, -d.x, 0))       # naar buiten (van de vijver af)
         if in_poly(((a + b) / 2 + n * 0.5).x, ((a + b) / 2 + n * 0.5).y, VIJVER): n = -n
-        hoek = math.atan2(d.y, d.x); m = (a + b) / 2
-        c = m + n * 0.3
-        doos(bms["zandsteen"], (c.x, c.y, 0.15), (L + 0.6, 0.6, 1.1), hoek)                  # muur z -0,4 .. 0,7
-        c2 = m + n * 0.28
-        doos(bms["afdek_zand"], (c2.x, c2.y, 0.76), (L + 0.7, 0.72, 0.12), hoek)            # afdekstenen
-        for _ in range(int(L * 2.2)):                                                         # ingemetselde stenen
-            t = random.uniform(0.08, 0.92); z = random.uniform(-0.05, 0.55); sx = random.uniform(0.18, 0.34); sz = random.uniform(0.12, 0.22)
-            p = a + (b - a) * t - n * 0.02
-            if k == 2 and abs(t - 0.5) * L < 0.75: continue                                 # niet in het boogje
-            doos(bms["muursteen"], (p.x, p.y, z), (sx, 0.06, sz), hoek)
-        if k == 2:                                                                            # boogje in het midden van de muur
-            p = m - n * 0.012; r = 0.42; zb = 0.05
-            boog = [Vector((p.x + d.x * r * math.cos(t), p.y + d.y * r * math.cos(t), zb + r * math.sin(t))) for t in [math.pi * i / 12 for i in range(13)]]
-            boog = [Vector((p.x + d.x * r, p.y + d.y * r, -0.2))] + boog + [Vector((p.x - d.x * r, p.y - d.y * r, -0.2))]
-            f = bms["boog"].faces.new([bms["boog"].verts.new(v) for v in boog]); f.normal_update()
+        segs.append((a, b, d, n, L, math.atan2(d.y, d.x)))
+    for k, (a, b, d, n, L, hoek) in enumerate(segs):
+        m = (a + b) / 2
+        boog = k == 2
+        if not boog:
+            c = m + n * DIK / 2
+            doos(bms["zandsteen"], (c.x, c.y, (TOP - 0.45) / 2), (L + 0.8, DIK, TOP + 0.45), hoek)
+        else:                                          # muur met boogopening: twee blokken naast de boog, latei erboven
+            r = 0.8; zb = 0.0
+            for zij in (-1, 1):
+                lb = L / 2 - r
+                c = m + d * zij * (r + lb / 2) + n * DIK / 2
+                doos(bms["zandsteen"], (c.x, c.y, (TOP - 0.45) / 2), (lb + 0.4, DIK, TOP + 0.45), hoek)
+            # boogvulling: ring van blokjes boven de boog tot de bovenkant
+            for i2 in range(12):
+                t0 = math.pi * i2 / 12; t1 = math.pi * (i2 + 1) / 12
+                for t in (t0,):
+                    pass
+            NB = 14
+            for i2 in range(NB):
+                t0, t1 = math.pi * i2 / NB, math.pi * (i2 + 1) / NB
+                for zz in (0, 1):
+                    pass
+            # vlakken: voorkant (vijverkant) en achterkant van de borstwering boven de boog, en de tunnel
+            for kant, off in ((-1, 0.0), (1, DIK)):
+                vs = []
+                for i2 in range(NB + 1):
+                    t = math.pi * i2 / NB
+                    vs.append((m + d * r * math.cos(t) + n * off, zb + r * math.sin(t)))
+                for i2 in range(NB):
+                    (p0, z0), (p1, z1) = vs[i2], vs[i2 + 1]
+                    q = [Vector((p0.x, p0.y, z0)), Vector((p1.x, p1.y, z1)), Vector((p1.x, p1.y, TOP)), Vector((p0.x, p0.y, TOP))]
+                    f = bms["zandsteenvlak"].faces.new([bms["zandsteenvlak"].verts.new(v) for v in q]); f.normal_update()
+                    if f.normal.dot(n * kant) < 0: f.normal_flip()
+            for i2 in range(NB):                       # tunnel (donker, naar binnen gericht)
+                t0, t1 = math.pi * i2 / NB, math.pi * (i2 + 1) / NB
+                p0 = m + d * r * math.cos(t0); p1 = m + d * r * math.cos(t1)
+                q = [Vector((p0.x, p0.y, zb + r * math.sin(t0))), Vector((p1.x, p1.y, zb + r * math.sin(t1))),
+                     Vector((p1.x + n.x * DIK, p1.y + n.y * DIK, zb + r * math.sin(t1))), Vector((p0.x + n.x * DIK, p0.y + n.y * DIK, zb + r * math.sin(t0)))]
+                f = bms["boog"].faces.new([bms["boog"].verts.new(v) for v in q]); f.normal_update()
+                mid = sum(q, Vector()) / 4; naar_as = Vector((m.x - mid.x, m.y - mid.y, zb - mid.z)); naar_as -= n * naar_as.dot(n)
+                if f.normal.dot(naar_as) < 0: f.normal_flip()
+            achter = [Vector((pp.x + n.x * (DIK - 0.05), pp.y + n.y * (DIK - 0.05), zz)) for pp, zz in
+                      [(m + d * r * math.cos(math.pi * i2 / NB), zb + r * math.sin(math.pi * i2 / NB)) for i2 in range(NB + 1)]]
+            achter = [Vector((achter[0].x, achter[0].y, -0.4))] + achter + [Vector((achter[-1].x, achter[-1].y, -0.4))]
+            f = bms["boog"].faces.new([bms["boog"].verts.new(v) for v in achter]); f.normal_update()   # donkere achterwand in de tunnel
             if f.normal.dot(-n) < 0: f.normal_flip()
-            for i in range(7):                                                                # boogstenen
-                t = math.pi * (i + 0.5) / 7; rr = r + 0.09
-                q = Vector((p.x + d.x * rr * math.cos(t), p.y + d.y * rr * math.cos(t), zb + rr * math.sin(t))) - n * 0.02
-                v = doos(bms["afdek_zand"], (q.x, q.y, q.z), (0.15, 0.08, 0.24), hoek)
+            q = [m + d * r, m - d * r, m - d * r + n * DIK, m + d * r + n * DIK]     # donkere waterbodem in de tunnel (dekt het plein-terrein af)
+            f = bms["boog"].faces.new([bms["boog"].verts.new(Vector((v.x, v.y, 0.31))) for v in q]); f.normal_update()
+            if f.normal.z < 0: f.normal_flip()
+            for zij in (-1, 1):                        # tunnelbodem-zijkanten onder water (donker)
+                p = m + d * zij * r
+                q = [Vector((p.x, p.y, -0.4)), Vector((p.x + n.x * DIK, p.y + n.y * DIK, -0.4)), Vector((p.x + n.x * DIK, p.y + n.y * DIK, zb)), Vector((p.x, p.y, zb))]
+                f = bms["boog"].faces.new([bms["boog"].verts.new(v) for v in q]); f.normal_update()
+                if f.normal.dot(-d * zij) < 0: f.normal_flip()
+            for i2 in range(9):                        # boogstenen + grotere sluitsteen
+                t = math.pi * (i2 + 0.5) / 9; rr = r + 0.15
+                q = m + d * rr * math.cos(t) - n * 0.03 + Vector((0, 0, zb + rr * math.sin(t)))
+                sl = i2 == 4
+                v = doos(bms["afdek_zand"], (q.x, q.y, q.z), (0.24 if sl else 0.2, 0.1, 0.42 if sl else 0.32), hoek)
                 bmesh.ops.rotate(bms["afdek_zand"], cent=q, matrix=Matrix.Rotation((t - math.pi / 2), 3, n), verts=v)
+        c2 = m + n * (DIK / 2 - 0.02)
+        doos(bms["afdek_zand"], (c2.x, c2.y, TOP + 0.07), (L + 0.9, DIK + 0.16, 0.14), hoek)       # afdekstenen
+        for _ in range(int(L * 2.6)):                  # ingemetselde stenen (vijverkant)
+            t = random.uniform(0.06, 0.94); z = random.uniform(0.0, TOP - 0.2); sx = random.uniform(0.2, 0.4); sz = random.uniform(0.14, 0.26)
+            if boog and (abs(t - 0.5) * L < 1.15): continue
+            if k in (1, 3) and abs(t - 0.5) * L < 0.4 and abs(z - 0.45) < 0.35: continue
+            p = a + (b - a) * t - n * 0.025
+            doos(bms["muursteen"], (p.x, p.y, z), (sx, 0.07, sz), hoek)
+        if k in (1, 3):                                # roostervenster met blauw licht naast de boog
+            p = m - n * 0.02
+            doos(bms["boog"], (p.x, p.y, 0.45), (0.42, 0.04, 0.42), hoek)
+            doos(bms["afdek_zand"], (p.x - n.x * 0.01, p.y - n.y * 0.01, 0.45), (0.56, 0.05, 0.56), hoek) if False else None
+            for zz in (0.24, 0.66):
+                doos(bms["afdek_zand"], (p.x - n.x * 0.02, p.y - n.y * 0.02, zz), (0.56, 0.08, 0.08), hoek)
+            for zij in (-1, 1):
+                q = p + d * zij * 0.25
+                doos(bms["afdek_zand"], (q.x - n.x * 0.02, q.y - n.y * 0.02, 0.45), (0.08, 0.08, 0.5), hoek)
+            q = p - n * 0.045
+            doos(bms["blauwglas"], (q.x, q.y, 0.45), (0.32, 0.02, 0.32), hoek)
+            for zij in (-0.08, 0.0, 0.08):             # tralies
+                r2 = p + d * zij - n * 0.04
+                stam(bms["paalmetaal"], Vector((r2.x, r2.y, 0.28)), Vector((r2.x, r2.y, 0.62)), 0.012, 0.012, 4, 0.0)
+    for (a, b, d, n, L, hoek), eind in ((segs[0], 0), (segs[-1], 1)):   # pijlers met kap aan beide einden
+        p = (a if eind == 0 else b) + n * DIK / 2 + (d * (-0.2) if eind == 0 else d * 0.2)
+        doos(bms["zandsteen"], (p.x, p.y, (TOP + 0.35 - 0.45) / 2), (1.0, 1.0, TOP + 0.35 + 0.45), hoek)
+        doos(bms["afdek_zand"], (p.x, p.y, TOP + 0.42), (1.16, 1.16, 0.14), hoek)
+        doos(bms["afdek_zand"], (p.x, p.y, TOP + 0.55), (0.7, 0.7, 0.14), hoek)
 
 
 def strand(bms):
@@ -537,15 +625,16 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog")
+              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog", "zandsteenvlak", "blauwglas")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)
     for p in WACHTRIJ[::2]:                            # palen onder de vlonder
         stam(bms["stam"], Vector((p[0], p[1], -0.8)), Vector((p[0], p[1], Z_VLONDER - 0.1)), 0.1, 0.1, 6, 0.1)
     leuning(bms, links[:ZEIL_VANAF + 1], Z_VLONDER); leuning(bms, rechts[:ZEIL_VANAF + 1], Z_VLONDER)
-    leuning(bms, links[ZEIL_VANAF:-1], Z_VLONDER, True); leuning(bms, rechts[ZEIL_VANAF:-1], Z_VLONDER, True)
-    zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-1], Z_VLONDER, lampen)
+    leuning(bms, links[ZEIL_VANAF:], Z_VLONDER, True); leuning(bms, rechts[ZEIL_VANAF:], Z_VLONDER, True)   # ook langs het instapstuk
+    zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-2], Z_VLONDER, lampen)          # stopt voor de afslag naar het dek: geen paal in het pad
+    dekhek(bms)
     hutje(bms); brug(bms); vijverrand(bms); havenmuur(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
     # waterplaat in de vorm van de vijver (dun, bovenkant omhoog)
     bmw = bmesh.new()
@@ -557,7 +646,7 @@ def main():
     obj("SI_om_water", bmw, "water")
     for rol, bm in bms.items():
         if not bm.verts: bm.free(); continue
-        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand", "boog"):
+        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand", "boog", "zandsteenvlak"):
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         obj(f"SI_om_{rol}", bm, rol)
     info = {"vijver": VIJVER, "wachtrij": WACHTRIJ, "zeil_vanaf": ZEIL_VANAF, "uitgang": UITGANG, "hut": HUT, "lampen": lampen,

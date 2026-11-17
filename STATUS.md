@@ -1480,5 +1480,14 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   tussen haven en brug (BEDRAND, terrein in het vak Ground/aarde); zandstenen zitmuur langs het plein aan de ZW-kant van de haven
   (HAVENMUUR, top ~0,5 m boven het plein, lichte afdekstenen, ingemetselde stenen, boogje met boogstenen waar het water onder
   door loopt). Omgeving 103724528563937.
+- Havenbrug (17 nov), Daan: "het is echt een grotere brug" (de muur met boogje, niet de uitgangsbrug): HAVENMUUR nu een brug,
+  0,8 m dik tot 1,0 m boven water, brede afdekstenen, pijlers met kap aan beide einden, echte boogopening r 0,8 met tunnel,
+  donkere waterbodem in de tunnel (dekt het pleinterrein af), boogstenen + sluitsteen, twee roostervensters met blauw licht.
+- Instap/dek (17 nov), Daan: "z-fighting, er staat een paal en ze kunnen in het water lopen". Wachtrij eindigt nu aan de dekrand
+  (r 8,62, was over het dek heen = z-fighting), uitgangsbrug begint aan de dekrand en ligt 5 cm lager dan het gebouwdek; zeilkap
+  stopt voor de afslag (binnenpaal stond in het pad); leuningen ook langs het instapstuk; dakpalen 5,5 graden verdraaid
+  (PAAL_DRAAI) zodat instap -62 en uitstap -106 graden tussen twee palen vallen; nieuw hek rond de buitenrand van het dek
+  (r 8,5) met alleen openingen bij instap en uitstap. Gecontroleerd in Studio: GetPartsInPart langs instap en uitstap leeg,
+  dekrand alleen open bij -60..-70 en -100..-115 graden. Gebouw 90330949979433, omgeving 91728363827329.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

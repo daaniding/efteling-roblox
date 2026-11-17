@@ -20,6 +20,7 @@ VOOR = math.radians(-124.0); VLEUGEL_HALF = math.radians(55.0)
 DIK_RIET = 0.45
 R_SCHIJF, R_DEK, Z_PLAT = 7.0, 8.6, 0.3
 R_PAAL, N_PAAL = 8.0, 16
+PAAL_DRAAI = math.radians(5.5)   # palen verdraaid zodat instap (-62) en uitstap (-106 graden) precies tussen twee palen vallen (Daan: paal in de weg)
 R_SUB, R_SUBMID = 2.3, 3.8
 
 
@@ -143,7 +144,7 @@ def constructie():
     bm = bmesh.new()
     ring_pts = []
     for i in range(N_PAAL):
-        t = 2 * math.pi * (i + 0.5) / N_PAAL
+        t = 2 * math.pi * (i + 0.5) / N_PAAL + PAAL_DRAAI
         r = R_PAAL
         top = dak_z(r, t, DIK_RIET) - 0.35            # ringbalk onder het dak
         c = Vector((r * math.cos(t), r * math.sin(t), 0))
