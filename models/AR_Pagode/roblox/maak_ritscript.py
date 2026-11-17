@@ -306,6 +306,27 @@ local kern = Instance.new("Part"); kern.Name = "Kern"; kern.Size = Vector3.new(2
 kern.CanQuery = false; kern.CanTouch = false; kern.Anchored = true
 kern.CFrame = CFrame.new(PIV:PointToWorldSpace(pag:GetAttribute("GondelLokaal"))) * PIV.Rotation; kern.Parent = gondel
 gondel.PrimaryPart = kern
+-- botsrand van de groene balustrade opnieuw t.o.v. de kern (Daan 17 nov: "ik kan door de groene hekjes"): de reling-delen uit
+-- de afwerking stonden ~120 studs te hoog (oud draaipunt van de gondel). 256 stukken op r 8.32 m vanaf het dek, 24 studs hoog;
+-- in de poortjes (kernhoek = 180 - gondelhoek alfa) heten ze poortreling en wisselen ze met de hekjes (PagodeRitClient)
+do
+  for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") and (p.Name == "reling" or p.Name == "poortreling") then p:Destroy() end end
+  local K = kern.CFrame
+  local oudR = gondel:FindFirstChild("Randbotsing"); if oudR then oudR:Destroy() end
+  local map = Instance.new("Folder"); map.Name = "Randbotsing"; map.Parent = gondel
+  local HALF = math.deg((BREED_POORT + 0.1) / 2 / 8.32)
+  local R, Y0, H, N = 8.32 * S, 6.58, 24, 256
+  local function inpoort2(t) for _, a in ipairs(POORT_ALFA) do if math.abs((t - (180 - a) + 180) % 360 - 180) < HALF then return true end end return false end
+  for i = 0, N - 1 do
+    local t0, t1 = i / N * 2 * math.pi, (i + 1) / N * 2 * math.pi
+    local p0 = K:PointToWorldSpace(Vector3.new(R * math.cos(t0), Y0 + H / 2, R * math.sin(t0)))
+    local p1 = K:PointToWorldSpace(Vector3.new(R * math.cos(t1), Y0 + H / 2, R * math.sin(t1)))
+    local p = Instance.new("Part"); p.Name = inpoort2(math.deg((t0 + t1) / 2)) and "poortreling" or "reling"
+    p.Anchored = true; p.Transparency = 1; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.CastShadow = false
+    p.Size = Vector3.new(0.6, H, (p1 - p0).Magnitude + 0.3)
+    p.CFrame = CFrame.lookAt((p0 + p1) / 2, p1, K.UpVector); p.Parent = map
+  end
+end
 -- ritscript
 local sc = Instance.new("Script"); sc.Name = "PagodeRit"; sc.Source = [==[{bron}]==]; sc.Parent = game:GetService("ServerScriptService")
 local sps = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")

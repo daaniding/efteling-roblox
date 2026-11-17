@@ -242,6 +242,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Atmosfeer Color (255,184,132) Decay (72,96,150) Glare 1.4 Haze 0.9 Density 0.28 Offset 0.2, Sky "Lucht" = standaard
     Roblox-lucht zonder sterren, wolken (255,214,190) cover 0.5. Oude avondlucht: skybox in ServerStorage.Lucht_oud_avond,
     oude waarden als attributen Oud_* op Lighting.
+  - Groene hekjes gondel (17 nov, Daan: "ik kan nog steeds door de groene hekjes"): de onzichtbare botsrand (reling/
+    poortreling uit afwerking_pagode) stond ~120 studs boven de gondel (oud draaipunt). Nu herbouwd t.o.v. de kern
+    (maak_ritscript na de Kern, map Gondel.Randbotsing): 256 delen op r 8.32 m vanaf het dek (6.58 studs), 24 hoog;
+    poortjes op kernhoek 180 - alfa (gemeten aan de scharnieren). Play: rand stopt op r 7.9-8.0 (120/250/40 gr), poortjes
+    in0 en in1 open tijdens instappen in beide richtingen, dicht tijdens de rit.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
