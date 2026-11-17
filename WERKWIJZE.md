@@ -400,4 +400,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   en losse delen worden anders belicht). Wel: alles verankerd, beweging op elke client uit workspace:GetServerTimeNow()
   (BulkMoveTo in PreSimulation) en de eigen speler meenemen met de vloer (delta-CFrame van het platform). Model op
   ModelStreamingMode Persistent, want de place streamt.
+- Lichten op bewegende delen: zonder Shadows lekken PointLights door alles heen (bewegende objecten hebben geen eigen
+  occlusie). Weinig lichten, laag Brightness/Range, en Shadows = true; Neon iets transparant tegen te veel bloom.
 

@@ -48,13 +48,15 @@ for i = 0, 21 do
   local l = deel("plafondlamp", cf, Vector3.new(0.12 * S, 0.9 * S, 0.9 * S),
     {Shape = Enum.PartType.Cylinder, Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 214, 150), CanCollide = false, CanQuery = false})
   l.CFrame = cf * CFrame.Angles(0, 0, math.pi / 2)
-  local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 190, 120); pl.Brightness = 1.2; pl.Range = 14; pl.Shadows = false; pl.Parent = l
+  if i % 3 == 0 then   -- rijdende gondel = bewegend object zonder eigen schaduw: 8 zachte lichten met schaduw, anders lekt het licht naar buiten
+    local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 190, 120); pl.Brightness = 0.6; pl.Range = 9; pl.Shadows = true; pl.Parent = l
+  end
 end
 
 -- 3 lichtsnoeren langs de windveren (warm wit, Pagode-donker.jpg) en lampjes op de gevelpunten
 local N, R, Z0, Z1 = 22, 8.4, 4.8, 6.8
 local hw = math.pi * R / N
-local LICHT = {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 226, 170), CanCollide = false, CanQuery = false}
+local LICHT = {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 214, 150), Transparency = 0.35, CanCollide = false, CanQuery = false}   -- getemperd (bloom)
 for i = 0, N - 1 do
   local h = i / N * 2 * math.pi
   local c, s = math.cos(h), math.sin(h)

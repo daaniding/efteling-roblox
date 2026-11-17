@@ -124,6 +124,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     ModelStreamingMode Persistent (de place streamt; anders kwamen cilinders/gondeldelen niet op de client).
     Getest in Play: speler blijft op 6.90 m uit het midden (was 1 m schuiven), 0.92-1.00 m boven het dek, max 5 cm per frame;
     onderkant weer donker. Nog geen geluid of ritbediening.
+  - Lichten (17 nov), Daan: "als die aangaat overbelichten die lichten heel erg". Een rijdende gondel is voor Roblox een
+    bewegend object zonder eigen schaduw: de 22 plafondlampjes (PointLight 1.2, bereik 14, geen schaduw) straalden door het dak
+    naar buiten, binnenwerk gloeide oranje. Nu 8 zachte lichten (0.6, bereik 9) MET schaduw, lichtsnoeren getemperd
+    (Transparency 0.35, warmer). In afwerking_pagode.luau en daarmee pagode_rit.luau vastgelegd; in Studio toegepast.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
