@@ -159,6 +159,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     hek op de laanmuur en trapreling tot r 25, uitgangstrap-leuningen met botsing en aansluiting op het muurhek, afsluiting aan de
     andere kant van de armsleuf). Controle losse hekeinden (script): alleen nog bewuste openingen. Scans opnieuw: 0 lekken, geen
     sluiproute langs de tourniquets.
+  - Wachtrijrelingen (17 nov), Daan: "deze moet aan rechts connecten, anders kan je er langs met een shortcut". De zigzagrelingen
+    liepen tot 152.6 gr; nu tot tegen het zuidhek (A_ZUID - 10 cm), keerpunten van 2 m om en om. Aansluitstukjes automatisch
+    (18_route: hekeinden 2-60 cm van een ander hek). Omgeving 119771598110089, 150 hekbotsingen. Loopscan (BFS 0.5 m, 3 hoogtes):
+    rij r 20.5 pas na 68 m lopen bereikbaar, 0 lekken naar het gras. Trapstrook (onderpad -> recht omhoog naar de tourniquets)
+    is open zoals in het echt (zigzag = drukte-wachtrij); dichtzetten is een keuze voor Daan.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

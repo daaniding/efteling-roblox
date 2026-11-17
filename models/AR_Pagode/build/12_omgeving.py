@@ -428,7 +428,7 @@ def build():
         r = 14.0 + t + 0.12
         z = ztop(t) if t < N_RIJ else Z_P + 0.02
         gat = math.degrees(2.0 / r)                   # keerpunten 2 m breed
-        a0, a1 = aS(r) + 0.3, A_RAIL
+        a0, a1 = aS(r), A_ZUID - math.degrees(0.1 / r)        # van de trapreling tot het zuidhek: geen strook langs de zuidkant (sluiproute, Daan)
         if (t // 2) % 2: a1 -= gat
         else: a0 += gat
         reling(f"AR_Pagode_O_rij_reling_{t:02d}", boog(r, a0, a1, z))

@@ -83,6 +83,31 @@ def build():
     # hekken van weggehaalde delen eruit (niets op het plein), gangetjes erbij
     hek = [h for h in hek if not (math.hypot(h[0][0] - CX, h[0][1] - CY) > 17.6 and math.degrees(math.atan2(h[0][1] - CY, h[0][0] - CX)) < 88)]
     hek += [[list(a_), list(b_), hh] for a_, b_, hh in NS["HEKKEN"]]
+    # aansluitstukjes: elk hekeinde dat 2-60 cm van een ander hek ophoudt, met een kort stuk hek laten aansluiten
+    # (Daan: "die hekken connecten nog steeds niet"); bewuste openingen overslaan
+    def dichtst(p, eigen):
+        beste = (99, None)
+        for j, (c, d, hh) in enumerate(hek):
+            if j == eigen or abs((c[2] + d[2]) / 2 - p[2]) > 1.6: continue
+            dx, dy = d[0] - c[0], d[1] - c[1]; L = dx * dx + dy * dy
+            t = 0 if L == 0 else max(0, min(1, ((p[0] - c[0]) * dx + (p[1] - c[1]) * dy) / L))
+            q = (c[0] + t * dx, c[1] + t * dy, c[2] + t * (d[2] - c[2]))
+            dd = math.hypot(q[0] - p[0], q[1] - p[1])
+            if dd < beste[0]: beste = (dd, q)
+        return beste
+    def bewust_open(p):
+        r = math.hypot(p[0] - CX, p[1] - CY); a = math.degrees(math.atan2(p[1] - CY, p[0] - CX)) % 360
+        return r < 9.3 or 12.5 < r < 12.75 or 13.4 < r < 13.6 or (15.1 < r < 15.3 and 118 < a < 123) or (17.6 < r < 17.9 and a < 89)
+    extra = []
+    for i, (a_, b_, hh) in enumerate(list(hek)):
+        for p in (a_, b_):
+            d_, q = dichtst(p, i)
+            if 0.02 < d_ < 0.6 and not bewust_open(p):
+                pa = Vector(p); pb = Vector((q[0], q[1], p[2]))
+                NS["spijlenhek"](f"AR_Pagode_R_aansluiting_{len(extra):02d}", [pa, pb], h=max(0.9, hh - 0.08))
+                extra.append([list(pa), list(pb), hh])
+    hek += extra
+    print("[18_route] %d aansluitstukjes" % len(extra))
     json.dump(hek, open(hp, "w"))
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=m)
