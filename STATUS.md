@@ -190,7 +190,7 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     meerijden: drift 0.1 stud.
   - Terrein vlak (17 nov, Daan: "waarom staat die niet gewoon op een recht stuk" / "mooi donker groenig gras"): AHN-bulten weg,
     vlak gras op NAP 9.8 (meet ~9.4-9.6, voxelraster) rond de Pagode en in de rand; uitsparingen onder bestrating en de
-    armsleuf ongewijzigd. Grasskleur 46,92,38 + Terrain.Decoration (sprieten). maak_plaatsscript: VLAK = true.
+    armsleuf ongewijzigd. Graskleur 46,92,38, geen sprieten (Daan: "hoeven niet"). maak_plaatsscript: VLAK = true.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

@@ -140,8 +140,7 @@ do
   vul(385, 430, 15, 112); vul(300, 385, 80, 112)
 end
 -- donkergroen gras met sprieten (Daan 17 nov: "gewoon mooi donker groenig gras, dit is zo somber")
-t:SetMaterialColor(Enum.Material.Grass, Color3.fromRGB(46, 92, 38)); t.Decoration = true
-pcall(function() t.GrassLength = 0.5 end)
+t:SetMaterialColor(Enum.Material.Grass, Color3.fromRGB(46, 92, 38)); t.Decoration = false   -- geen sprieten (Daan)
 -- spawn bij de Pagode (oude spawn bewaard in attribuut)
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")
 if sp then
