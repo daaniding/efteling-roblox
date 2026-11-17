@@ -1398,4 +1398,12 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   Eftepedia (Sirocco_doorsnede.jpg): draaischijf 14 m = 60,7 px/m -> nok 11,6 m, dakrand 3,0 m, voorvleugel 7,4 m, totaal 18,5 m.
 - Plek: dakmidden park (456,5; 191,2) m uit de luchtfoto (OSM-dak ligt ~4 m verschoven), dak 17,7 m doorsnede, voorkant
   (opgekrulde dakvleugel, steiger) naar het ZZW, wachtrij met turquoise zeilkap om de oostkant. Brief: models/AR_Sirocco/asset-brief.md.
-- VOLGENDE: plan op de luchtfoto, blockout gebouw + draaischijf in Blender, overlay op doorsnede en luchtfoto.
+- Blockout (build/02_blockout.py -> AR_Sirocco_master.blend): rieten kegeldak 17,7 m met holle zwaai (nok 11,6, rand 3,0) en
+  opgekrulde voorvleugel (7,4 m, +-55 gr rond parkhoek -124), 16 palen op r 8,0, draaischijf 14 m + vast dek tot r 8,6, ton,
+  3 subschijven (r 2,3 op r 3,8) met elk 3 boten + 3 losse boten, waterring. Gate: doorsnede-overlay (review/gate_snede.jpg,
+  achterkant/dakrand/draaischijf vallen samen) en luchtfoto-overlay (review/gate_boven.jpg, dak op plek en maat).
+  Binnenfoto's: geen middenpaal; dak op ruwe boomstampalen met schoren, radiale balkspanten en ringbalken; boten met mast en
+  opgerold zeil op eigen blauwe ronde voet; platform blauw met golven, houten vlonder eromheen.
+- VOLGENDE: vormen (balkconstructie, riet met dikte, boten met snijwerk), kap-interieur (schalen, lantaarns, handelaar), scène
+  (water en oevers uit de luchtfoto, wachtrij-vlonder met turquoise zeilkap, steiger/uitgang, haven met Sindbads boot), texturen,
+  export, plaatsen op park (456,5; 191,2) m, looptest, bezoekers (Park.VOLGORDE na de Pagode).
