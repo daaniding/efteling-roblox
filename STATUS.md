@@ -346,10 +346,15 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   - Wachttijdbord (17 nov, Daan): zwart frame op de linkerpaal van het ingangsbord (12_omgeving AR_Pagode_O_wachttijdbord,
     exports/wachttijdbord.json; omgeving 87648168829062), SurfaceGui "PAGODE / Waiting time / X min" (vertaling Wachttijd in
     PagodeTeksten). Rekent elke 5 s: bezoekers + spelers in de rij, 36 plekken per rit, cyclus 205 s, op 5 min, minimaal 5.
-  - Parkbudget voor NPC's (17 nov, Daan: "met veel attracties wordt het te veel"): ServerScriptService.ParkBezoekers
-    (bron park/luau/ParkBezoekers.luau), één limiet voor alle attracties: 20 + 8 per speler, max 60; per attractie een eigen
-    max (Pagode 14); park-breed hooguit 1 nieuwe bezoeker per 3 s; alleen spawnen als er een speler binnen 450 studs is.
-    Elke volgende attractie met bezoekers: Park.registreer(naam, map, max, plek) en Park.magErBij(naam) voor nieuw().
+  - Bezoekers in het park (17 nov, Daan: "elke attractie spawnt aan het begin van de server zoveel mensen als past bij de
+    grootte" en "iedereen gaat 1 voor 1 elke attractie langs, begin je bij de Pagode dan ga je door naar de volgende"):
+    ServerScriptService.ParkBezoekers (bron park/luau/ParkBezoekers.luau). VOLGORDE = vaste rondgang (nu {"Pagode"});
+    aantal(basis) x DICHTHEID (1.0) = hoeveel een attractie bij de serverstart neerzet (Pagode 14, achter elkaar in de rij);
+    maak(cf, map) = bezoeker (sjablonen, botsgroep, zwaar, 6.5 studs/s, animaties); registreer(naam, {ingang, ontvang});
+    naarVolgende(naam, model) = na de uitgang via pathfinding naar de ingang van de volgende attractie (map BezoekersOnderweg),
+    daar ontvang(model). Niemand verdwijnt, het aantal blijft gelijk. Nieuwe attractie: in VOLGORDE zetten, registreren met
+    haar ingang en een ontvang-functie (rij, rit, uitgang, Park.naarVolgende). Play: 11 uitstappers liepen van de uitgang
+    naar de ingang en zaten na ~40 s weer in de rij (14 bij de Pagode, 0 onderweg).
   - NPC-bezoekers (17 nov, Daan: "mensen in de rij", "ze blijven gewoon bezoekers, gaan daarna naar een andere attractie",
     "een wachtrij vullen dan de ander, recht erin staan", "het stoppen om te draaien is irritant"):
     ServerScriptService.PagodeBezoekers (bron roblox/PagodeBezoekers.server.luau + route build/22_bezoekersroute.py ->

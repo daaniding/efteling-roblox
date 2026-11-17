@@ -6,7 +6,7 @@
 -- Levensloop: rij (exports/bezoekersroute.json via maak_bezoekers.py: aanloop, laantje, onderpad, zigzag baan voor baan,
 -- trapkop, tourniquets, bordes, gangetje) -> eigen plek op het dek -> meerijden -> uitstappen via uit0 en de uitgangstrap ->
 -- door het park naar de volgende attractie (nu alleen de Pagode: een ommetje en weer achter in de rij).
--- Er komen nieuwe bezoekers bij tot er MAX_BEZOEKERS rondlopen; niemand verdwijnt meer.
+-- Bij de serverstart staan er MAX_BEZOEKERS in de rij (ParkBezoekers.aantal); daarna lopen ze hun vaste rondje, niemand verdwijnt.
 -- Meerijden: de gondel beweegt alleen op de clients (PagodeRitClient). De server zet een meerijder vast (HumanoidRootPart
 -- verankerd, attribuut Rijdt) op zijn plek op de stilstaande servergondel; elke client neemt hem dan mee met zijn gondel.
 -- Botsen niet met spelers (groep Bezoekers vs Spelers); door poortjes en onzichtbare routemuren lopen ze heen (ze volgen de route).
@@ -18,9 +18,8 @@ local S = 3
 local CX, CY = 360.0, 47.5
 local Z_I, Z_P = 1.3, -0.38
 local ROUTE: {{number}} = {{367.26,76.61,-0.38},{363.06,69.29,-0.38},{361.14,63.86,-0.38},{358.57,63.84,-0.38},{356.01,62.58,-0.38},{355.07,63.87,-0.38},{354.20,65.17,-0.38},{353.26,66.44,-0.38},{352.25,67.66,-0.38},{351.18,68.85,-0.38},{350.04,69.99,-0.38},{347.89,70.28,-0.38},{344.12,67.83,-0.38},{340.83,64.76,-0.38},{338.12,61.17,-0.38},{338.49,60.43,-0.35},{338.26,60.05,-0.35},{338.05,59.67,-0.35},{337.84,59.29,-0.35},{337.64,58.90,-0.35},{337.44,58.51,-0.35},{339.24,57.63,-0.20},{340.19,59.38,-0.20},{341.24,60.98,-0.20},{342.41,62.48,-0.20},{343.71,63.87,-0.20},{345.11,65.16,-0.20},{346.62,66.33,-0.20},{347.78,64.70,0.10},{346.41,63.64,0.10},{345.14,62.48,0.10},{343.96,61.22,0.10},{342.90,59.86,0.10},{341.95,58.42,0.10},{341.12,56.91,0.10},{342.90,56.02,0.40},{343.73,57.51,0.40},{344.63,58.84,0.40},{345.64,60.09,0.40},{346.75,61.25,0.40},{347.95,62.32,0.40},{349.23,63.28,0.40},{350.36,61.62,0.70},{349.22,60.78,0.70},{348.16,59.84,0.70},{347.18,58.82,0.70},{346.29,57.72,0.70},{345.49,56.55,0.70},{344.79,55.31,0.70},{346.57,54.40,1.00},{347.23,55.56,1.00},{347.92,56.56,1.00},{348.69,57.51,1.00},{349.53,58.38,1.00},{350.44,59.19,1.00},{351.41,59.92,1.00},{352.61,60.56,1.15},{353.56,60.60,1.30},{354.04,59.62,1.30},{353.67,58.39,1.30},{352.37,57.27,1.30},{352.28,56.16,1.30},{353.61,54.67,1.30},{355.08,53.02,1.30}}
-local MAX_BEZOEKERS = 14
+local MAX_BEZOEKERS = 14                         -- Pagode: wachtrij ~60 m, gondel 36 plekken
 local SPELER_SNELHEID = 6.5                      -- spelers en bezoekers lopen precies even snel (studs/s)
-local TUSSENPOOS = {6, 12}                       -- seconden tussen nieuwe bezoekers (tot MAX_BEZOEKERS)
 local ANIM = {loop = "rbxassetid://913402848", stil = "rbxassetid://507766388"}   -- standaard R15 lopen / stilstaan
 
 -- ritklok: gelijk aan PagodeRitClient (instappen T_IN, sluiten 5, omhoog 35, boven 70, omlaag 35)
@@ -35,8 +34,6 @@ end
 -- uitstappen: van de dekplek naar het poortje uit0, over de vlonder naar de trap, trap af, het pad op
 local UIT: {{number}} = {pp(7.2, A_UIT0, Z_I), pp(9.6, A_UIT0, Z_I), pp(10.25, A_UIT0, Z_I), pp(10.25, A_TRAP, Z_I),
 	pp(11.6, A_TRAP, 0.75), pp(13.2, A_TRAP, 0.0), pp(14.6, A_TRAP, Z_P)}
--- ommetje door het park terug naar het begin van de aanloop (later: naar een andere attractie)
-local OMMETJE: {{number}} = {pp(18.0, -8.0, Z_P), pp(23.0, 20.0, Z_P), pp(28.0, 48.0, Z_P), pp(31.0, 66.0, Z_P)}
 
 local pag = workspace:WaitForChild("Pagode") :: Model
 for _, g in {"Bezoekers", "Spelers", "Rijdend", "Routemuur", "Poortdeel"} do
@@ -80,6 +77,8 @@ end
 
 local map = workspace:FindFirstChild("PagodeBezoekersActief") or Instance.new("Folder")
 map.Name = "PagodeBezoekersActief"; map.Parent = workspace
+-- parkmodule: rondgang langs alle attracties (ServerScriptService.ParkBezoekers, bron park/luau/ParkBezoekers.luau)
+local Park = require(game:GetService("ServerScriptService"):WaitForChild("ParkBezoekers")) :: any
 
 type Bezoeker = {model: Model, hum: Humanoid, s: number, nr: number, fase: string}
 local rij: {Bezoeker} = {}
@@ -322,10 +321,10 @@ local function dekVrij(): boolean
 	return true
 end
 
-local function rijEnRit(b: Bezoeker)
+local function rijEnRit(b: Bezoeker, startS: number?)
 	local m, hum = b.model, b.hum
 	-- 1 de rij tot de splitsing op het bordes: recht op de lijn, vult van voren naar achteren
-	b.fase = "rij"; b.s = 0
+	b.fase = "rij"; b.s = startS or 0
 	local keus = 1
 	volg(b, RIJ_S, function()
 		local voor = voorganger(b)
@@ -399,40 +398,33 @@ local function rijEnRit(b: Bezoeker)
 	for _, q in {pp(9.6, poort, Z_I), pp(10.25, poort, Z_I)} do table.insert(uitweg, q) end
 	for k = 4, #UIT do table.insert(uitweg, UIT[k]) end
 	vrijLopen(b, uitweg)
-	b.fase = "park"
-	vrijLopen(b, OMMETJE)
-	if m.Parent then hum:Move(Vector3.zero); task.wait(5 + math.random() * 25) end      -- even rondkijken
-	vrijLopen(b, {ROUTE[1]})
+	b.fase = "weg"      -- verder naar de volgende attractie (Park.naarVolgende)
 end
 
-local function nieuw()
-	local lijst = sjablonen()
-	if #lijst == 0 then return end
-	local m = lijst[math.random(#lijst)]:Clone()
+-- bezoeker overnemen: in de rij (startS = plek op de rijlijn bij de serverstart, anders achteraan), rit, uitgang, dan door
+-- naar de volgende attractie in de rondgang van het park
+local function adopteer(m: Model, startS: number?)
 	local hum = m:FindFirstChildOfClass("Humanoid") :: Humanoid
-	if not hum then m:Destroy(); return end
-	for _, d in m:GetDescendants() do
-		if d:IsA("BasePart") then
-			d.Anchored = false; d.CollisionGroup = "Bezoekers"; d.CanTouch = false
-			d.CustomPhysicalProperties = PhysicalProperties.new(100, 0.4, 0.3)     -- zwaar: een speler duwt ze niet weg
-		end
-		if d:IsA("Script") or d:IsA("LocalScript") then d:Destroy() end
-	end
-	hum.WalkSpeed = SPELER_SNELHEID              -- precies even snel als de speler (Daan: "niet sneller of slomer")
-	hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-	m:PivotTo(CFrame.new(wereld(ROUTE[1])))
 	m.Parent = map
-	for _, d in m:GetDescendants() do if d:IsA("BasePart") then pcall(function() d:SetNetworkOwner(nil) end) end end
-	animeer(hum)
+	hum.AutoRotate = true
 	teller += 1
-	local b: Bezoeker = {model = m, hum = hum, s = 0, nr = teller, fase = "rij"}
+	local b: Bezoeker = {model = m, hum = hum, s = startS or 0, nr = teller, fase = "rij"}
 	table.insert(rij, b)
 	task.spawn(function()
-		while m.Parent do
-			rijEnRit(b)
-			teller += 1; b.nr = teller          -- weer achter in de rij aansluiten
-		end
+		rijEnRit(b, startS)
+		local k = table.find(rij, b); if k then table.remove(rij, k) end
+		if m.Parent then Park.naarVolgende("Pagode", m) end
 	end)
+end
+
+local function nieuw(startS: number?)
+	local cf = CFrame.new(wereld(ROUTE[1]))
+	if startS then   -- bij de serverstart: meteen op zijn plek in de rij, kijkend langs de looplijn
+		local p = opLijn(RIJ_S, startS)
+		cf = CFrame.lookAt(p, opLijn(RIJ_S, startS + 2) * Vector3.new(1, 0, 1) + Vector3.new(0, p.Y, 0))
+	end
+	local m = Park.maak(cf, map)
+	if m then adopteer(m, startS) end
 end
 
 -- medewerker in het controlehuisje (video 0:44: man achter de lessenaar; Daan 17 nov "doe maar medewerker"): staat achter de
@@ -551,11 +543,9 @@ end
 for _, p in Players:GetPlayers() do speler(p) end
 Players.PlayerAdded:Connect(speler)
 
--- parkbudget (ServerScriptService.ParkBezoekers, bron park/luau/ParkBezoekers.luau): limiet voor alle attracties samen
-local Park = require(game:GetService("ServerScriptService"):WaitForChild("ParkBezoekers")) :: any
-Park.registreer("Pagode", map, MAX_BEZOEKERS, Vector3.new(CX * S, 6, -CY * S))
-while true do
-	for k = #rij, 1, -1 do if not rij[k].model.Parent then table.remove(rij, k) end end
-	if Park.magErBij("Pagode") then nieuw() end
-	task.wait(TUSSENPOOS[1] + math.random() * (TUSSENPOOS[2] - TUSSENPOOS[1]))
-end
+-- bezoekers (Daan 17 nov): bij de serverstart zet de Pagode haar eigen aantal neer, achter elkaar in de rij vanaf de splitsing op
+-- het bordes. Na de uitgang lopen ze naar de volgende attractie in Park.VOLGORDE; wie daar vandaan komt, wordt hier aan de
+-- ingang (begin van de aanloop) overgenomen.
+local AANTAL = Park.aantal(MAX_BEZOEKERS)
+Park.registreer("Pagode", {ingang = wereld(ROUTE[1]), ontvang = function(m: Model) adopteer(m, nil) end})
+for k = 1, AANTAL do nieuw(math.max(0, RIJ_S.L - 2 - (k - 1) * GAT * 1.3)) end
