@@ -192,6 +192,19 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     vlak gras op NAP 9.8 (meet ~9.4-9.6, voxelraster) rond de Pagode en in de rand; uitsparingen onder bestrating en de
     armsleuf ongewijzigd. Uiteindelijk (Daan: "fris lichtgroen", "doe gewoon plat"): effen Grass, kleur 96,170,64, geen sprieten. LeafyGrass
     (roze vlekjes) en een eigen gazontextuur (build/20_gazon.py, MaterialVariant) geprobeerd en weer weggehaald. maak_plaatsscript: VLAK = true.
+  - Verbeterpunten (17 nov, Daan): (1) perk/modder ook aan de zijkanten dicht (18_route om_perk_bordes 99.6 gr en
+    om_perk_uitgang 54.2 gr); (2) controlehuisje naar video 0:44: getrapt kroondak (groen/rood/goud), groene koepel met gouden
+    spits, witte vlamhoorns op de hoeken, witte binnenlijsten, binnen lessenaar met knoppen, scherm, stoel en lamp (geen dichte
+    blok meer); (3) stalen trap + bordes midden in de bak weg (10_station; de gondel ging erdoorheen); (4) gondel dicht:
+    onzichtbare massieve kern (r 16.4 studs) en plafondschijf op dek + 7.4 studs, bewegen mee; (5) uitgang duidelijk: poort
+    met breed UITGANG-bord + groene pijlen over de uitgangstrap (04c PG_uitgangsboog), tweede staand bord bij uit0;
+    (6) eenrichting (PagodeRitClient, map Pagode.Eenrichting): schot bij de tourniquets gaat dicht zodra je erdoor bent,
+    schot op de kop van de uitgangstrap is standaard dicht en alleen open als je boven op de vlonder staat; (7) ritduur naar
+    de echte 5:10 (coaster.cloud): boven 200 s (was 180). Play (met echte sprongen): plafond houdt sprong op 3 studs, kern
+    stopt op r 5.8, terug door tourniquets / terug de uitgang op / van buitenaf de uitgang op / perk in: allemaal
+    geblokkeerd; meerijden drift 0.1 stud. Omgeving 115622496482577, station 118332205413998.
+  - Plafondlampen gondel (17 nov, Daan: "overbelicht"): mat creme i.p.v. Neon, PointLights 0.12 / bereik 12 (waren 0.6 / 9);
+    lichtsnoeren gedempt (190,150,100, transp 0.4). Lighting zelf (Brightness 3, Exposure 1.25, Bloom 0.9) is van Daan.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

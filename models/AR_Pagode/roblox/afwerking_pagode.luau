@@ -46,17 +46,17 @@ for i = 0, 21 do
   local a = (i + 0.5) / 22 * 2 * math.pi
   local cf = B(6.9 * math.cos(a), 6.9 * math.sin(a), 4.57)
   local l = deel("plafondlamp", cf, Vector3.new(0.12 * S, 0.9 * S, 0.9 * S),
-    {Shape = Enum.PartType.Cylinder, Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 214, 150), CanCollide = false, CanQuery = false})
+    {Shape = Enum.PartType.Cylinder, Material = Enum.Material.SmoothPlastic, Color = Color3.fromRGB(236, 220, 186), CanCollide = false, CanQuery = false})   -- mat, geen Neon: overbelichtte (Daan 17 nov)
   l.CFrame = cf * CFrame.Angles(0, 0, math.pi / 2)
   if i % 3 == 0 then   -- rijdende gondel = bewegend object zonder eigen schaduw: 8 zachte lichten met schaduw, anders lekt het licht naar buiten
-    local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 190, 120); pl.Brightness = 0.6; pl.Range = 9; pl.Shadows = true; pl.Parent = l
+    local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 190, 120); pl.Brightness = 0.12; pl.Range = 12; pl.Shadows = true; pl.Parent = l
   end
 end
 
 -- 3 lichtsnoeren langs de windveren (warm wit, Pagode-donker.jpg) en lampjes op de gevelpunten
 local N, R, Z0, Z1 = 22, 8.4, 4.8, 6.8
 local hw = math.pi * R / N
-local LICHT = {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 214, 150), Transparency = 0.35, CanCollide = false, CanQuery = false}   -- getemperd (bloom)
+local LICHT = {Material = Enum.Material.Neon, Color = Color3.fromRGB(190, 150, 100), Transparency = 0.4, CanCollide = false, CanQuery = false}   -- getemperd (bloom)
 for i = 0, N - 1 do
   local h = i / N * 2 * math.pi
   local c, s = math.cos(h), math.sin(h)
