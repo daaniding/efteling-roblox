@@ -193,7 +193,7 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	thVorig = th
 	if brom then
 		local doel = math.clamp(snel / 0.05, 0, 1)                                     -- 0.05 rad/s = volle beweging
-		brom.Volume = brom.Volume + (0.9 * doel - brom.Volume) * 0.05
+		brom.Volume = brom.Volume + (0.5 * doel - brom.Volume) * 0.05
 		brom.PlaybackSpeed = 0.55 + 0.25 * doel
 	end
 	if naam ~= vorigeFase then
@@ -205,7 +205,7 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	vorigOpen = nuOpen
 	if wind then
 		local hoog = rijdt and math.clamp((nieuwK.Position.Y - K0.Position.Y) / 90, 0, 1) or 0
-		wind.Volume = wind.Volume + (0.5 * hoog - wind.Volume) * 0.03
+		wind.Volume = wind.Volume + (0.3 * hoog - wind.Volume) * 0.03
 	end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)

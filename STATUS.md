@@ -225,7 +225,8 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (PSE walla, 8-60 studs): tribune families 9112787259, laantje en bordes crowd mumble 9112766358 (verschoven start).
     Voetstappen (LocalScript): Running-geluid per ondergrond via straal omlaag: klinkers/steen "Brick Footsteps"
     91557584218550, vlonder/dek "Floor Footsteps" 6506537704, metaal "Concrete Footsteps" 6362185620, gras "walk_grass"
-    106672010112184 (standaard klonk als plastic). Getest in Play: wisselt correct, alles geladen.
+    106672010112184 (standaard klonk als plastic). Getest in Play: wisselt correct, alles geladen. Volumes gehalveerd
+    (Daan: "te hard"): muziek 0.25, praten 0.15-0.22, brom max 0.5, bel 0.45, hek 0.4, wind 0.3.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

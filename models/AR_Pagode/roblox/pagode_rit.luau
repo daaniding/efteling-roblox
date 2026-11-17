@@ -310,7 +310,7 @@ do
     for i, l in ipairs(LAMPEN) do
       local pos = Vector3.new(l[1] * S, 2 + (l[3] - 0.95) * S, -l[2] * S)
       local sp = box("speaker" .. i, pos + Vector3.new(0.45, 0, 0), Vector3.new(360 * S, 0, -47.5 * S))
-      snd(sp, "muziek", GELUID.muziek, 0.55, 10, 75, true).Playing = true      -- ~25 m hoorbaar, daarna stil
+      snd(sp, "muziek", GELUID.muziek, 0.25, 10, 75, true).Playing = true      -- ~25 m hoorbaar, daarna stil
     end
     -- machinegeluid bij de draaias van de arm en de cilinders; bel en hekjes bij het station
     local as = Instance.new("Part"); as.Name = "machine"; as.Anchored = true; as.CanCollide = false; as.CanQuery = false; as.CanTouch = false
@@ -318,10 +318,10 @@ do
     snd(as, "brom", GELUID.brom, 0, 20, 160, true)
     local st0 = Instance.new("Part"); st0.Name = "station"; st0.Anchored = true; st0.CanCollide = false; st0.CanQuery = false; st0.CanTouch = false
     st0.Transparency = 1; st0.Size = Vector3.new(1, 1, 1); st0.Position = W(9.3, math.rad(140), 12.5); st0.Parent = fg
-    snd(st0, "bel", GELUID.bel, 0.8, 12, 110, false)
-    snd(st0, "hek", GELUID.hek, 0.7, 8, 60, false)
+    snd(st0, "bel", GELUID.bel, 0.45, 12, 110, false)
+    snd(st0, "hek", GELUID.hek, 0.4, 8, 60, false)
     -- geroezemoes: wachtende mensen (PSE walla), drie bronnen, hoorbaar tot ~20 m
-    for _, w in ipairs({{"tribune", 20.0, 136, 0.6, 9112787259, 0.45}, {"laantje", 18.0, 108, -0.38, 9112766358, 0.35}, {"bordes", 12.6, 132, 1.3, 9112766358, 0.3}}) do
+    for _, w in ipairs({{"tribune", 20.0, 136, 0.6, 9112787259, 0.22}, {"laantje", 18.0, 108, -0.38, 9112766358, 0.18}, {"bordes", 12.6, 132, 1.3, 9112766358, 0.15}}) do
       local p = Instance.new("Part"); p.Name = "praten_" .. w[1]; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
       p.Transparency = 1; p.Size = Vector3.new(1, 1, 1); p.Position = W(w[2], math.rad(w[3]), 10 + w[4] + 1.2); p.Parent = fg
       local so = snd(p, "praten", w[5], w[6], 8, 60, true); so.Playing = true
@@ -604,7 +604,7 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	thVorig = th
 	if brom then
 		local doel = math.clamp(snel / 0.05, 0, 1)                                     -- 0.05 rad/s = volle beweging
-		brom.Volume = brom.Volume + (0.9 * doel - brom.Volume) * 0.05
+		brom.Volume = brom.Volume + (0.5 * doel - brom.Volume) * 0.05
 		brom.PlaybackSpeed = 0.55 + 0.25 * doel
 	end
 	if naam ~= vorigeFase then
@@ -616,7 +616,7 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	vorigOpen = nuOpen
 	if wind then
 		local hoog = rijdt and math.clamp((nieuwK.Position.Y - K0.Position.Y) / 90, 0, 1) or 0
-		wind.Volume = wind.Volume + (0.5 * hoog - wind.Volume) * 0.03
+		wind.Volume = wind.Volume + (0.3 * hoog - wind.Volume) * 0.03
 	end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)
