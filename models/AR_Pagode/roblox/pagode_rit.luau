@@ -2,7 +2,7 @@
 -- Gondel+arm+voet: oorsprong = draaias, op park (320.5, 58.5), 4.2 m boven de grond, draaiing 164.44 graden.
 -- Station: oorsprong = middelpunt bak, park (360.0, 47.5); 180 graden gedraaid (Blender x oost/y noord -> Roblox).
 -- Hoogte: NAP 10.0 = Roblox Y 2. Terrein uit AHN (x 300..385, y 15..80), materiaal uit de luchtfoto.
-local ID = {AR_Pagode_gondel = 80470568889612, AR_Pagode_station = 118332205413998, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 76036336782300, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 115622496482577, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 100311851570971, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280, wilg_kleur = 100412416431599, steen_kleur = 116600353020198, steen_normaal = 95927671453559, pluk_kleur = 82875106386837, huisrand_kleur = 74245754818603, AR_Pagode_arm = 88039896274620, AR_Pagode_voet = 79185188175320, gazon_kleur = 138637810636041, gazon_normaal = 84279641416348, uitgangsboog_kleur = 98360375455954}
+local ID = {AR_Pagode_gondel = 80470568889612, AR_Pagode_station = 118332205413998, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 76036336782300, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 77125367267740, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 100311851570971, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280, wilg_kleur = 100412416431599, steen_kleur = 116600353020198, steen_normaal = 95927671453559, pluk_kleur = 82875106386837, huisrand_kleur = 74245754818603, AR_Pagode_arm = 88039896274620, AR_Pagode_voet = 79185188175320, gazon_kleur = 138637810636041, gazon_normaal = 84279641416348, uitgangsboog_kleur = 98360375455954}
 local S = 3
 local G = 2                                   -- Roblox Y van NAP 10.0
 local function park(x, y, nap) return Vector3.new(x * S, G + (nap - 10) * S, -y * S) end
@@ -462,7 +462,7 @@ local sps = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"
 local oudC = sps:FindFirstChild("PagodeRitClient"); if oudC then oudC:Destroy() end
 local lc = Instance.new("LocalScript"); lc.Name = "PagodeRitClient"; lc.Source = [==[--!strict
 -- PagodeRitClient (StarterPlayerScripts): laat de Pagode rijden op deze client.
--- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 25 s, sluiten 5 s, omhoog 55 s, boven 200 s,
+-- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 60 s (Daan), sluiten 5 s, omhoog 55 s, boven 200 s,
 -- omlaag 55 s; twee volle draaien over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
 -- Alles verankerd en verplaatst met BulkMoveTo; de stand volgt uit workspace:GetServerTimeNow() - RitStart (zelfde voor iedereen).
 -- Wie op het dek staat wordt elk frame met de gondel meegenomen (geen wegzakken, geen trillen).
@@ -549,7 +549,8 @@ local function staaf(p: BasePart, a: Vector3, r: Vector3, L: number)
 	p.CFrame = CFrame.lookAt(a + r * (L / 2), a + r * L) * CFrame.Angles(0, math.pi / 2, 0)
 end
 
-local FASEN = {{"instappen", 25}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
+local T_IN = 60                                       -- instappen: hekjes open (Daan 17 nov: "doe maar zestig")
+local FASEN = {{"instappen", T_IN}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
 local CYCLUS, T_RIT = 0, 55 + 200 + 55
 local RONDJES = 2                                   -- twee hele rondjes per rit (Daan: "moet hij niet wat draaien"); heel getal: poortjes eindigen weer voor het station
 for _, f in FASEN do CYCLUS += f[2] :: number end
@@ -627,9 +628,9 @@ RunService.PreSimulation:Connect(function(dtF: number)
 		local k = A:PointToWorldSpace(c.kop); local u = (k - c.voet).Unit
 		staaf(c.huis, c.voet, u, c.Lh); staaf(c.stang, k, -u, c.Ls)
 	end
-	-- klaphekjes: 2 s open aan het begin van het instappen, 2 s dicht aan het eind (instappen = eerste fase, tc 0..25)
+	-- klaphekjes: 2 s open aan het begin van het instappen, 2 s dicht aan het eind (instappen = eerste fase, tc 0..T_IN)
 	local open = 0
-	if naam == "instappen" then open = math.clamp(math.min(tc / 2, (25 - tc) / 2), 0, 1) end
+	if naam == "instappen" then open = math.clamp(math.min(tc / 2, (T_IN - tc) / 2), 0, 1) end
 	local hoek = math.rad(85) * e(open)
 	for _, b in bladen do
 		local scharnier = nieuwK * b.sch * CFrame.Angles(0, b.teken * hoek, 0)

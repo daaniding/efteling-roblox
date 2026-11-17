@@ -1,6 +1,6 @@
 --!strict
 -- PagodeRitClient (StarterPlayerScripts): laat de Pagode rijden op deze client.
--- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 25 s, sluiten 5 s, omhoog 55 s, boven 200 s,
+-- Ritverloop naar de on-ride video _Wz0aORIVaM en de echte ritduur 5:10 (coaster.cloud): instappen 60 s (Daan), sluiten 5 s, omhoog 55 s, boven 200 s,
 -- omlaag 55 s; twee volle draaien over de rit. De arm draait om de draaias (AsFrame, lokale Z-as), de gondel blijft waterpas.
 -- Alles verankerd en verplaatst met BulkMoveTo; de stand volgt uit workspace:GetServerTimeNow() - RitStart (zelfde voor iedereen).
 -- Wie op het dek staat wordt elk frame met de gondel meegenomen (geen wegzakken, geen trillen).
@@ -87,7 +87,8 @@ local function staaf(p: BasePart, a: Vector3, r: Vector3, L: number)
 	p.CFrame = CFrame.lookAt(a + r * (L / 2), a + r * L) * CFrame.Angles(0, math.pi / 2, 0)
 end
 
-local FASEN = {{"instappen", 25}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
+local T_IN = 60                                       -- instappen: hekjes open (Daan 17 nov: "doe maar zestig")
+local FASEN = {{"instappen", T_IN}, {"sluiten", 5}, {"omhoog", 55}, {"boven", 200}, {"omlaag", 55}}
 local CYCLUS, T_RIT = 0, 55 + 200 + 55
 local RONDJES = 2                                   -- twee hele rondjes per rit (Daan: "moet hij niet wat draaien"); heel getal: poortjes eindigen weer voor het station
 for _, f in FASEN do CYCLUS += f[2] :: number end
@@ -165,9 +166,9 @@ RunService.PreSimulation:Connect(function(dtF: number)
 		local k = A:PointToWorldSpace(c.kop); local u = (k - c.voet).Unit
 		staaf(c.huis, c.voet, u, c.Lh); staaf(c.stang, k, -u, c.Ls)
 	end
-	-- klaphekjes: 2 s open aan het begin van het instappen, 2 s dicht aan het eind (instappen = eerste fase, tc 0..25)
+	-- klaphekjes: 2 s open aan het begin van het instappen, 2 s dicht aan het eind (instappen = eerste fase, tc 0..T_IN)
 	local open = 0
-	if naam == "instappen" then open = math.clamp(math.min(tc / 2, (25 - tc) / 2), 0, 1) end
+	if naam == "instappen" then open = math.clamp(math.min(tc / 2, (T_IN - tc) / 2), 0, 1) end
 	local hoek = math.rad(85) * e(open)
 	for _, b in bladen do
 		local scharnier = nieuwK * b.sch * CFrame.Angles(0, b.teken * hoek, 0)
