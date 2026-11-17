@@ -108,21 +108,45 @@ do
       so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = minA; so.RollOffMaxDistance = maxA; so.Parent = ouder
       return so
     end
-    local function box(naam, pos, kijk)
-      local p = Instance.new("Part"); p.Name = naam; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
-      p.Size = Vector3.new(0.75, 1.05, 0.6); p.Color = Color3.fromRGB(28, 28, 30); p.Material = Enum.Material.SmoothPlastic
-      p.CFrame = CFrame.lookAt(pos, Vector3.new(kijk.X, pos.Y, kijk.Z)); p.Parent = fg
-      local d = Instance.new("Part"); d.Name = "grill"; d.Anchored = true; d.CanCollide = false; d.CanQuery = false; d.CanTouch = false
-      d.Size = Vector3.new(0.62, 0.9, 0.05); d.Color = Color3.fromRGB(55, 55, 58); d.Material = Enum.Material.DiamondPlate
-      d.CFrame = p.CFrame * CFrame.new(0, 0, -0.31); d.Parent = p
-      return p
+    -- verstopte speaker (Daan 17 nov: "speakers kunnen een beetje weggestopt worden"): klein stenen kastje laag bij de voet van
+    -- een lantaarnpaal, natuursteenkleur, alleen een donkere grille naar de wachtrij
+    local function box(naam, voet, kijk)
+      local dir = Vector3.new(kijk.X - voet.X, 0, kijk.Z - voet.Z).Unit
+      local m = Instance.new("Model"); m.Name = naam; m.Parent = fg
+      local function stuk(nm, cf, size, kleur, mat)
+        local p = Instance.new("Part"); p.Name = nm; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+        p.Size = size; p.Color = kleur; p.Material = mat; p.CFrame = cf; p.Parent = m; return p
+      end
+      local c = CFrame.lookAt(voet, voet + dir) * CFrame.new(0, 0.3, -0.55) * CFrame.Angles(math.rad(12), 0, 0)
+      local k = stuk("kast", c, Vector3.new(0.95, 0.7, 0.75), Color3.fromRGB(122, 112, 100), Enum.Material.Slate)
+      stuk("grill", c * CFrame.new(0, 0.02, -0.38), Vector3.new(0.6, 0.42, 0.03), Color3.fromRGB(34, 34, 32), Enum.Material.DiamondPlate)
+      m.PrimaryPart = k
+      return k
     end
-    -- speakers langs de wachtrij aan de lantaarnpalen (LAMPEN uit omgeving_lampen.json, 0.7 m onder de kap), naar het pad gericht
-    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {352.65, 59.94, 4.43}, {351.08, 62.56, 3.98}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}}
+    -- speakers bij de voet van de lantaarnpalen langs de wachtrij (exports/omgeving_lampen.json: x, y, z van de kap);
+    -- grond onder de paal via een straal omlaag naast de paal, kastje richting de wachtrij (het stationsmidden)
+    local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}}
+    local rpG = RaycastParams.new(); rpG.FilterType = Enum.RaycastFilterType.Include
+    rpG.FilterDescendantsInstances = {workspace:FindFirstChild("PagodeOmgeving"), workspace:FindFirstChild("PagodeStation"), workspace.Terrain}
+    local VLOER = {klinker = true, graniet = true, natuursteen = true, vlonder = true, breuksteen = true, steen = true, voeg = true, beton_groen = true, grind = true}
+    local function grond(van)          -- eerste vloer onder een punt (lantaarnkap, reling en hekken overslaan)
+      local o = van
+      for _ = 1, 10 do
+        local h = workspace:Raycast(o, Vector3.new(0, -25, 0), rpG)
+        if not h then return nil end
+        local rol = h.Instance:IsA("Terrain") and "terrein" or string.match(h.Instance.Name, "^PG_(.-)_%d+")
+        if rol == "terrein" or VLOER[rol] then return h.Position.Y end
+        o = h.Position - Vector3.new(0, 0.05, 0)
+      end
+    end
     for i, l in ipairs(LAMPEN) do
-      local pos = Vector3.new(l[1] * S, 2 + (l[3] - 0.95) * S, -l[2] * S)
-      local sp = box("speaker" .. i, pos + Vector3.new(0.45, 0, 0), Vector3.new(360 * S, 0, -47.5 * S))
-      snd(sp, "muziek", GELUID.muziek, 0.25, 10, 75, true).Playing = true      -- ~25 m hoorbaar, daarna stil
+      local kop = Vector3.new(l[1] * S, 2 + l[3] * S, -l[2] * S)
+      local naar = Vector3.new(360 * S - kop.X, 0, -47.5 * S - kop.Z).Unit
+      local gy = grond(kop + naar * 0.9 + Vector3.new(0, 3, 0))
+      local voet = Vector3.new(kop.X, gy or kop.Y - 9.6, kop.Z)
+      local sp = box("speaker" .. i, voet, kop + naar * 10)
+      local so = snd(sp, "muziek", GELUID.muziek, 0.4, 4, 50, true)        -- realistisch: 1/afstand vanaf 1.3 m, stil na ~17 m
+      so.RollOffMode = Enum.RollOffMode.Inverse; so.Playing = true
     end
     -- machinegeluid bij de draaias van de arm en de cilinders; bel en hekjes bij het station
     local as = Instance.new("Part"); as.Name = "machine"; as.Anchored = true; as.CanCollide = false; as.CanQuery = false; as.CanTouch = false

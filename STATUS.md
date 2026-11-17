@@ -230,6 +230,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   - Muziek gekozen (17 nov, Daan: "6/12"): APM "Fortune's Smiling" 1840841073 (173 s), ook eerste in de MuziekKiezer.
     Zacht lopende en pratende mensen: PSE "Street Crowd" (walla, voetstappen, kinderen, vogels, geen verkeer) bij de
     aanloop (9112879470, vol 0.16) en het onderpad (9112879448, vol 0.14, start 11 s), 8-55 studs.
+  - Speakers (17 nov, Daan: "zwarte kubussen in de lucht", "moet echt uit de speakers komen", "mogen weggestopt"):
+    stonden op oude lantaarnposities (sierlantaarns verplaatst). Nu verstopte stenen kastjes (natuursteenkleur, donkere
+    grille, 0.3 m) laag aan de voet van de 6 lantaarnpalen (posities = exports/omgeving_lampen.json, vloer via straal),
+    muziek RollOffMode Inverse 4-50 studs (1/afstand vanaf 1.3 m, stil na ~17 m), vol 0.4. Twee lantaarnlichten
+    (afwerking LAMPEN) ook naar de nieuwe sierlantaarnposities.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
