@@ -131,7 +131,7 @@ def main():
             stam(bms["touw"], vorig, q, 0.02, 0.02, 4, 0.0); vorig = q
     # gaashek op de rand van het dek (r 7.25), 1.0 m hoog, bamboepalen om de ~1.6 m, openingen bij in- en uitstappen
     R_HEK = R_SCHIJF + 0.25
-    open_hoeken = [math.radians(20), VOOR]                # instap (oost, einde wachtrij), uitstap (voorkant, steiger)
+    open_hoeken = [math.radians(-62), math.radians(-106)]  # instap (einde wachtrij, luchtfoto), uitstap (uitgangsbrug op x -2)
     N = 96
     def open_(t): return any(abs((t - o + math.pi) % (2 * math.pi) - math.pi) < math.radians(9) for o in open_hoeken)
     for i in range(N):

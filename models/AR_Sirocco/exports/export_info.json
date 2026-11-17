@@ -17,8 +17,8 @@
    "SI_lantaarnglas_0_gb": 100,
    "SI_mand_0_gb": 9500,
    "SI_mand_1_gb": 3992,
-   "SI_net_0_gb": 336,
-   "SI_touw_0_gb": 6164,
+   "SI_net_0_gb": 340,
+   "SI_touw_0_gb": 6184,
    "SI_vlonder_0_gb": 768
   },
   "AR_Sirocco_rit": {
@@ -47,6 +47,32 @@
    "SI_platform_0_rt": 380,
    "SI_subschijf_0_rt": 756,
    "SI_ton_0_rt": 228
+  },
+  "AR_Sirocco_omgeving": {
+   "SI_afdek_0_om": 24,
+   "SI_bamboe_0_om": 6436,
+   "SI_bamboewand_0_om": 92,
+   "SI_bestrating_0_om": 8,
+   "SI_boei_blauw_0_om": 360,
+   "SI_boei_geel_0_om": 360,
+   "SI_bord_0_om": 12,
+   "SI_mast_0_om": 184,
+   "SI_dhow_0_om": 118,
+   "SI_zeil_dhow_0_om": 2,
+   "SI_lantaarn_0_om": 240,
+   "SI_lantaarnglas_0_om": 240,
+   "SI_muur_0_om": 24,
+   "SI_net_0_om": 132,
+   "SI_raam_0_om": 320,
+   "SI_riet_0_om": 72,
+   "SI_stam_0_om": 9500,
+   "SI_stam_1_om": 1708,
+   "SI_steen_0_om": 4662,
+   "SI_touw_0_om": 1584,
+   "SI_vlonder_0_om": 232,
+   "SI_water_0_om": 19,
+   "SI_zeil_turkoois_0_om": 92,
+   "SI_zeilrand_0_om": 184
   }
  },
  "lampen": [

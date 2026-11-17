@@ -1,6 +1,7 @@
 """11_export: Sirocco -> FBX'en voor Roblox (1 unit = 1 m; in Studio ScaleTo(3)), zelfde methode als AR_Pagode/build/11_export.py.
   exports/AR_Sirocco_gebouw.fbx : dak, constructie, vlonder, tonnen niet; decor, hek  (staat stil)
   exports/AR_Sirocco_rit.fbx    : draaischijf, subschijven, tonnen, 12 boten       (draait later)
+  exports/AR_Sirocco_omgeving.fbx : wachtrij, zeilkap, hutje, brug, vijverrand, haven (07_omgeving)
 Oorsprong = dakmidden op waterpeil (park 456,5; 191,2); per materiaal samengevoegd, stukken <= 9500 driehoeken, onderdeelnaam
 SI_<rol>_<n>_<deel>, UV's per vlak los (geen gedeelde hoekpunten), ankerblokje op z = -2.
 Uit ook exports/export_info.json (driehoeken per deel, lampen).
@@ -21,6 +22,7 @@ info = {"delen": {}, "lampen": []}
 
 
 def deel_van(o):
+    if o.get("owner") == "phase:07_omgeving": return "omgeving"
     if o.name.startswith("SI_boot") or o.get("rol") in ("platform", "subschijf", "ton"): return "rit"
     return "gebouw"
 
@@ -86,4 +88,5 @@ def schrijf(groepen, naam, achter):
 
 schrijf(verzamel("gebouw"), "AR_Sirocco_gebouw", "gb")
 schrijf(verzamel("rit"), "AR_Sirocco_rit", "rt")
+schrijf(verzamel("omgeving"), "AR_Sirocco_omgeving", "om")
 json.dump(info, open(os.path.join(uit, "export_info.json"), "w"), indent=1)

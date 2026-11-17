@@ -1,4 +1,4 @@
-AR_Sirocco_gebouw 130218947819308
+AR_Sirocco_gebouw 140043470117648
 AR_Sirocco_rit 118252639030237
 riet_kleur 122992305053489
 riet_normaal 107154390027579
@@ -13,3 +13,4 @@ beschot_kleur 124186550110005
 stam_kleur 86277939897558
 stam_normaal 85501756974124
 romp_blauw_kleur 81733490640030
+AR_Sirocco_omgeving 116908231211365

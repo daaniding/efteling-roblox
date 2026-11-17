@@ -1428,6 +1428,19 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   sinaasappels en fles. Lessen: (1) recalc_face_normals op losse vlakken draait ze willekeurig om (gaten in Roblox) -> niet doen,
   richting bij het bouwen goedzetten en meten (0 van 5760 verkeerd); (2) kleine delen in grote meshes verdwijnen op afstand ->
   RenderFidelity Precise (plaatsscript); (3) bamboepalen effen (Pagode-bamboetextuur is een plant). Rit 110k driehoeken.
-- VOLGENDE: scène (vijvervorm en oevers uit de luchtfoto, wachtrij-vlonder met ruwe palen, gaashekken en turquoise zeilkap met
-  lantaarns, steiger/uitgangsbrug, haven met Sindbads boot), botsing (hek rond de schijf, routemuren), looptest, bezoekers
-  (Park.VOLGORDE na de Pagode), rit pas als Daan erom vraagt.
+- Scène v1 (17 nov), Daan: "ja, omgeving bouwen" en "kijk ff goed waar de paden echt lopen". build/07_omgeving.py (modelframe,
+  eigen FBX AR_Sirocco_omgeving, 26.6k driehoeken, asset 116908231211365): vijverrand in de vorm van de luchtfoto (NW-lob, haven
+  zuidwest) met rotsen + losse strandrotsen, waterplaat in die vorm; wachtrijvlonder (2 m) vanaf het plein zuidoost (9.8; -16.2)
+  noord langs de oostkant, zeilkap vanaf (15.9; 6.6), haarspeldbocht om het plantvak (midden (12.3; 8.8), r 3.3), dan meebuigend
+  met de draaischijf (r 10.3) tot het opstappunt op -62 graden; ruwe palen, leuning, gaas (botst in Roblox), bamboe kruisschoren
+  onder de kap, 12 lantaarns. Rond hutje (1.35; -8.9) met bamboewand, ovale raampjes en rieten kegel; stenen uitgangsbrug op
+  x -2.05 (muurtjes x -3.2/-0.9 uit de luchtfoto) met opengeslagen lattenhek; Sindbads dhow met latijnzeil in de haven (figuur
+  later), meerpalen, gele/blauwe boeien, ingangsbord. Gaashek-openingen (04_decor) verplaatst naar -62 (instap) en -106 graden
+  (uitstap = brug); gebouw opnieuw geupload 140043470117648.
+  Paden: rond de Sirocco ligt geen gras maar een groot plein (ruitpatroon) west/zuid, het noordpad en zand bij Archipel. 12_plak.py
+  deelt de 70 m rond het midden per m in uit de luchtfoto (kleurklassen + meerderheidsfilter + handgetekend NW-plantvak):
+  Pavement / Grass / Sand; plaats_sirocco.luau vult zo het terrein (vijver uitgespaard). Review: review/paden_osm.jpg (OSM over
+  luchtfoto, OSM ~4 m verschoven), review/paden_klassen.jpg, review/07_omgeving/*.png.
+  Gemeten in Studio: vlonder Y 1.1, plein ernaast 0.6-1.0 (halve stud opstap), brug sluit gelijk aan op het plein.
+- VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
+  Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

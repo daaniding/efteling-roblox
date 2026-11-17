@@ -64,6 +64,12 @@ for o in list(bpy.data.objects):
             per = 0.8 if rol == "schubben" else 2.0; hoog = 0.8 if rol == "schubben" else 1.0
             # bootmidden = middelpunt van de voet: neem het gemiddelde van alle hoekpunten van dit deel
             hoek_uv(bm, uvl, lambda co: ((lambda h: h * 0.85 / per), ((M @ co).z) / hoog, math.atan2((M @ co).y - c.y, (M @ co).x - c.x)))
+    elif rol == "net" and o.get("owner") == "phase:07_omgeving":     # rechte hekstukken langs de wachtrij: u langs het vlak
+        for f in bm.faces:
+            a0, a1 = M @ f.loops[0].vert.co, M @ f.loops[1].vert.co
+            d = Vector((a1.x - a0.x, a1.y - a0.y, 0)); d = d.normalized() if d.length > 1e-6 else Vector((1, 0, 0))
+            for lp in f.loops:
+                w = M @ lp.vert.co; lp[uvl].uv = (w.x * d.x + w.y * d.y, w.z)
     elif rol == "net":
         for f in bm.faces:
             for lp in f.loops:

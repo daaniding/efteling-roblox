@@ -12,7 +12,9 @@ KLEUR = {"riet": (0.55, 0.50, 0.40), "beschot": (0.12, 0.11, 0.10), "stam": (0.3
          "fles": (0.30, 0.18, 0.08), "ton": (0.42, 0.28, 0.16),
          "mand": (0.72, 0.62, 0.42), "fruit_geel": (0.95, 0.8, 0.1), "fruit_groen": (0.25, 0.55, 0.15), "lampion_oranje": (0.95, 0.5, 0.1),
          "lampion_rood": (0.75, 0.12, 0.1), "lampion_petrol": (0.1, 0.4, 0.45), "lantaarn": (0.6, 0.45, 0.2), "lantaarnglas": (1.0, 0.7, 0.3),
-         "bamboe": (0.75, 0.62, 0.35), "net": (0.75, 0.78, 0.8)}
+         "bamboe": (0.75, 0.62, 0.35), "net": (0.75, 0.78, 0.8), "zeil_turkoois": (0.15, 0.6, 0.58), "zeilrand": (0.1, 0.45, 0.45), "bamboewand": (0.7, 0.58, 0.35),
+         "raam": (0.05, 0.05, 0.05), "bestrating": (0.55, 0.5, 0.44), "muur": (0.5, 0.45, 0.4), "afdek": (0.62, 0.58, 0.52), "steen": (0.45, 0.42, 0.38),
+         "boei_geel": (0.95, 0.8, 0.1), "boei_blauw": (0.1, 0.3, 0.7), "bord": (0.4, 0.28, 0.16), "dhow": (0.4, 0.28, 0.16), "zeil_dhow": (0.92, 0.85, 0.6), "water": (0.13, 0.22, 0.2)}
 
 a = sys.argv[sys.argv.index("--") + 1:]
 def arg(n, d=None): return a[a.index(n) + 1] if n in a else d
