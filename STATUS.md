@@ -213,6 +213,12 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     vertrek (PSE 9119642644, begin "sluiten") en hekgeluid bij open/dicht (PSE 9116875342) bij het station, wind voor
     meerijders hoog (PSE 9112777914, 2D). Play: alles geladen, bel en hek op tc 25, brom 0 -> 0.88 tijdens omhoog,
     speakers binnen 0.06 s gelijk. Daan moet de muziekkeuze nog beluisteren.
+  - Wachtrijmuziek (17 nov): echte Pagode-muziek niet bruikbaar (auteursrecht). Meting van de video-audio (scratch
+    analyse.py): pentatonisch F-G-A-C-D (F groot / D klein), ~88 bpm met doortikkende achtsten, hoge melodie C5-A5, lage
+    drone C2/D2, warm (energie < 2 kHz). Gekozen uit de gelicentieerde APM-bibliotheek: "Peach Blossom Spring" 1840540291
+    (280 s). Alternatieven (laden allemaal): Plum Blossoms 1845854732 (165 s), Faint Moonlight 1845854743 (142 s), Kinuta
+    1845854711 (155 s), Fantasy Of Waves 1845916643 (138 s), Monkey King 1837190707 (108 s), Mandala 1840706030 (114 s),
+    Lightly Magical 1837777641 (149 s), Fairy Doll 1846356693 (156 s), World Of Wonder 1836330626 (143 s).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

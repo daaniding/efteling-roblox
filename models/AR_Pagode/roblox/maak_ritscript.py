@@ -95,7 +95,7 @@ do
   -- vervangen = alleen de ID hieronder aanpassen. De client (PagodeRitClient) speelt de ritgeluiden synchroon met de rit.
   do
     local GELUID = {
-      muziek = 1837145328,   -- APM "Milarepa" (wachtrij, Oosters getint)
+      muziek = 1840540291,   -- APM "Peach Blossom Spring" (wachtrij, Chinees getint, 280 s); alternatieven in STATUS.md
       brom = 9125767459,     -- PSE constante machinetoon (hydrauliek arm), toonhoogte/volume volgen de armsnelheid
       hek = 9116875342,      -- PSE metalen hekje open/dicht
       bel = 9119642644,      -- PSE dubbele bel (vertrek)
