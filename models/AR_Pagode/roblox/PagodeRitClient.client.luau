@@ -136,6 +136,18 @@ local vorigeFase, vorigOpen, thVorig = "", false, TH_D
 local huidigeGroep = ""
 plr.CharacterAdded:Connect(function() huidigeGroep = "" end)
 local cfs = table.create(#gDelen)
+-- camera draait mee met de gondel (Daan 17 nov: "waarom draai ik niet mee, met normale physics sta je en beweeg je mee"):
+-- in eerste persoon (EerstePersoon, LockFirstPerson) draait Roblox het lichaam elk frame naar de camera, dus alleen het lichaam
+-- meedraaien werkt niet. De draaiing van de gondel (om de verticaal) gaat elk frame ook op de camera, om het focuspunt;
+-- de cameramodule rekent vanaf de huidige camerastand verder, dus de draaiing blijft staan en je kunt gewoon rondkijken.
+local meeDraai = 0
+RunService:BindToRenderStep("PagodeMeedraaien", Enum.RenderPriority.Camera.Value + 2, function()
+	if meeDraai == 0 then return end
+	local cam = workspace.CurrentCamera
+	local f = cam.Focus.Position
+	cam.CFrame = CFrame.new(f) * CFrame.Angles(0, meeDraai, 0) * CFrame.new(-f) * cam.CFrame
+	meeDraai = 0
+end)
 -- NPC-bezoekers die meerijden (PagodeBezoekers: attribuut Rijdt, verankerd op de servergondel in de stationsstand = K_ONDER)
 local meeRel: {[Model]: CFrame} = {}      -- geen zwakke sleutels: Instance-sleutels worden dan weggegooid (rel drijft weg)
 local acfs = table.create(#aDelen)
@@ -157,7 +169,11 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	local rijdt = false
 	if hrp and beweegt then
 		local r = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
-		if r then hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame; rijdt = true end
+		if r then
+			hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame; rijdt = true
+			local _, dy, _ = (nieuwK.Rotation * gK.Rotation:Inverse()):ToEulerAnglesYXZ()
+			meeDraai += dy
+		end
 	end
 	-- wie meerijdt botst niet met de onzichtbare routemuren (de gondel zwaait door de stationshekken)
 	local groep = rijdt and "Rijdend" or "Spelers"                -- Spelers: NPC-bezoekers lopen erdoorheen (PagodeBezoekers)

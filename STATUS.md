@@ -320,6 +320,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Pak = klassieke Shirt/Pants getekend met build/23_uniform.py: donkergroene jas met gouden knopen en biezen, bordeaux
     revers en manchetten, wit overhemd met bordeaux das, gouden naambadge PAGODE; antraciet broek met riem en gouden bies.
     Ids MW_shirt 72318330752161, MW_broek 102868677288881 (exports/asset_ids.json).
+  - Meedraaien met de gondel (17 nov, Daan: "waarom draai ik niet mee, met normale physics beweeg je mee"): in eerste persoon
+    (EerstePersoon, LockFirstPerson) draait Roblox het lichaam elk frame naar de camera, dus alleen het lichaam meedraaien
+    werd teruggedraaid. PagodeRitClient telt de draaiing van de gondel om de verticaal op (meeDraai) en draait de camera
+    daarmee om het focuspunt (RenderStep Camera+2); rondkijken blijft vrij. Daan getest: "werkt goed".
   - Wachttijdbord (17 nov, Daan): zwart frame op de linkerpaal van het ingangsbord (12_omgeving AR_Pagode_O_wachttijdbord,
     exports/wachttijdbord.json; omgeving 87648168829062), SurfaceGui "PAGODE / Waiting time / X min" (vertaling Wachttijd in
     PagodeTeksten). Rekent elke 5 s: bezoekers + spelers in de rij, 36 plekken per rit, cyclus 205 s, op 5 min, minimaal 5.
