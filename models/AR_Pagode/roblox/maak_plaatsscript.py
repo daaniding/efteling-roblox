@@ -72,7 +72,7 @@ end
 -- rol -> textuur (SurfaceAppearance) of effen kleur + materiaal
 local TEX = {{pannen = true, sierveld = true, windveer = true, trommel = true, sierrand = true, kernwand = true, arm = true,
   natuursteen = true, vlonder = true, klinker = true, bord = true, ingangsbord = true, uitgangsbord = true, breuksteen = true,
-  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true, tokorand = true, tokopaneel = true, parasol = true, wilg = true, steen = true, pluk = true}}
+  bamboe = true, blad = true, spar = true, naald = true, haag = true, bloem = true, schors = true, tokorand = true, tokopaneel = true, parasol = true, wilg = true, steen = true, pluk = true, huisrand = true}}
 local ALPHA = {{bamboe = true, blad = true, spar = true, wilg = true, pluk = true}}       -- bladkaarten: transparantie uit de textuur
 local EFFEN = {{
   groen = {{Color3.fromRGB(22, 112, 86), Enum.Material.SmoothPlastic}}, rib = {{Color3.fromRGB(232, 228, 216), Enum.Material.SmoothPlastic}},

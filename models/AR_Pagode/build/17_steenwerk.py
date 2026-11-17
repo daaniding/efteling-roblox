@@ -8,7 +8,7 @@ Video fmEZsIkqsl8 (0:04-0:12 plein, 0:20-0:30 laantje, 0:39 tribune, 6:40 uitgan
 De gladde muren van 12_omgeving blijven als achterwand (rol "voeg": donker, zit achter de stenen).
 Stenen per muur in een object; UV in de steenatlas (04f_texturen_steen.py), tegel per steen -> obj["uv_vast"].
 Gebruik: blender --background --python build/17_steenwerk.py -- --master AR_Pagode_master.blend"""
-import bpy, bmesh, sys, os, math, random
+import bpy, bmesh, sys, os, math, random, json
 from mathutils import Vector, Matrix
 
 HIER = os.path.dirname(os.path.abspath(__file__))
@@ -20,6 +20,13 @@ pt, aL, aR, aW, ztop, ringsector = NS["pt"], NS["aL"], NS["aR"], NS["aW"], NS["z
 Z_I, Z_P, R_BO, R_VL, N_RIJ, A_ZUID = NS["Z_I"], NS["Z_P"], NS["R_BO"], NS["R_VL"], NS["N_RIJ"], NS["A_ZUID"]
 rnd = random.Random(17)
 TRIS = [0]
+_mj = os.path.join(os.path.dirname(HIER), "exports", "omgeving_meubilair.json")
+MEUBEL = [Vector((x, y, 0)) for _, x, y, _ in json.load(open(_mj))] if os.path.exists(_mj) else []
+
+
+def botst(c, L):
+    """Rotsblok niet op een lantaarn, bak, bordpaal of bank zetten (12_omgeving schrijft hun plekken weg)."""
+    return any((Vector((c.x, c.y, 0)) - m).length < L * 0.6 + 0.35 for m in MEUBEL)
 ROTS_TEGELS = [0, 2, 4, 5, 7, 8, 10, 12, 14, 15]           # geen lichte beige tegels voor losse rotsen (video: grijs, mossig)
 
 
@@ -172,7 +179,7 @@ def rotsrij(naam, punten, z, maat=(0.25, 0.5)):
         L = rnd.uniform(*maat); p, _, _, _, tg = lijn.op(s + L / 2)
         B = L * rnd.uniform(0.6, 0.9); H = L * rnd.uniform(0.5, 0.8)
         rot = Matrix.Rotation(math.atan2(tg.y, tg.x) + rnd.uniform(-0.4, 0.4), 3, "Z") @ Matrix.Rotation(rnd.uniform(-0.15, 0.15), 3, "X")
-        blok(bm, uv, Vector((p.x, p.y, z + H * 0.25)), (L, B, H), rot, afrond=0.3, bodem=-H * 0.3)
+        if not botst(p, L): blok(bm, uv, Vector((p.x, p.y, z + H * 0.25)), (L, B, H), rot, afrond=0.3, bodem=-H * 0.3)
         s += L * rnd.uniform(0.7, 0.9)
     o = NS["obj"](naam, bm, "steen"); o["uv_vast"] = True
     return o
@@ -240,6 +247,7 @@ def build():
     bm = bmesh.new(); uv = bm.loops.layers.uv.verify()
     for j in range(14):
         r = rnd.uniform(16.0, 25.0); aa = aL(r) - math.degrees(rnd.uniform(0.8, 4.5) / r); L = rnd.uniform(0.35, 0.8)
+        if botst(pt(r, aa), L): continue
         blok(bm, uv, pt(r, aa, Z_P + L * 0.1), (L, L * rnd.uniform(0.6, 0.9), L * rnd.uniform(0.45, 0.7)),
              Matrix.Rotation(rnd.uniform(0, 6.3), 3, "Z") @ Matrix.Rotation(rnd.uniform(-0.3, 0.3), 3, "X"), afrond=0.6, bodem=-L * 0.2)
     o = NS["obj"]("AR_Pagode_S_tuinrotsen", bm, "steen"); o["uv_vast"] = True

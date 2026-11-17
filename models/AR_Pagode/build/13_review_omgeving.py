@@ -50,6 +50,8 @@ CAMS = {
     "v005": (P(21.0, 80.0, 1.25), P(14.5, 96.0, 1.5), 22),           # video 0:05 (plein, muur, bord rechts)
     "v021": (P(15.3, 102.8, 1.3), P(24.0, 117.0, 0.6), 22),          # video 0:21 (begin laantje, muur links)
     "v024": (P(21.0, 110.2, 1.2), P(23.5, 100.0, 1.5), 22),          # video 0:24 (laantje, kijkt naar de bamboe)
+    "v043": (P(18.5, 114.5, 2.15), P(12.05, 112.6, 2.6), 24),          # video 0:43 (trapstrook, tourniquets, huisje)
+    "v016": (P(15.3, 92.5, 1.15), P(15.4, 101.5, 2.3), 22),           # video 0:16 (bord en kop van het laantje)
     "toko": ((366.0, 58.0, 4.2), (380.6, 79.3, 3.0), 30),          # video 1:02 vanaf het bordes
 }
 for naam in arg.alleen.split(","):

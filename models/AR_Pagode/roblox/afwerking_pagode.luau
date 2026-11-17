@@ -76,7 +76,7 @@ for i = 0, 47 do
     {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 40, 40), CanCollide = false, CanQuery = false})
 end
 -- 4 lantaarns van de omgeving (12_omgeving.py -> exports/omgeving_lampen.json, park x, y, z = NAP - 10): warm licht
-local LAMPEN = {{352.74, 63.42, 3.63}, {349.52, 67.41, 2.88}, {341.45, 56.23, 3.18}, {349.81, 56.05, 4.23}, {360.53, 62.69, 2.55}, {367.14, 60.92, 2.55}, {355.63, 68.04, 2.85}, {372.36, 40.93, 2.58}, {373.79, 49.93, 2.58}}
+local LAMPEN = {{352.53, 64.97, 3.32}, {349.87, 68.15, 2.72}, {353.80, 60.55, 4.43}, {352.23, 63.18, 3.98}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}, {360.29, 63.95, 2.54}, {370.20, 42.08, 2.57}, {371.38, 49.51, 2.57}}
 for i, l in ipairs(LAMPEN) do
   local p = Instance.new("Part"); p.Name = "lantaarnlicht"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
   p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3); p.Position = Vector3.new(l[1] * S, 2 + l[3] * S, -l[2] * S); p.Parent = map

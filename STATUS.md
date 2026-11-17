@@ -147,7 +147,19 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   Klinkers valer (video). Bank en pot naar voren (r 15.7). Vergelijk: models/AR_Pagode/review/17_steen/vergelijk.jpg (v005, v021).
   In Studio geladen (omgeving 54 delen, 183k driehoeken, waarvan ~82k stenen): roblox/herlaad_omgeving.luau laadt alleen de
   omgeving. Fps nog niet gemeten. Gondoletta-water staat nog op het oude peil (raycast NAP ~8.6): gondoletta_water.luau opnieuw draaien.
-  Nog open voor ingang/wachtrij: hekken en relingen (kragen, bolletjes), lantaarns, PAGODE-bord, controlehuisje, banken (nu blokken).
+- Meubilair ingang/wachtrij secuur geplaatst en verfijnd (17 nov), Daan: "zet ze secuur neer, soms staan lantaarnpalen op het pad".
+  12_omgeving heeft nu een looppadcontrole: elk meubelstuk wordt met vrij() geregistreerd en getoetst tegen laantje, trapstrook,
+  banen tussen de wachtrijrelingen, bordes, onderpad en pad langs de uitgangsmuur; de build stopt bij een treffer (vond er 6).
+  Plekken uit de video: klassieke zwarte lantaarns op de trapstrook tegen het hek op de laanmuur (0:18-0:24), sierlijke bronzen
+  lantaarns in de lijn van de trapreling (0:39-0:46), lantaarn op de hoek plein/tuin (0:02), lantaarns uitgang aan de muurvoet;
+  tuinlantaarn en tweede pleinlantaarn weg (niet in de video). PAGODE-bord met de voorkant naar het plein (je loopt westwaarts
+  onder het bord door en slaat dan rechtsaf het laantje in), pot links ervoor tegen de pleinmuur, hoge groene bak rechts,
+  3 zwarte paaltjes in de mond van het laantje. Tourniquets recht boven de trapstrook, controlehuisje er vlak achter (nieuw model:
+  groen frame, rode panelen, glas met roeden, opengeklapt raam, toonbank, kroonrand PG_huisrand, gouden knoppen, plat dak).
+  Palen met voetplaat/kraag/hals/bol, dubbele bovenregel op de spijlenhekken, spijlenpaneel langs de trapstrook, afvalbakken
+  met lijsten en embleem, banken met latten en gietijzeren zijstukken. Rotsen ontwijken het meubilair (exports/omgeving_meubilair.json).
+  Lichten in Studio bijgewerkt (afwerking_pagode.luau LAMPEN). Vergelijk: models/AR_Pagode/review/18_meubilair/.
+  Omgeving 58 delen, 191k driehoeken; fps nog niet gemeten.
 - Nog te doen: rieten stoelen netter (nu blokjes), koepel iets minder spits, onzichtbare botsing langs de hekken. Eerder genoemd nog open:
   met terras, Gondoletta-oever, onzichtbare botsing langs de hekken en relingen (nu loop je erdoor).
 

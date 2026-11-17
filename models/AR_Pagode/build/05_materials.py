@@ -83,6 +83,7 @@ ROLLEN = {
     "naald_donker": ((0.025, 0.045, 0.025), 0.9, 0.0, None, 0),  # kern van de niwakiwolken
     "voeg":      ((0.045, 0.04, 0.035), 0.95, 0.0, None, 0),     # achterwand tussen de stenen
     "graniet":   ((0.34, 0.33, 0.31), 0.8, 0.0, None, 0),        # neuzen tribunerijen
+    "huisrand":  ((1, 1, 1), 0.5, 0.0, "huisrand", 0),           # kroonrand controlehuisje (04g)
 }
 
 

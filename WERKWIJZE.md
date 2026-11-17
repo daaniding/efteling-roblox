@@ -388,4 +388,7 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   rotatiematrix uit (raaklijn, normaal, omhoog) kan gespiegeld zijn (det -1) en keert dan alle vlakken om.
 - Muren met textuur alleen lijken vlak: echte losse stenen (24 driehoeken per steen, per muur een object, tegel per steen in een
   atlas) maken het verschil. Maten uit de video tellen (lagen per meter), en vulstenen zetten waar een steen de laag niet vult.
+- Meubilair (lantaarns, bakken, palen) nooit "ongeveer" neerzetten: per stuk de videoframe zoeken, en in het bouwscript een
+  looppadcontrole draaien die de build laat falen als iets op een looppad staat. Een plattegrond (ortho-render met labels) laat
+  meteen zien wat er mis staat. Een bord oriënteren op de looprichting van wie eraan komt, niet op de lengteas van het pad.
 

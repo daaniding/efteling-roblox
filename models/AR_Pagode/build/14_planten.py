@@ -89,11 +89,11 @@ def kaarten(naam, lijst, rol):
     return obj(naam, bm, rol, uv_vast=True)
 
 
-def bamboebos(naam, c, z, n=10, h=5.0):
+def bamboebos(naam, c, z, n=10, h=5.0, spreid=0.6):
     """Bamboebos (video 0:24-0:28): veel dunne geelgroene stengels, bladveren vanaf ~30 % van de hoogte, dicht en fijn."""
     c = Vector(c); stengels = []
     for k in range(n):
-        p = c + Vector((rnd.uniform(-0.6, 0.6), rnd.uniform(-0.6, 0.6), z))
+        p = c + Vector((rnd.uniform(-spreid, spreid), rnd.uniform(-spreid, spreid), z))
         hh = h * rnd.uniform(0.75, 1.15); top = p + Vector((rnd.uniform(-0.5, 0.5), rnd.uniform(-0.5, 0.5), hh))
         buis(f"{naam}_stengel{k}", p, top, rnd.uniform(0.014, 0.024), "bamboestam", 5, 0.008)
         stengels.append((p, top))
@@ -229,7 +229,7 @@ def build():
     while r < 27.0:
         bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(r, aL(r) - math.degrees(rnd.uniform(4.2, 5.4) / r)), Z_P - 0.1, 10, 4.8); k += 1
         r += 1.3
-    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(15.7, 95.0, Z_P + 0.5), 0.0, 8, 1.6)     # in de pot naast het bord
+    bamboebos(f"AR_Pagode_P_bamboe{k:02d}", pt(14.62, 98.4, Z_P + 0.62), 0.0, 8, 1.6, 0.2)     # in de pot naast het bord
     # niwaki: tuin (2), achter het bord, bij het oostpad
     niwaki("AR_Pagode_P_niwaki0", pt(20.0, aL(20.0) - math.degrees(2.2 / 20), Z_P - 0.1), 6.2, 7)       # video 0:21: hoog, vlak naast het laantje
     niwaki("AR_Pagode_P_niwaki1", pt(23.8, aL(23.8) - math.degrees(2.0 / 23.8), Z_P - 0.1), 3.4, 5)

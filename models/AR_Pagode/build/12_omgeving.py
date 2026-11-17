@@ -36,6 +36,38 @@ def aW(r): return aR(r) + math.degrees(0.42 / r)          # einde muur
 def aS(r): return aW(r) + math.degrees(1.5 / r)           # einde trapstrook (begin zigzag)
 
 
+PLAATS = []
+
+
+def vrij(naam, p, rad, bewust=False):
+    """Registreer meubilair voor de looppadcontrole (bewust=True: hoort in de looproute, zoals tourniquets en paaltjes)."""
+    PLAATS.append((naam, Vector(p), rad, bewust))
+
+
+def looppad(q):
+    """Is punt q (park x, y) een looppad? Laantje, trapstrook, de banen tussen de wachtrijrelingen, het bordes, het onderpad
+    en het pad langs de uitgangsmuur. Randstroken tegen muren en hekken tellen niet mee (daar mag meubilair staan)."""
+    r = math.hypot(q.x - CX, q.y - CY); a = math.degrees(math.atan2(q.y - CY, q.x - CX))
+    if 14.15 < r < 25.0 and aL(r) < a < aR(r): return "laantje"
+    if 14.2 < r < 25.0 and aW(r) + math.degrees(0.35 / r) < a < aS(r) - math.degrees(0.1 / r): return "trapstrook"
+    if 14.2 < r < 25.0 and aS(r) + math.degrees(0.1 / r) < a < A_ZUID - math.degrees(0.1 / r):
+        if abs(r - (14.12 + round(r - 14.12))) > 0.12: return "wachtrijbaan"
+    if R_VL + 0.05 < r < 13.55 and 99.5 < a < A_ZUID: return "bordes"
+    if 25.0 < r < 26.45 and aL(25.9) < a < A_ZUID: return "onderpad"
+    if 11.75 < r < R_BO + 0.15 and -52.0 < a < 54.0: return "pad uitgang"
+    return None
+
+
+def controle():
+    fout = []
+    for naam, p, rad, bewust in PLAATS:
+        if bewust: continue
+        for dx, dy in ((0, 0), (0.4, 0), (-0.4, 0), (0, 0.4), (0, -0.4)):
+            w = looppad(p + Vector((dx * rad, dy * rad, 0)))
+            if w: fout.append(f"{naam} op ({p.x:.2f}, {p.y:.2f}): {w}"); break
+    return fout
+
+
 def col():
     c = bpy.data.collections.get("OMGEVING")
     if not c:
@@ -98,38 +130,49 @@ def steen(naam, c, s, rol="breuksteen"):
     return obj(naam, bm, rol)
 
 
+def paalkop(naam, p, h, rol, dik=0.06):
+    """Paal zoals in de video (0:04-0:44): voetplaat, vierkante paal, kraag onder de top, hals en gouden bol."""
+    doos(f"{naam}_voet", p + Vector((0, 0, 0.02)), (dik * 1.9, dik * 1.9, 0.04), rol)
+    doos(f"{naam}", p + Vector((0, 0, h / 2)), (dik, dik, h), rol)
+    doos(f"{naam}_kraag", p + Vector((0, 0, h - 0.06)), (dik * 1.45, dik * 1.45, 0.035), rol)
+    buis(f"{naam}_hals", p + Vector((0, 0, h)), p + Vector((0, 0, h + 0.05)), dik * 0.35, rol, 8)
+    bol(f"{naam}_bol", p + Vector((0, 0, h + 0.05 + dik * 0.9)), dik * 0.95)
+
+
 def spijlenhek(naam, pts, h=1.1, rol="hek"):
-    """Zwart spijlenhek (video 0:04-0:26, 6:40): palen met gouden bol om de ~2 m, boven-/onderregel, spijlen om de 12 cm.
-    pts: lijst Vector (voet van het hek); hek volgt de lijn, ook schuin."""
+    """Spijlenhek (video 0:04-0:26, 0:40, 6:40): palen met kraag en gouden bol om de ~2 m, dubbele bovenregel, onderregel,
+    vierkante spijlen om de 11 cm. pts: lijst Vector (voet van het hek); volgt de lijn, ook schuin."""
     for k in range(len(pts) - 1):
         a, b = pts[k], pts[k + 1]; d = b - a; L = d.length
         if L < 0.05: continue
         rot = math.atan2(d.y, d.x)
-        for nm, z in (("o", 0.1), ("b", h)):
-            buis(f"{naam}_{k:02d}_regel{nm}", a + Vector((0, 0, z)), b + Vector((0, 0, z)), 0.022, rol, 4)
-        n = max(1, int(L / 0.12))
+        for nm, z in (("o", 0.1), ("b", h), ("b2", h - 0.11)):
+            buis(f"{naam}_{k:02d}_regel{nm}", a + Vector((0, 0, z)), b + Vector((0, 0, z)), 0.018, rol, 4)
+        n = max(1, int(L / 0.11))
         for i in range(1, n):
             p = a + d * (i / n)
-            doos(f"{naam}_{k:02d}_sp{i:03d}", p + Vector((0, 0, (h + 0.1) / 2)), (0.018, 0.018, h - 0.08), rol, rot)
+            doos(f"{naam}_{k:02d}_sp{i:03d}", p + Vector((0, 0, (h + 0.1) / 2)), (0.016, 0.016, h - 0.1), rol, rot)
         np_ = max(1, int(L / 2.0))
         for i in range(np_ + (1 if k == len(pts) - 2 else 0)):
-            p = a + d * (i / np_)
-            doos(f"{naam}_{k:02d}_paal{i}", p + Vector((0, 0, (h + 0.12) / 2)), (0.06, 0.06, h + 0.12), rol, rot)
-            bol(f"{naam}_{k:02d}_bol{i}", p + Vector((0, 0, h + 0.19)), 0.055)
+            paalkop(f"{naam}_{k:02d}_paal{i}", a + d * (i / np_), h + 0.08, rol, 0.06)
 
 
-def reling(naam, pts, rol="reling"):
-    """Wachtrijreling (video 0:22-0:44): donkergroene buizen op 0.5 en 1.0 m, palen om de ~2 m met crèmegouden bol."""
+def reling(naam, pts, rol="reling", spijlen=False):
+    """Wachtrijreling (video 0:22-0:44): twee buizen op 0.45 en 0.95 m, palen om de ~1.8 m met voetplaat, kraag en bol.
+    spijlen=True: paneel met spijlen (langs de trapstrook, video 0:39-0:41)."""
     for k in range(len(pts) - 1):
         a, b = pts[k], pts[k + 1]; d = b - a; L = d.length
         if L < 0.05: continue
-        for nm, z in (("o", 0.5), ("b", 1.0)):
+        rot = math.atan2(d.y, d.x)
+        for nm, z in (("o", 0.45 if not spijlen else 0.1), ("b", 0.95)):
             buis(f"{naam}_{k:02d}_{nm}", a + Vector((0, 0, z)), b + Vector((0, 0, z)), 0.024, rol, 6)
-        np_ = max(1, int(L / 2.0))
+        if spijlen:
+            n = max(1, int(L / 0.11))
+            for i in range(1, n):
+                doos(f"{naam}_{k:02d}_sp{i:03d}", a + d * (i / n) + Vector((0, 0, 0.525)), (0.016, 0.016, 0.85), rol, rot)
+        np_ = max(1, int(L / 1.8))
         for i in range(np_ + (1 if k == len(pts) - 2 else 0)):
-            p = a + d * (i / np_)
-            buis(f"{naam}_{k:02d}_paal{i}", p, p + Vector((0, 0, 1.05)), 0.03, rol, 6)
-            bol(f"{naam}_{k:02d}_bol{i}", p + Vector((0, 0, 1.1)), 0.05)
+            paalkop(f"{naam}_{k:02d}_paal{i}", a + d * (i / np_), 1.02, rol, 0.055)
 
 
 def boog(r, a0, a1, z, stap=2.0):
@@ -137,35 +180,152 @@ def boog(r, a0, a1, z, stap=2.0):
     return [pt(r, a0 + (a1 - a0) * i / n, z) for i in range(n + 1)]
 
 
+def kolom(naam, c, rx, ry, h, rol, rot=0.0, seg=16):
+    """Ovale kolom (tourniquet, afvalbak met ronde hoeken)."""
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=seg, radius1=1.0, radius2=1.0, depth=h)
+    bmesh.ops.scale(bm, vec=(rx, ry, 1), verts=bm.verts)
+    bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(rot, 3, "Z"), verts=bm.verts)
+    bmesh.ops.translate(bm, vec=Vector(c) + Vector((0, 0, h / 2)), verts=bm.verts)
+    for fc in bm.faces: fc.smooth = abs(fc.normal.z) < 0.5
+    return obj(naam, bm, rol)
+
+
 def lantaarn(naam, p):
-    """Bronzen lantaarnpaal met oosterse kap (video 0:38-0:44, 6:53): voet, paal 2.6 m, lantaarn 0.32 x 0.32 x 0.45, kap + pinakel."""
-    p = Vector(p)
-    buis(f"{naam}_voet", p, p + Vector((0, 0, 0.5)), 0.14, "brons", 8, 0.08)
-    buis(f"{naam}_paal", p + Vector((0, 0, 0.45)), p + Vector((0, 0, 2.65)), 0.055, "brons", 8)
-    buis(f"{naam}_kraag", p + Vector((0, 0, 2.6)), p + Vector((0, 0, 2.7)), 0.12, "brons", 8)
-    doos(f"{naam}_glas", p + Vector((0, 0, 2.93)), (0.28, 0.28, 0.42), "lamp")
+    """Klassieke zwarte lantaarnpaal (video 0:02 plein, 0:18-0:24 langs de trapstrook, 6:53): uitlopende voet, slanke paal met
+    ringen, vierkante lantaarn die naar boven breder wordt, kap met knop. Licht op ~2.95 m."""
+    p = Vector(p); R = "hek"
+    buis(f"{naam}_voet", p, p + Vector((0, 0, 0.55)), 0.13, R, 8, 0.07)
+    buis(f"{naam}_ring0", p + Vector((0, 0, 0.55)), p + Vector((0, 0, 0.6)), 0.09, R, 8)
+    buis(f"{naam}_paal", p + Vector((0, 0, 0.6)), p + Vector((0, 0, 2.62)), 0.05, R, 8, 0.04)
+    buis(f"{naam}_ring1", p + Vector((0, 0, 2.6)), p + Vector((0, 0, 2.68)), 0.075, R, 8)
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=4, radius1=0.15, radius2=0.21, depth=0.44)
+    bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(math.pi / 4, 3, "Z"), verts=bm.verts)
+    bmesh.ops.translate(bm, vec=p + Vector((0, 0, 2.92)), verts=bm.verts); obj(f"{naam}_glas", bm, "lamp")
     for sx in (-1, 1):
         for sy in (-1, 1):
-            doos(f"{naam}_stijl{sx}{sy}", p + Vector((sx * 0.15, sy * 0.15, 2.93)), (0.035, 0.035, 0.46), "brons")
-    buis(f"{naam}_kap", p + Vector((0, 0, 3.15)), p + Vector((0, 0, 3.4)), 0.26, "brons", 4, 0.02)
-    buis(f"{naam}_pinakel", p + Vector((0, 0, 3.38)), p + Vector((0, 0, 3.55)), 0.025, "goud", 6)
-    LAMPEN.append([round(p.x, 3), round(p.y, 3), round(p.z + 2.93, 3)])
+            buis(f"{naam}_stijl{sx}{sy}", p + Vector((sx * 0.105, sy * 0.105, 2.7)), p + Vector((sx * 0.15, sy * 0.15, 3.14)), 0.014, R, 4)
+    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=4, radius1=0.27, radius2=0.03, depth=0.22)
+    bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(math.pi / 4, 3, "Z"), verts=bm.verts)
+    bmesh.ops.translate(bm, vec=p + Vector((0, 0, 3.25)), verts=bm.verts); obj(f"{naam}_kap", bm, R)
+    bol(f"{naam}_knop", p + Vector((0, 0, 3.4)), 0.04, R)
+    LAMPEN.append([round(p.x, 3), round(p.y, 3), round(p.z + 2.92, 3)])
 
 
-def afvalbak(naam, p, rot):
+def lantaarn_sier(naam, p):
+    """Sierlijke bronzen lantaarnpaal bij de tourniquets (video 0:39-0:46): brede geribde voet met ringen, paal met
+    verdikkingen, kapiteel, zeshoekige lantaarn met bolle kap en spits. Licht op ~3.3 m."""
+    p = Vector(p); R = "brons"
+    buis(f"{naam}_plint", p, p + Vector((0, 0, 0.12)), 0.2, R, 8)
+    buis(f"{naam}_voet", p + Vector((0, 0, 0.12)), p + Vector((0, 0, 0.95)), 0.16, R, 8, 0.09)
+    for k, z in enumerate((0.35, 0.95, 1.6, 2.6)):
+        buis(f"{naam}_ring{k}", p + Vector((0, 0, z - 0.03)), p + Vector((0, 0, z + 0.03)), 0.12 if k < 2 else 0.085, R, 8)
+    buis(f"{naam}_paal", p + Vector((0, 0, 0.95)), p + Vector((0, 0, 2.9)), 0.06, R, 8, 0.05)
+    buis(f"{naam}_kapiteel", p + Vector((0, 0, 2.9)), p + Vector((0, 0, 3.05)), 0.07, R, 8, 0.13)
+    buis(f"{naam}_glas", p + Vector((0, 0, 3.05)), p + Vector((0, 0, 3.5)), 0.15, "lamp", 6, 0.19)
+    for k in range(6):
+        a = k * math.pi / 3
+        buis(f"{naam}_stijl{k}", p + Vector((math.cos(a) * 0.155, math.sin(a) * 0.155, 3.05)), p + Vector((math.cos(a) * 0.195, math.sin(a) * 0.195, 3.5)), 0.013, R, 4)
+    buis(f"{naam}_kap", p + Vector((0, 0, 3.5)), p + Vector((0, 0, 3.7)), 0.24, R, 6, 0.05)
+    buis(f"{naam}_spits", p + Vector((0, 0, 3.7)), p + Vector((0, 0, 3.9)), 0.035, "goud", 6, 0.0)
+    LAMPEN.append([round(p.x, 3), round(p.y, 3), round(p.z + 3.28, 3)])
+
+
+def afvalbak(naam, p, rot, hoog=False):
+    """Groene afvalbak (video 0:02 plein: hoog met grijze kap; 0:49-0:52 bordes: met gouden embleem en lijsten)."""
+    p = Vector(p); f = Vector((math.cos(rot), math.sin(rot), 0)); t = Vector((-f.y, f.x, 0))
+    H = 1.15 if hoog else 0.95
+    doos(f"{naam}_plint", p + Vector((0, 0, 0.04)), (0.5, 0.46, 0.08), "staal_groen", rot)
+    doos(f"{naam}_bak", p + Vector((0, 0, H / 2)), (0.46, 0.42, H - 0.04), "staal_groen", rot)
+    doos(f"{naam}_deksel", p + Vector((0, 0, H + 0.03)), (0.52, 0.48, 0.07), "staal" if hoog else "staal_groen", rot)
+    doos(f"{naam}_gleuf", p + f * 0.215 + Vector((0, 0, H - 0.14)), (0.03, 0.3, 0.08), "beton_donker", rot)
+    for s_ in (-1, 1):                                       # lijsten (verdiept paneel)
+        doos(f"{naam}_lijst{s_}", p + f * 0.215 + t * s_ * 0.17 + Vector((0, 0, H * 0.45)), (0.02, 0.03, H * 0.6), "goud" if not hoog else "staal_groen", rot)
+    buis(f"{naam}_embleem", p + f * 0.21 + Vector((0, 0, H * 0.48)), p + f * 0.235 + Vector((0, 0, H * 0.48)), 0.09, "goud", 12)
+
+
+def paaltje(naam, p):
+    """Zwart paaltje (video 0:04-0:13, kop van het laantje)."""
     p = Vector(p)
-    doos(f"{naam}_bak", p + Vector((0, 0, 0.48)), (0.5, 0.5, 0.96), "staal_groen", rot)
-    doos(f"{naam}_deksel", p + Vector((0, 0, 0.99)), (0.58, 0.58, 0.06), "staal_groen", rot)
-    f = Vector((math.cos(rot), math.sin(rot), 0))
-    buis(f"{naam}_embleem", p + f * 0.25 + Vector((0, 0, 0.55)), p + f * 0.262 + Vector((0, 0, 0.55)), 0.13, "goud", 12)
+    buis(f"{naam}", p, p + Vector((0, 0, 0.85)), 0.045, "hek", 8)
+    bol(f"{naam}_bol", p + Vector((0, 0, 0.88)), 0.055, "hek")
 
 
 def bankje(naam, p, rot):
+    """Parkbank: rode houten latten op gietijzeren zijstukken met armleuning (Pagode-landing.jpg)."""
     p = Vector(p); f = Vector((math.cos(rot), math.sin(rot), 0)); t = Vector((-f.y, f.x, 0))
-    doos(f"{naam}_zit", p + Vector((0, 0, 0.45)), (0.45, 1.8, 0.06), "rood", rot)
-    doos(f"{naam}_rug", p - f * 0.22 + Vector((0, 0, 0.75)), (0.05, 1.8, 0.45), "rood", rot)
-    for s in (-1, 1):
-        doos(f"{naam}_poot{s}", p + t * s * 0.75 + Vector((0, 0, 0.22)), (0.42, 0.06, 0.44), "hek", rot)
+    for k in range(4):
+        doos(f"{naam}_zit{k}", p + f * (0.18 - k * 0.115) + Vector((0, 0, 0.45)), (0.09, 1.8, 0.035), "rood", rot)
+    for k in range(3):
+        c = p - f * (0.25 + k * 0.02) + Vector((0, 0, 0.6 + k * 0.13))
+        bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0); bmesh.ops.scale(bm, vec=(0.03, 1.8, 0.09), verts=bm.verts)
+        bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(rot, 3, "Z") @ Matrix.Rotation(0.18, 3, "Y"), verts=bm.verts)
+        bmesh.ops.translate(bm, vec=c, verts=bm.verts); obj(f"{naam}_rug{k}", bm, "rood")
+    for s_ in (-1, 1):
+        q = p + t * s_ * 0.8
+        doos(f"{naam}_voorpoot{s_}", q + f * 0.2 + Vector((0, 0, 0.3)), (0.05, 0.05, 0.6), "hek", rot)
+        doos(f"{naam}_achterpoot{s_}", q - f * 0.24 + Vector((0, 0, 0.47)), (0.05, 0.05, 0.94), "hek", rot)
+        doos(f"{naam}_leuning{s_}", q + Vector((0, 0, 0.64)), (0.5, 0.05, 0.04), "hek", rot)
+        doos(f"{naam}_dwars{s_}", q + Vector((0, 0, 0.42)), (0.48, 0.05, 0.04), "hek", rot)
+
+
+def tourniquet(naam, p, rot):
+    """Tourniquetkolom (video 0:44-0:47): zwart, ovaal, ~1.1 m, rond groen licht bovenop, lichtblauw bordje met pijl."""
+    p = Vector(p); f = Vector((math.cos(rot), math.sin(rot), 0))
+    kolom(f"{naam}", p, 0.13, 0.11, 1.08, "hek", rot)
+    kolom(f"{naam}_kap", p + Vector((0, 0, 1.08)), 0.14, 0.12, 0.04, "hek", rot)
+    kolom(f"{naam}_licht", p + Vector((0, 0, 1.12)), 0.075, 0.075, 0.015, "lamp_groen", rot, 12)
+    doos(f"{naam}_bordje", p + f * 0.118 + Vector((0, 0, 0.72)), (0.012, 0.17, 0.3), "bord_blauw", rot)
+
+
+def controlehuisje(naam, hc, rot):
+    """Controlehuisje (video 0:44-0:49): groen frame, rode onderpanelen met groene lijst, glazen bovenhelft met roeden,
+    een opengeklapt raam aan de voorkant, toonbank, rode kroonrand met witte motieven (PG_huisrand) en gouden knoppen."""
+    f = Vector((math.cos(rot), math.sin(rot), 0)); tg = Vector((-f.y, f.x, 0)); B, D = 1.7, 1.5
+    doos(f"{naam}_vloer", hc + Vector((0, 0, 0.05)), (D + 0.06, B + 0.06, 0.1), "groen", rot)
+    doos(f"{naam}_binnen", hc + Vector((0, 0, 1.35)), (D - 0.2, B - 0.2, 2.5), "onderkant", rot)
+    for zijde, (n, breed) in enumerate(((f, B), (-f, B), (tg, D), (-tg, D))):
+        t2 = Vector((-n.y, n.x, 0)); c = hc + n * ((D if breed == B else B) / 2)
+        r2 = math.atan2(n.y, n.x)
+        doos(f"{naam}_paneel{zijde}", c + Vector((0, 0, 0.6)), (0.04, breed - 0.1, 0.95), "rood", r2)
+        for k, sx in enumerate((-1, 1)):
+            doos(f"{naam}_plijst{zijde}{k}", c + n * 0.025 + t2 * sx * (breed / 2 - 0.15) + Vector((0, 0, 0.6)), (0.02, 0.06, 0.8), "groen", r2)
+        for nm, z in (("o", 0.2), ("b", 1.0)):
+            doos(f"{naam}_plat{zijde}{nm}", c + n * 0.025 + Vector((0, 0, z)), (0.02, breed - 0.24, 0.06), "groen", r2)
+        doos(f"{naam}_glas{zijde}", c + Vector((0, 0, 1.68)), (0.02, breed - 0.1, 1.2), "glas", r2)
+        for k in (-1, 0, 1):
+            doos(f"{naam}_roede{zijde}{k}", c + n * 0.015 + t2 * k * breed / 3.2 + Vector((0, 0, 1.68)), (0.03, 0.045, 1.2), "groen", r2)
+        doos(f"{naam}_dorpel{zijde}", c + n * 0.03 + Vector((0, 0, 1.1)), (0.08, breed, 0.07), "groen", r2)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            doos(f"{naam}_stijl{sx}{sy}", hc + f * sx * D / 2 + tg * sy * B / 2 + Vector((0, 0, 1.25)), (0.1, 0.1, 2.5), "groen", rot)
+    # opengeklapt raam (scharnier links voor), 70 graden naar buiten
+    sch = hc + f * (D / 2 + 0.02) + tg * (B / 2 - 0.05)
+    dirp = Vector((math.cos(rot - math.radians(20)), math.sin(rot - math.radians(20)), 0)); rn = rot + math.radians(70)
+    doos(f"{naam}_raam", sch + dirp * 0.38 + Vector((0, 0, 1.75)), (0.03, 0.72, 0.95), "glas", rn)
+    for nm, z in (("o", 1.27), ("b", 2.23)):
+        doos(f"{naam}_raamlijst{nm}", sch + dirp * 0.38 + Vector((0, 0, z)), (0.045, 0.76, 0.06), "groen", rn)
+    doos(f"{naam}_toonbank", hc + f * (D / 2 + 0.12) + Vector((0, 0, 1.1)), (0.26, B - 0.2, 0.05), "groen", rot)
+    # kroonrand: rode band met motieven (textuur), groene kroonlijst, plat dak
+    bm = bmesh.new(); uvl = bm.loops.layers.uv.new("UVMap")
+    z0, z1 = 2.48, 2.82; omtrek = 0.0
+    hoeken = [hc + f * sx * (D / 2 + 0.08) + tg * sy * (B / 2 + 0.08) for sx, sy in ((1, -1), (1, 1), (-1, 1), (-1, -1))]
+    for i in range(4):
+        a_, b_ = hoeken[i], hoeken[(i + 1) % 4]; L = (b_ - a_).length
+        vs = [bm.verts.new(a_ + Vector((0, 0, z0))), bm.verts.new(b_ + Vector((0, 0, z0))), bm.verts.new(b_ + Vector((0, 0, z1))), bm.verts.new(a_ + Vector((0, 0, z1)))]
+        fc = bm.faces.new(vs); fc.normal_update()
+        if fc.normal.dot(((a_ + b_) / 2) - hc) < 0: fc.normal_flip()
+        for l in fc.loops:
+            q = (l.vert.co - a_); q.z = 0; u = (omtrek + q.length) / 0.6; v = (l.vert.co.z - hc.z - z0) / (z1 - z0)
+            l[uvl].uv = (u, v)
+        omtrek += L
+    o = obj(f"{naam}_rand", bm, "huisrand"); o["uv_vast"] = True
+    doos(f"{naam}_lijst", hc + Vector((0, 0, 2.86)), (D + 0.3, B + 0.3, 0.08), "groen", rot)
+    doos(f"{naam}_dak", hc + Vector((0, 0, 2.95)), (D + 0.2, B + 0.2, 0.1), "dak_donker", rot)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            p_ = hc + f * sx * (D / 2 + 0.12) + tg * sy * (B / 2 + 0.12)
+            buis(f"{naam}_pinakel{sx}{sy}", p_ + Vector((0, 0, 2.9)), p_ + Vector((0, 0, 3.12)), 0.04, "goud", 6, 0.005)
+    bol(f"{naam}_knop", hc + Vector((0, 0, 3.08)), 0.09)
 
 
 def bord_mesh(naam, omtrek, breed, hoog, dik, oorsprong, rot, rol):
@@ -245,68 +405,59 @@ def build():
         else: a0 += gat
         reling(f"AR_Pagode_O_rij_reling_{t:02d}", boog(r, a0, a1, z))
     rl = [pt(R_BO + 0.2, aS(14.2), Z_I)] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(N_RIJ)]
-    reling("AR_Pagode_O_trap_reling", rl)
+    reling("AR_Pagode_O_trap_reling", rl, spijlen=True)          # paneel met spijlen langs de trapstrook (video 0:39-0:41)
     # hek tussen bordes en tribune (Pagode-landing.jpg), open bij de trapstrook en bij het zuidpad
     spijlenhek("AR_Pagode_O_hek_bordes", boog(R_BO + 0.05, aS(14.2) + 2.0, A_RAIL - 2.0, Z_I))
-    # A5 lantaarns langs de trapstrook, bij het zuidpad, op het plein, in de tuin
-    for k, r in enumerate((17.5, 22.5)):
-        lantaarn(f"AR_Pagode_O_lamp_trap{k}", pt(r, (aW(r) + aS(r)) / 2 + 0.6, ztop(int(r - 14.0))))
-    lantaarn("AR_Pagode_O_lamp_zuid", pt(20.5, 154.8, ztop(6)))
-    lantaarn("AR_Pagode_O_lamp_bordes", pt(13.3, 140.0, Z_I))
-    lantaarn("AR_Pagode_O_lamp_plein0", pt(15.2, 88.0, Z_P))
-    lantaarn("AR_Pagode_O_lamp_plein1", pt(15.2, 62.0, Z_P))
-    lantaarn("AR_Pagode_O_lamp_tuin", pt(21.0, aL(21.0) - 6.0, Z_P + 0.3))
 
-    # B1 controlehuisje (video 0:44-0:47, Pagode-landing.jpg): groen frame, rode onderpanelen, glas, rode band, donker dak
-    hc = pt(12.0, 116.5, Z_I); rot = math.radians(116.5)
-    f = Vector((math.cos(rot), math.sin(rot), 0)); tg = Vector((-f.y, f.x, 0))
-    doos("AR_Pagode_O_huis_vloer", hc + Vector((0, 0, 0.06)), (1.95, 2.15, 0.12), "groen", rot)
-    doos("AR_Pagode_O_huis_onder", hc + Vector((0, 0, 0.62)), (1.8, 2.0, 1.0), "rood", rot)
-    doos("AR_Pagode_O_huis_binnen", hc + Vector((0, 0, 1.65)), (1.6, 1.8, 1.05), "onderkant", rot)
-    doos("AR_Pagode_O_huis_glas", hc + Vector((0, 0, 1.67)), (1.84, 2.04, 1.1), "glas", rot)
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            doos(f"AR_Pagode_O_huis_stijl{sx}{sy}", hc + f * sx * 0.92 + tg * sy * 1.02 + Vector((0, 0, 1.2)), (0.12, 0.12, 2.4), "groen", rot)
-    for nm, z in (("r1", 1.14), ("r2", 2.24)):
-        doos(f"AR_Pagode_O_huis_{nm}", hc + Vector((0, 0, z)), (1.9, 2.1, 0.08), "groen", rot)
-    doos("AR_Pagode_O_huis_stijlmid", hc + f * 0.93 + Vector((0, 0, 1.68)), (0.07, 0.07, 1.1), "groen", rot)
-    doos("AR_Pagode_O_huis_band", hc + Vector((0, 0, 2.43)), (2.1, 2.3, 0.3), "rood", rot)
-    for nm, z in (("b0", 2.29), ("b1", 2.58)):
-        doos(f"AR_Pagode_O_huis_{nm}", hc + Vector((0, 0, z)), (2.16, 2.36, 0.045), "groen", rot)
-    bm = bmesh.new(); bmesh.ops.create_cone(bm, cap_ends=True, segments=4, radius1=1.75, radius2=0.08, depth=0.75)
-    bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(rot + math.pi / 4, 3, "Z"), verts=bm.verts)
-    bmesh.ops.scale(bm, vec=(1, 1, 1), verts=bm.verts)
-    bmesh.ops.translate(bm, vec=hc + Vector((0, 0, 2.6 + 0.375)), verts=bm.verts)
-    obj("AR_Pagode_O_huis_dak", bm, "dak_donker")
-    buis("AR_Pagode_O_huis_pinakel", hc + Vector((0, 0, 3.3)), hc + Vector((0, 0, 3.62)), 0.06, "goud", 8, 0.015)
-    bol("AR_Pagode_O_huis_knop", hc + Vector((0, 0, 3.36)), 0.09)
-    # B2 dubbele tourniquet voor het huisje, bovenaan de trapstrook (video 0:44-0:47)
-    for k, aa in enumerate((112.4, 114.2)):
-        p = pt(13.35, aa, Z_I); r_ = math.radians(aa)
-        doos(f"AR_Pagode_O_tourniquet{k}", p + Vector((0, 0, 0.5)), (0.3, 0.24, 1.0), "hek", r_)
-        doos(f"AR_Pagode_O_tourniquet{k}_licht", p + Vector((0, 0, 1.03)), (0.26, 0.2, 0.06), "lamp_groen", r_)
-        doos(f"AR_Pagode_O_tourniquet{k}_bordje", p + Vector((math.cos(r_), math.sin(r_), 0)) * 0.125 + Vector((0, 0, 0.68)), (0.01, 0.18, 0.28), "bord_blauw", r_)
-    # B3 ingangsbord PAGODE over de kop van het laantje (video 0:13-0:19), dwars op het laantje
-    pa, pb = pt(14.6, a_c(14.6)), pt(16.6, a_c(16.6)); lr = (pb - pa).normalized()
-    mid = pt(14.9, a_c(14.9), Z_P)
-    rot = math.atan2(lr.y, lr.x) + math.pi            # voorkant naar het plein
-    tg = Vector((-lr.y, lr.x, 0))
-    for k, s in enumerate((-1, 1)):
-        p = mid + tg * s * 1.5
-        buis(f"AR_Pagode_O_bordpaal{k}", p + Vector((0, 0, -0.3)), p + Vector((0, 0, 3.35)), 0.065, "hek", 8)
-        buis(f"AR_Pagode_O_bordpaal{k}_kap", p + Vector((0, 0, 3.35)), p + Vector((0, 0, 3.45)), 0.085, "brons", 8)
-        bol(f"AR_Pagode_O_bordpaal{k}_bol", p + Vector((0, 0, 3.55)), 0.11)
-    bord_mesh("AR_Pagode_O_ingangsbord", tex.BORD_OMTREK(48), 2.8, 1.05, 0.07, mid + Vector((0, 0, 2.2)), rot, "ingangsbord")
-    doos("AR_Pagode_O_regelbord", mid + tg * 1.5 + Vector((0, 0, 1.45)) - lr * 0.08, (0.02, 0.3, 0.5), "bord_blauw", rot)
-    afvalbak("AR_Pagode_O_bak_plein", pt(14.7, 97.5, Z_P), math.radians(97.5))
-    afvalbak("AR_Pagode_O_bak_bordes", pt(12.9, 101.5, Z_I), math.radians(101.5 + 180))
-    afvalbak("AR_Pagode_O_bak_zuid", pt(13.4, 151.0, Z_I), math.radians(151 + 180))
-    afvalbak("AR_Pagode_O_bak_onder", pt(25.9, 155.6, Z_P + 0.02), math.radians(155.6 + 180))
-    # bloempot met bamboe naast het bord (video 0:04-0:12); de bamboe zelf komt met de beplanting
-    buis("AR_Pagode_O_pot", pt(15.7, 95.0, Z_P), pt(15.7, 95.0, Z_P + 0.62), 0.36, "rood", 12, 0.28)   # voor het plantvak (17)
-    # rode bankjes langs de pleinmuur (Pagode-landing.jpg)
+    # A5 lantaarns, elk op een plek uit de video, NOOIT op een looppad (zie controle onderaan)
+    for k, r in enumerate((19.0, 23.0)):             # klassiek, op de trapstrook tegen het hek op de laanmuur (0:18-0:24)
+        p = pt(r, aW(r) + math.degrees(0.2 / r), ztop(int(r - 14.0))); lantaarn(f"AR_Pagode_O_lamp_trap{k}", p); vrij(f"lamp_trap{k}", p, 0.13)
+    for k, r in enumerate((14.45, 17.5)):            # sierlijk brons, in de lijn van de trapreling (0:39-0:46)
+        p = pt(r, aS(r), ztop(int(r - 14.0))); lantaarn_sier(f"AR_Pagode_O_lamp_sier{k}", p); vrij(f"lamp_sier{k}", p, 0.2)
+    p = pt(20.12, A_RAIL, ztop(6)); lantaarn("AR_Pagode_O_lamp_zuid", p)   # op het eind van de reling, naast het zuidpad; vrij("lamp_zuid", p, 0.13)
+    p = pt(13.8, 140.0, Z_I); lantaarn("AR_Pagode_O_lamp_bordes", p); vrij("lamp_bordes", p, 0.13)
+    p = pt(16.45, 89.0, Z_P); lantaarn("AR_Pagode_O_lamp_plein", p); vrij("lamp_plein", p, 0.13)      # hoek plein/tuin (0:02)
+
+    # B1 dubbele tourniquet bovenaan de trapstrook, controlehuisje er vlak achter (video 0:44-0:47: trap loopt recht op de
+    # tourniquets af, het huisje staat erachter, daarna splitst de rij naar links en rechts)
+    a_t = (aW(14.2) + aS(14.2)) / 2
+    for k, s_ in enumerate((-1, 1)):
+        aa = a_t + s_ * math.degrees(0.19 / 13.5); p = pt(13.5, aa, Z_I)
+        tourniquet(f"AR_Pagode_O_tourniquet{k}", p, math.radians(aa)); vrij(f"tourniquet{k}", p, 0.13, bewust=True)
+    a_h = a_t + math.degrees(0.25 / 12.05); hc = pt(12.05, a_h, Z_I)
+    controlehuisje("AR_Pagode_O_huis", hc, math.radians(a_h)); vrij("huis", hc, 0.8, bewust=True)
+
+    # B2 ingangsbord PAGODE over de kop van het laantje (video 0:13-0:19): linkerpaal tegen de laanmuur, rechterpaal in de
+    # tuinrand met het regelbordje; bord een kwartslag naar het plein gedraaid (gezien vanaf het plein, 0:02-0:12)
+    # je loopt over het plein naar het westen, onder het bord door, en slaat dan rechtsaf het laantje in (0:02-0:20):
+    # bord staat dwars op die looprichting, voorkant naar het plein; linkerpaal tegen de pleinmuur, rechterpaal aan de tuinrand
+    pl = pt(14.38, 100.3, Z_P)
+    pr = pt(16.65, 100.3, Z_P)
+    as_ = pr - pl; as_.z = 0; breed = as_.length + 0.3
+    fz = Vector((-as_.y, as_.x, 0)).normalized()
+    if fz.dot(pt(18.0, 88.0) - pl) < 0: fz = -fz                       # voorkant naar het plein
+    rot = math.atan2(fz.y, fz.x); mid = (pl + pr) / 2
+    for k, p in enumerate((pl, pr)):
+        buis(f"AR_Pagode_O_bordpaal{k}", p + Vector((0, 0, -0.3)), p + Vector((0, 0, 3.35)), 0.06, "hek", 8)
+        paalkop(f"AR_Pagode_O_bordpaal{k}_kop", p + Vector((0, 0, 3.3)), 0.12, "hek", 0.1)
+        vrij(f"bordpaal{k}", p, 0.06)
+    bord_mesh("AR_Pagode_O_ingangsbord", tex.BORD_OMTREK(48), breed, 1.05, 0.07, mid + Vector((0, 0, 2.2)), rot, "ingangsbord")
+    doos("AR_Pagode_O_regelbord", pr + fz * 0.05 + Vector((0, 0, 1.45)), (0.02, 0.3, 0.55), "bord_blauw", rot)
+    for k, dt in enumerate((-0.55, 0.0, 0.55)):                     # paaltjes in de mond van het laantje (0:04-0:13)
+        p = pt(15.5 + dt, 101.6, Z_P); paaltje(f"AR_Pagode_O_paaltje{k}", p); vrij(f"paaltje{k}", p, 0.05, bewust=True)
+    # afvalbakken: hoge bak rechts van het bord op het plein (0:02), groene bakken met embleem tegen de hekken (0:49-0:52)
+    p = pt(16.05, 99.3, Z_P); afvalbak("AR_Pagode_O_bak_plein", p, math.radians(99.3 - 90), hoog=True); vrij("bak_plein", p, 0.3)   # rechts voor het bord
+    for naam, r, aa, z in (("bak_bordes", 13.72, 101.5, Z_I), ("bak_zuid", 13.72, 151.0, Z_I), ("bak_onder", 26.65, 155.6, Z_P + 0.02)):
+        p = pt(r, aa, z); afvalbak(f"AR_Pagode_O_{naam}", p, math.radians(aa + 180)); vrij(naam, p, 0.3)
+    # grote donkerrode pot met bamboe links van het bord, tegen de pleinmuur (0:02-0:12); bamboe zelf in 14_planten
+    p = pt(14.62, 98.4, Z_P)
+    buis("AR_Pagode_O_pot", p, p + Vector((0, 0, 0.2)), 0.26, "rood", 16, 0.38)
+    buis("AR_Pagode_O_pot_buik", p + Vector((0, 0, 0.2)), p + Vector((0, 0, 0.62)), 0.38, "rood", 16, 0.3)
+    buis("AR_Pagode_O_pot_rand", p + Vector((0, 0, 0.62)), p + Vector((0, 0, 0.68)), 0.32, "rood", 16)
+    vrij("pot", p, 0.38)
+    # rode bankjes voor het plantvak (Pagode-landing.jpg), rug naar de muur
     for k, aa in enumerate((70.0, 82.0)):
-        bankje(f"AR_Pagode_O_bank{k}", pt(15.75, aa, Z_P), math.radians(aa))
+        p = pt(15.75, aa, Z_P); bankje(f"AR_Pagode_O_bank{k}", p, math.radians(aa)); vrij(f"bank{k}", p, 0.4)
 
     # C uitgang aan de oostkant (video 6:15-6:45): keermuur langs de vlonder, trap naar het pad, hek, uitgangsbord
     A_UIT = -20.0; gat = math.degrees(1.3 / 10.8)
@@ -331,11 +482,11 @@ def build():
             p = a_ + (b_ - a_) * q
             buis(f"AR_Pagode_O_uitleuning{s}_paal{q}", p - Vector((0, 0, 0.92)), p, 0.025, "hek", 6)
     bord_mesh("AR_Pagode_O_uitgangsbord", [(0, 0), (1, 0), (1, 0.82), (0.5, 0.96), (0, 0.82)], 0.55, 1.15, 0.05,
-              pt(10.35, A_UIT - 12.0, Z_I + 0.75), rot + math.pi, "uitgangsbord")
-    buis("AR_Pagode_O_uitgangspaal", pt(10.35, A_UIT - 12.0, Z_I) - f * 0.04, pt(10.35, A_UIT - 12.0, Z_I + 0.8) - f * 0.04, 0.035, "hek", 6)
-    lantaarn("AR_Pagode_O_lamp_uit0", pt(14.0, A_UIT - 8.0, Z_P + 0.03))
-    lantaarn("AR_Pagode_O_lamp_uit1", pt(14.0, A_UIT + 30.0, Z_P + 0.03))
-    afvalbak("AR_Pagode_O_bak_uit", pt(11.3, A_UIT + 9.0, Z_P + 0.03), rot)
+              pt(10.5, A_UIT - 12.0, Z_I + 0.75), rot + math.pi, "uitgangsbord")     # tegen het hek, rand van de vlonder
+    buis("AR_Pagode_O_uitgangspaal", pt(10.5, A_UIT - 12.0, Z_I) - f * 0.04, pt(10.5, A_UIT - 12.0, Z_I + 0.8) - f * 0.04, 0.035, "hek", 6)
+    for k, aa in enumerate((A_UIT - 8.0, A_UIT + 30.0)):          # aan de voet van de keermuur, niet midden op het pad
+        p = pt(11.55, aa, Z_P + 0.03); lantaarn(f"AR_Pagode_O_lamp_uit{k}", p); vrij(f"lamp_uit{k}", p, 0.13)
+    p = pt(11.6, A_UIT + 9.0, Z_P + 0.03); afvalbak("AR_Pagode_O_bak_uit", p, rot); vrij("bak_uit", p, 0.3)
     # losse rotsblokken aan de voet van de muren (lemma: natuursteenranden en rotsblokken, video 5:55)
     for k in range(14):
         aa = rnd.uniform(-50, 50)
@@ -343,6 +494,10 @@ def build():
         steen(f"AR_Pagode_O_muursteen_{k:02d}", pt(11.25, aa, Z_P + 0.1), (0.4, 0.3, 0.3))
 
     json.dump(LAMPEN, open(os.path.join(D, "exports", "omgeving_lampen.json"), "w"))
+    json.dump([[n, round(p.x, 3), round(p.y, 3), rad] for n, p, rad, _ in PLAATS], open(os.path.join(D, "exports", "omgeving_meubilair.json"), "w"))
+    fout = controle()
+    for regel in fout: print("[12_omgeving] OP LOOPPAD:", regel)
+    assert not fout, "meubilair op een looppad"
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=m)
     print("[12_omgeving] %d objecten, %d lantaarns" % (len([o for o in bpy.data.objects if o.get("owner") == OWNER]), len(LAMPEN)))
