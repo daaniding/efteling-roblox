@@ -289,7 +289,9 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     roblox/interieur_gondel.luau (in maak_ritscript na de Kern), map Gondel.Interieur (beweegt mee): witte zitrand rondom
     de kern (0.45 m hoog, 0.5 m diep, botst; in de video loopt onderaan de rode wand zo'n witte rand), gouden randen om de
     22 plafondlampen, mintgroene bordjes met gouden lijst op de kernwand: UITGANG (bij uit0/uit1) en 3x "PAGODE - Efteling -
-    1987". Nog niet: de oranje ornamenten op de kernwand zijn ovalen; in het echt verticale vlammotieven (textuur kernwand).
+    1987". Kernwand-textuur (04_texturen kernwand, Daan: "ja, doe dat"): naar video loop_in s_055-s_058 geribbelde
+    rode planken met donkere naden, op elke tweede plank een kolom oranje klokornamenten (knop + spits, klokvormig lijf,
+    uitwaaierende vleugels, druppel) over de hele hoogte; kleur 136078988623224, normaal 86029428553252.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

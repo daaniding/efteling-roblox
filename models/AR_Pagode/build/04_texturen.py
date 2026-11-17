@@ -161,17 +161,54 @@ def sierrand():
 
 
 def kernwand():
-    """Rode binnenwand (video 6:45): verticale planken met oranje vlam-sjablonen. u herhaalt per 1.2 m."""
-    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
-    u, v = xx / N, yy / N
-    k = np.zeros((N, N, 3), np.float32); k[:] = ROOD_D; h = np.full((N, N), 0.5, np.float32)
-    naad = ((u * 6) % 1.0) < 0.03
-    k[naad] *= 0.6; h[naad] = 0.2
-    pu = (u * 6) % 1.0 - 0.5
-    for vc in (0.18, 0.36):        # twee rijen vlammetjes bovenaan
-        vl = (pu ** 2 * 30 + ((v - vc) / 0.09) ** 2) < 1.0
-        k[vl] = (226, 120, 40); h[vl] = 0.7
-    k += ruis(1, 6)[..., None]
+    """Rode binnenwand (video instappen, loop_in s_055-s_058): geribbelde verticale planken met donkere naden; op elke tweede
+    plank een kolom klokvormige oranje ornamenten over de hele hoogte (knopje + spits, klokvormig lijf, uitwaaierende
+    vleugels, druppeltje eronder). u: 6 planken per textuur (1.2 m), v: de hele wandhoogte, v=0 boven."""
+    PL = N // 6
+    img = Image.new('RGB', (N, N), ROOD_D); hg = Image.new('L', (N, N), 120)
+    d = ImageDraw.Draw(img); dh = ImageDraw.Draw(hg)
+    # planken: per plank een lichte bolling (rib), donkere naad aan de rand
+    k = np.asarray(img).astype(np.float32).copy()
+    xx = np.arange(N) % PL / PL
+    bol = np.sin(xx * math.pi) ** 0.6
+    k *= (0.78 + 0.32 * bol)[None, :, None]
+    h = np.tile((0.3 + 0.5 * bol)[None, :], (N, 1)).astype(np.float32)
+    naad = (np.arange(N) % PL) < 5
+    k[:, naad] *= 0.55; h[:, naad] = 0.05
+    img = Image.fromarray(np.clip(k, 0, 255).astype(np.uint8)); d = ImageDraw.Draw(img)
+    hg = Image.fromarray((h * 255).astype(np.uint8)); dh = ImageDraw.Draw(hg)
+    OR = (236, 128, 36)
+    def ornament(cx, top, H):
+        W = H * 0.62
+        # knopje en spits
+        d.ellipse([cx - W * 0.09, top, cx + W * 0.09, top + H * 0.10], fill=OR); dh.ellipse([cx - W * 0.09, top, cx + W * 0.09, top + H * 0.10], fill=200)
+        spits = [(cx, top + H * 0.06), (cx + W * 0.10, top + H * 0.22), (cx - W * 0.10, top + H * 0.22)]
+        d.polygon(spits, fill=OR); dh.polygon(spits, fill=200)
+        # klokvormig lijf: van smal (boven) naar breed (onder), zijkanten iets hol
+        lijf = []
+        for i in range(21):
+            t = i / 20; y = top + H * (0.20 + 0.50 * t); w = W * (0.12 + 0.30 * t ** 1.6)
+            lijf.append((cx + w, y))
+        for i in range(20, -1, -1):
+            t = i / 20; y = top + H * (0.20 + 0.50 * t); w = W * (0.12 + 0.30 * t ** 1.6)
+            lijf.append((cx - w, y))
+        d.polygon(lijf, fill=OR); dh.polygon(lijf, fill=200)
+        # uitwaaierende vleugels met punten naar buiten-boven
+        vl = [(cx - W * 0.42, top + H * 0.66), (cx - W * 0.50, top + H * 0.62), (cx - W * 0.30, top + H * 0.80), (cx, top + H * 0.84),
+              (cx + W * 0.30, top + H * 0.80), (cx + W * 0.50, top + H * 0.62), (cx + W * 0.42, top + H * 0.66), (cx, top + H * 0.62)]
+        d.polygon(vl, fill=OR); dh.polygon(vl, fill=200)
+        # druppeltje eronder
+        dr = [(cx - W * 0.08, top + H * 0.84), (cx + W * 0.08, top + H * 0.84), (cx, top + H * 0.98)]
+        d.polygon(dr, fill=OR); dh.polygon(dr, fill=200)
+    H = N * 0.15
+    for p in (1, 3, 5):
+        cx = p * PL + PL / 2
+        y = N * 0.03
+        while y + H < N * 0.97:
+            ornament(cx, y, H); y += H * 1.08
+    img = img.filter(ImageFilter.GaussianBlur(0.8))
+    h = np.asarray(hg.filter(ImageFilter.GaussianBlur(2))).astype(np.float32) / 255
+    k = np.asarray(img).astype(np.float32) + ruis(1, 5)[..., None]
     opslaan('kernwand', k, h, 2.0)
 
 
