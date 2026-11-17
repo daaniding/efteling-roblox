@@ -95,7 +95,7 @@ do
   -- vervangen = alleen de ID hieronder aanpassen. De client (PagodeRitClient) speelt de ritgeluiden synchroon met de rit.
   do
     local GELUID = {
-      muziek = 1840540291,   -- APM "Peach Blossom Spring" (wachtrij, Chinees getint, 280 s); alternatieven in STATUS.md
+      muziek = 1839842602,   -- APM "One World (a)" (wachtrij, levendig, etnische instrumenten, 201 s); kiezen met MuziekKiezer (M)
       brom = 9125767459,     -- PSE constante machinetoon (hydrauliek arm), toonhoogte/volume volgen de armsnelheid
       hek = 9116875342,      -- PSE metalen hekje open/dicht
       bel = 9119642644,      -- PSE dubbele bel (vertrek)
@@ -132,6 +132,13 @@ do
     st0.Transparency = 1; st0.Size = Vector3.new(1, 1, 1); st0.Position = W(9.3, math.rad(140), 12.5); st0.Parent = fg
     snd(st0, "bel", GELUID.bel, 0.8, 12, 110, false)
     snd(st0, "hek", GELUID.hek, 0.7, 8, 60, false)
+    -- geroezemoes: wachtende mensen (PSE walla), drie bronnen, hoorbaar tot ~20 m
+    for _, w in ipairs({{"tribune", 20.0, 136, 0.6, 9112787259, 0.45}, {"laantje", 18.0, 108, -0.38, 9112766358, 0.35}, {"bordes", 12.6, 132, 1.3, 9112766358, 0.3}}) do
+      local p = Instance.new("Part"); p.Name = "praten_" .. w[1]; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+      p.Transparency = 1; p.Size = Vector3.new(1, 1, 1); p.Position = W(w[2], math.rad(w[3]), 10 + w[4] + 1.2); p.Parent = fg
+      local so = snd(p, "praten", w[5], w[6], 8, 60, true); so.Playing = true
+      if w[1] == "bordes" then so.TimePosition = 17 end
+    end
     local wind = Instance.new("Sound"); wind.Name = "wind"; wind.SoundId = "rbxassetid://" .. GELUID.wind; wind.Volume = 0; wind.Looped = true; wind.Parent = fg
   end
   local station = pag:FindFirstChild("Station") or pag
@@ -178,6 +185,8 @@ end''' for k, c in enumerate(info['cilinders']))
 
 bron = open(os.path.join(R, 'PagodeRit.server.luau')).read()
 bronc = open(os.path.join(R, 'PagodeRitClient.client.luau')).read()
+bronv = open(os.path.join(R, 'Voetstappen.client.luau')).read()
+bronm = open(os.path.join(R, 'MuziekKiezer.client.luau')).read()
 luau = '\n'.join(kop) + f'''
 
 -- ===== rijdende Pagode: opzet (gegenereerd door roblox/maak_ritscript.py) =====
@@ -272,6 +281,9 @@ local sc = Instance.new("Script"); sc.Name = "PagodeRit"; sc.Source = [==[{bron}
 local sps = game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts")
 local oudC = sps:FindFirstChild("PagodeRitClient"); if oudC then oudC:Destroy() end
 local lc = Instance.new("LocalScript"); lc.Name = "PagodeRitClient"; lc.Source = [==[{bronc}]==]; lc.Parent = sps
+for _, n in ipairs({{"Voetstappen", "MuziekKiezer"}}) do local o = sps:FindFirstChild(n); if o then o:Destroy() end end
+local lv = Instance.new("LocalScript"); lv.Name = "Voetstappen"; lv.Source = [==[{bronv}]==]; lv.Parent = sps
+local lm = Instance.new("LocalScript"); lm.Name = "MuziekKiezer"; lm.Source = [==[{bronm}]==]; lm.Parent = sps
 local n = 0; for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") then n += 1 end end
 return "Pagode rijklaar: gondel " .. n .. " delen, cilinders " .. #cils:GetChildren()
 '''

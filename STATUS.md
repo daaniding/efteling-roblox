@@ -219,6 +219,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (280 s). Alternatieven (laden allemaal): Plum Blossoms 1845854732 (165 s), Faint Moonlight 1845854743 (142 s), Kinuta
     1845854711 (155 s), Fantasy Of Waves 1845916643 (138 s), Monkey King 1837190707 (108 s), Mandala 1840706030 (114 s),
     Lightly Magical 1837777641 (149 s), Fairy Doll 1846356693 (156 s), World Of Wonder 1836330626 (143 s).
+  - Geluid deel 2 (17 nov, Daan: "moet echt andere muziek, niet zo rustig", "mensen horen praten", "loop sound
+    realistischer"): MuziekKiezer (LocalScript, alleen in Studio): in Play M = volgend nummer op alle speakers, naam
+    linksboven; 12 levendigere APM-nummers, start op "One World (a)" 1839842602 (ook in maak_ritscript). Geroezemoes
+    (PSE walla, 8-60 studs): tribune families 9112787259, laantje en bordes crowd mumble 9112766358 (verschoven start).
+    Voetstappen (LocalScript): Running-geluid per ondergrond via straal omlaag: klinkers/steen "Brick Footsteps"
+    91557584218550, vlonder/dek "Floor Footsteps" 6506537704, metaal "Concrete Footsteps" 6362185620, gras "walk_grass"
+    106672010112184 (standaard klonk als plastic). Getest in Play: wisselt correct, alles geladen.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

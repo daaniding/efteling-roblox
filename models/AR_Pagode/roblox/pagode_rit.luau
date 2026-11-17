@@ -283,7 +283,7 @@ do
   -- vervangen = alleen de ID hieronder aanpassen. De client (PagodeRitClient) speelt de ritgeluiden synchroon met de rit.
   do
     local GELUID = {
-      muziek = 1840540291,   -- APM "Peach Blossom Spring" (wachtrij, Chinees getint, 280 s); alternatieven in STATUS.md
+      muziek = 1839842602,   -- APM "One World (a)" (wachtrij, levendig, etnische instrumenten, 201 s); kiezen met MuziekKiezer (M)
       brom = 9125767459,     -- PSE constante machinetoon (hydrauliek arm), toonhoogte/volume volgen de armsnelheid
       hek = 9116875342,      -- PSE metalen hekje open/dicht
       bel = 9119642644,      -- PSE dubbele bel (vertrek)
@@ -320,6 +320,13 @@ do
     st0.Transparency = 1; st0.Size = Vector3.new(1, 1, 1); st0.Position = W(9.3, math.rad(140), 12.5); st0.Parent = fg
     snd(st0, "bel", GELUID.bel, 0.8, 12, 110, false)
     snd(st0, "hek", GELUID.hek, 0.7, 8, 60, false)
+    -- geroezemoes: wachtende mensen (PSE walla), drie bronnen, hoorbaar tot ~20 m
+    for _, w in ipairs({{"tribune", 20.0, 136, 0.6, 9112787259, 0.45}, {"laantje", 18.0, 108, -0.38, 9112766358, 0.35}, {"bordes", 12.6, 132, 1.3, 9112766358, 0.3}}) do
+      local p = Instance.new("Part"); p.Name = "praten_" .. w[1]; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+      p.Transparency = 1; p.Size = Vector3.new(1, 1, 1); p.Position = W(w[2], math.rad(w[3]), 10 + w[4] + 1.2); p.Parent = fg
+      local so = snd(p, "praten", w[5], w[6], 8, 60, true); so.Playing = true
+      if w[1] == "bordes" then so.TimePosition = 17 end
+    end
     local wind = Instance.new("Sound"); wind.Name = "wind"; wind.SoundId = "rbxassetid://" .. GELUID.wind; wind.Volume = 0; wind.Looped = true; wind.Parent = fg
   end
   local station = pag:FindFirstChild("Station") or pag
@@ -615,5 +622,81 @@ RunService.PreSimulation:Connect(function(dtF: number)
 	pag:SetAttribute("FaseLokaal", naam)
 end)
 ]==]; lc.Parent = sps
+for _, n in ipairs({"Voetstappen", "MuziekKiezer"}) do local o = sps:FindFirstChild(n); if o then o:Destroy() end end
+local lv = Instance.new("LocalScript"); lv.Name = "Voetstappen"; lv.Source = [==[--!strict
+-- Voetstappen (StarterPlayerScripts): het standaard loopgeluid (RbxCharacterSounds, Sound "Running" in de HumanoidRootPart)
+-- krijgt een opname die bij de ondergrond past (Daan 17 nov: "mijn loop sound moet realistischer"). Ondergrond via een
+-- straal omlaag: rol van het Pagode-onderdeel (PG_<rol>_n) of het terreinmateriaal (gras).
+local Players = game:GetService("Players")
+local STAP = {
+	steen = "rbxassetid://91557584218550",   -- "Brick Footsteps": klinkers, natuursteen, graniet, beton
+	hout = "rbxassetid://6506537704",        -- "Floor Footsteps": vlonder, gondeldek
+	metaal = "rbxassetid://6362185620",      -- "Concrete Footsteps": roosters, staal
+	gras = "rbxassetid://106672010112184",   -- "walk_grass": terrein (Roblox-standaard klinkt als plastic)
+}
+local ROL = {klinker = "steen", natuursteen = "steen", breuksteen = "steen", graniet = "steen", voeg = "steen", steen = "steen",
+	beton_groen = "steen", beton_groen_licht = "steen", beton_licht = "steen", asfalt = "steen", grind = "steen",
+	vlonder = "hout", dek = "hout", rooster = "metaal", staal = "metaal"}
+local plr = Players.LocalPlayer
+local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Exclude
+
+local function soort(hit: RaycastResult?): string?
+	if not hit then return nil end
+	local inst = hit.Instance
+	if inst:IsA("Terrain") then return hit.Material == Enum.Material.Grass and "gras" or "steen" end
+	local rol = string.match(inst.Name, "^PG_(.-)_%d+")
+	return rol and ROL[rol] or "steen"
+end
+
+local function volg(ch: Model)
+	local hrp = ch:WaitForChild("HumanoidRootPart", 10) :: BasePart?
+	if not hrp then return end
+	local run = hrp:WaitForChild("Running", 10) :: Sound?
+	if not run then return end
+	local standaard = run.SoundId
+	ray.FilterDescendantsInstances = {ch}
+	local huidig = ""
+	while ch.Parent do
+		local s = soort(workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray))
+		local id = s and STAP[s] or standaard
+		if id ~= huidig then run.SoundId = id; huidig = id end
+		task.wait(0.15)
+	end
+end
+plr.CharacterAdded:Connect(volg)
+if plr.Character then task.spawn(volg, plr.Character) end
+]==]; lv.Parent = sps
+local lm = Instance.new("LocalScript"); lm.Name = "MuziekKiezer"; lm.Source = [==[--!strict
+-- MuziekKiezer (StarterPlayerScripts, alleen in Studio): druk M om de wachtrijmuziek op alle Pagode-speakers te wisselen,
+-- naam linksboven. Alleen lokaal; de gekozen ID daarna vastzetten in maak_ritscript (GELUID.muziek).
+local RunService = game:GetService("RunService")
+if not RunService:IsStudio() then return end
+local UIS = game:GetService("UserInputService")
+local LIJST = {
+	{"One World (a)", 1839842602}, {"Cultures And Colours (A)", 1840397475}, {"World Of Wonder", 1836330626},
+	{"The Legend of the Monkey King", 1837190707}, {"Kawachi Ondo (c)", 1842506077}, {"Fortune's Smiling", 1840841073},
+	{"Lightly Magical", 1837777641}, {"Fairy Doll", 1846356693}, {"The Carousel Waltz", 132619984017094},
+	{"Outward Bound", 1842179736}, {"Plum Blossoms", 1845854732}, {"Peach Blossom Spring", 1840540291},
+}
+local gui = Instance.new("ScreenGui"); gui.Name = "MuziekKiezer"; gui.ResetOnSpawn = false
+local lab = Instance.new("TextLabel"); lab.Size = UDim2.fromOffset(460, 34); lab.Position = UDim2.fromOffset(12, 12)
+lab.BackgroundTransparency = 0.35; lab.BackgroundColor3 = Color3.fromRGB(20, 20, 24); lab.TextColor3 = Color3.new(1, 1, 1)
+lab.Font = Enum.Font.GothamMedium; lab.TextSize = 16; lab.TextXAlignment = Enum.TextXAlignment.Left; lab.Parent = gui
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local pag = workspace:WaitForChild("Pagode"); local g = pag:WaitForChild("Geluid")
+local i = 1
+local function zet()
+	local naam, id = LIJST[i][1], LIJST[i][2]
+	for _, s in g:GetDescendants() do
+		if s:IsA("Sound") and s.Name == "muziek" then s.SoundId = "rbxassetid://" .. id; s.TimePosition = 0; s:Play() end
+	end
+	lab.Text = string.format("  Muziek %d/%d: %s  (%d)   [M = volgende]", i, #LIJST, naam, id)
+end
+UIS.InputBegan:Connect(function(inp, bezet)
+	if bezet or inp.KeyCode ~= Enum.KeyCode.M then return end
+	i = i % #LIJST + 1; zet()
+end)
+task.wait(2); zet()
+]==]; lm.Parent = sps
 local n = 0; for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") then n += 1 end end
 return "Pagode rijklaar: gondel " .. n .. " delen, cilinders " .. #cils:GetChildren()
