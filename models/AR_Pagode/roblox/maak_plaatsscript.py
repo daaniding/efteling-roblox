@@ -186,13 +186,8 @@ do
   end
   vul({X1}, 430, 15, 112); vul({X0}, {X1}, {Y1}, 112)
 end
--- donkergroen gras met sprieten (Daan 17 nov: "gewoon mooi donker groenig gras, dit is zo somber")
-t:SetMaterialColor(Enum.Material.Grass, Color3.fromRGB(46, 92, 38)); t.Decoration = false   -- geen sprieten (Daan)
-do   -- andere ondergrond rond de Pagode (Daan 17 nov: "doe andere ondergrond"): LeafyGrass
-  local reg = Region3.new(Vector3.new(300 * S, -40, -112 * S), Vector3.new(430 * S, 60, -15 * S)):ExpandToGrid(4)
-  t:ReplaceMaterial(reg, 4, Enum.Material.Grass, Enum.Material.LeafyGrass)
-  t:SetMaterialColor(Enum.Material.LeafyGrass, Color3.fromRGB(58, 104, 44))
-end
+-- effen vlak frisgroen gras (Daan 17 nov: "fris lichtgroen", "doe gewoon plat"); geen sprieten, geen eigen textuur
+t:SetMaterialColor(Enum.Material.Grass, Color3.fromRGB(96, 170, 64)); t.Decoration = false
 -- spawn bij de Pagode (oude spawn bewaard in attribuut)
 local sp = workspace:FindFirstChildOfClass("SpawnLocation")
 if sp then

@@ -190,7 +190,8 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     meerijden: drift 0.1 stud.
   - Terrein vlak (17 nov, Daan: "waarom staat die niet gewoon op een recht stuk" / "mooi donker groenig gras"): AHN-bulten weg,
     vlak gras op NAP 9.8 (meet ~9.4-9.6, voxelraster) rond de Pagode en in de rand; uitsparingen onder bestrating en de
-    armsleuf ongewijzigd. Graskleur 46,92,38, geen sprieten (Daan: "hoeven niet"). Rond de Pagode LeafyGrass (58,104,44) i.p.v. Grass. maak_plaatsscript: VLAK = true.
+    armsleuf ongewijzigd. Uiteindelijk (Daan: "fris lichtgroen", "doe gewoon plat"): effen Grass, kleur 96,170,64, geen sprieten. LeafyGrass
+    (roze vlekjes) en een eigen gazontextuur (build/20_gazon.py, MaterialVariant) geprobeerd en weer weggehaald. maak_plaatsscript: VLAK = true.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
