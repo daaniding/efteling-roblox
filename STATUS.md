@@ -164,6 +164,9 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (18_route: hekeinden 2-60 cm van een ander hek). Omgeving 119771598110089, 150 hekbotsingen. Loopscan (BFS 0.5 m, 3 hoogtes):
     rij r 20.5 pas na 68 m lopen bereikbaar, 0 lekken naar het gras. Trapstrook (onderpad -> recht omhoog naar de tourniquets)
     is open zoals in het echt (zigzag = drukte-wachtrij); dichtzetten is een keuze voor Daan.
+  - Trapstrook onderaan dicht (17 nov, Daan: "ja, dichtzetten"): hek op r 24.95 van laanmuur tot trapreling (18_route
+    om_trapdicht). Iedereen loopt nu de hele zigzag. Omgeving 137933384153007, 151 hekbotsingen. Loopscan: rijen op volgorde
+    bereikbaar (38, 42.5, 68, 71, 92.5, 94.5 m), tourniquets pas na 106 m, 0 lekken.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

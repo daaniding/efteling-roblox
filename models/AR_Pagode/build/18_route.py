@@ -60,6 +60,9 @@ def build():
             zuid.append(pt(r, A_ZUID - math.degrees(0.1 / r), NS["ztop"](t)))
     zuid.append(pt(R_BO + 0.05, A_ZUID - math.degrees(0.1 / 14.05), Z_I))
     hek("AR_Pagode_R_om_zuid", zuid, h=1.0)
+    # trapstrook onderaan dicht (Daan 17 nov: "dichtzetten"): iedereen loopt de zigzag; de trap is alleen nog de laatste meter
+    aW, aS = NS["aW"], NS["aS"]
+    hek("AR_Pagode_R_om_trapdicht", [pt(24.95, aW(24.95), NS["ztop"](N_RIJ - 1)), pt(24.95, aS(24.95), NS["ztop"](N_RIJ - 1))], h=1.0)
     # 3 bordes: hek tussen bordes en tribune doortrekken tot de zuidrand (anders langs de tourniquets via het zuidstrookje)
     a_kop = A_ZUID - math.degrees(0.1 / 14.05)
     hek("AR_Pagode_R_om_bordeszuid", boog(R_BO + 0.05, A_RAIL - 2.0, a_kop, Z_I, 1.0), h=1.0)
