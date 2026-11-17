@@ -285,6 +285,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     na de rit. Engels als bron, vertaling nl in LocalizationService.PagodeTeksten (AutoLocalize). Play: titel zichtbaar
     bij instappen, nl-vertaling werkt ("Welkom aan boord", "De hekjes gaan dicht"). Geen zitbanken: in de on-ride video staan mensen langs de
     reling. Fotomoment: pas als het uitzicht (buurattracties) er is. Echte omroepstem: niet mogelijk (geen TTS in Roblox).
+  - Interieur gondel (17 nov, Daan: "kan de Pagode van binnen meer detail hebben"; video instappen, Pagode-binnenzijde):
+    roblox/interieur_gondel.luau (in maak_ritscript na de Kern), map Gondel.Interieur (beweegt mee): witte zitrand rondom
+    de kern (0.45 m hoog, 0.5 m diep, botst; in de video loopt onderaan de rode wand zo'n witte rand), gouden randen om de
+    22 plafondlampen, mintgroene bordjes met gouden lijst op de kernwand: UITGANG (bij uit0/uit1) en 3x "PAGODE - Efteling -
+    1987". Nog niet: de oranje ornamenten op de kernwand zijn ovalen; in het echt verticale vlammotieven (textuur kernwand).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
