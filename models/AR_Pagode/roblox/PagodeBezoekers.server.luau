@@ -42,8 +42,11 @@ local pag = workspace:WaitForChild("Pagode") :: Model
 for _, g in {"Bezoekers", "Spelers", "Rijdend", "Routemuur", "Poortdeel"} do
 	if not PhysicsService:IsCollisionGroupRegistered(g) then PhysicsService:RegisterCollisionGroup(g) end
 end
-PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Spelers", false)
-PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Rijdend", false)
+-- bezoekers zijn vast voor spelers (Daan 17 nov: "dat je er niet doorheen kan lopen"); groep Spook = stilstaande speler in de rij
+if not PhysicsService:IsCollisionGroupRegistered("Spook") then PhysicsService:RegisterCollisionGroup("Spook") end
+PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Spelers", true)
+PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Rijdend", true)
+PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Spook", false)
 PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Bezoekers", false)
 PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Routemuur", false)
 PhysicsService:CollisionGroupSetCollidable("Bezoekers", "Poortdeel", false)
@@ -244,6 +247,67 @@ for k = 0, 39 do
 	if vrij then table.insert(PLEKKEN, {a = a}) end
 end
 
+-- spelers in de rij (Daan 17 nov: "maak dat je niet door de mensen heen kunt lopen"): elke 0.2 s per looplijn de plek (s) van
+-- elke speler die op die lijn staat (binnen 1.1 m van de middellijn); bezoekers wachten daar achter, net als achter een bezoeker.
+-- Wie 40 s stilstaat in de rij of een gangetje wordt "doorzichtig" (groep Spook: botst niet met bezoekers en telt niet mee),
+-- zodat niemand de rij kan blokkeren; bewegen = weer gewoon vast.
+local LIJNEN: {[string]: Lijn} = {rij = RIJ_S, gang1 = GANG[1].ln, gang2 = GANG[2].ln}
+local spelerOp: {[string]: {number}} = {rij = {}, gang1 = {}, gang2 = {}}
+local spelerDek: {number} = {}                 -- hoeken (park, graden) van spelers op het dek
+local laatstePlek: {[Player]: Vector3} = {}
+local laatsteBeweging: {[Player]: number} = {}
+local function opLijnVol(ln: Lijn, pos: Vector3): (number, number)
+	local best, bestD = 0, math.huge
+	for i = 2, #ln.p do
+		local a, b = ln.p[i - 1], ln.p[i]
+		local ab = Vector2.new(b.X - a.X, b.Z - a.Z); local ap = Vector2.new(pos.X - a.X, pos.Z - a.Z)
+		local len2 = ab:Dot(ab)
+		local t = if len2 > 0 then math.clamp(ap:Dot(ab) / len2, 0, 1) else 0
+		local d = (ap - ab * t).Magnitude
+		if d < bestD then best, bestD = ln.l[i - 1] + t * (ln.l[i] - ln.l[i - 1]), d end
+	end
+	return best, bestD
+end
+local function zetGroep(ch: Model, groep: string)
+	for _, d in ch:GetDescendants() do if d:IsA("BasePart") and d.CollisionGroup ~= "Rijdend" then d.CollisionGroup = groep end end
+end
+task.spawn(function()
+	while true do
+		local nieuw: {[string]: {number}} = {rij = {}, gang1 = {}, gang2 = {}}
+		local dek = {}
+		local nu = os.clock()
+		for _, plr in Players:GetPlayers() do
+			local ch = plr.Character
+			local h = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+			if ch and h then
+				local vorig = laatstePlek[plr]
+				if not vorig or (h.Position - vorig).Magnitude > 1 then laatstePlek[plr] = h.Position; laatsteBeweging[plr] = nu end
+				local x, y = h.Position.X / S - CX, -h.Position.Z / S - CY
+				local r = math.sqrt(x * x + y * y)
+				local opMij = {}
+				for naam, ln in LIJNEN do
+					local s, d = opLijnVol(ln, h.Position)
+					if d < 1.1 * S and math.abs(h.Position.Y - opLijn(ln, s).Y) < 6 then table.insert(opMij, {naam, s}) end
+				end
+				local spook = #opMij > 0 and nu - (laatsteBeweging[plr] or nu) > 40
+				local isSpook = h.CollisionGroup == "Spook"
+				if spook and not isSpook then zetGroep(ch, "Spook") elseif not spook and isSpook then zetGroep(ch, "Spelers") end
+				if not spook then for _, o in opMij do table.insert(nieuw[o[1]], o[2]) end end
+				if r < 8.3 and h.Position.Y > 2 + Z_I * S and h.Position.Y < 2 + Z_I * S + 9 then table.insert(dek, math.deg(math.atan2(y, x))) end
+			end
+		end
+		spelerOp = nieuw; spelerDek = dek
+		task.wait(0.2)
+	end
+end)
+Players.PlayerRemoving:Connect(function(plr) laatstePlek[plr] = nil; laatsteBeweging[plr] = nil end)
+-- dichtstbijzijnde speler vóór plek s op lijn 'naam' (nil = geen)
+local function spelerVoor(naam: string, s: number): number?
+	local best: number? = nil
+	for _, ps in spelerOp[naam] or {} do if ps > s + 0.3 and (best == nil or ps < best) then best = ps end end
+	return best
+end
+
 -- eerst uitstappen, dan instappen (Daan 17 nov): pas instappen als niemand meer meerijdt en de uitstappers het dek af zijn
 local function dekVrij(): boolean
 	for _, o in rij do
@@ -265,11 +329,16 @@ local function rijEnRit(b: Bezoeker)
 	local keus = 1
 	volg(b, RIJ_S, function()
 		local voor = voorganger(b)
-		return if voor then voor.s - GAT else RIJ_S.L
+		local g = if voor then voor.s - GAT else RIJ_S.L
+		local ps = spelerVoor("rij", b.s)
+		return if ps then math.min(g, ps - GAT) else g
 	end, function()
 		if b.s < RIJ_S.L - 1.5 or voorganger(b) ~= nil then return false end
 		-- vooraan: naar het gangetje met de minste mensen, als daar achteraan plek is
 		local n1, s1 = staart("gang1"); local n2, s2 = staart("gang2")
+		n1 += #spelerOp.gang1; n2 += #spelerOp.gang2
+		for _, ps in spelerOp.gang1 do s1 = math.min(s1, ps) end
+		for _, ps in spelerOp.gang2 do s2 = math.min(s2, ps) end
 		keus = if n2 < n1 then 2 else 1
 		local laagste = if keus == 1 then s1 else s2
 		return laagste > GAT + 1
@@ -280,7 +349,9 @@ local function rijEnRit(b: Bezoeker)
 	b.fase = "gang" .. keus; b.s = 0
 	volg(b, gang.ln, function()
 		local voor = voorganger(b)
-		return if voor then voor.s - GAT else gang.ln.L
+		local g = if voor then voor.s - GAT else gang.ln.L
+		local ps = spelerVoor(b.fase, b.s)
+		return if ps then math.min(g, ps - GAT) else g
 	end, function()
 		local t = tc()
 		return b.s > gang.ln.L - 1.5 and voorganger(b) == nil and t > 2 and t < T_IN - 8 and dekVrij()
@@ -289,7 +360,14 @@ local function rijEnRit(b: Bezoeker)
 	-- 3 over het dek naar een vrije plek aan de reling (willekeurig rondom), naar buiten kijken
 	b.fase = "dek"; m:SetAttribute("OpDek", true)
 	local vrije = {}
-	for _, p in PLEKKEN do if p.b == nil or not p.b.model.Parent or p.b.fase ~= "dek" and p.b.fase ~= "rit" then p.b = nil; table.insert(vrije, p) end end
+	for _, p in PLEKKEN do
+		if p.b == nil or not p.b.model.Parent or p.b.fase ~= "dek" and p.b.fase ~= "rit" then
+			p.b = nil
+			local bijSpeler = false                                      -- niet op de plek van een speler gaan staan
+			for _, sa in spelerDek do if math.abs((p.a - sa + 180) % 360 - 180) < 8 then bijSpeler = true end end
+			if not bijSpeler then table.insert(vrije, p) end
+		end
+	end
 	local plek = if #vrije > 0 then vrije[math.random(#vrije)] else PLEKKEN[math.random(#PLEKKEN)]
 	plek.b = b
 	local naarPlek = {pp(7.4, gang.poort, Z_I)}
@@ -334,7 +412,10 @@ local function nieuw()
 	local hum = m:FindFirstChildOfClass("Humanoid") :: Humanoid
 	if not hum then m:Destroy(); return end
 	for _, d in m:GetDescendants() do
-		if d:IsA("BasePart") then d.Anchored = false; d.CollisionGroup = "Bezoekers"; d.CanTouch = false end
+		if d:IsA("BasePart") then
+			d.Anchored = false; d.CollisionGroup = "Bezoekers"; d.CanTouch = false
+			d.CustomPhysicalProperties = PhysicalProperties.new(100, 0.4, 0.3)     -- zwaar: een speler duwt ze niet weg
+		end
 		if d:IsA("Script") or d:IsA("LocalScript") then d:Destroy() end
 	end
 	hum.WalkSpeed = SPELER_SNELHEID              -- precies even snel als de speler (Daan: "niet sneller of slomer")

@@ -332,6 +332,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     speler daarna op r 15.2 a -20.
   - Snelheid (17 nov, Daan: "precies even snel als de bezoekers, niet sneller of slomer"): spelers en alle bezoekers 6.5 studs/s
     (SPELER_SNELHEID in PagodeBezoekers; bezoekers waren 5.5-7.5 willekeurig).
+  - Bezoekers vast voor spelers (17 nov, Daan: "dat je er niet doorheen kan lopen"): Bezoekers botst met Spelers en Rijdend;
+    bezoekers zwaar (CustomPhysicalProperties dichtheid 100) zodat je ze niet wegduwt. Spelers op een looplijn (rij, gang1,
+    gang2; binnen 1.1 m van de middellijn) tellen mee in de rij: bezoekers wachten 0.85 m achter je en kiezen het gangetje
+    met de minste mensen (spelers meegeteld). Dekplekken binnen 8 gr van een speler op het dek worden overgeslagen.
+    Wie 40 s stilstaat op een looplijn wordt groep Spook (botst niet met bezoekers, telt niet mee): niemand blokkeert de rij;
+    bewegen = weer Spelers. Play: bezoekers stonden 0.86 en 1.54 m achter de speler in de eerste baan. Spook niet getest
+    (Daan speelde zelf mee); te checken: duwen bezoekers je bij vrij lopen (uitgang, ommetje, dek)?
   - Meedraaien met de gondel (17 nov, Daan: "waarom draai ik niet mee, met normale physics beweeg je mee"): in eerste persoon
     (EerstePersoon, LockFirstPerson) draait Roblox het lichaam elk frame naar de camera, dus alleen het lichaam meedraaien
     werd teruggedraaid. PagodeRitClient telt de draaiing van de gondel om de verticaal op (meeDraai) en draait de camera
