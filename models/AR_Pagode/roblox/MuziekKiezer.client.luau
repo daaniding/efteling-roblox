@@ -5,8 +5,8 @@ local RunService = game:GetService("RunService")
 if not RunService:IsStudio() then return end
 local UIS = game:GetService("UserInputService")
 local LIJST = {
-	{"One World (a)", 1839842602}, {"Cultures And Colours (A)", 1840397475}, {"World Of Wonder", 1836330626},
-	{"The Legend of the Monkey King", 1837190707}, {"Kawachi Ondo (c)", 1842506077}, {"Fortune's Smiling", 1840841073},
+	{"Fortune's Smiling (gekozen)", 1840841073}, {"One World (a)", 1839842602}, {"Cultures And Colours (A)", 1840397475}, {"World Of Wonder", 1836330626},
+	{"The Legend of the Monkey King", 1837190707}, {"Kawachi Ondo (c)", 1842506077},
 	{"Lightly Magical", 1837777641}, {"Fairy Doll", 1846356693}, {"The Carousel Waltz", 132619984017094},
 	{"Outward Bound", 1842179736}, {"Plum Blossoms", 1845854732}, {"Peach Blossom Spring", 1840540291},
 }

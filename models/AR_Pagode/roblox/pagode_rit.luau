@@ -283,7 +283,7 @@ do
   -- vervangen = alleen de ID hieronder aanpassen. De client (PagodeRitClient) speelt de ritgeluiden synchroon met de rit.
   do
     local GELUID = {
-      muziek = 1839842602,   -- APM "One World (a)" (wachtrij, levendig, etnische instrumenten, 201 s); kiezen met MuziekKiezer (M)
+      muziek = 1840841073,   -- APM "Fortune's Smiling" (wachtrij, gekozen door Daan met MuziekKiezer 6/12, 173 s)
       brom = 9125767459,     -- PSE constante machinetoon (hydrauliek arm), toonhoogte/volume volgen de armsnelheid
       hek = 9116875342,      -- PSE metalen hekje open/dicht
       bel = 9119642644,      -- PSE dubbele bel (vertrek)
@@ -326,6 +326,12 @@ do
       p.Transparency = 1; p.Size = Vector3.new(1, 1, 1); p.Position = W(w[2], math.rad(w[3]), 10 + w[4] + 1.2); p.Parent = fg
       local so = snd(p, "praten", w[5], w[6], 8, 60, true); so.Playing = true
       if w[1] == "bordes" then so.TimePosition = 17 end
+    end
+    -- zacht lopende en pratende mensen (PSE street crowd: walla, voetstappen, kinderen, vogels, geen verkeer)
+    for _, w in ipairs({{"aanloop", 16.3, 95, -0.38, 9112879470, 0.16, 0}, {"onderpad", 26.0, 135, -0.38, 9112879448, 0.14, 11}}) do
+      local p = Instance.new("Part"); p.Name = "lopen_" .. w[1]; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+      p.Transparency = 1; p.Size = Vector3.new(1, 1, 1); p.Position = W(w[2], math.rad(w[3]), 10 + w[4] + 1.0); p.Parent = fg
+      local so = snd(p, "lopen", w[5], w[6], 8, 55, true); so.Playing = true; so.TimePosition = w[7]
     end
     local wind = Instance.new("Sound"); wind.Name = "wind"; wind.SoundId = "rbxassetid://" .. GELUID.wind; wind.Volume = 0; wind.Looped = true; wind.Parent = fg
   end
@@ -673,8 +679,8 @@ local RunService = game:GetService("RunService")
 if not RunService:IsStudio() then return end
 local UIS = game:GetService("UserInputService")
 local LIJST = {
-	{"One World (a)", 1839842602}, {"Cultures And Colours (A)", 1840397475}, {"World Of Wonder", 1836330626},
-	{"The Legend of the Monkey King", 1837190707}, {"Kawachi Ondo (c)", 1842506077}, {"Fortune's Smiling", 1840841073},
+	{"Fortune's Smiling (gekozen)", 1840841073}, {"One World (a)", 1839842602}, {"Cultures And Colours (A)", 1840397475}, {"World Of Wonder", 1836330626},
+	{"The Legend of the Monkey King", 1837190707}, {"Kawachi Ondo (c)", 1842506077},
 	{"Lightly Magical", 1837777641}, {"Fairy Doll", 1846356693}, {"The Carousel Waltz", 132619984017094},
 	{"Outward Bound", 1842179736}, {"Plum Blossoms", 1845854732}, {"Peach Blossom Spring", 1840540291},
 }
