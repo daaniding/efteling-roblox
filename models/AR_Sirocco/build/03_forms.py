@@ -19,7 +19,7 @@ R_DAK, Z_NOK, Z_RAND, Z_VLEUGEL = 8.85, 11.6, 3.0, 7.4
 VOOR = math.radians(-124.0); VLEUGEL_HALF = math.radians(55.0)
 DIK_RIET = 0.45
 R_SCHIJF, R_DEK, Z_PLAT = 7.0, 8.6, 0.3
-R_PAAL, N_PAAL = 8.0, 16
+R_PAAL, N_PAAL = 8.4, 16   # op de buitenrand van het dek (was 8,0: te weinig looprand, Daan 17 nov)
 PAAL_DRAAI = math.radians(5.5)   # palen verdraaid zodat instap (-62) en uitstap (-106 graden) precies tussen twee palen vallen (Daan: paal in de weg)
 R_SUB, R_SUBMID = 2.3, 3.8
 

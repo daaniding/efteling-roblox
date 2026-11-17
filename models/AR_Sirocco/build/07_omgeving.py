@@ -50,14 +50,18 @@ PLEINKANT = lambda x, y: (x < -11.0 and -13 < y < 7.0) or (x < -9.5 and y < -12.
 WACHTRIJ = [(5.8, -15.8), (8.0, -13.9), (11.0, -11.9), (13.8, -9.6), (15.6, -6.5), (15.9, -2.0), (15.9, 3.0), (15.75, 6.0)]
 for a in range(0, 181, 20):                        # haarspeldbocht om het plantvak (luchtfoto: midden (12.0; 8.0), r 3.75)
     WACHTRIJ.append((12.0 + 3.75 * math.cos(math.radians(a)), 8.0 + 3.75 * math.sin(math.radians(a))))
-for a in range(30, -59, -8):                       # meebuigend met de draaischijf naar het opstappunt (luchtfoto r ~10.2)
+I_BOOG = len(WACHTRIJ)
+for k in range(13):                                # meebuigend met de draaischijf (luchtfoto r ~10.2), iets voorbij het instappunt (-62)
+    a = 30 - k * 100 / 12
     WACHTRIJ.append((10.25 * math.cos(math.radians(a)), 10.25 * math.sin(math.radians(a))))
-WACHTRIJ.append((8.62 * math.cos(math.radians(-62)), 8.62 * math.sin(math.radians(-62))))        # tot de dekrand (R_DEK 8,6): niet over het dek heen (z-fighting)
+DEK_HEK_R = 8.55
+OPEN_INSTAP = (-62 - math.degrees(math.asin(1.0 / DEK_HEK_R)), -62 + math.degrees(math.asin(1.0 / DEK_HEK_R)))
+OPEN_UITSTAP = (-math.degrees(math.acos(-3.35 / DEK_HEK_R)), -math.degrees(math.acos(-0.65 / DEK_HEK_R)))   # tussen de brugmuren
 ZEIL_VANAF = 7                                     # index in WACHTRIJ waar de zeilkap begint
 B_RIJ = 2.0                                        # breedte vlonder (Roblox: looppaden ~1,5x echt)
 UITGANG_X = -2.0                                   # uitgangsbrug recht naar het zuiden (luchtfoto: muurtjes op x -3,5 en -0,5)
 UITGANG = [(UITGANG_X, -8.1), (UITGANG_X, -17.3)]   # begint aan de dekrand; dek iets lager dan het gebouwdek (geen z-fighting)
-HUT = (1.6, -8.5, 1.55)                             # rond hutje (luchtfoto: ronde lob aan de voorkant)
+HUT = (0.7, -9.45, 1.15)                             # rond hutje (luchtfoto: ronde lob aan de voorkant)
 BOOT_SINDBAD = (-7.9, -8.5, math.radians(35))   # luchtfoto: boot schuin, boeg naar het noordoosten
 
 
@@ -111,13 +115,14 @@ def strook(bm, pts, breedte, z, dik=0.12):
     return links, rechts
 
 
-def leuning(bms, rand, z, overdekt=False):
+def leuning(bms, rand, z, overdekt=False, geen_eindpaal=False):
     """ruwe palen om de ~1,8 m, bovenregel + middenregel, gaas ertussen (video f_016); onder de zeilkap bamboe kruisschoren"""
     pts = [rand[0]]
     for p in rand[1:]:
         if (p - pts[-1]).length > 1.8 or p is rand[-1]: pts.append(p)
     for i, p in enumerate(pts):
-        stam(bms["stam"], Vector((p.x, p.y, -0.6)), Vector((p.x, p.y, z + 1.15)), 0.09, 0.08, 8, 0.1)
+        if not (geen_eindpaal and i == len(pts) - 1):
+            stam(bms["stam"], Vector((p.x, p.y, -0.6)), Vector((p.x, p.y, z + 1.15)), 0.09, 0.08, 8, 0.1)
         if i == 0: continue
         q = pts[i - 1]
         stam(bms["stam"], Vector((q.x, q.y, z + 1.05)), Vector((p.x, p.y, z + 1.05)), 0.06, 0.06, 6, 0.08)
@@ -161,12 +166,18 @@ def zeilkap(bms, pts, z, lampen):
 def dekhek(bms):
     """hek rond de buitenrand van het vlonderdek (r 8,5) zodat niemand van het dek het water in loopt; open bij de instap
     (einde wachtrij, -62 graden) en de uitstap (brug, -106 graden)"""
-    R = 8.5; open_ = [(-62, 8.5), (-106, 9.5)]
-    def vrij(a): return all(abs((a - o + 180) % 360 - 180) > h for o, h in open_)
+    R = DEK_HEK_R
+    def vrij(a):
+        p = Vector((R * math.cos(math.radians(a)), R * math.sin(math.radians(a)), 0))
+        if (p - Vector((HUT[0], HUT[1], 0))).length < HUT[2] + 0.15: return False      # bij het bedieningshuisje: de wand is het hek
+        return not any(o0 - 0.01 <= a <= o1 + 0.01 for o0, o1 in (OPEN_INSTAP, OPEN_UITSTAP))
     stukken, huidig = [], []
-    for k in range(361):
-        a = -180 + k
-        if vrij(a): huidig.append(Vector((R * math.cos(math.radians(a)), R * math.sin(math.radians(a)), 0)))
+    hoeken = sorted(set([-180 + k for k in range(361)] + [round(v, 3) for v in (*OPEN_INSTAP, *OPEN_UITSTAP)]))
+    for a in hoeken:
+        rand = any(abs(a - v) < 0.005 for v in (*OPEN_INSTAP, *OPEN_UITSTAP))
+        if vrij(a) or rand:
+            huidig.append(Vector((R * math.cos(math.radians(a)), R * math.sin(math.radians(a)), 0)))
+            if rand and len(huidig) > 1 and not vrij(a + 0.5): stukken.append(huidig); huidig = []
         elif huidig: stukken.append(huidig); huidig = []
     if huidig:
         if stukken and abs(math.degrees(math.atan2(stukken[0][0].y, stukken[0][0].x)) + 180) < 1.5: stukken[0] = huidig + stukken[0]
@@ -176,27 +187,89 @@ def dekhek(bms):
 
 
 def hutje(bms):
-    """rond hutje aan de voorkant (f_004, f_136): bamboewand met ovale raampjes, rieten kegeldak met spitsje, hek naar de brug"""
+    """bedieningshuisje van de medewerker aan de dekrand naast de uitgangsbrug (video xloCDJYf-Tw 256-266 s, f_131): achthoekige
+    bamboewand met stokken en banden, drie boogramen met glas naar het dek/de draaischijf, deur aan de achterkant, hol rieten
+    puntdak met overstek en spits; staat op een eigen vlonder op palen (half boven het water)"""
     x, y, r = HUT
-    v = cil(bms["bamboewand"], (x, y, Z_PLAT), r, 2.3, 24)
-    for k in range(24):                                # bamboestokken als ribbels
-        h = 2 * math.pi * k / 24
-        stam(bms["bamboe"], Vector((x + (r + 0.03) * math.cos(h), y + (r + 0.03) * math.sin(h), Z_PLAT)),
-             Vector((x + (r + 0.03) * math.cos(h), y + (r + 0.03) * math.sin(h), Z_PLAT + 2.3)), 0.04, 0.04, 6, 0.0)
+    c = Vector((x, y, 0))
+    naar_dek = Vector((-x, -y, 0)).normalized()
+    hd = math.atan2(naar_dek.y, naar_dek.x)
+    z0 = Z_PLAT
+    # vlonder + palen
+    vl = [c + Vector((1.45 * math.cos(hd + math.pi / 8 + k * math.pi / 4), 1.45 * math.sin(hd + math.pi / 8 + k * math.pi / 4), 0)) for k in range(8)]
+    bm = bms["vlonder"]
+    top = bm.faces.new([bm.verts.new(Vector((v.x, v.y, z0 - 0.02))) for v in vl]); top.normal_update()
+    if top.normal.z < 0: top.normal_flip()
+    for k in range(8):
+        a, b = vl[k], vl[(k + 1) % 8]
+        f = bm.faces.new([bm.verts.new(v) for v in (Vector((a.x, a.y, z0 - 0.2)), Vector((b.x, b.y, z0 - 0.2)), Vector((b.x, b.y, z0 - 0.02)), Vector((a.x, a.y, z0 - 0.02)))])
+        f.normal_update()
+        if f.normal.dot(Vector(((a.x + b.x) / 2 - x, (a.y + b.y) / 2 - y, 0))) < 0: f.normal_flip()
+    for k in range(0, 8, 2):
+        stam(bms["stam"], Vector((vl[k].x, vl[k].y, -0.8)), Vector((vl[k].x, vl[k].y, z0 - 0.15)), 0.1, 0.1, 6, 0.05)
+    # wand: achthoek
+    hoeken = [hd + math.pi / 8 + k * math.pi / 4 for k in range(8)]
+    pts = [c + Vector((r * math.cos(h), r * math.sin(h), 0)) for h in hoeken]
+    H = 2.4
+    bm = bms["bamboewand"]
+    for k in range(8):
+        a, b = pts[k], pts[(k + 1) % 8]
+        f = bm.faces.new([bm.verts.new(v) for v in (Vector((a.x, a.y, z0)), Vector((b.x, b.y, z0)), Vector((b.x, b.y, z0 + H)), Vector((a.x, a.y, z0 + H)))])
+        f.normal_update()
+        if f.normal.dot(Vector(((a.x + b.x) / 2 - x, (a.y + b.y) / 2 - y, 0))) < 0: f.normal_flip()
+    for k in range(8):                                  # hoekstokken + tussenstokken
+        for t in (0.0, 0.5):
+            p = pts[k].lerp(pts[(k + 1) % 8], t); p = c + (p - c) * 1.03
+            stam(bms["bamboe"], Vector((p.x, p.y, z0)), Vector((p.x, p.y, z0 + H)), 0.05 if t == 0 else 0.035, 0.05 if t == 0 else 0.035, 6, 0.0)
+    for zz in (0.12, 0.95, 2.3):                        # banden
+        for k in range(8):
+            a = c + (pts[k] - c) * 1.05; b = c + (pts[(k + 1) % 8] - c) * 1.05
+            stam(bms["bamboe"], Vector((a.x, a.y, z0 + zz)), Vector((b.x, b.y, z0 + zz)), 0.035, 0.035, 6, 0.0)
+    # ramen: de drie vlakken die naar het dek kijken; deur: het vlak er recht tegenover
+    for k in range(8):
+        a, b = pts[k], pts[(k + 1) % 8]; m = (a + b) / 2; n = Vector((m.x - x, m.y - y, 0)).normalized(); d = (b - a).normalized()
+        richting = n.dot(naar_dek)
+        if richting > 0.3:                              # boograam
+            w, zb, zt = 0.29, z0 + 1.0, z0 + 1.82
+            omtrek = [(-w, zb), (w, zb), (w, zt)] + [(w * math.cos(t), zt + w * math.sin(t)) for t in [math.pi * i2 / 10 for i2 in range(1, 10)]] + [(-w, zt)]
+            for rol, uit, schaal in (("raam", 0.012, 1.0), ("raamglas", 0.03, 0.92)):
+                vs = [m + d * u * schaal + n * uit + Vector((0, 0, zb + (zz - zb) * schaal)) for u, zz in omtrek]
+                f = bms[rol].faces.new([bms[rol].verts.new(v) for v in vs]); f.normal_update()
+                if f.normal.dot(n) < 0: f.normal_flip()
+            vorig = None                               # kozijn (bamboe) langs de omtrek
+            for u, zz in omtrek + [omtrek[0]]:
+                q = m + d * u + n * 0.04 + Vector((0, 0, zz))
+                if vorig is not None: stam(bms["bamboe"], vorig, q, 0.025, 0.025, 6, 0.0)
+                vorig = q
+        elif richting < -0.9:                          # deur
+            v = doos(bms["deur"], ((m + n * 0.03).x, (m + n * 0.03).y, z0 + 0.95), (0.7, 0.05, 1.9), math.atan2(d.y, d.x))
+            bol(bms["goud"], m + n * 0.07 + d * 0.25 + Vector((0, 0, z0 + 1.0)), 0.035, 6)
+    # dak: hol riet-puntdak met overstek, dikke rand en spits
+    NA = 16
+    prof = [(1.75, z0 + 2.3), (1.3, z0 + 2.85), (0.85, z0 + 3.5), (0.45, z0 + 4.2), (0.0, z0 + 5.0)]
     bm = bms["riet"]
-    NA = 24; top = Vector((x, y, Z_PLAT + 5.2))
-    rand = [Vector((x + (r + 0.6) * math.cos(2 * math.pi * k / NA), y + (r + 0.6) * math.sin(2 * math.pi * k / NA), Z_PLAT + 2.2)) for k in range(NA)]
-    tv = bm.verts.new(top)
-    for k in range(NA):
-        bm.faces.new((tv, bm.verts.new(rand[k]), bm.verts.new(rand[(k + 1) % NA])))
-        bm.faces.new((bm.verts.new(rand[k]), bm.verts.new(rand[k] - Vector((0, 0, 0.3))), bm.verts.new(rand[(k + 1) % NA] - Vector((0, 0, 0.3))), bm.verts.new(rand[(k + 1) % NA])))
-    stam(bms["stam"], top - Vector((0, 0, 0.2)), top + Vector((0, 0, 0.9)), 0.08, 0.02, 8, 0.0)
-    for k in range(4):                                 # ovale raampjes (donker)
-        h = math.radians(30 + 90 * k)
-        c = Vector((x + (r + 0.05) * math.cos(h), y + (r + 0.05) * math.sin(h), Z_PLAT + 1.5))
-        vv = bol(bms["raam"], c, 0.25, 10)
-        for q in vv:
-            dd = q.co - c; q.co = c + Vector((dd.x * 0.35, dd.y * 0.35, dd.z * 1.3))
+    for i2 in range(len(prof) - 1):
+        (r0, h0), (r1, h1) = prof[i2], prof[i2 + 1]
+        for k in range(NA):
+            t0, t1 = 2 * math.pi * k / NA, 2 * math.pi * (k + 1) / NA
+            q = [Vector((x + r0 * math.cos(t0), y + r0 * math.sin(t0), h0)), Vector((x + r0 * math.cos(t1), y + r0 * math.sin(t1), h0)),
+                 Vector((x + r1 * math.cos(t1), y + r1 * math.sin(t1), h1)), Vector((x + r1 * math.cos(t0), y + r1 * math.sin(t0), h1))]
+            if r1 == 0: q = q[:3]
+            f = bm.faces.new([bm.verts.new(v) for v in q]); f.normal_update()
+            if f.normal.z < 0: f.normal_flip()
+    for k in range(NA):                                 # dikke rand + onderkant van het overstek
+        t0, t1 = 2 * math.pi * k / NA, 2 * math.pi * (k + 1) / NA
+        r0 = prof[0][0]; h0 = prof[0][1]
+        q = [Vector((x + r0 * math.cos(t0), y + r0 * math.sin(t0), h0 - 0.25)), Vector((x + r0 * math.cos(t1), y + r0 * math.sin(t1), h0 - 0.25)),
+             Vector((x + r0 * math.cos(t1), y + r0 * math.sin(t1), h0)), Vector((x + r0 * math.cos(t0), y + r0 * math.sin(t0), h0))]
+        f = bm.faces.new([bm.verts.new(v) for v in q]); f.normal_update()
+        if f.normal.dot(Vector((math.cos((t0 + t1) / 2), math.sin((t0 + t1) / 2), 0))) < 0: f.normal_flip()
+        q2 = [Vector((x + r0 * math.cos(t0), y + r0 * math.sin(t0), h0 - 0.25)), Vector((x + r0 * math.cos(t1), y + r0 * math.sin(t1), h0 - 0.25)),
+              Vector((x + 1.0 * math.cos(t1), y + 1.0 * math.sin(t1), h0 - 0.12)), Vector((x + 1.0 * math.cos(t0), y + 1.0 * math.sin(t0), h0 - 0.12))]
+        f = bms["beschot_om"].faces.new([bms["beschot_om"].verts.new(v) for v in q2]); f.normal_update()
+        if f.normal.z > 0: f.normal_flip()
+    stam(bms["stam"], Vector((x, y, z0 + 4.8)), Vector((x, y, z0 + 5.7)), 0.07, 0.015, 8, 0.0)
+    bol(bms["goud"], (x, y, z0 + 5.15), 0.08, 8)
 
 
 def brug(bms):
@@ -205,8 +278,9 @@ def brug(bms):
     links, rechts = strook(bms["bestrating"], [a, b], 2.4, Z_PLAT - 0.05, 0.6)
     for zij in (-1, 1):
         x = UITGANG_X + zij * 1.35
-        doos(bms["muur"], ((x), (a[1] + b[1]) / 2, Z_PLAT + 0.35), (0.3, abs(b[1] - a[1]), 0.9))
-        doos(bms["afdek"], ((x), (a[1] + b[1]) / 2, Z_PLAT + 0.84), (0.4, abs(b[1] - a[1]) + 0.1, 0.1))
+        y0m = -math.sqrt(DEK_HEK_R ** 2 - x ** 2)                     # muur begint precies bij de hekpaal op de dekrand
+        doos(bms["muur"], ((x), (y0m + b[1]) / 2, Z_PLAT + 0.35), (0.3, abs(b[1] - y0m), 0.9))
+        doos(bms["afdek"], ((x), (y0m + b[1]) / 2, Z_PLAT + 0.84), (0.4, abs(b[1] - y0m) + 0.1, 0.1))
     # hek van twee latten-deuren bij het hutje (f_136), opengeslagen tegen de muurtjes zodat de looproute vrij is
     y0 = -8.6
     for zij in (-1, 1):
@@ -625,15 +699,30 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog", "zandsteenvlak", "blauwglas")
+              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog", "zandsteenvlak", "blauwglas", "raamglas", "deur", "beschot_om")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)
     for p in WACHTRIJ[::2]:                            # palen onder de vlonder
         stam(bms["stam"], Vector((p[0], p[1], -0.8)), Vector((p[0], p[1], Z_VLONDER - 0.1)), 0.1, 0.1, 6, 0.1)
     leuning(bms, links[:ZEIL_VANAF + 1], Z_VLONDER); leuning(bms, rechts[:ZEIL_VANAF + 1], Z_VLONDER)
-    leuning(bms, links[ZEIL_VANAF:], Z_VLONDER, True); leuning(bms, rechts[ZEIL_VANAF:], Z_VLONDER, True)   # ook langs het instapstuk
-    zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-2], Z_VLONDER, lampen)          # stopt voor de afslag naar het dek: geen paal in het pad
+    # leuningen onder de zeilkap: buitenkant doorlopend en aan het eind dicht; binnenkant open waar het instapstuk afsplitst
+    mid = I_BOOG + 6
+    binnen_rand, buiten_rand = (links, rechts) if links[mid].length < rechts[mid].length else (rechts, links)
+    u = Vector((math.cos(math.radians(-62)), math.sin(math.radians(-62)), 0)); tg = Vector((-u.y, u.x, 0))
+    h_open = math.degrees(math.asin(1.0 / 9.25))
+    def boogpunt(a): return Vector((9.25 * math.cos(math.radians(a)), 9.25 * math.sin(math.radians(a)), 0))
+    hk = [30 - k * 100 / 12 for k in range(13)]
+    voor = binnen_rand[ZEIL_VANAF:I_BOOG] + [boogpunt(a) for a in hk if a > -62 + h_open] + [boogpunt(-62 + h_open)]
+    na = [boogpunt(-62 - h_open)] + [boogpunt(a) for a in hk if a < -62 - h_open]
+    leuning(bms, voor, Z_VLONDER, True); leuning(bms, na, Z_VLONDER, True)
+    leuning(bms, buiten_rand[ZEIL_VANAF:] + [binnen_rand[-1]], Z_VLONDER, True)
+    zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-2], Z_VLONDER, lampen)          # stopt voor het instapstuk: geen paal in het pad
+    # instapstuk: recht (radiaal) van de binnenrand naar de dekrand, 4 cm lager (onder de wachtrij en het dek door: geen z-fighting)
+    strook(bms["vlonder"], [(9.45 * u).xy, (8.2 * u).xy], B_RIJ, Z_VLONDER - 0.04, 0.1)
+    for zij in (-1, 1):
+        a0 = 9.2 * u + zij * 1.0 * tg; a1 = 8.49 * u + zij * 1.0 * tg      # eindigt op de hekpaal van het dek (r 8,55)
+        leuning(bms, [a0, a1], Z_VLONDER, True, True)
     dekhek(bms)
     hutje(bms); brug(bms); vijverrand(bms); havenmuur(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
     # waterplaat in de vorm van de vijver (dun, bovenkant omhoog)
@@ -646,7 +735,7 @@ def main():
     obj("SI_om_water", bmw, "water")
     for rol, bm in bms.items():
         if not bm.verts: bm.free(); continue
-        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand", "boog", "zandsteenvlak"):
+        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand", "boog", "zandsteenvlak", "raam", "raamglas", "bamboewand", "beschot_om"):
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         obj(f"SI_om_{rol}", bm, rol)
     info = {"vijver": VIJVER, "wachtrij": WACHTRIJ, "zeil_vanaf": ZEIL_VANAF, "uitgang": UITGANG, "hut": HUT, "lampen": lampen,

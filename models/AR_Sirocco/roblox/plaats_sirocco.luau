@@ -8,7 +8,7 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 90330949979433, rit = 83505201461300, omgeving = 91728363827329, bord_kleur = 138476476235233,
+local ID = {gebouw = 131869393173401, rit = 83505201461300, omgeving = 82705200382373, bord_kleur = 138476476235233,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -89,6 +89,10 @@ local R = {
 	boog = {nil, nil, Color3.fromRGB(18, 16, 14), Enum.Material.SmoothPlastic, false},
 	zandsteenvlak = {nil, nil, Color3.fromRGB(212, 186, 146), Enum.Material.Sandstone, true},
 	blauwglas = {nil, nil, Color3.fromRGB(90, 200, 225), Enum.Material.Neon, false},
+	-- bedieningshuisje (07_omgeving.hutje)
+	raamglas = {nil, nil, Color3.fromRGB(170, 205, 215), Enum.Material.Glass, false, "ruit"},
+	deur = {nil, nil, Color3.fromRGB(92, 62, 40), Enum.Material.WoodPlanks, true},
+	beschot_om = {nil, nil, Color3.fromRGB(52, 48, 44), Enum.Material.Wood, false},
 }
 
 local function inVijver(x, y)          -- punt-in-veelhoek (even-oneven)
@@ -158,7 +162,7 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit, Omgeving = ID.omgeving}
 		pcall(function() p.RenderFidelity = Enum.RenderFidelity.Precise end)   -- anders vallen kleine delen (schubben, golf, fruit) op afstand weg
 		if not r then table.insert(onbekend, p.Name); continue end
 		p.Color = r[3]; p.Material = r[4]; p.CanCollide = r[5]; p.CanQuery = r[5]
-		p.CastShadow = rol ~= "net" and rol ~= "lantaarnglas" and rol ~= "blauwglas"
+		p.CastShadow = rol ~= "net" and rol ~= "lantaarnglas" and rol ~= "blauwglas" and rol ~= "raamglas"
 		if r[1] then
 			local sa = Instance.new("SurfaceAppearance")
 			sa.ColorMap = "rbxassetid://" .. ID[r[1]]
@@ -168,6 +172,7 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit, Omgeving = ID.omgeving}
 			sa.Parent = p
 		end
 		if r[6] == "glas" then p.Transparency = 0.15 end
+		if r[6] == "ruit" then p.Transparency = 0.45; p.Reflectance = 0.15 end
 		if r[6] == "water" then p.Transparency = 0.12; p.Reflectance = 0.05; p.CastShadow = false; p.Position += Vector3.new(0, 0.27, 0) end   -- Y 0,35: vrij boven het vlakke terrein
 		if naam == "Omgeving" and rol == "net" then p.CanCollide = true; p.CanQuery = true end
 		if naam == "Omgeving" and rol == "vlonder" then p.Color = Color3.fromRGB(205, 190, 168); p:FindFirstChildOfClass("SurfaceAppearance").Color = p.Color end   -- wachtrijvlonder lichter   -- wachtrijhek: niet doorheen lopen

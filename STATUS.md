@@ -1489,5 +1489,17 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   (PAAL_DRAAI) zodat instap -62 en uitstap -106 graden tussen twee palen vallen; nieuw hek rond de buitenrand van het dek
   (r 8,5) met alleen openingen bij instap en uitstap. Gecontroleerd in Studio: GetPartsInPart langs instap en uitstap leeg,
   dekrand alleen open bij -60..-70 en -100..-115 graden. Gebouw 90330949979433, omgeving 91728363827329.
+- Instap opnieuw (17 nov), Daan (screenshots): "hier klopt nog steeds niks van" / "ook hier gaat het mis" (driehoekig gat, dubbele
+  palen/leuningen). Oorzaak: korte scherpe 90-gradenbocht van de wachtrij het dek op (strook vouwt). Nu: wachtrijboog loopt door tot
+  -70 graden en is aan het eind dicht; instapstuk takt radiaal af van de binnenrand (r 9,45 -> 8,2, 4 cm lager, onder wachtrij en
+  dek door); binnenleuning open op -62 +- 6,2 graden; leuningen langs het instapstuk eindigen zonder eigen paal op de hekpaal van
+  het dek; dekhek-openingen exact: instap +-asin(1/8,55), uitstap tussen de brugmuren (x -3,35/-0,65); brugmuren beginnen op de
+  dekrand. Dakpalen naar r 8,4 (op de dekrand; op r 8,0 bleef er naast de paal te weinig looprand).
+- Bedieningshuisje (17 nov), Daan: "waar is dit voor en maak het beter". Het is het huisje van de medewerker (video 256-266 s):
+  nu aan de dekrand naast de brug (0,7; -9,45) op eigen vlonder met palen, achthoekige bamboewand met stokken en banden, drie
+  boogramen met glas naar de draaischijf, deur achter, hol rieten puntdak met dikke rand, onderbeschot en spits. Stond eerst
+  midden op het dek (blokkeerde de looprand). Dekhek wijkt uit voor het huisje.
+  Studio-check: GetPartsInPart langs wachtrij -> instap -> dek (r 7,7, -62..-106) -> brug leeg; dekrand alleen open bij de
+  instap en uitstap. Gebouw 131869393173401, omgeving 82705200382373.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
