@@ -84,7 +84,8 @@ end
 -- de vijver (vorm uit de luchtfoto) leeg tot ver onder het water
 local t = workspace.Terrain
 -- Daan 17 nov: "gewoon de ondergrond plat, niet dit rare relief". Terrein op het voxelraster (4 studs) met volle voxels, dus
--- vlak: bovenkant Y 0 (plein/plantvak/zand), vijverkolommen tot Y -4 (onder de waterplaat), water 0,35 erboven.
+-- vlak. Gemeten: bovenkant = 4 * (bezetting bovenste laag - 0,5); bezetting 0,725 -> grond Y 0,9-1,0, net onder de wachtrijvlonder
+-- (1,1) en de brug (1,16), boven het water (0,35). Vijverkolommen: bovenste laag leeg (bodem Y -2).
 t:FillBlock(CFrame.new(MIDDEN.X, 40, MIDDEN.Z), Vector3.new(70 * S + 8, 80, 70 * S + 8), Enum.Material.Air)
 local x0 = math.floor((MIDDEN.X - 35 * S) / 4) * 4; local z0 = math.floor((MIDDEN.Z - 35 * S) / 4) * 4
 local nx = math.ceil((MIDDEN.X + 35 * S - x0) / 4); local nz = math.ceil((MIDDEN.Z + 35 * S - z0) / 4)
@@ -103,7 +104,7 @@ for ix = 1, nx do
 		for iy = 1, NY do
 			local vol = not (water and iy == NY)
 			mat[ix][iy][iz] = vol and (iy == NY and (MAT[k] or Enum.Material.Grass) or Enum.Material.Ground) or Enum.Material.Air
-			occ[ix][iy][iz] = vol and 1 or 0
+			occ[ix][iy][iz] = vol and (iy == NY and 0.725 or 1) or 0
 		end
 	end
 end
