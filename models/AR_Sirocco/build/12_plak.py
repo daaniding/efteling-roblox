@@ -40,6 +40,9 @@ for jj in range(-35, 35):              # model-y van -35 tot 34 (cel-midden +0,5
         pi, pj = int(x + 456.5 - 420), int(223 - (y + 191.2))
         k = K[pj, pi] if 0 <= pi < 70 and 0 <= pj < 70 else 1
         if any(binnen(x, y, P) for P in BEDDEN): k = 1
+        STRAND = [(-12.0, -6.0), (-11.2, -7.6), (-11.6, -8.8), (-12.6, -10.0), (-13.8, -11.6), (-14.6, -12.3), (-16.0, -11.7), (-17.0, -10.2),
+                  (-17.3, -8.0), (-16.6, -6.0), (-14.6, -4.9), (-12.9, -4.6)]       # = 07_omgeving.STRAND
+        if binnen(x, y, STRAND): rij += "z"; continue
         if math.hypot(x, y) < 17:      # band om de vijver: plein langs de west-/zuidkant, verder plantvak (luchtfoto)
             k = 0 if ((x < -11 and -13 < y < 7) or (x < -9.5 and y < -12.5) or y < -15.5) else 1
         rij += "vgz"[k]

@@ -49,7 +49,7 @@
    "SI_ton_0_rt": 228
   },
   "AR_Sirocco_omgeving": {
-   "SI_afdek_0_om": 252,
+   "SI_afdek_0_om": 192,
    "SI_baal_0_om": 48,
    "SI_bamboe_0_om": 6612,
    "SI_bamboewand_0_om": 92,
@@ -63,7 +63,8 @@
    "SI_romp_0_om": 3072,
    "SI_schubben_0_om": 576,
    "SI_sierpaneel_0_om": 192,
-   "SI_goud_0_om": 3740,
+   "SI_goud_0_om": 3812,
+   "SI_kei_0_om": 2352,
    "SI_kruik_0_om": 132,
    "SI_lamp_groen_0_om": 440,
    "SI_lamp_rood_0_om": 220,
@@ -71,16 +72,17 @@
    "SI_lantaarnglas_0_om": 300,
    "SI_muur_0_om": 24,
    "SI_net_0_om": 152,
-   "SI_paalmetaal_0_om": 646,
+   "SI_paalmetaal_0_om": 906,
    "SI_raam_0_om": 320,
    "SI_riet_0_om": 72,
    "SI_stam_0_om": 9500,
-   "SI_stam_1_om": 1932,
+   "SI_stam_1_om": 2052,
    "SI_steen_0_om": 1536,
    "SI_ton_0_om": 52,
    "SI_touw_0_om": 1780,
    "SI_vlonder_0_om": 240,
    "SI_water_0_om": 47,
+   "SI_zand_0_om": 20,
    "SI_zeil_turkoois_0_om": 88,
    "SI_zeilrand_0_om": 176
   }

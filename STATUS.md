@@ -1472,6 +1472,10 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   spanten, binnenwand en dek; rode planken (romp_kleur), blauwe schubben onder aan de boeg, blauw sierpaneel met goud achter, gouden
   rand; achtersteven krult omhoog met grote gouden veer; schuine mast, lange ra, latijnzeil met rood embleem (atlas gebied D,
   bord_kleur 138476476235233); balen met touw, kruiken, tonnetje. Sindbad zelf nog niet (figuur later). Omgeving 74474002198959.
-  NB: op de foto's ligt rechts van de haven ook een zandstrandje met keien (World_of_Sinbad.jpg) - eerder weggehaald, nog terugzetten.
+- Zandstrand (17 nov), Daan: "maak het strandje goed". Plek uit de luchtfoto (keien als donkere vlekken op licht zand, x -17..-11,
+  y -12.3..-4.6 = west van de haven) en foto's (eftepedia/Storm_effect_sindbad.jpg, videoframe 284 s): zand op pleinhoogte dat 1,3 m
+  schuin het water in loopt (geen randband daar), 14 ronde granieten keien (onregelmatig, half in het zand), twee meerpalen met
+  koepelkap; terrein eronder Sand (12_plak). Ook gezien: het bed tussen haven en brug heeft een witte betonrand, en de havenmuur
+  aan het plein is zandsteen met een boogje (World_of_Sinbad.jpg) - nog niet nagebouwd. Omgeving 94099909450699.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

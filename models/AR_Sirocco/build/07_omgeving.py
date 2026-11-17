@@ -31,6 +31,16 @@ VIJVER = [(10.5, 10.8), (8.6, 11.1), (7.0, 10.6), (5.0, 11.25), (1.75, 12.6), (-
           (-11.2, -7.6), (-11.6, -8.8), (-12.6, -10.0), (-13.8, -11.6), (-14.6, -12.3), (-13.0, -13.4), (-11.0, -14.8), (-9.8, -15.2),
           (-9.6, -13.6), (-8.8, -12.0), (-7.5, -11.0), (-3.5, -11.0), (-3.4, -13.3), (7.5, -13.3), (10.0, -11.5), (12.25, -9.25),
           (14.0, -6.25), (14.8, -2.5), (14.8, 1.25), (14.3, 3.8), (12.6, 4.0), (11.6, 6.0), (11.3, 9.3)]
+STRAND = [(-12.0, -6.0), (-11.2, -7.6), (-11.6, -8.8), (-12.6, -10.0), (-13.8, -11.6), (-14.6, -12.3), (-16.0, -11.7), (-17.0, -10.2),
+          (-17.3, -8.0), (-16.6, -6.0), (-14.6, -4.9), (-12.9, -4.6)]       # zandstrand west van de haven (luchtfoto: keien op licht zand)
+STRAND_RAND = STRAND[:6]                              # het deel dat de vijverrand is
+def in_poly(x, y, P):
+    c = False; j = len(P) - 1
+    for i in range(len(P)):
+        (xi, yi), (xj, yj) = P[i], P[j]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi) + xi: c = not c
+        j = i
+    return c
 PLEINKANT = lambda x, y: (x < -11.0 and -13 < y < 7.0) or (x < -9.5 and y < -12.5)     # rand langs het plein (lichte band, witte muur)
 # wachtrij: begin bij het plein (zuidoost, naast Archipel), noord langs de oostkant, zeilkap vanaf ZEIL_VANAF, bocht van 180
 # graden en meebuigend met de draaischijf (r ~10.3) tot het opstappunt aan het dek
@@ -194,6 +204,7 @@ def vijverrand(bms):
     for k in range(len(pts) - 1):
         a, b = Vector((*pts[k], 0)), Vector((*pts[k + 1], 0)); m = (a + b) / 2
         d = (b - a); L = d.length; d = d.normalized(); n = Vector((d.y, -d.x, 0))
+        if m.x < -11.0 and -12.6 < m.y < -5.5: continue      # strand: geen rand, het zand loopt het water in
         plein = PLEINKANT(m.x, m.y)
         rol = "afdek" if plein else "steen"
         c = m + n * 0.2
@@ -205,6 +216,51 @@ def vijverrand(bms):
                     vv = bol(bms["steen"], cc, r, 7)
                     for q in vv:
                         dd = q.co - cc; q.co = cc + Vector((dd.x * random.uniform(0.9, 1.3), dd.y * random.uniform(0.9, 1.3), dd.z * 0.55))
+
+
+def strand(bms):
+    """zandstrand west van de haven (foto's eftepedia/Storm_effect_sindbad.jpg, videoframe 284 s, luchtfoto): vlak zand op
+    pleinhoogte dat schuin het water in loopt (1,3 m tot 0,35 m onder water), grote ronde granieten keien, twee sierlijke
+    meerpalen met koepelkap aan de waterkant"""
+    Z = 0.30
+    bm = bms["zand"]
+    vs = [bm.verts.new((x, y, Z - (0.18 if (x, y) in STRAND_RAND else 0.0))) for x, y in STRAND]
+    f = bm.faces.new(vs); bmesh.ops.triangulate(bm, faces=[f], ngon_method="EAR_CLIP")
+    rand = [Vector((x, y, 0)) for x, y in STRAND_RAND]
+    binnen = []
+    for i, p in enumerate(rand):                       # punten 1,3 m het water in (naar binnen in de vijver)
+        a = rand[max(0, i - 1)]; b = rand[min(len(rand) - 1, i + 1)]; d = (b - a).normalized(); n = Vector((-d.y, d.x, 0))
+        if not in_poly((p + n * 0.5).x, (p + n * 0.5).y, VIJVER): n = -n
+        binnen.append(p + n * 1.3)
+    for i in range(len(rand) - 1):
+        q = [Vector((rand[i].x, rand[i].y, Z - 0.18)), Vector((rand[i + 1].x, rand[i + 1].y, Z - 0.18)),
+             Vector((binnen[i + 1].x, binnen[i + 1].y, -0.35)), Vector((binnen[i].x, binnen[i].y, -0.35))]
+        bm.faces.new([bm.verts.new(v) for v in q])
+    for f in bm.faces:
+        f.normal_update()
+        if f.normal.z < 0: f.normal_flip()
+    random.seed(284)                                   # keien: rond, granietroze/grijs, half in het zand
+    keien = [(-13.6, -6.2, 0.55), (-14.9, -7.0, 0.42), (-13.2, -7.9, 0.32), (-15.8, -8.4, 0.6), (-14.3, -9.0, 0.38), (-12.8, -9.3, 0.26),
+             (-16.4, -10.0, 0.45), (-15.1, -10.6, 0.5), (-13.9, -10.3, 0.28), (-16.0, -6.4, 0.35), (-12.4, -6.6, 0.22), (-15.4, -11.6, 0.3),
+             (-14.8, -5.6, 0.3), (-12.2, -8.4, 0.18)]
+    for kx, ky, r in keien:
+        c = Vector((kx, ky, Z + r * 0.15))
+        v = bol(bms["kei"], c, r, 14)
+        sx, sy = random.uniform(1.0, 1.35), random.uniform(0.85, 1.1); h = random.uniform(0.6, 0.8); rot = random.uniform(0, math.pi)
+        fase = [random.uniform(0, 6.28) for _ in range(3)]
+        for q in v:
+            dd = q.co - c
+            hk = math.atan2(dd.y, dd.x); el = math.asin(max(-1, min(1, dd.z / r)))
+            bult = 1 + 0.10 * math.sin(2 * hk + fase[0]) + 0.07 * math.sin(3 * hk + fase[1]) * math.cos(el) + 0.06 * math.sin(2 * el + fase[2])
+            dd = dd * bult
+            dx, dy = dd.x * sx, dd.y * sy
+            q.co = c + Vector((dx * math.cos(rot) - dy * math.sin(rot), dx * math.sin(rot) + dy * math.cos(rot), dd.z * h))
+    for (mx, my) in ((-11.9, -7.3), (-13.4, -11.0)):  # sierlijke meerpalen (foto: houten paal met koepelkap)
+        stam(bms["stam"], Vector((mx, my, -0.5)), Vector((mx, my, 1.7)), 0.13, 0.12, 8, 0.05)
+        cil(bms["paalmetaal"], (mx, my, 1.55), 0.16, 0.1, 10)
+        v = bol(bms["paalmetaal"], (mx, my, 1.7), 0.15, 10)
+        cil(bms["paalmetaal"], (mx, my, 1.8), 0.05, 0.22, 8, 0.0)
+        cil(bms["goud"], (mx, my, 1.2), 0.15, 0.08, 10)
 
 
 def dhow_sindbad(bms):
@@ -442,7 +498,7 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand", "dhow", "baal", "kruik", "ton")
+              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)
@@ -451,7 +507,7 @@ def main():
     leuning(bms, links[:ZEIL_VANAF + 1], Z_VLONDER); leuning(bms, rechts[:ZEIL_VANAF + 1], Z_VLONDER)
     leuning(bms, links[ZEIL_VANAF:-1], Z_VLONDER, True); leuning(bms, rechts[ZEIL_VANAF:-1], Z_VLONDER, True)
     zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-1], Z_VLONDER, lampen)
-    hutje(bms); brug(bms); vijverrand(bms); haven(bms); ingangsbord(bms, lampen)
+    hutje(bms); brug(bms); vijverrand(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
     # waterplaat in de vorm van de vijver (dun, bovenkant omhoog)
     bmw = bmesh.new()
     vs = [bmw.verts.new((x, y, -0.04)) for x, y in VIJVER]
@@ -462,7 +518,7 @@ def main():
     obj("SI_om_water", bmw, "water")
     for rol, bm in bms.items():
         if not bm.verts: bm.free(); continue
-        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud"):
+        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud", "zand"):
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         obj(f"SI_om_{rol}", bm, rol)
     info = {"vijver": VIJVER, "wachtrij": WACHTRIJ, "zeil_vanaf": ZEIL_VANAF, "uitgang": UITGANG, "hut": HUT, "lampen": lampen,
