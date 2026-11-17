@@ -127,13 +127,31 @@ for ix = 1, nx do
 		local rij = KLASSEN[math.clamp(math.floor(y) + 36, 1, 70)]
 		local k = string.sub(rij, math.clamp(math.floor(x) + 36, 1, 70), math.clamp(math.floor(x) + 36, 1, 70))
 		for iy = 1, NY do
-			local vol = not (water and iy == NY)
-			mat[ix][iy][iz] = vol and (iy == NY and (MAT[k] or Enum.Material.Grass) or Enum.Material.Ground) or Enum.Material.Air
-			occ[ix][iy][iz] = vol and (iy == NY and 0.725 or 1) or 0
+			if water then                         -- vijver: modderbodem, terreinwater tot ~Y 0,35 (zie laag erboven)
+				mat[ix][iy][iz] = iy == NY and Enum.Material.Water or (iy == NY - 1 and Enum.Material.Mud or Enum.Material.Ground)
+				occ[ix][iy][iz] = 1
+			else
+				mat[ix][iy][iz] = iy == NY and (MAT[k] or Enum.Material.Grass) or Enum.Material.Ground
+				occ[ix][iy][iz] = iy == NY and 0.725 or 1
+			end
 		end
 	end
 end
 t:WriteVoxels(Region3.new(Vector3.new(x0, -32, z0), Vector3.new(x0 + nx * 4, 0, z0 + nz * 4)), 4, mat, occ)
+-- dun laagje water erboven: water rekent 2 studs lager dan vaste grond (gemeten: volle laag [-4,0] -> Y 0,0; + laag [0,4] met
+-- bezetting 0,1 -> Y 0,3-0,4, het waterpeil van het model)
+local wm, wo = {}, {}
+for ix = 1, nx do
+	wm[ix], wo[ix] = {{}}, {{}}
+	for iz = 1, nz do
+		local x, y = (x0 + (ix - 0.5) * 4 - MIDDEN.X) / S, -(z0 + (iz - 0.5) * 4 - MIDDEN.Z) / S
+		local w = inVijver(x, y)
+		wm[ix][1][iz] = w and Enum.Material.Water or Enum.Material.Air; wo[ix][1][iz] = w and 0.1 or 0
+	end
+end
+t:WriteVoxels(Region3.new(Vector3.new(x0, 0, z0), Vector3.new(x0 + nx * 4, 4, z0 + nz * 4)), 4, wm, wo)
+-- water (Daan 17 nov: "echt water, een beetje donker maar realistisch"); geldt voor het hele park
+t.WaterColor = Color3.fromRGB(34, 54, 42); t.WaterTransparency = 0.18; t.WaterReflectance = 0.35; t.WaterWaveSize = 0.04; t.WaterWaveSpeed = 4
 
 -- 2 modellen
 local oud = workspace:FindFirstChild("Sirocco"); if oud then oud:Destroy() end
@@ -173,7 +191,7 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit, Omgeving = ID.omgeving}
 		end
 		if r[6] == "glas" then p.Transparency = 0.15 end
 		if r[6] == "ruit" then p.Transparency = 0.45; p.Reflectance = 0.15 end
-		if r[6] == "water" then p.Transparency = 0.12; p.Reflectance = 0.05; p.CastShadow = false; p.Position += Vector3.new(0, 0.27, 0) end   -- Y 0,35: vrij boven het vlakke terrein
+		if r[6] == "water" then p:Destroy(); continue end   -- vervangen door terreinwater   -- Y 0,35: vrij boven het vlakke terrein
 		if naam == "Omgeving" and rol == "net" then p.CanCollide = true; p.CanQuery = true end
 		if naam == "Omgeving" and rol == "vlonder" then p.Color = Color3.fromRGB(205, 190, 168); p:FindFirstChildOfClass("SurfaceAppearance").Color = p.Color end   -- wachtrijvlonder lichter   -- wachtrijhek: niet doorheen lopen
 		if p.CanCollide then pcall(function() p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end) end

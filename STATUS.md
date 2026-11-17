@@ -1501,5 +1501,9 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   midden op het dek (blokkeerde de looprand). Dekhek wijkt uit voor het huisje.
   Studio-check: GetPartsInPart langs wachtrij -> instap -> dek (r 7,7, -62..-106) -> brug leeg; dekrand alleen open bij de
   instap en uitstap. Gebouw 131869393173401, omgeving 82705200382373.
+- Echt water (17 nov), Daan: "maak het nu echt water, een beetje donker maar wel realistisch". De platte waterplaat is vervangen
+  door terreinwater in de vijverkolommen (modderbodem; water rekent 2 studs lager dan vaste grond: volle laag [-4,0] + laag [0,4]
+  met bezetting 0,1 -> wateroppervlak Y 0,3-0,4). Water parkbreed: kleur (34, 54, 42), transparantie 0,18, reflectie 0,35,
+  golven 0,04 / snelheid 4 (was (22, 32, 22) / 0,04 / 0,18 / 0,03 / 3). Spawn tijdelijk op het plein bij de ingang (alleen in de place).
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
