@@ -25,11 +25,25 @@ info = {"draaias_lokaal": list(AS), "delen": {}}
 seen = set()
 
 
-def verzamel(collectie, verschuif):
+ARM = ("AR_Pagode_arm", "AR_Pagode_V_contragewicht", "AR_Pagode_V_cilinderkop_")
+WEG = ("AR_Pagode_V_cilinder_", "AR_Pagode_V_zuigerstang_")          # hefcilinders: in Roblox als bewegende delen (rit)
+
+
+def deel_van(naam):
+    """Voor de rit (Daan 17 nov: "laat de attractie werken"): voet staat stil, arm (+ contragewicht, cilinderkoppen) draait
+    om de draaias, gondel blijft waterpas en draait rond. Hefcilinders worden in Roblox gebouwd (schuiven in/uit)."""
+    if naam.startswith(WEG): return None
+    if naam.startswith(ARM): return "arm"
+    if naam.startswith("AR_Pagode_V_"): return "voet"
+    return "gondel"
+
+
+def verzamel(collectie, verschuif, alleen=None):
     groepen = defaultdict(list)
     for o in bpy.data.collections[collectie].all_objects:
         if not o.name.startswith("AR_Pagode") or o.type not in ("MESH", "CURVE") or o.hide_render or o.name in seen:
             continue
+        if alleen and deel_van(o.name) != alleen: continue
         seen.add(o.name)
         me = bpy.data.meshes.new_from_object(o.evaluated_get(dg), preserve_all_data_layers=True, depsgraph=dg)
         if len(me.polygons) == 0:
@@ -70,7 +84,7 @@ def schrijf(groepen, naam):
                 f.smooth = p.use_smooth
                 for lp, li in zip(f.loops, p.loop_indices): lp[uvl].uv = uv[li].uv
         bmesh.ops.triangulate(bm, faces=bm.faces)
-        achter = {"AR_Pagode_gondel": "", "AR_Pagode_station": "_st", "AR_Pagode_omgeving": "_om"}[naam]
+        achter = {"AR_Pagode_gondel": "", "AR_Pagode_arm": "_am", "AR_Pagode_voet": "_vt", "AR_Pagode_station": "_st", "AR_Pagode_omgeving": "_om"}[naam]
         nm = f"{mn}_{idx}{achter}"                    # unieke namen over alle FBX'en (geen .001 in Roblox)
         me2 = bpy.data.meshes.new(nm); bm.to_mesh(me2); bm.free()
         mat = bpy.data.materials.get(mn) or bpy.data.materials.new(mn); me2.materials.append(mat)
@@ -103,7 +117,17 @@ def schrijf(groepen, naam):
     print("[11_export]", naam, len(made), "delen,", sum(t for _, t in made), "driehoeken")
 
 
-schrijf(verzamel("LOW", AS), "AR_Pagode_gondel")
+schrijf(verzamel("LOW", AS, "gondel"), "AR_Pagode_gondel")
+schrijf(verzamel("LOW", AS, "arm"), "AR_Pagode_arm")
+schrijf(verzamel("LOW", AS, "voet"), "AR_Pagode_voet")
+# hefcilinders voor de rit: voet- en kopmidden (lokaal t.o.v. de draaias, Blender-meters), straal cilinder/stang
+cil = []
+for k in (0, 1):
+    c = bpy.data.objects.get(f"AR_Pagode_V_cilindervoet_{k}"); h = bpy.data.objects.get(f"AR_Pagode_V_cilinderkop_{k}")
+    if c and h:
+        mid = lambda o: sum((o.matrix_world @ Vector(b) for b in o.bound_box), Vector()) / 8 - AS
+        cil.append({"voet": list(mid(c)), "kop": list(mid(h))})
+info["cilinders"] = cil
 schrijf(verzamel("STATION", Vector((360.0, 47.5, 0.0))), "AR_Pagode_station")
 schrijf(verzamel("OMGEVING", Vector((360.0, 47.5, 0.0))), "AR_Pagode_omgeving")
 json.dump(info, open(os.path.join(uit, "export_info.json"), "w"), indent=1)

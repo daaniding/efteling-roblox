@@ -21,17 +21,21 @@
    "PG_vlam_0": 9500,
    "PG_vlam_1": 7660,
    "PG_trommel_0": 148,
-   "PG_rib_0": 5664,
-   "PG_arm_0": 216,
-   "PG_armzijde_0": 220,
-   "PG_beton_donker_0": 12,
-   "PG_beton_groen_0": 108,
-   "PG_rooster_0": 36,
-   "PG_hek_0": 924,
-   "PG_staal_0": 516,
-   "PG_wit_glans_0": 184,
-   "PG_chroom_0": 120,
-   "PG_grind_0": 12
+   "PG_rib_0": 5664
+  },
+  "AR_Pagode_arm": {
+   "PG_arm_0_am": 216,
+   "PG_armzijde_0_am": 220,
+   "PG_staal_0_am": 120,
+   "PG_beton_groen_0_am": 12
+  },
+  "AR_Pagode_voet": {
+   "PG_beton_donker_0_vt": 12,
+   "PG_beton_groen_0_vt": 96,
+   "PG_rooster_0_vt": 36,
+   "PG_hek_0_vt": 924,
+   "PG_staal_0_vt": 396,
+   "PG_grind_0_vt": 12
   },
   "AR_Pagode_station": {
    "PG_beton_groen_licht_0_st": 768,
@@ -105,5 +109,31 @@
    "PG_steen_7_om": 9500,
    "PG_steen_8_om": 992
   }
- }
+ },
+ "cilinders": [
+  {
+   "voet": [
+    6.500000476837158,
+    -0.949999988079071,
+    -6.700004577636719
+   ],
+   "kop": [
+    0.26684677600860596,
+    -0.9499999284744263,
+    2.7872543334960938
+   ]
+  },
+  {
+   "voet": [
+    6.500000476837158,
+    0.949999988079071,
+    -6.700004577636719
+   ],
+   "kop": [
+    0.26684677600860596,
+    0.949999988079071,
+    2.7872543334960938
+   ]
+  }
+ ]
 }

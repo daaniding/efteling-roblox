@@ -105,6 +105,18 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
 - Gecontroleerd: tribune en vlonder vrij van terrein, onderkant van onder leesbaar (hol, rode rand), speltest 58 fps bij het
   station (GPU 7.5 ms).
 - Nog open (later, als Daan wil): zwarte stalen liggers onder de loopgang.
+- RIT WERKT (17 nov), Daan: "laat eerst de attractie werken, de scène later". Ritverloop uit de on-ride video _Wz0aORIVaM:
+  instappen 25 s (hekken open), sluiten 5 s, omhoog 55 s, boven 180 s, omlaag 55 s; een volle draai over de rit (~1.9 gr/s boven).
+  - 11_export splitst LOW in AR_Pagode_gondel / _arm (arm, contragewicht, cilinderkoppen) / _voet; hefcilinders in Roblox als
+    huis + zuigerstang die meeschuiven (export_info.json "cilinders"). Ids in exports/asset_ids.json.
+  - roblox/maak_ritscript.py -> pagode_rit.luau (opzet: workspace.Pagode = Voet, Arm, Gondel, Cilinders, Station, AsFrame) en
+    zet ServerScriptService.PagodeRit (bron roblox/PagodeRit.server.luau). Gondel = losse groep gelast aan "Kern", gestuurd met
+    starre AlignPosition/AlignOrientation (echte snelheid: spelers rijden mee); arm verankerd, elk frame PivotTo om de draaias.
+  - Stand beneden: 98.3 gr gedraaid (dek op instapniveau NAP 11.3); de armmaat uit de foto komt 2.74 m tekort tot het bakmidden:
+    kleine schuif die pas onderin meetelt (t^4). Gondel botst niet met de wereld (botsgroep PagodeGondel), wel met spelers (PagodeSpeler).
+  - Getest in Play: gondel exact in de bak (0.00 m), dek NAP 11.30 -> boven NAP 55.0, waterpas (0.000 gr), speler op het dek rijdt
+    mee (op de client: vloer WoodPlanks, 1.0 m boven het dek); na de rit terug op dezelfde plek en stand, hekken weer open.
+  - Bekend: tijdens het stijgen schuift een speler ~1 m naar buiten tot tegen de reling (traagheid); geen geluid of ritbediening.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

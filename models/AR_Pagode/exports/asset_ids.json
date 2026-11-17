@@ -1,5 +1,5 @@
 {
- "AR_Pagode_gondel": 136098683069651,
+ "AR_Pagode_gondel": 87895236112943,
  "AR_Pagode_station": 124320247767428,
  "pannen_kleur": 113862951849627,
  "pannen_normaal": 135305032497691,
@@ -41,5 +41,7 @@
  "steen_kleur": 116600353020198,
  "steen_normaal": 95927671453559,
  "pluk_kleur": 82875106386837,
- "huisrand_kleur": 74245754818603
+ "huisrand_kleur": 74245754818603,
+ "AR_Pagode_arm": 88039896274620,
+ "AR_Pagode_voet": 79185188175320
 }
