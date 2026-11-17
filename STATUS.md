@@ -324,6 +324,14 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     animatie gegenereerd met de Roblox animatiegenerator (2 s, 108791896595488), prioriteit Action. De rig gebruikt
     AnimationConstraints (C0 alleen-lezen), dus tweenen van gewrichten kan niet; "point" (507770453) wees door het raam.
     Hefcilinders: kop schaalt mee met ArmFactor (PagodeRitClient), verschoof 0.4 stud.
+  - Uitstappen na de rit voor spelers (17 nov, Daan: "ja bouw het zo"): PagodeRit onthoudt wie tijdens het sluiten op het
+    dek stond (gereden). Staat die bij het instappen nog op het dek: attribuut Uitstappen = 1 op tc 14 (PagodeBeleving:
+    "Please exit the gondola" / Graag uitstappen), = 2 op tc 25: beeld zwart met "The attendant walks you to the exit" (De
+    medewerker brengt je naar de uitgang), server zet je onder aan de uitgangstrap (r 15.2, -20 gr), beeld weer open. Zolang een
+    blijver op het dek staat, vertrekt de gondel niet. Opnieuw rijden = opnieuw de rij in. Play: melding tc 15, begeleid tc 25,
+    speler daarna op r 15.2 a -20.
+  - Snelheid (17 nov, Daan: "precies even snel als de bezoekers, niet sneller of slomer"): spelers en alle bezoekers 6.5 studs/s
+    (SPELER_SNELHEID in PagodeBezoekers; bezoekers waren 5.5-7.5 willekeurig).
   - Meedraaien met de gondel (17 nov, Daan: "waarom draai ik niet mee, met normale physics beweeg je mee"): in eerste persoon
     (EerstePersoon, LockFirstPerson) draait Roblox het lichaam elk frame naar de camera, dus alleen het lichaam meedraaien
     werd teruggedraaid. PagodeRitClient telt de draaiing van de gondel om de verticaal op (meeDraai) en draait de camera

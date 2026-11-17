@@ -78,6 +78,26 @@ RunService.Heartbeat:Connect(function(dt)
 	if doel == 0 and aanBoordMuziek.Volume < 0.005 and aanBoordMuziek.IsPlaying then aanBoordMuziek:Pause() end
 end)
 
+-- uitstappen na de rit (server PagodeRit, attribuut Uitstappen op de speler): 1 = melding, 2 = de medewerker brengt je naar
+-- de uitgang (beeld kort zwart, server zet je onder aan de uitgangstrap), 0 = klaar
+local zwart = Instance.new("Frame"); zwart.Size = UDim2.fromScale(1, 1); zwart.BackgroundColor3 = Color3.new(0, 0, 0)
+zwart.BackgroundTransparency = 1; zwart.BorderSizePixel = 0; zwart.ZIndex = 5; zwart.Parent = gui
+local zwartTekst = label("The attendant walks you to the exit", Enum.Font.SourceSansSemibold, 26, 0.5, Color3.new(1, 1, 1))
+zwartTekst.ZIndex = 6
+plr:GetAttributeChangedSignal("Uitstappen"):Connect(function()
+	local st = plr:GetAttribute("Uitstappen") or 0
+	local snel = TweenInfo.new(0.5, Enum.EasingStyle.Sine)
+	if st == 1 then
+		meld("Please exit the gondola")
+	elseif st == 2 then
+		TweenService:Create(zwart, snel, {BackgroundTransparency = 0}):Play()
+		TweenService:Create(zwartTekst, snel, {TextTransparency = 0}):Play()
+	else
+		TweenService:Create(zwart, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(zwartTekst, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {TextTransparency = 1}):Play()
+	end
+end)
+
 local vorige, welkomGezegd, gereden = "", false, false
 RunService.Heartbeat:Connect(function()
 	local fase = pag:GetAttribute("FaseLokaal") :: string?

@@ -19,7 +19,7 @@ local CX, CY = 360.0, 47.5
 local Z_I, Z_P = 1.3, -0.38
 local ROUTE: {{number}} = __ROUTE__
 local MAX_BEZOEKERS = 14
-local SPELER_SNELHEID = 6.5                      -- spelers lopen even snel als de bezoekers (5.5-7.5)
+local SPELER_SNELHEID = 6.5                      -- spelers en bezoekers lopen precies even snel (studs/s)
 local TUSSENPOOS = {6, 12}                       -- seconden tussen nieuwe bezoekers (tot MAX_BEZOEKERS)
 local ANIM = {loop = "rbxassetid://913402848", stil = "rbxassetid://507766388"}   -- standaard R15 lopen / stilstaan
 
@@ -337,7 +337,7 @@ local function nieuw()
 		if d:IsA("BasePart") then d.Anchored = false; d.CollisionGroup = "Bezoekers"; d.CanTouch = false end
 		if d:IsA("Script") or d:IsA("LocalScript") then d:Destroy() end
 	end
-	hum.WalkSpeed = 5.5 + math.random() * 2
+	hum.WalkSpeed = SPELER_SNELHEID              -- precies even snel als de speler (Daan: "niet sneller of slomer")
 	hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 	m:PivotTo(CFrame.new(wereld(ROUTE[1])))
 	m.Parent = map

@@ -542,21 +542,65 @@ local pag = workspace:WaitForChild("Pagode") :: Model
 
 pag:SetAttribute("RitStart", workspace:GetServerTimeNow())
 
-local function iemandAanBoord(): boolean
-	for _, plr in Players:GetPlayers() do
-		local ch = plr.Character
-		local hrp = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
-		local hum = ch and ch:FindFirstChildOfClass("Humanoid")
-		if hrp and hum and hum.Health > 0 then
-			local p = hrp.Position
-			local r = (Vector3.new(p.X, 0, p.Z) - MIDDEN).Magnitude
-			if r < R_DEK and p.Y > Y_DEK and p.Y < Y_DEK + 9 then return true end
-		end
+local function opDek(plr: Player): BasePart?
+	local ch = plr.Character
+	local hrp = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
+	if hrp and hum and hum.Health > 0 then
+		local p = hrp.Position
+		local r = (Vector3.new(p.X, 0, p.Z) - MIDDEN).Magnitude
+		if r < R_DEK and p.Y > Y_DEK and p.Y < Y_DEK + 9 then return hrp end
 	end
+	return nil
+end
+
+local function iemandAanBoord(): boolean
+	for _, plr in Players:GetPlayers() do if opDek(plr) then return true end end
 	-- NPC-bezoekers op het dek tellen ook (PagodeBezoekers: attribuut OpDek)
 	local b = workspace:FindFirstChild("PagodeBezoekersActief")
 	if b then for _, m in b:GetChildren() do if m:GetAttribute("OpDek") then return true end end end
 	return false
+end
+
+-- Uitstappen na de rit (Daan 17 nov: "ja bouw het zo"): wie de rit heeft meegemaakt (op het dek tijdens sluiten/rijden) moet
+-- er bij het instappen weer af. Attribuut Uitstappen op de speler (PagodeBeleving toont de melding):
+--   1 vanaf tc 14: "Please exit the gondola" (nl: Graag uitstappen)
+--   2 vanaf tc 25: de medewerker brengt je naar de uitgang: beeld zwart, onder aan de uitgangstrap, beeld weer open
+-- Zolang zo iemand op het dek staat, vertrekt de gondel niet (klok blijft op WACHT_TC). Opnieuw rijden = opnieuw de rij in.
+local MELDING_TC, BEGELEID_TC = 14, 25
+local UIT_PLEK = Vector3.new((360.0 + 15.2 * math.cos(math.rad(-20))) * S, 2 + -0.38 * S + 3.2, -(47.5 + 15.2 * math.sin(math.rad(-20))) * S)
+local UIT_KIJK = Vector3.new(math.cos(math.rad(-20)), 0, -math.sin(math.rad(-20)))
+local gereden: {[Player]: boolean} = {}
+Players.PlayerRemoving:Connect(function(plr) gereden[plr] = nil end)
+
+local function begeleid(plr: Player)
+	plr:SetAttribute("Uitstappen", 2)
+	task.wait(0.6)                                         -- client maakt het beeld zwart
+	local ch = plr.Character
+	if ch then ch:PivotTo(CFrame.lookAt(UIT_PLEK, UIT_PLEK + UIT_KIJK)) end
+	gereden[plr] = nil
+	task.wait(0.4)
+	plr:SetAttribute("Uitstappen", 0)
+end
+
+local function uitstappen(tc: number): boolean
+	local wacht = false
+	for _, plr in Players:GetPlayers() do
+		local hrp = opDek(plr)
+		if tc >= T_IN then
+			if hrp then gereden[plr] = true end                 -- rijdt mee
+		elseif gereden[plr] then
+			if not hrp then
+				gereden[plr] = nil; plr:SetAttribute("Uitstappen", 0)   -- netjes uitgestapt
+			else
+				wacht = true
+				local stand = plr:GetAttribute("Uitstappen") or 0
+				if tc >= BEGELEID_TC and stand < 2 then task.spawn(begeleid, plr)
+				elseif tc >= MELDING_TC and stand < 1 then plr:SetAttribute("Uitstappen", 1) end
+			end
+		end
+	end
+	return wacht
 end
 
 while true do
@@ -564,8 +608,9 @@ while true do
 	local nu = workspace:GetServerTimeNow()
 	local start = pag:GetAttribute("RitStart") :: number
 	local tc = (nu - start) % CYCLUS
-	if tc >= WACHT_TC and tc < WACHT_TC + 1 and not iemandAanBoord() then
-		pag:SetAttribute("RitStart", nu - WACHT_TC)          -- klok vasthouden: hekjes blijven open tot er iemand instapt
+	local blijvers = uitstappen(tc)
+	if tc >= WACHT_TC and tc < WACHT_TC + 1 and (blijvers or not iemandAanBoord()) then
+		pag:SetAttribute("RitStart", nu - WACHT_TC)          -- klok vasthouden: hekjes open tot er iemand instapt / tot de blijvers eruit zijn
 	end
 	pag:SetAttribute("Wacht", tc >= WACHT_TC and tc < WACHT_TC + 1)
 end
@@ -981,6 +1026,26 @@ RunService.Heartbeat:Connect(function(dt)
 	if doel == 0 and aanBoordMuziek.Volume < 0.005 and aanBoordMuziek.IsPlaying then aanBoordMuziek:Pause() end
 end)
 
+-- uitstappen na de rit (server PagodeRit, attribuut Uitstappen op de speler): 1 = melding, 2 = de medewerker brengt je naar
+-- de uitgang (beeld kort zwart, server zet je onder aan de uitgangstrap), 0 = klaar
+local zwart = Instance.new("Frame"); zwart.Size = UDim2.fromScale(1, 1); zwart.BackgroundColor3 = Color3.new(0, 0, 0)
+zwart.BackgroundTransparency = 1; zwart.BorderSizePixel = 0; zwart.ZIndex = 5; zwart.Parent = gui
+local zwartTekst = label("The attendant walks you to the exit", Enum.Font.SourceSansSemibold, 26, 0.5, Color3.new(1, 1, 1))
+zwartTekst.ZIndex = 6
+plr:GetAttributeChangedSignal("Uitstappen"):Connect(function()
+	local st = plr:GetAttribute("Uitstappen") or 0
+	local snel = TweenInfo.new(0.5, Enum.EasingStyle.Sine)
+	if st == 1 then
+		meld("Please exit the gondola")
+	elseif st == 2 then
+		TweenService:Create(zwart, snel, {BackgroundTransparency = 0}):Play()
+		TweenService:Create(zwartTekst, snel, {TextTransparency = 0}):Play()
+	else
+		TweenService:Create(zwart, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(zwartTekst, TweenInfo.new(0.8, Enum.EasingStyle.Sine), {TextTransparency = 1}):Play()
+	end
+end)
+
 local vorige, welkomGezegd, gereden = "", false, false
 RunService.Heartbeat:Connect(function()
 	local fase = pag:GetAttribute("FaseLokaal") :: string?
@@ -1010,6 +1075,8 @@ do
     {Key = "", Source = "Gates closing", Context = "", Values = {nl = "De hekjes gaan dicht"}},
     {Key = "", Source = "Exit: follow the signs", Context = "", Values = {nl = "Uitgang: volg de borden"}},
     {Key = "", Source = "Waiting time", Context = "", Values = {nl = "Wachttijd"}},
+    {Key = "", Source = "Please exit the gondola", Context = "", Values = {nl = "Graag uitstappen"}},
+    {Key = "", Source = "The attendant walks you to the exit", Context = "", Values = {nl = "De medewerker brengt je naar de uitgang"}},
   })
   lt.Parent = LS
 end

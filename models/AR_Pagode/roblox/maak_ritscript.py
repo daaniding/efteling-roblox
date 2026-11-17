@@ -368,6 +368,8 @@ do
     {{Key = "", Source = "Gates closing", Context = "", Values = {{nl = "De hekjes gaan dicht"}}}},
     {{Key = "", Source = "Exit: follow the signs", Context = "", Values = {{nl = "Uitgang: volg de borden"}}}},
     {{Key = "", Source = "Waiting time", Context = "", Values = {{nl = "Wachttijd"}}}},
+    {{Key = "", Source = "Please exit the gondola", Context = "", Values = {{nl = "Graag uitstappen"}}}},
+    {{Key = "", Source = "The attendant walks you to the exit", Context = "", Values = {{nl = "De medewerker brengt je naar de uitgang"}}}},
   }})
   lt.Parent = LS
 end
