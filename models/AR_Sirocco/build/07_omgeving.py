@@ -84,12 +84,17 @@ def strook(bm, pts, breedte, z, dik=0.12):
         t = (d0.normalized() + d1.normalized()).normalized(); n = Vector((-t.y, t.x, 0))
         links.append(p + n * breedte / 2); rechts.append(p - n * breedte / 2)
     for i in range(len(pts) - 1):
-        for zz, omhoog in ((z, True), (z - dik, False)):
-            q = [links[i], rechts[i], rechts[i + 1], links[i + 1]]
-            vs = [bm.verts.new(Vector((v.x, v.y, zz))) for v in (q if not omhoog else q[::-1])]
-            bm.faces.new(vs)
+        q = [links[i], rechts[i], rechts[i + 1], links[i + 1]]
+        midden = sum(q, Vector()) / 4
+        for zz, omhoog in ((z, True), (z - dik, False)):     # bovenkant wijst omhoog, onderkant omlaag (Roblox tekent achterkanten niet)
+            f = bm.faces.new([bm.verts.new(Vector((v.x, v.y, zz))) for v in q])
+            f.normal_update()
+            if (f.normal.z > 0) != omhoog: f.normal_flip()
         for a, b in ((links[i], links[i + 1]), (rechts[i + 1], rechts[i])):
-            bm.faces.new([bm.verts.new(v) for v in (Vector((a.x, a.y, z - dik)), Vector((b.x, b.y, z - dik)), Vector((b.x, b.y, z)), Vector((a.x, a.y, z)))])
+            f = bm.faces.new([bm.verts.new(v) for v in (Vector((a.x, a.y, z - dik)), Vector((b.x, b.y, z - dik)), Vector((b.x, b.y, z)), Vector((a.x, a.y, z)))])
+            f.normal_update()
+            uit = Vector(((a.x + b.x) / 2 - midden.x, (a.y + b.y) / 2 - midden.y, 0))
+            if f.normal.dot(uit) < 0: f.normal_flip()      # zijkant naar buiten
     return links, rechts
 
 

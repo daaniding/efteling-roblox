@@ -8,7 +8,7 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 133616517213350,
+local ID = {gebouw = 140043470117648, rit = 83505201461300, omgeving = 112633918280575,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -148,7 +148,8 @@ for naam, id in pairs({Gebouw = ID.gebouw, Rit = ID.rit, Omgeving = ID.omgeving}
 		end
 		if r[6] == "glas" then p.Transparency = 0.15 end
 		if r[6] == "water" then p.Transparency = 0.12; p.Reflectance = 0.05; p.CastShadow = false; p.Position += Vector3.new(0, 0.27, 0) end   -- Y 0,35: vrij boven het vlakke terrein
-		if naam == "Omgeving" and rol == "net" then p.CanCollide = true; p.CanQuery = true end   -- wachtrijhek: niet doorheen lopen
+		if naam == "Omgeving" and rol == "net" then p.CanCollide = true; p.CanQuery = true end
+		if naam == "Omgeving" and rol == "vlonder" then p.Color = Color3.fromRGB(205, 190, 168); p:FindFirstChildOfClass("SurfaceAppearance").Color = p.Color end   -- wachtrijvlonder lichter   -- wachtrijhek: niet doorheen lopen
 		if p.CanCollide then pcall(function() p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end) end
 	end
 end

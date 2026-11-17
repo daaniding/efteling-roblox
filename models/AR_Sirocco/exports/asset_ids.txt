@@ -13,4 +13,4 @@ beschot_kleur 124186550110005
 stam_kleur 86277939897558
 stam_normaal 85501756974124
 romp_blauw_kleur 81733490640030
-AR_Sirocco_omgeving 133616517213350
+AR_Sirocco_omgeving 112633918280575

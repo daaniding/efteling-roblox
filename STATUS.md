@@ -1456,5 +1456,9 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   Z_PLAT -0,03 .. +0,10, voeten 3 cm in de vloer, boten op de subschijven op +0,10 (03_forms). Rit 83505201461300.
 - Grondniveau (17 nov), Daan: "de ondergrond is te hoog". Volle voxels tot Y 0 geven in Roblox een oppervlak op Y 2,0 (gemeten:
   oppervlak = 4 * (bezetting - 0,5) boven de laaggrens). Bovenste laag nu bezetting 0,725 -> plein Y ~1,0, net onder vlonder/brug.
+- Pad zichtbaar (17 nov), Daan (screenshot wachtrij zuidoost): "zorg dat het pad hier goed doorkomt". Oorzaak: in strook() (07)
+  wees de bovenkant van vlonder en brugdek omlaag; Roblox tekent achterkanten niet, dus je keek door het dek heen naar gras of de
+  binnenkant. Nu per vlak gecontroleerd (boven omhoog, onder omlaag, zijkanten naar buiten); vlonder lichter getint. Omgeving
+  112633918280575. Les: bij losse vlakken (geen gedeelde hoekpunten) de normaal zelf zetten, niet op de volgorde vertrouwen.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
