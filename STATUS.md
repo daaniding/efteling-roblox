@@ -272,6 +272,12 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     exacte posities/hoogtes uit AHN-boomhoogtes of een zomerluchtfoto, ondergroei).
   - Wachttijd beneden (17 nov, Daan: "doe maar zestig"): instappen 60 s (was 25; T_IN in PagodeRitClient, hekjes en bel
     volgen mee) + 5 s sluiten; cyclus nu 375 s. Play: hekjes dicht op tc 59, bel op 60, omhoog op 65.
+  - Wachten op passagiers (17 nov, Daan: "op het begin haal ik het niet om op de Pagode te komen"): PagodeRit (server)
+    houdt de ritklok vast op tc 40 (instappen, hekjes open) zolang niemand op het dek staat (r < 8.2 m, dekhoogte); stapt
+    iemand in, dan nog 20 s instappen, 5 s sluiten, rit. Play: zonder passagier na 45 s en 60 s nog op tc 40 (wacht=true);
+    met passagier vertrokken. Attribuut Pagode.Wacht = true tijdens het wachten.
+  - Bomen tijdelijk uit (Daan: "haal voor nu de bebossing weg"): workspace.PagodeBomen -> ServerStorage.PagodeBomen_uit
+    (terugzetten = map terug naar workspace, of bomen_pagode.luau opnieuw draaien). Tuin langs het laantje blijft.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
