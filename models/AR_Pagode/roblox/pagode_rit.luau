@@ -92,11 +92,12 @@ local function zet(id, naam) local m = laad(id, naam); aankleden(m, true); m:Piv
 local voet = zet(ID.AR_Pagode_voet, "Voet")
 local arm = zet(ID.AR_Pagode_arm, "Arm")
 local gondel = zet(ID.AR_Pagode_gondel, "Gondel")
--- arm 2.71 m langer (f 1.0703, langs de as vanaf de draaias): de armmaat uit het schema kwam 2.7 m tekort voor het station;
--- vroeger schoof de client de gondel onderin opzij (CORR), dan sloot de arm niet op het gondelmidden aan (Daan 17 nov:
--- "de arm en de gondel raken elkaar net niet"). Nu valt het armgewricht onderin precies op het stationsmidden (rest 0.005 stud).
+-- gondel hangt aan de naaf aan het armeinde (08_arm H: 4.2 m = 12.6 studs boven het gondelmidden) en draait daarom heen
+-- (PagodeRitClient: attribuut NaafLokaal). Daarmee is de arm 4 % te lang voor het station: f 0.9582 langs de as vanaf de
+-- draaias, dan valt de naaf onderin precies boven het stationsmidden (rest 0.005 stud). Daan 17 nov: "de arm en de gondel
+-- raken elkaar niet" (eerst draaide de gondel om zijn midden en schoof het armeinde uit de naaf; daarna CORR-schuif).
 do
-  local ARM_F = 1.0703
+  local ARM_F, NAAF = 0.9582, 12.6
   for _, p in ipairs(arm:GetDescendants()) do
     if p:IsA("BasePart") and p.Size.Y > 100 then
       p.Size = Vector3.new(p.Size.X, p.Size.Y * ARM_F, p.Size.Z)
@@ -104,8 +105,10 @@ do
     end
   end
   local jl = pag:GetAttribute("GondelLokaal")
-  pag:SetAttribute("GondelLokaal", Vector3.new(jl.X, jl.Y * ARM_F, jl.Z))
-  gondel:PivotTo(gondel:GetPivot() + Vector3.new(0, jl.Y * (ARM_F - 1), 0))
+  local nl = Vector3.new(jl.X, (jl.Y + NAAF) * ARM_F, jl.Z)
+  pag:SetAttribute("NaafLokaal", nl)
+  pag:SetAttribute("GondelLokaal", nl - Vector3.new(0, NAAF, 0))
+  gondel:PivotTo(gondel:GetPivot() + Vector3.new(0, nl.Y - NAAF - jl.Y, 0))
   pag:SetAttribute("ArmFactor", ARM_F)
 end
 for _, p in ipairs(arm:GetChildren()) do if p:IsA("BasePart") then p.CanCollide = false end end
@@ -589,7 +592,11 @@ local Y_INSTAP = 2 + 1.3 * S
 local DEK = 2.2 * S
 local BAK = Vector3.new(360.0 * S, 0, -47.5 * S)
 
-local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(JL) end
+-- de gondel hangt aan de naaf aan het armeinde (08_arm: 4.2 m boven het gondelmidden, in de holle onderkant) en blijft waterpas:
+-- draaien om de naaf, niet om het gondelmidden (anders schuift het armeinde de naaf uit; Daan 17 nov "ze raken elkaar niet")
+local NL = (pag:GetAttribute("NaafLokaal") :: Vector3?) or JL
+local OFF = PIV:VectorToWorldSpace(JL - NL)
+local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(NL) + OFF end
 local lo, hi = math.rad(70), math.rad(120)
 for _ = 1, 50 do
 	local m = (lo + hi) / 2
@@ -597,7 +604,7 @@ for _ = 1, 50 do
 end
 local TH_D = (lo + hi) / 2
 local jd = Jw(TH_D)
-local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- restafwijking; ~0 sinds de arm 2.71 m langer is (maak_ritscript ArmFactor)
+local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- restafwijking; ~0 met naaf als draaipunt en ArmFactor 0.9582 (maak_ritscript)
 local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1); return CORR * t ^ 4 end
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)
@@ -984,6 +991,7 @@ do
     {Key = "", Source = "Welcome aboard", Context = "", Values = {nl = "Welkom aan boord"}},
     {Key = "", Source = "Gates closing", Context = "", Values = {nl = "De hekjes gaan dicht"}},
     {Key = "", Source = "Exit: follow the signs", Context = "", Values = {nl = "Uitgang: volg de borden"}},
+    {Key = "", Source = "Waiting time", Context = "", Values = {nl = "Wachttijd"}},
   })
   lt.Parent = LS
 end

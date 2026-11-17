@@ -244,6 +244,20 @@ for k = 0, 39 do
 	if vrij then table.insert(PLEKKEN, {a = a}) end
 end
 
+-- eerst uitstappen, dan instappen (Daan 17 nov): pas instappen als niemand meer meerijdt en de uitstappers het dek af zijn
+local function dekVrij(): boolean
+	for _, o in rij do
+		if o.model.Parent then
+			if o.fase == "rit" then return false end
+			if o.fase == "uit" then
+				local h = o.model:FindFirstChild("HumanoidRootPart") :: BasePart?
+				if h and Vector3.new(h.Position.X - CX * S, 0, h.Position.Z + CY * S).Magnitude < 9.7 * S then return false end
+			end
+		end
+	end
+	return true
+end
+
 local function rijEnRit(b: Bezoeker)
 	local m, hum = b.model, b.hum
 	-- 1 de rij tot de splitsing op het bordes: recht op de lijn, vult van voren naar achteren
@@ -269,7 +283,7 @@ local function rijEnRit(b: Bezoeker)
 		return if voor then voor.s - GAT else gang.ln.L
 	end, function()
 		local t = tc()
-		return b.s > gang.ln.L - 1.5 and voorganger(b) == nil and t > 2 and t < T_IN - 8
+		return b.s > gang.ln.L - 1.5 and voorganger(b) == nil and t > 2 and t < T_IN - 8 and dekVrij()
 	end)
 	if not m.Parent then return end
 	-- 3 over het dek naar een vrije plek aan de reling (willekeurig rondom), naar buiten kijken
@@ -340,6 +354,87 @@ local function nieuw()
 	end)
 end
 
+-- medewerker in het controlehuisje (video 0:44: man achter de lessenaar; Daan 17 nov "doe maar medewerker"): staat achter de
+-- lessenaar (12_omgeving controlehuisje: pt(11.42, 106), lessenaar aan de voorkant), kijkt naar de tourniquets en de rij.
+-- Uniform: bordeauxrood shirt, donkere broek. Staat stil (rust-animatie); knop-gebaar pas als Daan om animaties vraagt.
+do
+	local oud = pag:FindFirstChild("Medewerker"); if oud then oud:Destroy() end
+	local bron = ServerStorage:FindFirstChild("PagodeBezoekers")
+	local sjabloon = bron and (bron:FindFirstChild("man_muts") or bron:FindFirstChildOfClass("Model"))
+	if sjabloon then
+		local m = sjabloon:Clone(); m.Name = "Medewerker"
+		for _, d in m:GetDescendants() do
+			if d:IsA("Shirt") or d:IsA("Pants") or d:IsA("ShirtGraphic") or d:IsA("BodyColors") or d:IsA("Script") or d:IsA("LocalScript")
+				or (d:IsA("Accessory") and not string.find(string.lower(d.Name), "hair")) then d:Destroy() end
+		end
+		local SHIRT, BROEK = Color3.fromRGB(122, 28, 40), Color3.fromRGB(38, 38, 44)
+		for _, d in m:GetDescendants() do
+			if d:IsA("BasePart") then
+				d.Anchored = false; d.CanCollide = false; d.CanTouch = false; d.CanQuery = false
+				local n = d.Name
+				if n == "UpperTorso" or n == "LowerTorso" or string.find(n, "UpperArm") or string.find(n, "LowerArm") then d.Color = SHIRT
+				elseif string.find(n, "Leg") or string.find(n, "Foot") then d.Color = BROEK end
+			end
+		end
+		local hum = m:FindFirstChildOfClass("Humanoid") :: Humanoid
+		local hrp = m:FindFirstChild("HumanoidRootPart") :: BasePart
+		hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+		local a = math.rad(106)
+		local f = Vector3.new(math.cos(a), 0, -math.sin(a))
+		local voet = Vector3.new((CX + 11.42 * math.cos(a)) * S, 2 + (Z_I + 0.1) * S, -(CY + 11.42 * math.sin(a)) * S) - f * 0.1 * S
+		local c = voet + Vector3.new(0, hum.HipHeight + hrp.Size.Y / 2, 0)
+		m.Parent = pag
+		m:PivotTo(CFrame.lookAt(c, c + f))
+		hrp.Anchored = true
+		animeer(hum)
+	end
+end
+
+-- wachttijdbord op de linkerpaal van het ingangsbord (frame: 12_omgeving -> exports/wachttijdbord.json). Rekent uit de rij:
+-- bezoekers en spelers in de wachtrij, 36 plekken per rit (PLEKKEN), cyclus CYCLUS; afgerond op 5 min, minimaal 5 (Efteling).
+-- Tekst Engels, vertaling in LocalizationService.PagodeTeksten ("Waiting time" -> "Wachttijd").
+local WB = __WACHTTIJDBORD__
+local tijdLabel: TextLabel
+do
+	local oud = pag:FindFirstChild("Wachttijdbord"); if oud then oud:Destroy() end
+	local n = Vector3.new(WB.normaal[1], 0, -WB.normaal[2])
+	local c = Vector3.new(WB.midden[1] * S, 2 + WB.midden[3] * S, -WB.midden[2] * S)
+	local p = Instance.new("Part"); p.Name = "Wachttijdbord"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+	p.Size = Vector3.new(WB.breed * S, WB.hoog * S, 0.05); p.Transparency = 1; p.CFrame = CFrame.lookAt(c, c + n); p.Parent = pag
+	local sg = Instance.new("SurfaceGui"); sg.Face = Enum.NormalId.Front; sg.CanvasSize = Vector2.new(280, 360)
+	sg.LightInfluence = 0; sg.Brightness = 1.4; sg.Parent = p
+	local bg = Instance.new("Frame"); bg.Size = UDim2.fromScale(1, 1); bg.BackgroundColor3 = Color3.fromRGB(12, 12, 14); bg.BorderSizePixel = 0; bg.Parent = sg
+	local AMBER = Color3.fromRGB(255, 186, 64)
+	local function tekst(t: string, y: number, h: number, font: Enum.Font, kleur: Color3, vertaal: boolean): TextLabel
+		local l = Instance.new("TextLabel"); l.BackgroundTransparency = 1; l.Position = UDim2.fromScale(0.06, y); l.Size = UDim2.fromScale(0.88, h)
+		l.Font = font; l.TextScaled = true; l.TextColor3 = kleur; l.Text = t; l.AutoLocalize = vertaal; l.Parent = bg
+		return l
+	end
+	tekst("PAGODE", 0.05, 0.11, Enum.Font.Bodoni, Color3.fromRGB(232, 196, 120), false)
+	tekst("Waiting time", 0.2, 0.12, Enum.Font.GothamBold, Color3.fromRGB(240, 236, 228), true)
+	tijdLabel = tekst("5", 0.36, 0.42, Enum.Font.GothamBlack, AMBER, false)
+	tekst("min", 0.78, 0.14, Enum.Font.GothamBold, AMBER, false)
+end
+task.spawn(function()
+	while true do
+		local n = 0
+		for _, o in rij do if o.model.Parent and (o.fase == "rij" or string.sub(o.fase, 1, 4) == "gang") then n += 1 end end
+		for _, plr in Players:GetPlayers() do
+			local h = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
+			if h then
+				local x, y = h.Position.X / S - CX, -h.Position.Z / S - CY
+				local r, a = math.sqrt(x * x + y * y), math.deg(math.atan2(y, x))
+				if r > 9.3 and r < 27 and a > 95 and a < 157 then n += 1 end
+			end
+		end
+		local t = tc()
+		local totInstap = if t < T_IN - 8 then 0 else CYCLUS - t
+		local wacht = totInstap + math.floor(n / #PLEKKEN) * CYCLUS
+		tijdLabel.Text = tostring(math.max(5, math.ceil(wacht / 60 / 5) * 5))
+		task.wait(5)
+	end
+end)
+
 -- spelers in hun eigen botsgroep (bezoekers lopen er doorheen; PagodeRitClient wisselt tussen Spelers en Rijdend)
 local function speler(plr: Player)
 	plr.CharacterAdded:Connect(function(ch)
@@ -353,8 +448,11 @@ end
 for _, p in Players:GetPlayers() do speler(p) end
 Players.PlayerAdded:Connect(speler)
 
+-- parkbudget (ServerScriptService.ParkBezoekers, bron park/luau/ParkBezoekers.luau): limiet voor alle attracties samen
+local Park = require(game:GetService("ServerScriptService"):WaitForChild("ParkBezoekers")) :: any
+Park.registreer("Pagode", map, MAX_BEZOEKERS, Vector3.new(CX * S, 6, -CY * S))
 while true do
 	for k = #rij, 1, -1 do if not rij[k].model.Parent then table.remove(rij, k) end end
-	if #rij < MAX_BEZOEKERS then nieuw() end
+	if Park.magErBij("Pagode") then nieuw() end
 	task.wait(TUSSENPOOS[1] + math.random() * (TUSSENPOOS[2] - TUSSENPOOS[1]))
 end

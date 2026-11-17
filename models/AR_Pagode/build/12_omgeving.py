@@ -515,6 +515,12 @@ def build():
         vrij(f"bordpaal{k}", p, 0.06)
     bord_mesh("AR_Pagode_O_ingangsbord", tex.BORD_OMTREK(48), breed, 1.05, 0.07, mid + Vector((0, 0, 2.2)), rot, "ingangsbord")
     doos("AR_Pagode_O_regelbord", pr + fz * 0.05 + Vector((0, 0, 1.45)), (0.02, 0.3, 0.55), "bord_blauw", rot)
+    # wachttijdbord op de linkerpaal, voorkant naar het plein (Daan 17 nov: "doe maar medewerker en wachttijdbord"): zwart
+    # frame; de tijd zelf is een SurfaceGui in Roblox (PagodeBezoekers, rekent uit de rij) -> exports/wachttijdbord.json
+    wb = pl + fz * 0.09 + Vector((0, 0, 1.55))
+    doos("AR_Pagode_O_wachttijdbord", wb, (0.06, 0.62, 0.78), "hek", rot)
+    json.dump({"midden": [round(v, 4) for v in (wb + fz * 0.031)], "normaal": [round(fz.x, 5), round(fz.y, 5)], "breed": 0.56, "hoog": 0.72},
+              open(os.path.join(D, "exports", "wachttijdbord.json"), "w"))
     # paaltjes in de mond van het laantje weg (Daan 17 nov: "die paaltjes weg", zaten in de doorgang)
     # afvalbakken: hoge bak rechts van het bord op het plein (0:02), groene bakken met embleem tegen de hekken (0:49-0:52)
     aa = A_BORD - 1.2; p = pt(17.15, aa, Z_P); afvalbak("AR_Pagode_O_bak_plein", p, math.radians(aa - 90), hoog=True); vrij("bak_plein", p, 0.3)   # rechts voor het bord

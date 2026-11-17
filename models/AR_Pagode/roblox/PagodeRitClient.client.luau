@@ -18,7 +18,11 @@ local Y_INSTAP = 2 + 1.3 * S
 local DEK = 2.2 * S
 local BAK = Vector3.new(360.0 * S, 0, -47.5 * S)
 
-local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(JL) end
+-- de gondel hangt aan de naaf aan het armeinde (08_arm: 4.2 m boven het gondelmidden, in de holle onderkant) en blijft waterpas:
+-- draaien om de naaf, niet om het gondelmidden (anders schuift het armeinde de naaf uit; Daan 17 nov "ze raken elkaar niet")
+local NL = (pag:GetAttribute("NaafLokaal") :: Vector3?) or JL
+local OFF = PIV:VectorToWorldSpace(JL - NL)
+local function Jw(th: number): Vector3 return (PIV * CFrame.Angles(0, 0, th)):PointToWorldSpace(NL) + OFF end
 local lo, hi = math.rad(70), math.rad(120)
 for _ = 1, 50 do
 	local m = (lo + hi) / 2
@@ -26,7 +30,7 @@ for _ = 1, 50 do
 end
 local TH_D = (lo + hi) / 2
 local jd = Jw(TH_D)
-local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- restafwijking; ~0 sinds de arm 2.71 m langer is (maak_ritscript ArmFactor)
+local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- restafwijking; ~0 met naaf als draaipunt en ArmFactor 0.9582 (maak_ritscript)
 local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1); return CORR * t ^ 4 end
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)

@@ -238,11 +238,12 @@ local function zet(id, naam) local m = laad(id, naam); aankleden(m, true); m:Piv
 local voet = zet(ID.AR_Pagode_voet, "Voet")
 local arm = zet(ID.AR_Pagode_arm, "Arm")
 local gondel = zet(ID.AR_Pagode_gondel, "Gondel")
--- arm 2.71 m langer (f 1.0703, langs de as vanaf de draaias): de armmaat uit het schema kwam 2.7 m tekort voor het station;
--- vroeger schoof de client de gondel onderin opzij (CORR), dan sloot de arm niet op het gondelmidden aan (Daan 17 nov:
--- "de arm en de gondel raken elkaar net niet"). Nu valt het armgewricht onderin precies op het stationsmidden (rest 0.005 stud).
+-- gondel hangt aan de naaf aan het armeinde (08_arm H: 4.2 m = 12.6 studs boven het gondelmidden) en draait daarom heen
+-- (PagodeRitClient: attribuut NaafLokaal). Daarmee is de arm 4 % te lang voor het station: f 0.9582 langs de as vanaf de
+-- draaias, dan valt de naaf onderin precies boven het stationsmidden (rest 0.005 stud). Daan 17 nov: "de arm en de gondel
+-- raken elkaar niet" (eerst draaide de gondel om zijn midden en schoof het armeinde uit de naaf; daarna CORR-schuif).
 do
-  local ARM_F = 1.0703
+  local ARM_F, NAAF = 0.9582, 12.6
   for _, p in ipairs(arm:GetDescendants()) do
     if p:IsA("BasePart") and p.Size.Y > 100 then
       p.Size = Vector3.new(p.Size.X, p.Size.Y * ARM_F, p.Size.Z)
@@ -250,8 +251,10 @@ do
     end
   end
   local jl = pag:GetAttribute("GondelLokaal")
-  pag:SetAttribute("GondelLokaal", Vector3.new(jl.X, jl.Y * ARM_F, jl.Z))
-  gondel:PivotTo(gondel:GetPivot() + Vector3.new(0, jl.Y * (ARM_F - 1), 0))
+  local nl = Vector3.new(jl.X, (jl.Y + NAAF) * ARM_F, jl.Z)
+  pag:SetAttribute("NaafLokaal", nl)
+  pag:SetAttribute("GondelLokaal", nl - Vector3.new(0, NAAF, 0))
+  gondel:PivotTo(gondel:GetPivot() + Vector3.new(0, nl.Y - NAAF - jl.Y, 0))
   pag:SetAttribute("ArmFactor", ARM_F)
 end
 for _, p in ipairs(arm:GetChildren()) do if p:IsA("BasePart") then p.CanCollide = false end end
@@ -364,6 +367,7 @@ do
     {{Key = "", Source = "Welcome aboard", Context = "", Values = {{nl = "Welkom aan boord"}}}},
     {{Key = "", Source = "Gates closing", Context = "", Values = {{nl = "De hekjes gaan dicht"}}}},
     {{Key = "", Source = "Exit: follow the signs", Context = "", Values = {{nl = "Uitgang: volg de borden"}}}},
+    {{Key = "", Source = "Waiting time", Context = "", Values = {{nl = "Wachttijd"}}}},
   }})
   lt.Parent = LS
 end

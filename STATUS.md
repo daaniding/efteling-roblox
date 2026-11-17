@@ -302,15 +302,28 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     "de stok zit niet aan de attractie vast"; de client las de gondel half-verplaatst in). Bezoekers staan in het station op een
     eigen onzichtbare schijf PagodeBezoekersDek (r 8.3 m, top NAP 11.3, groep Bezoekersvloer, botst alleen met Bezoekers).
     Play: arm vast onder de gondel tijdens de rit, bezoeker op het dek op z 1.32.
-  - Arm 2.71 m langer (17 nov, Daan: "de arm en de gondel raken elkaar net niet"): de armmaat uit het schema kwam 2.7 m
-    tekort, daarom schoof de client de gondel onderin tot 8 studs opzij (CORR) en sloot de arm niet op het gondelmidden aan.
-    Nu: arm-meshes (Size.Y > 100) x 1.0703 langs de as vanaf de draaias, GondelLokaal.Y x 1.0703, gondel 8.14 studs omhoog in
-    de bouwstand, attribuut ArmFactor (maak_ritscript, direct na het plaatsen). Play: onderin gewricht-kern 0.04 studs, kern
-    precies op het stationsmidden; arm loopt tijdens de hele rit onder het gondelmidden in.
+  - Gondel draait om de NAAF (17 nov, Daan: "de arm sluit niet aan, hij raakt hem nog steeds niet"): de gondel draaide om
+    zijn midden (Blender 0,0,0) terwijl het armeinde 4.2 m hoger in de naaf van de holle onderkant zit (08_arm H); bij kantelen
+    schoof het armeinde zijwaarts uit de naaf (en de oude CORR-schuif maakte het erger). Nu: attribuut NaafLokaal (armeinde,
+    PIV-lokaal), PagodeRitClient Jw = naaf(th) + vaste afstand naaf->gondelmidden (gondel blijft waterpas). Daarmee is de arm
+    4 % te lang voor het station: ArmFactor 0.9582 (arm-meshes Size.Y > 100 langs de as vanaf de draaias), GondelLokaal =
+    NaafLokaal - 12.6 studs (maak_ritscript, direct na het plaatsen). Play: armnaaf-gondelnaaf max 0.005 studs over de
+    hele rit, onderin kern exact op het stationsmidden, dek op 5.90. In het station ligt de arm nu over de haag het station in.
   - Lantaarn in de buitenhoek zuid van de wachtrij (17 nov, Daan: "rechtsonder in de hoek, te onderbelicht"; daar hing geen
     licht, alle lantaarns staan aan de noordkant): klassieke lantaarn lamp_hoek op r 26.7, 155.9 gr (randstrook naast het
     onderpad, tegen buiten- en zuidhek) in 12_omgeving, keten 12-14-17-18-05-19 + 11_export; omgeving 107059610813282;
     lantaarnlicht erbij (afwerking LAMPEN).
+  - Eerst uitstappen, dan instappen (17 nov, Daan): bezoekers in een gangetje stappen pas in als niemand meer meerijdt en de
+    uitstappers voorbij het uitstappoortje zijn (dekVrij). Play: laatste uitstapper van het dek op 14.3 s, eerste instapper 14.6 s.
+  - Medewerker in het controlehuisje (17 nov, Daan): R15 uit ServerStorage.PagodeBezoekers (man_muts), bordeauxrood
+    shirt (122,28,40) en donkere broek, achter de lessenaar, kijkt naar de tourniquets, rust-animatie (PagodeBezoekers).
+  - Wachttijdbord (17 nov, Daan): zwart frame op de linkerpaal van het ingangsbord (12_omgeving AR_Pagode_O_wachttijdbord,
+    exports/wachttijdbord.json; omgeving 87648168829062), SurfaceGui "PAGODE / Waiting time / X min" (vertaling Wachttijd in
+    PagodeTeksten). Rekent elke 5 s: bezoekers + spelers in de rij, 36 plekken per rit, cyclus 205 s, op 5 min, minimaal 5.
+  - Parkbudget voor NPC's (17 nov, Daan: "met veel attracties wordt het te veel"): ServerScriptService.ParkBezoekers
+    (bron park/luau/ParkBezoekers.luau), één limiet voor alle attracties: 20 + 8 per speler, max 60; per attractie een eigen
+    max (Pagode 14); park-breed hooguit 1 nieuwe bezoeker per 3 s; alleen spawnen als er een speler binnen 450 studs is.
+    Elke volgende attractie met bezoekers: Park.registreer(naam, map, max, plek) en Park.magErBij(naam) voor nieuw().
   - NPC-bezoekers (17 nov, Daan: "mensen in de rij", "ze blijven gewoon bezoekers, gaan daarna naar een andere attractie",
     "een wachtrij vullen dan de ander, recht erin staan", "het stoppen om te draaien is irritant"):
     ServerScriptService.PagodeBezoekers (bron roblox/PagodeBezoekers.server.luau + route build/22_bezoekersroute.py ->
