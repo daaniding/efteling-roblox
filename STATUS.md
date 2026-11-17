@@ -251,6 +251,13 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     (RONDJES = 2 in PagodeRitClient; heel getal zodat de poortjes weer voor het station eindigen), piek ~3.6 gr/s
     halverwege. Meenemen van meerijders: de "beweegt"-check zag de langzame draai als stilstand; nu exact via
     ToObjectSpace + ToAxisAngle (drempel 1e-5 stud / 1e-7 rad). Play: drift 0.1 stud tijdens omhoog met draaien.
+  - Bomen (17 nov, Daan: "bomen, maar het moet echt realistisch", "kijk ook in video's"): build/21_bomen.py haalt
+    posities uit de luchtfoto (groene kronen + kale loofkronen: de foto is van de winter; geen water, daken van
+    buurattracties, route, station, armsleuf, hekken +1.5 m), 63 bomen (24 dennen, 39 loof) binnen 40 m, plus de grote eik
+    aan het oostpad. Video: sparren naast het station 24-30 m (zo hoog als de gondel), loofbomen 16-23 m. Gondelbaan-check:
+    geen boom raakt de gondel. Modellen: Creator Store PBR-packs van Letaij (Ponderosa Pine 130515502281374, Realistic Oak
+    Trees 114023396228594), gecontroleerd: geen scripts; bron in ServerStorage.BoomBronnen; plaatsen = roblox/
+    bomen_pagode.luau (maak_bomenscript.py). Play: 55-60 fps. Nog niet: bamboe en gesnoeide dennen langs het laantje.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
