@@ -113,13 +113,18 @@ do
 end
 -- onzichtbare botsing langs alle hekken en relingen (12_omgeving / 18_route -> exports/omgeving_hekken.json)
 do
+  -- onzichtbare muren tot 24 studs boven de vloer: niet over hekken springen, je MOET de route volgen (Daan 17 nov).
+  -- Groep Routemuur botst niet met Rijdend (wie meerijdt, zie PagodeRitClient): de gondel zwaait door de stationshekken.
+  local PS = game:GetService("PhysicsService")
+  for _, g in ipairs({{"Routemuur", "Rijdend"}}) do if not PS:IsCollisionGroupRegistered(g) then PS:RegisterCollisionGroup(g) end end
+  PS:CollisionGroupSetCollidable("Routemuur", "Rijdend", false)
   local f = Instance.new("Folder"); f.Name = "Hekken"; f.Parent = pag
   for _, h in ipairs(HEKKEN) do
     local a = Vector3.new(h[1] * 3, 2 + h[3] * 3, -h[2] * 3); local b = Vector3.new(h[4] * 3, 2 + h[6] * 3, -h[5] * 3)
-    local hoog = h[7] * 3 + 0.6
-    local m = (a + b) / 2 + Vector3.new(0, hoog / 2, 0)
+    local hoog = 24 + math.abs(a.Y - b.Y)
+    local m = (a + b) / 2 + Vector3.new(0, hoog / 2 - 0.5 - math.abs(a.Y - b.Y) / 2, 0)
     local p = Instance.new("Part"); p.Name = "hekbotsing"; p.Anchored = true; p.Transparency = 1; p.CanCollide = true; p.CanQuery = false
-    p.CanTouch = false; p.Size = Vector3.new(0.4, hoog, (b - a).Magnitude + 0.2)
+    p.CanTouch = false; p.CollisionGroup = "Routemuur"; p.Size = Vector3.new(0.4, hoog, Vector3.new(b.X - a.X, 0, b.Z - a.Z).Magnitude + 0.2)
     p.CFrame = CFrame.lookAt(m, m + Vector3.new(b.X - a.X, 0, b.Z - a.Z)) * CFrame.Angles(0, 0, 0); p.Parent = f
   end
 end

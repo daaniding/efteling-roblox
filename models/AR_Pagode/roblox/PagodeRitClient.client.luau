@@ -100,6 +100,8 @@ end
 local plr = Players.LocalPlayer
 local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Include; ray.FilterDescendantsInstances = {gondel}
 local gK = K0
+local huidigeGroep = "Default"
+plr.CharacterAdded:Connect(function() huidigeGroep = "Default" end)
 local cfs = table.create(#gDelen)
 local acfs = table.create(#aDelen)
 
@@ -115,9 +117,16 @@ RunService.PreSimulation:Connect(function()
 	local hrp = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
 	-- alleen als de gondel echt beweegt: elk frame de CFrame zetten (ook bij stilstand) blokkeert het lopen op het dek
 	local beweegt = (nieuwK.Position - gK.Position).Magnitude > 1e-4 or nieuwK.LookVector:Dot(gK.LookVector) < 0.9999999
+	local rijdt = false
 	if hrp and beweegt then
 		local r = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
-		if r then hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame end
+		if r then hrp.CFrame = (nieuwK * gK:Inverse()) * hrp.CFrame; rijdt = true end
+	end
+	-- wie meerijdt botst niet met de onzichtbare routemuren (de gondel zwaait door de stationshekken)
+	local groep = rijdt and "Rijdend" or "Default"
+	if ch and groep ~= huidigeGroep then
+		for _, p in ch:GetDescendants() do if p:IsA("BasePart") then p.CollisionGroup = groep end end
+		huidigeGroep = groep
 	end
 	for i, rel in gRel do cfs[i] = nieuwK * rel end
 	workspace:BulkMoveTo(gDelen, cfs, Enum.BulkMoveMode.FireCFrameChanged)

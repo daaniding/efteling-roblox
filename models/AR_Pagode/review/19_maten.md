@@ -36,6 +36,8 @@
 | poortje uit1 gondel: vrije doorgang | 1.701 m | >= 1.5 | ok |
 | poortje uit1 station: vrije doorgang | 1.583 m | >= 1.5 | ok |
 | tourniquets: vrije doorgang | 1.599 m | >= 1.5 | ok |
+| opening bovenste baan -> trapkop (bordeshek r 14.05 tot rail rij 2 r 16.12) | 2.015 m | >= 1.9 | ok |
+| huisje: vrij tot de tourniquet (rand tot kolom) | 1.200 m | >= 1.0 | ok |
 | wachtrijreling: bovenkant boven de rij | 1.070 m | 0.95-1.25 | ok |
 | spijlenhek bordes: bovenkant boven bordes | 1.180 m | 0.95-1.25 | ok |
 | vlonder = instapniveau (NAP 11.3) | 0.000 m | <= 0.01 | ok |

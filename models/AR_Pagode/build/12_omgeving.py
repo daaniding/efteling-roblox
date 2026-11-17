@@ -432,7 +432,8 @@ def build():
         if (t // 2) % 2: a1 -= gat
         else: a0 += gat
         reling(f"AR_Pagode_O_rij_reling_{t:02d}", boog(r, a0, a1, z))
-    rl = [pt(15.2, aS(15.2), ztop(1))] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(1, N_RIJ)] + [pt(24.95, aS(24.95), ztop(N_RIJ - 1))]   # bovenste meter open: wachtrij -> trapstrook; tot het eind van de rijen
+    R_OPEN = 14.0 + 2 + 0.12                                  # bovenste baan (rij 0 en 1) helemaal open naar de trapkop: 1.9 m (Daan: "lastig om doorheen te komen")
+    rl = [pt(R_OPEN, aS(R_OPEN), ztop(2))] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(3, N_RIJ)] + [pt(24.95, aS(24.95), ztop(N_RIJ - 1))]   # tot het eind van de rijen
     reling("AR_Pagode_O_trap_reling", rl, spijlen=True)          # paneel met spijlen langs de trapstrook (video 0:39-0:41)
     # hek tussen bordes en tribune (Pagode-landing.jpg), open bij de trapstrook en bij het zuidpad
     spijlenhek("AR_Pagode_O_hek_bordes", boog(R_BO + 0.05, aS(14.2) + 0.2, A_RAIL - 2.0, Z_I))     # dicht tot de trapstrook: alles via de tourniquets
@@ -440,7 +441,7 @@ def build():
     # A5 lantaarns, elk op een plek uit de video, NOOIT op een looppad (zie controle onderaan)
     for k, r in enumerate((19.0, 23.0)):             # klassiek, op de trapstrook tegen het hek op de laanmuur (0:18-0:24)
         p = pt(r, aW(r) + math.degrees(0.2 / r), ztop(int(r - 14.0))); lantaarn(f"AR_Pagode_O_lamp_trap{k}", p); vrij(f"lamp_trap{k}", p, 0.13)
-    for k, r in enumerate((14.45, 17.5)):            # sierlijk brons, in de lijn van de trapreling (0:39-0:46)
+    for k, r in enumerate((R_OPEN + 0.08, 18.6)):     # sierlijk brons, op de trapreling (0:39-0:46); niet meer in de doorgang
         p = pt(r, aS(r), ztop(int(r - 14.0))); lantaarn_sier(f"AR_Pagode_O_lamp_sier{k}", p); vrij(f"lamp_sier{k}", p, 0.2)
     p = pt(20.12, A_RAIL, ztop(6)); lantaarn("AR_Pagode_O_lamp_zuid", p)   # op het eind van de reling, naast het zuidpad; vrij("lamp_zuid", p, 0.13)
     p = pt(13.8, 140.0, Z_I); lantaarn("AR_Pagode_O_lamp_bordes", p); vrij("lamp_bordes", p, 0.13)
@@ -455,8 +456,13 @@ def build():
         # kort hekje van de tourniquet naar de rand van de trapstrook (niet om de tourniquets heen lopen)
         rand = aW(14.2) if s_ < 0 else aS(14.2)
         spijlenhek(f"AR_Pagode_O_tourniquethek{k}", [p, pt(14.25, rand, Z_I)], h=1.0)
-    a_h = a_t; hc = pt(11.55, a_h, Z_I)                                       # 1.2 m achter de tourniquets: ruimte om erlangs
-    controlehuisje("AR_Pagode_O_huis", hc, math.radians(a_h)); vrij("huis", hc, 0.8, bewust=True)
+    # huisje opzij (kloksgewijs), uit de looplijn: na de tourniquets loop je tegen de klok in naar de poortjes (Daan: "ik kom gelijk
+    # tegen dat huisje aan"); raam naar de tourniquets, met botsing rondom
+    hc = pt(11.42, 106.0, Z_I); rot_h = math.radians(106.0)          # recht op het station, raam naar buiten (naar de tourniquets)
+    controlehuisje("AR_Pagode_O_huis", hc, rot_h); vrij("huis", hc, 0.8, bewust=True)
+    fh = Vector((math.cos(rot_h), math.sin(rot_h), 0)); th = Vector((-fh.y, fh.x, 0))
+    hoeken = [hc + fh * sx * 0.78 + th * sy * 0.88 for sx, sy in ((1, 1), (1, -1), (-1, -1), (-1, 1))]
+    for k in range(4): HEKKEN.append([list(hoeken[k]), list(hoeken[(k + 1) % 4]), 2.6])
 
     # B2 ingangsbord PAGODE over de kop van het laantje (video 0:13-0:19): linkerpaal tegen de laanmuur, rechterpaal in de
     # tuinrand met het regelbordje; bord een kwartslag naar het plein gedraaid (gezien vanaf het plein, 0:02-0:12)

@@ -100,7 +100,7 @@ def build():
         return beste
     def bewust_open(p):
         r = math.hypot(p[0] - CX, p[1] - CY); a = math.degrees(math.atan2(p[1] - CY, p[0] - CX)) % 360
-        return r < 9.3 or 12.5 < r < 12.75 or 13.4 < r < 13.6 or (15.1 < r < 15.3 and 118 < a < 123) or (17.6 < r < 17.9 and a < 89)
+        return r < 9.3 or 12.5 < r < 12.75 or 13.4 < r < 13.6 or (16.0 < r < 16.3 and 118 < a < 123) or (17.6 < r < 17.9 and a < 89)
     extra = []
     for i, (a_, b_, hh) in enumerate(list(hek)):
         for p in (a_, b_):

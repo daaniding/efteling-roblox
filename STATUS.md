@@ -167,6 +167,17 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
   - Trapstrook onderaan dicht (17 nov, Daan: "ja, dichtzetten"): hek op r 24.95 van laanmuur tot trapreling (18_route
     om_trapdicht). Iedereen loopt nu de hele zigzag. Omgeving 137933384153007, 151 hekbotsingen. Loopscan: rijen op volgorde
     bereikbaar (38, 42.5, 68, 71, 92.5, 94.5 m), tourniquets pas na 106 m, 0 lekken.
+  - Onzichtbare muren (17 nov, Daan: "je moet echt de route volgen"): alle hekbotsingen 24 studs hoog (niet meer over
+    hekken springen), groep Routemuur; wie meerijdt krijgt groep Rijdend (PagodeRitClient) en botst er niet mee, want de
+    gondel zwaait door de stationshekken. Springscan (BFS, springen over alles < 7 studs): vanuit de wachtrij met ingang en
+    tourniquets virtueel dicht onbereikbaar: bordes, vlonder, uitgang, gras. Vanaf het gras en vanaf de uitgang de wachtrij
+    en de instapkant niet in. Play: springen tegen reling, zuidhek, onderpadhek en bordeshek houdt overal stand.
+  - Trapkop (17 nov, Daan: "lastig om doorheen te komen en ik kom gelijk tegen dat huisje aan"): de opening van de bovenste
+    baan naar de tourniquets was 1 m met de bronzen lantaarn erin; nu de hele baan open (2.0 m, trapreling begint op de
+    rail van rij 2), lantaarns op r 16.2 en 18.6 op de trapreling. Controlehuisje uit de looplijn: naast de tourniquets
+    (r 11.42, 106 gr, recht op het station), 1.2 m vrij, met botsing rondom. Play: avatar loopt bovenste rij -> trapkop ->
+    tourniquets -> gangetje -> poortje zonder vast te lopen; meerijden met de nieuwe muren: drift < 0.1 stud.
+    Omgeving 83791895400022.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

@@ -84,6 +84,15 @@ for naam, alfa, soort in PT.POORTEN:
 t0, t1 = bb("AR_Pagode_O_tourniquet0"), bb("AR_Pagode_O_tourniquet1")
 if t0 and t1:
     eis("tourniquets: vrije doorgang", ((t0[0] + t0[1]) / 2 - (t1[0] + t1[1]) / 2).xy.length - 0.26, 1.5, None)
+# 4b trapkop: opening bovenste baan -> tourniquets, en het huisje uit de looplijn
+tr_ = bb("AR_Pagode_O_trap_reling")          # trapreling begint nu op de rail van rij 2 (r 16.12)
+if tr_:
+    r_open = min(polair(Vector((x, y, 0)))[0] for x in (tr_[0].x, tr_[1].x) for y in (tr_[0].y, tr_[1].y))
+eis("opening bovenste baan -> trapkop (bordeshek r 14.05 tot rail rij 2 r 16.12)", 16.12 - (R_BO + 0.05) - 0.055, 1.9, None)
+h_, t_ = bb("AR_Pagode_O_huis_vloer"), bb("AR_Pagode_O_tourniquet0")
+if h_ and t_:
+    ph = Vector(((h_[0].x + h_[1].x) / 2, (h_[0].y + h_[1].y) / 2, 0)); pt_ = Vector(((t_[0].x + t_[1].x) / 2, (t_[0].y + t_[1].y) / 2, 0))
+    eis("huisje: vrij tot de tourniquet (rand tot kolom)", (ph - pt_).length - 1.15 - 0.13, 1.0, None)
 # 5 hoogtes: relingen en hekken boven hun loopvloer, vlonder = bordes = instapniveau
 eis("wachtrijreling: bovenkant boven de rij", 1.02 + 0.05, 0.95, 1.25)
 eis("spijlenhek bordes: bovenkant boven bordes", 1.1 + 0.08, 0.95, 1.25)
