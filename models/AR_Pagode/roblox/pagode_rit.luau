@@ -910,7 +910,14 @@ local RIJDEN = {sluiten = 0.25, omhoog = 0.45, boven = 0.45, omlaag = 0.4}
 RunService.Heartbeat:Connect(function(dt)
 	local fase = pag:GetAttribute("FaseLokaal") :: string?
 	local doel = fase and RIJDEN[fase] or 0
-	if doel > 0 and not aanBoordMuziek.IsPlaying then aanBoordMuziek:Play() end
+	if doel > 0 and not aanBoordMuziek.IsPlaying then
+		-- zelfde nummer als de wachtrijspeakers: op dezelfde plek in het nummer starten (geen dubbel geluid bij vertrek)
+		local geluid = pag:FindFirstChild("Geluid")
+		local sp = geluid and geluid:FindFirstChild("speaker1")
+		local spm = sp and sp:FindFirstChild("muziek", true) :: Sound?
+		if spm and spm.SoundId == aanBoordMuziek.SoundId then aanBoordMuziek.TimePosition = spm.TimePosition end
+		aanBoordMuziek:Play()
+	end
 	aanBoordMuziek.Volume += (doel - aanBoordMuziek.Volume) * math.clamp(dt * 0.6, 0, 1)
 	if doel == 0 and aanBoordMuziek.Volume < 0.005 and aanBoordMuziek.IsPlaying then aanBoordMuziek:Pause() end
 end)
