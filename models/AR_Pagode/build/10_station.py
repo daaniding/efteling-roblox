@@ -91,12 +91,26 @@ def build():
     # 2 houten loopring op instaphoogte + onderbouw (beton) en groen hek aan de bakzijde
     ringsector("AR_Pagode_S_vlonder", R_RAND - 0.1, R_VL, Z_INSTAP - 0.12, Z_INSTAP, ws1, ws0 + 360, "vlonder")
     ringsector("AR_Pagode_S_onderbouw", R_RAND - 0.05, R_VL + 0.05, -1.0, Z_INSTAP - 0.06, ws1 + 0.4, ws0 + 360 - 0.4, "beton_groen")   # 6 cm in de vlonder
+    # hek aan de bakzijde met openingen voor de poortjes (poorten.py): geen palen/regels in de opening, dikkere poortpalen ernaast
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import poorten as PT
+    rH = R_RAND + 0.15
     n = int((360 - 15) / 4)
     for i in range(n + 1):
         ang = ws1 + (ws0 + 360 - ws1) * i / n
-        buis(f"AR_Pagode_S_hekpaal_{i:03d}", boogpunt(R_RAND + 0.15, ang, Z_INSTAP - 0.05), boogpunt(R_RAND + 0.15, ang, Z_INSTAP + 1.1), 0.035, "groen")
-    for nm, z in (("boven", 1.1), ("midden", 0.6), ("onder", 0.12)):
-        ringsector(f"AR_Pagode_S_hekregel_{nm}", R_RAND + 0.11, R_RAND + 0.19, Z_INSTAP + z - 0.03, Z_INSTAP + z + 0.03, ws1, ws0 + 360, "groen")
+        if PT.in_poort(ang, rH, 0.2): continue
+        buis(f"AR_Pagode_S_hekpaal_{i:03d}", boogpunt(rH, ang, Z_INSTAP - 0.05), boogpunt(rH, ang, Z_INSTAP + 1.1), 0.035, "groen")
+    # stukken hek tussen sleuf en poortjes
+    stukken, a0 = [], ws1
+    for naam, a, _ in sorted(PT.POORTEN, key=lambda q: (PT.park(q[1]) - ws1) % 360):
+        c = ws1 + (PT.park(a) - ws1) % 360; h = PT.half_hoek(rH)
+        stukken.append((a0, c - h)); a0 = c + h
+        for s_ in (-1, 1):
+            buis(f"AR_Pagode_S_poortpaal_{naam}_{s_ + 1}", boogpunt(rH, c + s_ * h, Z_INSTAP - 0.05), boogpunt(rH, c + s_ * h, Z_INSTAP + 1.2), 0.06, "groen")
+    stukken.append((a0, ws0 + 360))
+    for k, (b0, b1) in enumerate(stukken):
+        for nm, z in (("boven", 1.1), ("midden", 0.6), ("onder", 0.12)):
+            ringsector(f"AR_Pagode_S_hekregel_{nm}_{k}", R_RAND + 0.11, R_RAND + 0.19, Z_INSTAP + z - 0.03, Z_INSTAP + z + 0.03, b0, b1, "groen")
     # 3 tribunetrap: verhuisd naar 12_omgeving.py (11 rijen naar video + AHN)
     # 4 stalen trap + bordes in de bak (Pagode-bak-2023.jpg): kolom, bordes 2.4 x 2.4 op z 3.6, trap vanaf de vloer
     bx, by = CX - 1.5, CY + 1.0

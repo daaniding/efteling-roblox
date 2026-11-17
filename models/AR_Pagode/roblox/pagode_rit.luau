@@ -2,7 +2,7 @@
 -- Gondel+arm+voet: oorsprong = draaias, op park (320.5, 58.5), 4.2 m boven de grond, draaiing 164.44 graden.
 -- Station: oorsprong = middelpunt bak, park (360.0, 47.5); 180 graden gedraaid (Blender x oost/y noord -> Roblox).
 -- Hoogte: NAP 10.0 = Roblox Y 2. Terrein uit AHN (x 300..385, y 15..80), materiaal uit de luchtfoto.
-local ID = {AR_Pagode_gondel = 87895236112943, AR_Pagode_station = 124320247767428, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 76036336782300, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 114216309813465, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 100311851570971, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280, wilg_kleur = 100412416431599, steen_kleur = 116600353020198, steen_normaal = 95927671453559, pluk_kleur = 82875106386837, huisrand_kleur = 74245754818603, AR_Pagode_arm = 88039896274620, AR_Pagode_voet = 79185188175320}
+local ID = {AR_Pagode_gondel = 80470568889612, AR_Pagode_station = 123102938730600, pannen_kleur = 113862951849627, pannen_normaal = 135305032497691, sierveld_kleur = 92806080990483, sierveld_normaal = 75982823389914, windveer_kleur = 105110194440006, windveer_normaal = 129813406208116, trommel_kleur = 94643214361680, trommel_normaal = 105998268539020, sierrand_kleur = 114707188453195, sierrand_normaal = 98163589145950, kernwand_kleur = 118948255846476, kernwand_normaal = 77932851706654, arm_kleur = 125000713070178, arm_normaal = 115276388154879, natuursteen_kleur = 93634200024177, natuursteen_normaal = 71110702105863, vlonder_kleur = 114168670349764, vlonder_normaal = 105858881415149, klinker_kleur = 76036336782300, klinker_normaal = 132177172189347, bord_kleur = 107214009738343, AR_Pagode_omgeving = 139919568580908, ingangsbord_kleur = 106758910462500, uitgangsbord_kleur = 71715100841980, breuksteen_kleur = 74939119820853, breuksteen_normaal = 96183299144764, bamboe_kleur = 100311851570971, blad_kleur = 75105356130828, spar_kleur = 91377517844234, naald_kleur = 72168876031761, haag_kleur = 97966661994557, bloem_kleur = 71396169120830, schors_kleur = 139686993244290, tokorand_kleur = 115150839917312, tokopaneel_kleur = 109978993367892, parasol_kleur = 116141934527280, wilg_kleur = 100412416431599, steen_kleur = 116600353020198, steen_normaal = 95927671453559, pluk_kleur = 82875106386837, huisrand_kleur = 74245754818603, AR_Pagode_arm = 88039896274620, AR_Pagode_voet = 79185188175320}
 local S = 3
 local G = 2                                   -- Roblox Y van NAP 10.0
 local function park(x, y, nap) return Vector3.new(x * S, G + (nap - 10) * S, -y * S) end
@@ -77,6 +77,11 @@ end
 
 -- ===== rijdende Pagode: opzet (gegenereerd door roblox/maak_ritscript.py) =====
 local PIV = CFrame.new(park(320.5, 58.5, 10 + 4.199)) * CFrame.Angles(0, math.rad(164.4385), 0)
+local POORT_ALFA = {147.2727, 163.6364, 0.0000, -16.3636}       -- poorten.py: gondelhoek alfa
+local DRAAI, BREED_POORT = 15.5615, 1.7
+local HALF_POORT = math.deg((BREED_POORT + 0.1) / 2 / 8.3)
+local function inpoort(alfa, r) local h = math.deg((BREED_POORT + 0.1) / 2 / r); for _, a in ipairs(POORT_ALFA) do if math.abs((alfa - a + 180) % 360 - 180) < h then return true end end; return false end
+local HEKKEN = {{368.200, 58.786, 1.550, 366.492, 59.848, 1.550, 1.18}, {366.492, 59.848, 1.550, 364.649, 60.653, 1.550, 1.18}, {364.649, 60.653, 1.550, 362.709, 61.184, 1.550, 1.18}, {362.709, 61.184, 1.550, 360.713, 61.432, 1.550, 1.18}, {360.713, 61.432, 1.550, 358.702, 61.390, 1.550, 1.18}, {358.702, 61.390, 1.550, 356.719, 61.059, 1.550, 1.18}, {356.719, 61.059, 1.550, 354.803, 60.446, 1.550, 1.18}, {354.952, 60.719, 1.550, 354.794, 61.033, 1.450, 1.18}, {354.794, 61.033, 1.450, 354.305, 61.916, 1.300, 1.18}, {354.305, 61.916, 1.300, 353.786, 62.785, 1.150, 1.18}, {353.786, 62.785, 1.150, 353.237, 63.640, 1.000, 1.18}, {353.237, 63.640, 1.000, 352.658, 64.481, 0.850, 1.18}, {352.658, 64.481, 0.850, 352.050, 65.306, 0.700, 1.18}, {352.050, 65.306, 0.700, 351.413, 66.115, 0.550, 1.18}, {351.413, 66.115, 0.550, 350.747, 66.907, 0.400, 1.18}, {350.747, 66.907, 0.400, 350.052, 67.681, 0.250, 1.18}, {350.052, 67.681, 0.250, 349.330, 68.438, 0.100, 1.18}, {349.330, 68.438, 0.100, 348.580, 69.175, -0.050, 1.18}, {357.276, 63.266, -0.380, 355.537, 65.968, -0.380, 1.07}, {355.537, 65.968, -0.380, 353.526, 68.526, -0.380, 1.07}, {353.526, 68.526, -0.380, 351.254, 70.920, -0.380, 1.07}, {351.754, 61.351, 0.850, 349.853, 60.026, 0.850, 1.07}, {349.853, 60.026, 0.850, 348.163, 58.442, 0.850, 1.07}, {348.163, 58.442, 0.850, 346.716, 56.632, 0.850, 1.07}, {349.000, 61.899, 0.550, 347.013, 60.136, 0.550, 1.07}, {347.013, 60.136, 0.550, 345.305, 58.102, 0.550, 1.07}, {345.305, 58.102, 0.550, 343.913, 55.839, 0.550, 1.07}, {349.440, 64.626, 0.250, 347.622, 63.362, 0.250, 1.07}, {347.622, 63.362, 0.250, 345.953, 61.905, 0.250, 1.07}, {345.953, 61.905, 0.250, 344.454, 60.273, 0.250, 1.07}, {344.454, 60.273, 0.250, 343.144, 58.486, 0.250, 1.07}, {346.480, 65.007, -0.050, 344.660, 63.437, -0.050, 1.07}, {344.660, 63.437, -0.050, 343.021, 61.678, -0.050, 1.07}, {343.021, 61.678, -0.050, 341.582, 59.751, -0.050, 1.07}, {341.582, 59.751, -0.050, 340.362, 57.680, -0.050, 1.07}, {346.683, 67.611, -0.350, 345.025, 66.408, -0.350, 1.07}, {345.025, 66.408, -0.350, 343.475, 65.069, -0.350, 1.07}, {343.475, 65.069, -0.350, 342.043, 63.604, -0.350, 1.07}, {342.043, 63.604, -0.350, 340.742, 62.022, -0.350, 1.07}, {340.742, 62.022, -0.350, 339.579, 60.335, -0.350, 1.07}, {352.290, 60.599, 1.000, 352.141, 60.860, 1.000, 1.07}, {352.141, 60.860, 1.000, 351.628, 61.718, 0.850, 1.07}, {351.628, 61.718, 0.850, 351.085, 62.559, 0.700, 1.07}, {351.085, 62.559, 0.700, 350.515, 63.383, 0.550, 1.07}, {350.515, 63.383, 0.550, 349.916, 64.190, 0.400, 1.07}, {349.916, 64.190, 0.400, 349.289, 64.979, 0.250, 1.07}, {349.289, 64.979, 0.250, 348.634, 65.750, 0.100, 1.07}, {348.634, 65.750, 0.100, 347.952, 66.502, -0.050, 1.07}, {347.952, 66.502, -0.050, 347.242, 67.236, -0.200, 1.07}, {347.242, 67.236, -0.200, 346.506, 67.949, -0.350, 1.07}, {352.801, 59.565, 1.300, 350.829, 58.144, 1.300, 1.18}, {350.829, 58.144, 1.300, 349.132, 56.404, 1.300, 1.18}, {349.132, 56.404, 1.300, 347.759, 54.397, 1.300, 1.18}, {354.891, 59.996, 1.300, 354.720, 60.736, 1.300, 1.08}, {353.223, 59.176, 1.300, 352.741, 59.763, 1.300, 1.08}, {366.706, 39.009, 1.420, 368.355, 40.625, 1.420, 1.18}, {368.355, 40.625, 1.420, 369.624, 42.555, 1.420, 1.18}, {370.551, 45.102, 1.420, 370.815, 47.175, 1.420, 1.18}, {370.815, 47.175, 1.420, 370.676, 49.261, 1.420, 1.18}, {370.676, 49.261, 1.420, 370.138, 51.280, 1.420, 1.18}, {370.138, 51.280, 1.420, 369.222, 53.159, 1.420, 1.18}, {369.222, 53.159, 1.420, 367.963, 54.826, 1.420, 1.18}, {367.963, 54.826, 1.420, 366.406, 56.220, 1.420, 1.18}, {354.517, 55.004, 1.300, 352.288, 57.505, 1.300, 1.08}, {353.173, 53.806, 1.300, 350.944, 56.307, 1.300, 1.08}, {352.625, 53.155, 1.300, 349.782, 54.927, 1.300, 1.08}, {351.673, 51.628, 1.300, 348.830, 53.399, 1.300, 1.08}}
 local oudS = game:GetService("ServerScriptService"):FindFirstChild("PagodeRit"); if oudS then oudS:Destroy() end
 local oud = workspace:FindFirstChild("Pagode"); if oud then oud:Destroy() end
 local pag = Instance.new("Model"); pag.Name = "Pagode"; pag.Parent = workspace
@@ -114,22 +119,22 @@ end
 local ONZ = {Transparency = 1, CanCollide = true, CanQuery = false}
 
 -- 1 botsing: reling gondel (r 8.3, dek 2.2 -> 3.5), binnenwand (r 5.4) wordt muur
-for i = 0, 63 do
-  local a0, a1 = i / 64 * 2 * math.pi, (i + 1) / 64 * 2 * math.pi
+for i = 0, 255 do
+  local a0, a1 = i / 256 * 2 * math.pi, (i + 1) / 256 * 2 * math.pi
   local p0, p1 = B(8.32 * math.cos(a0), 8.32 * math.sin(a0), 2.85).Position, B(8.32 * math.cos(a1), 8.32 * math.sin(a1), 2.85).Position
-  deel("reling", CFrame.lookAt((p0 + p1) / 2, p1), Vector3.new(0.6, 1.3 * S, (p1 - p0).Magnitude + 0.3), ONZ)
+  deel(inpoort(math.deg(a0 + a1) / 2, 8.32) and "poortreling" or "reling", CFrame.lookAt((p0 + p1) / 2, p1), Vector3.new(0.6, 1.3 * S, (p1 - p0).Magnitude + 0.3), ONZ)
 end
 for _, p in ipairs(g:GetChildren()) do
   if p:IsA("BasePart") and string.match(p.Name, "^PG_kernwand") then p.CanCollide = true end
 end
 -- reling bakrand (station: r 8.95 rond (360, 47.5), instapniveau NAP 11.3), behalve bij de sleuf (164.4 +- 7.5 graden)
-for i = 0, 71 do
-  local a0, a1 = math.rad(i * 5), math.rad(i * 5 + 5)
-  local m = (i * 5 + 2.5)
+for i = 0, 287 do
+  local a0, a1 = math.rad(i * 1.25), math.rad(i * 1.25 + 1.25)
+  local m = (i * 1.25 + 0.625)
   if not (m > 156.9 and m < 171.9) then
     local function w(a) return Vector3.new((360 + 8.95 * math.cos(a)) * S, 2 + (1.3 + 0.55) * S, -(47.5 + 8.95 * math.sin(a)) * S) end
     local p0, p1 = w(a0), w(a1)
-    deel("bakreling", CFrame.lookAt((p0 + p1) / 2, p1), Vector3.new(0.6, 1.1 * S, (p1 - p0).Magnitude + 0.3), ONZ)
+    deel(inpoort(m + DRAAI, 8.95) and "bakpoort" or "bakreling", CFrame.lookAt((p0 + p1) / 2, p1), Vector3.new(0.6, 1.1 * S, (p1 - p0).Magnitude + 0.3), ONZ)
   end
 end
 
@@ -170,7 +175,7 @@ for i = 0, 47 do
     {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 40, 40), CanCollide = false, CanQuery = false})
 end
 -- 4 lantaarns van de omgeving (12_omgeving.py -> exports/omgeving_lampen.json, park x, y, z = NAP - 10): warm licht
-local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {352.65, 59.94, 4.43}, {351.08, 62.56, 3.98}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}, {360.31, 65.30, 2.54}, {370.20, 42.08, 2.57}, {371.38, 49.51, 2.57}}
+local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {352.65, 59.94, 4.43}, {351.08, 62.56, 3.98}, {342.14, 56.76, 3.17}, {349.43, 56.37, 4.22}, {370.20, 42.08, 2.57}}
 for i, l in ipairs(LAMPEN) do
   local p = Instance.new("Part"); p.Name = "lantaarnlicht"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
   p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3); p.Position = Vector3.new(l[1] * S, 2 + l[3] * S, -l[2] * S); p.Parent = map
@@ -181,7 +186,54 @@ end
 end
 local station = Instance.new("Folder"); station.Name = "Station"; station.Parent = pag
 for _, p in ipairs(gondel:GetDescendants()) do
-  if p:IsA("BasePart") and (p.Name == "bakreling" or p.Name == "lantaarnlicht") then p.Parent = station end
+  if p:IsA("BasePart") and (p.Name == "bakreling" or p.Name == "bakpoort" or p.Name == "lantaarnlicht") then p.Parent = station end
+end
+-- klaphekjes in de balustrade (poorten.py): twee bladen per poortje, scharnier aan de poortpaal, draaien naar binnen open
+do
+  local S = 3
+  local PIVg = gondel:GetPivot()
+  local function B(x, y, z) return PIVg * CFrame.new(-(x - 0.5) * S, (z + 38.6) * S, y * S) end
+  local K0 = CFrame.new(PIV:PointToWorldSpace(pag:GetAttribute("GondelLokaal"))) * PIV.Rotation
+  local map = Instance.new("Folder"); map.Name = "Poorten"; map.Parent = gondel
+  local GROEN = Color3.fromRGB(22, 112, 86)
+  for _, pa in ipairs(POORT_ALFA) do
+    local a = math.rad(pa); local h = math.rad(HALF_POORT)
+    local Cp = B(8.3 * math.cos(a), 8.3 * math.sin(a), 2.2 + 0.12).Position
+    for _, sz in ipairs({-1, 1}) do
+      local Hp = B(8.3 * math.cos(a + sz * h), 8.3 * math.sin(a + sz * h), 2.2 + 0.12).Position
+      local hcf = CFrame.lookAt(Hp, Vector3.new(Cp.X, Hp.Y, Cp.Z))
+      local blad = Instance.new("Folder"); blad.Name = "Blad"; blad.Parent = map
+      blad:SetAttribute("Scharnier", K0:ToObjectSpace(hcf))
+      local L = (BREED_POORT / 2) * S
+      local function stuk(naam, c, size, zicht)
+        local p = Instance.new("Part"); p.Name = naam; p.Anchored = true; p.Size = size; p.Color = GROEN; p.Material = Enum.Material.SmoothPlastic
+        p.CanTouch = false; p.CastShadow = zicht; p.CanCollide = false; p.Transparency = zicht and 0 or 1; p.CanQuery = zicht
+        p.CFrame = hcf * c; p:SetAttribute("Rel", c); p.Parent = blad; return p
+      end
+      stuk("regel", CFrame.new(0, 1.2 * S, -L / 2), Vector3.new(0.2, 0.2, L), true)
+      stuk("regel", CFrame.new(0, 0.12 * S, -L / 2), Vector3.new(0.2, 0.2, L), true)
+      stuk("stijl", CFrame.new(0, 0.66 * S, -L + 0.1), Vector3.new(0.2, 1.1 * S, 0.2), true)
+      for k = 1, 5 do stuk("spijl", CFrame.new(0, 0.66 * S, -L * k / 6), Vector3.new(0.08, 1.05 * S, 0.08), true) end
+      stuk("poortblad", CFrame.new(0, 0.66 * S, -L / 2), Vector3.new(0.4, 1.3 * S, L), false)
+      -- naar binnen open: kies de draairichting waarbij het einde van het blad dichter bij het gondelmidden komt
+      local eind0 = (hcf * CFrame.Angles(0, math.rad(80), 0) * CFrame.new(0, 0, -L)).Position
+      local eind1 = (hcf * CFrame.Angles(0, math.rad(-80), 0) * CFrame.new(0, 0, -L)).Position
+      local M = K0.Position
+      blad:SetAttribute("Teken", ((eind0 - M) * Vector3.new(1, 0, 1)).Magnitude < ((eind1 - M) * Vector3.new(1, 0, 1)).Magnitude and 1 or -1)
+    end
+  end
+end
+-- onzichtbare botsing langs alle hekken en relingen (12_omgeving / 18_route -> exports/omgeving_hekken.json)
+do
+  local f = Instance.new("Folder"); f.Name = "Hekken"; f.Parent = pag
+  for _, h in ipairs(HEKKEN) do
+    local a = Vector3.new(h[1] * 3, 2 + h[3] * 3, -h[2] * 3); local b = Vector3.new(h[4] * 3, 2 + h[6] * 3, -h[5] * 3)
+    local hoog = h[7] * 3 + 0.6
+    local m = (a + b) / 2 + Vector3.new(0, hoog / 2, 0)
+    local p = Instance.new("Part"); p.Name = "hekbotsing"; p.Anchored = true; p.Transparency = 1; p.CanCollide = true; p.CanQuery = false
+    p.CanTouch = false; p.Size = Vector3.new(0.4, hoog, (b - a).Magnitude + 0.2)
+    p.CFrame = CFrame.lookAt(m, m + Vector3.new(b.X - a.X, 0, b.Z - a.Z)) * CFrame.Angles(0, 0, 0); p.Parent = f
+  end
 end
 -- hefcilinders (bewegen mee met de arm, zie PagodeRit)
 local cils = Instance.new("Folder"); cils.Name = "Cilinders"; cils.Parent = pag
@@ -248,19 +300,33 @@ local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1)
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)
 local K0 = kern.CFrame
+local poorten = gondel:WaitForChild("Poorten")
 local gDelen, gRel = {}, {}
 for _, p in gondel:GetDescendants() do
-	if p:IsA("BasePart") then p.Anchored = true; table.insert(gDelen, p); table.insert(gRel, K0:ToObjectSpace(p.CFrame)) end
+	if p:IsA("BasePart") and not p:IsDescendantOf(poorten) then p.Anchored = true; table.insert(gDelen, p); table.insert(gRel, K0:ToObjectSpace(p.CFrame)) end
+end
+-- klaphekjes: per blad een scharnier (t.o.v. de kern) en de delen t.o.v. het scharnier; draaien naar binnen open bij het instappen
+type Blad = {sch: CFrame, teken: number, delen: {BasePart}, rel: {CFrame}}
+local bladen: {Blad} = {}
+for _, f in poorten:GetChildren() do
+	local b: Blad = {sch = f:GetAttribute("Scharnier") :: CFrame, teken = f:GetAttribute("Teken") :: number, delen = {}, rel = {}}
+	for _, p in f:GetChildren() do
+		if p:IsA("BasePart") then table.insert(b.delen, p); table.insert(b.rel, p:GetAttribute("Rel") :: CFrame) end
+	end
+	table.insert(bladen, b)
 end
 local A0 = PIV
 local aDelen, aRel = {}, {}
 for _, p in arm:GetDescendants() do
 	if p:IsA("BasePart") then p.Anchored = true; table.insert(aDelen, p); table.insert(aRel, A0:ToObjectSpace(p.CFrame)) end
 end
-local relingen: {BasePart} = {}
-for _, p in gDelen do if p.Name == "reling" then table.insert(relingen, p) end end
+-- botsing die met de poortjes meewisselt: reling in de poortopening (gondel), bakrand in de opening (station), dichte bladen
+local poortBots: {BasePart} = {}
+for _, p in gDelen do if p.Name == "poortreling" then table.insert(poortBots, p) end end
 local st = pag:FindFirstChild("Station")
-if st then for _, p in st:GetDescendants() do if p:IsA("BasePart") and p.Name == "bakreling" then table.insert(relingen, p) end end end
+if st then for _, p in st:GetDescendants() do if p:IsA("BasePart") and p.Name == "bakpoort" then table.insert(poortBots, p) end end end
+local bladBots: {BasePart} = {}
+for _, b in bladen do for _, p in b.delen do if p.Name == "poortblad" then table.insert(bladBots, p) end end end
 
 type Cil = {voet: Vector3, kop: Vector3, huis: BasePart, stang: BasePart, Lh: number, Ls: number}
 local cils: {Cil} = {}
@@ -303,7 +369,6 @@ end
 local plr = Players.LocalPlayer
 local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Include; ray.FilterDescendantsInstances = {gondel}
 local gK = K0
-local fase = ""
 local cfs = table.create(#gDelen)
 local acfs = table.create(#aDelen)
 
@@ -329,12 +394,19 @@ RunService.PreSimulation:Connect(function()
 		local k = A:PointToWorldSpace(c.kop); local u = (k - c.voet).Unit
 		staaf(c.huis, c.voet, u, c.Lh); staaf(c.stang, k, -u, c.Ls)
 	end
+	-- klaphekjes: 2 s open aan het begin van het instappen, 2 s dicht aan het eind (instappen = eerste fase, tc 0..25)
+	local open = 0
+	if naam == "instappen" then open = math.clamp(math.min(tc / 2, (25 - tc) / 2), 0, 1) end
+	local hoek = math.rad(85) * e(open)
+	for _, b in bladen do
+		local scharnier = nieuwK * b.sch * CFrame.Angles(0, b.teken * hoek, 0)
+		for i, p in b.delen do p.CFrame = scharnier * b.rel[i] end
+	end
+	local dicht = open < 0.5
+	for _, p in poortBots do p.CanCollide = dicht end
+	for _, p in bladBots do p.CanCollide = dicht end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)
-	if naam ~= fase then
-		fase = naam
-		for _, p in relingen do p.CanCollide = naam ~= "instappen" end
-	end
 end)
 ]==]; lc.Parent = sps
 local n = 0; for _, p in ipairs(gondel:GetDescendants()) do if p:IsA("BasePart") then n += 1 end end

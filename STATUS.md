@@ -128,6 +128,25 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     bewegend object zonder eigen schaduw: de 22 plafondlampjes (PointLight 1.2, bereik 14, geen schaduw) straalden door het dak
     naar buiten, binnenwerk gloeide oranje. Nu 8 zachte lichten (0.6, bereik 9) MET schaduw, lichtsnoeren getemperd
     (Transparency 0.35, warmer). In afwerking_pagode.luau en daarmee pagode_rit.luau vastgelegd; in Studio toegepast.
+- Ingang en uitgang op maat, plein weg (17 nov), Daan: "niet dat plein, haal dat allemaal weg; ingang en uitgang die gebruikt
+  kunnen worden, elke cm checken, op schaal" (keuze: echte route; echte maten, looppaden minstens 2 m).
+  - build/poorten.py: 4 poortjes tussen de rode palen van de gondel: in0/in1 (park 131.7 en 148.1 graden, bordeskant),
+    uit0/uit1 (-15.6 en -31.9, naast de uitgangstrap op -20); 1.7 m vrij. Gondel draait per rit precies 1x: poortjes komen terug.
+  - build/03b_poorten.py knipt de balustrade open + poortpalen; 10_station: openingen in het stationshek; 18_route.py haalt plein,
+    Toko, terras, Gondoletta, tuin, banken, pot en pleinlantaarn weg en zet gangetjes van zwarte hekjes naar in0/in1.
+  - Route: wachtrij bovenaan via de trapstrook door de tourniquets (bordeshek dicht tot de trapstrook, hekjes naast de
+    tourniquets); tourniquets 1.60 m vrij.
+  - build/19_maatcontrole.py -> review/19_maten.md: 41 metingen, 0 fout (treden tribune 15 cm/1.0 m, uitgangstrap 18.3/33 cm,
+    poortjes 1.70/1.58 m, gangetjes 1.76 m, relingen 1.07-1.18 m, vlonder = bordes = dek = NAP 11.3, kieren 0.30/0.02 m).
+    Bewuste afwijking: wachtrijbanen 1.945 m vrij (2.0 hart op hart; tribune ligt vast op 11 rijen van 1 m uit de AHN).
+  - Onzichtbare botsing langs alle hekken/relingen (exports/omgeving_hekken.json, 67 stukken) en klaphekjes in de gondel die bij
+    het instappen 85 graden naar binnen draaien (PagodeRitClient); reling/bakrand in 1.25-graden-stukken met poortopeningen.
+  - Getest in Play: de hele ingangsroute (spawn, aanlooppad, onder het bord, laantje, onderpad, trapstrook, tourniquets, bordes,
+    gangetje) loopt. NOG NIET GELUKT: door het poortje de gondel in; de avatar blijft op r 8.45 staan (ook met open hekjes en
+    fijnere reling). Oorzaak nog niet gevonden: Studio viel weg tijdens het onderzoek. Daarna: dek -> uitstappoortje -> vlonder ->
+    uitgangstrap testen.
+  - LET OP: Studio-wijzigingen van deze ronde zijn mogelijk niet opgeslagen; opnieuw neerzetten met roblox/pagode_rit.luau
+    (+ station/omgeving herladen, terrein waar het plein lag gras, scripts PagodeRit + PagodeRitClient).
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,

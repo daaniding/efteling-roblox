@@ -166,9 +166,8 @@ for j = 0, NY - 1 do
       local bebouwd = r < 11.2
         or (r < 27.2 and a > aL - 1.0 and a < 157.5)                                         -- bordes, tribune, laantje, onderpad
         or (r < 14.4 and a > 52 and a < 157.5)                                               -- bloemenperk + pleinmuur
-        or (r < 24.6 and (a < 89 or a > 306))                                                -- plein en oostpad
+        or (r < 14.6 and (a > 306 or a < 1.5))                                               -- uitgangspad oost (pad_oost0/1)
         or (r < 17.9 and a >= 87.5 and a < aL)                                               -- aanlooppad naar het laantje
-        or (r < 41.2 and a > 41 and a < 89)                                                  -- terras en Toko Pagode (15_toko)
       if bebouwd then nap = math.min(nap, 8.0)
       elseif r < 29 and a > 85 and a < 160 then nap = math.min(nap, 8.95) end              -- tuin: zichtbaar net onder de klinkers (terrein tekent ~0.6 m hoger dan nap; raycast meet lager dan je ziet)
       local top = G + (nap - 10) * S - 2     -- terrein rendert ~2 stud boven de FillBlock-bovenkant (voxelraster)

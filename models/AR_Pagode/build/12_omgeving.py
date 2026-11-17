@@ -42,6 +42,7 @@ def aS(r): return aW(r) + math.degrees(B_TRAP / r)        # einde trapstrook (be
 
 
 PLAATS = []
+HEKKEN = []                           # (a, b, hoogte) van elk hek-/relingstuk: onzichtbare botsing in Roblox
 
 
 def vrij(naam, p, rad, bewust=False):
@@ -151,6 +152,7 @@ def spijlenhek(naam, pts, h=1.1, rol="hek"):
     for k in range(len(pts) - 1):
         a, b = pts[k], pts[k + 1]; d = b - a; L = d.length
         if L < 0.05: continue
+        HEKKEN.append([list(a), list(b), h + 0.08])
         rot = math.atan2(d.y, d.x)
         for nm, z in (("o", 0.1), ("b", h), ("b2", h - 0.11)):
             buis(f"{naam}_{k:02d}_regel{nm}", a + Vector((0, 0, z)), b + Vector((0, 0, z)), 0.018, rol, 4)
@@ -169,6 +171,7 @@ def reling(naam, pts, rol="reling", spijlen=False):
     for k in range(len(pts) - 1):
         a, b = pts[k], pts[k + 1]; d = b - a; L = d.length
         if L < 0.05: continue
+        HEKKEN.append([list(a), list(b), 1.07])
         rot = math.atan2(d.y, d.x)
         for nm, z in (("o", 0.45 if not spijlen else 0.1), ("b", 0.95)):
             buis(f"{naam}_{k:02d}_{nm}", a + Vector((0, 0, z)), b + Vector((0, 0, z)), 0.024, rol, 6)
@@ -410,10 +413,10 @@ def build():
         if (t // 2) % 2: a1 -= gat
         else: a0 += gat
         reling(f"AR_Pagode_O_rij_reling_{t:02d}", boog(r, a0, a1, z))
-    rl = [pt(R_BO + 0.2, aS(14.2), Z_I)] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(N_RIJ)]
+    rl = [pt(15.2, aS(15.2), ztop(1))] + [pt(14.5 + t, aS(14.5 + t), ztop(t)) for t in range(1, N_RIJ)]   # bovenste meter open: wachtrij -> trapstrook
     reling("AR_Pagode_O_trap_reling", rl, spijlen=True)          # paneel met spijlen langs de trapstrook (video 0:39-0:41)
     # hek tussen bordes en tribune (Pagode-landing.jpg), open bij de trapstrook en bij het zuidpad
-    spijlenhek("AR_Pagode_O_hek_bordes", boog(R_BO + 0.05, aS(14.2) + 2.0, A_RAIL - 2.0, Z_I))
+    spijlenhek("AR_Pagode_O_hek_bordes", boog(R_BO + 0.05, aS(14.2) + 0.2, A_RAIL - 2.0, Z_I))     # dicht tot de trapstrook: alles via de tourniquets
 
     # A5 lantaarns, elk op een plek uit de video, NOOIT op een looppad (zie controle onderaan)
     for k, r in enumerate((19.0, 23.0)):             # klassiek, op de trapstrook tegen het hek op de laanmuur (0:18-0:24)
@@ -428,8 +431,11 @@ def build():
     # tourniquets af, het huisje staat erachter, daarna splitst de rij naar links en rechts)
     a_t = (aW(14.2) + aS(14.2)) / 2
     for k, s_ in enumerate((-1, 1)):
-        aa = a_t + s_ * math.degrees(0.8 / 13.5); p = pt(13.5, aa, Z_I)          # 1.6 m uit elkaar: doorgang ertussen
+        aa = a_t + s_ * math.degrees(0.93 / 13.5); p = pt(13.5, aa, Z_I)         # 1.86 m hart op hart: 1.60 m vrije doorgang (19_maatcontrole)
         tourniquet(f"AR_Pagode_O_tourniquet{k}", p, math.radians(aa)); vrij(f"tourniquet{k}", p, 0.13, bewust=True)
+        # kort hekje van de tourniquet naar de rand van de trapstrook (niet om de tourniquets heen lopen)
+        rand = aW(14.2) if s_ < 0 else aS(14.2)
+        spijlenhek(f"AR_Pagode_O_tourniquethek{k}", [p, pt(14.25, rand, Z_I)], h=1.0)
     a_h = a_t; hc = pt(11.55, a_h, Z_I)                                       # 1.2 m achter de tourniquets: ruimte om erlangs
     controlehuisje("AR_Pagode_O_huis", hc, math.radians(a_h)); vrij("huis", hc, 0.8, bewust=True)
 
@@ -520,6 +526,7 @@ def build():
         steen(f"AR_Pagode_O_muursteen_{k:02d}", pt(11.25, aa, Z_P + 0.1), (0.4, 0.3, 0.3))
 
     json.dump(LAMPEN, open(os.path.join(D, "exports", "omgeving_lampen.json"), "w"))
+    json.dump(HEKKEN, open(os.path.join(D, "exports", "omgeving_hekken.json"), "w"))
     json.dump([[n, round(p.x, 3), round(p.y, 3), rad] for n, p, rad, _ in PLAATS], open(os.path.join(D, "exports", "omgeving_meubilair.json"), "w"))
     fout = controle()
     for regel in fout: print("[12_omgeving] OP LOOPPAD:", regel)

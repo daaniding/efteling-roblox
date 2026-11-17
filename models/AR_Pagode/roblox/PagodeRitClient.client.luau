@@ -31,19 +31,33 @@ local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1)
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)
 local K0 = kern.CFrame
+local poorten = gondel:WaitForChild("Poorten")
 local gDelen, gRel = {}, {}
 for _, p in gondel:GetDescendants() do
-	if p:IsA("BasePart") then p.Anchored = true; table.insert(gDelen, p); table.insert(gRel, K0:ToObjectSpace(p.CFrame)) end
+	if p:IsA("BasePart") and not p:IsDescendantOf(poorten) then p.Anchored = true; table.insert(gDelen, p); table.insert(gRel, K0:ToObjectSpace(p.CFrame)) end
+end
+-- klaphekjes: per blad een scharnier (t.o.v. de kern) en de delen t.o.v. het scharnier; draaien naar binnen open bij het instappen
+type Blad = {sch: CFrame, teken: number, delen: {BasePart}, rel: {CFrame}}
+local bladen: {Blad} = {}
+for _, f in poorten:GetChildren() do
+	local b: Blad = {sch = f:GetAttribute("Scharnier") :: CFrame, teken = f:GetAttribute("Teken") :: number, delen = {}, rel = {}}
+	for _, p in f:GetChildren() do
+		if p:IsA("BasePart") then table.insert(b.delen, p); table.insert(b.rel, p:GetAttribute("Rel") :: CFrame) end
+	end
+	table.insert(bladen, b)
 end
 local A0 = PIV
 local aDelen, aRel = {}, {}
 for _, p in arm:GetDescendants() do
 	if p:IsA("BasePart") then p.Anchored = true; table.insert(aDelen, p); table.insert(aRel, A0:ToObjectSpace(p.CFrame)) end
 end
-local relingen: {BasePart} = {}
-for _, p in gDelen do if p.Name == "reling" then table.insert(relingen, p) end end
+-- botsing die met de poortjes meewisselt: reling in de poortopening (gondel), bakrand in de opening (station), dichte bladen
+local poortBots: {BasePart} = {}
+for _, p in gDelen do if p.Name == "poortreling" then table.insert(poortBots, p) end end
 local st = pag:FindFirstChild("Station")
-if st then for _, p in st:GetDescendants() do if p:IsA("BasePart") and p.Name == "bakreling" then table.insert(relingen, p) end end end
+if st then for _, p in st:GetDescendants() do if p:IsA("BasePart") and p.Name == "bakpoort" then table.insert(poortBots, p) end end end
+local bladBots: {BasePart} = {}
+for _, b in bladen do for _, p in b.delen do if p.Name == "poortblad" then table.insert(bladBots, p) end end end
 
 type Cil = {voet: Vector3, kop: Vector3, huis: BasePart, stang: BasePart, Lh: number, Ls: number}
 local cils: {Cil} = {}
@@ -86,7 +100,6 @@ end
 local plr = Players.LocalPlayer
 local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Include; ray.FilterDescendantsInstances = {gondel}
 local gK = K0
-local fase = ""
 local cfs = table.create(#gDelen)
 local acfs = table.create(#aDelen)
 
@@ -112,10 +125,17 @@ RunService.PreSimulation:Connect(function()
 		local k = A:PointToWorldSpace(c.kop); local u = (k - c.voet).Unit
 		staaf(c.huis, c.voet, u, c.Lh); staaf(c.stang, k, -u, c.Ls)
 	end
+	-- klaphekjes: 2 s open aan het begin van het instappen, 2 s dicht aan het eind (instappen = eerste fase, tc 0..25)
+	local open = 0
+	if naam == "instappen" then open = math.clamp(math.min(tc / 2, (25 - tc) / 2), 0, 1) end
+	local hoek = math.rad(85) * e(open)
+	for _, b in bladen do
+		local scharnier = nieuwK * b.sch * CFrame.Angles(0, b.teken * hoek, 0)
+		for i, p in b.delen do p.CFrame = scharnier * b.rel[i] end
+	end
+	local dicht = open < 0.5
+	for _, p in poortBots do p.CanCollide = dicht end
+	for _, p in bladBots do p.CanCollide = dicht end
 	gK = nieuwK
 	pag:SetAttribute("FaseLokaal", naam)
-	if naam ~= fase then
-		fase = naam
-		for _, p in relingen do p.CanCollide = naam ~= "instappen" end
-	end
 end)
