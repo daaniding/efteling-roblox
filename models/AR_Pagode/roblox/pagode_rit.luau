@@ -92,6 +92,22 @@ local function zet(id, naam) local m = laad(id, naam); aankleden(m, true); m:Piv
 local voet = zet(ID.AR_Pagode_voet, "Voet")
 local arm = zet(ID.AR_Pagode_arm, "Arm")
 local gondel = zet(ID.AR_Pagode_gondel, "Gondel")
+-- arm 2.71 m langer (f 1.0703, langs de as vanaf de draaias): de armmaat uit het schema kwam 2.7 m tekort voor het station;
+-- vroeger schoof de client de gondel onderin opzij (CORR), dan sloot de arm niet op het gondelmidden aan (Daan 17 nov:
+-- "de arm en de gondel raken elkaar net niet"). Nu valt het armgewricht onderin precies op het stationsmidden (rest 0.005 stud).
+do
+  local ARM_F = 1.0703
+  for _, p in ipairs(arm:GetDescendants()) do
+    if p:IsA("BasePart") and p.Size.Y > 100 then
+      p.Size = Vector3.new(p.Size.X, p.Size.Y * ARM_F, p.Size.Z)
+      p.Position = Vector3.new(p.Position.X, PIV.Y + (p.Position.Y - PIV.Y) * ARM_F, p.Position.Z)
+    end
+  end
+  local jl = pag:GetAttribute("GondelLokaal")
+  pag:SetAttribute("GondelLokaal", Vector3.new(jl.X, jl.Y * ARM_F, jl.Z))
+  gondel:PivotTo(gondel:GetPivot() + Vector3.new(0, jl.Y * (ARM_F - 1), 0))
+  pag:SetAttribute("ArmFactor", ARM_F)
+end
 for _, p in ipairs(arm:GetChildren()) do if p:IsA("BasePart") then p.CanCollide = false end end
 -- afwerking (lampjes, lichtsnoeren, reling) in de gondel
 do
@@ -175,7 +191,7 @@ for i = 0, 47 do
     {Material = Enum.Material.Neon, Color = Color3.fromRGB(255, 40, 40), CanCollide = false, CanQuery = false})
 end
 -- 4 lantaarns van de omgeving (12_omgeving.py -> exports/omgeving_lampen.json, park x, y, z = NAP - 10): warm licht
-local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {349.43, 56.37, 4.22}, {370.20, 42.08, 2.57}}   -- = exports/omgeving_lampen.json
+local LAMPEN = {{351.98, 64.73, 3.32}, {349.33, 67.88, 2.72}, {351.79, 61.46, 4.13}, {350.46, 63.47, 3.83}, {349.43, 56.37, 4.22}, {370.20, 42.08, 2.57}, {335.64, 58.42, 2.56}}   -- = exports/omgeving_lampen.json
 for i, l in ipairs(LAMPEN) do
   local p = Instance.new("Part"); p.Name = "lantaarnlicht"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
   p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3); p.Position = Vector3.new(l[1] * S, 2 + l[3] * S, -l[2] * S); p.Parent = map
@@ -581,7 +597,7 @@ for _ = 1, 50 do
 end
 local TH_D = (lo + hi) / 2
 local jd = Jw(TH_D)
-local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- armmaat uit de foto komt 2.7 m tekort: schuif die pas onderin telt
+local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- restafwijking; ~0 sinds de arm 2.71 m langer is (maak_ritscript ArmFactor)
 local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1); return CORR * t ^ 4 end
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)

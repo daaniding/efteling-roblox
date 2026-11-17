@@ -238,6 +238,22 @@ local function zet(id, naam) local m = laad(id, naam); aankleden(m, true); m:Piv
 local voet = zet(ID.AR_Pagode_voet, "Voet")
 local arm = zet(ID.AR_Pagode_arm, "Arm")
 local gondel = zet(ID.AR_Pagode_gondel, "Gondel")
+-- arm 2.71 m langer (f 1.0703, langs de as vanaf de draaias): de armmaat uit het schema kwam 2.7 m tekort voor het station;
+-- vroeger schoof de client de gondel onderin opzij (CORR), dan sloot de arm niet op het gondelmidden aan (Daan 17 nov:
+-- "de arm en de gondel raken elkaar net niet"). Nu valt het armgewricht onderin precies op het stationsmidden (rest 0.005 stud).
+do
+  local ARM_F = 1.0703
+  for _, p in ipairs(arm:GetDescendants()) do
+    if p:IsA("BasePart") and p.Size.Y > 100 then
+      p.Size = Vector3.new(p.Size.X, p.Size.Y * ARM_F, p.Size.Z)
+      p.Position = Vector3.new(p.Position.X, PIV.Y + (p.Position.Y - PIV.Y) * ARM_F, p.Position.Z)
+    end
+  end
+  local jl = pag:GetAttribute("GondelLokaal")
+  pag:SetAttribute("GondelLokaal", Vector3.new(jl.X, jl.Y * ARM_F, jl.Z))
+  gondel:PivotTo(gondel:GetPivot() + Vector3.new(0, jl.Y * (ARM_F - 1), 0))
+  pag:SetAttribute("ArmFactor", ARM_F)
+end
 for _, p in ipairs(arm:GetChildren()) do if p:IsA("BasePart") then p.CanCollide = false end end
 -- afwerking (lampjes, lichtsnoeren, reling) in de gondel
 do

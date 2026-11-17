@@ -302,6 +302,15 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     "de stok zit niet aan de attractie vast"; de client las de gondel half-verplaatst in). Bezoekers staan in het station op een
     eigen onzichtbare schijf PagodeBezoekersDek (r 8.3 m, top NAP 11.3, groep Bezoekersvloer, botst alleen met Bezoekers).
     Play: arm vast onder de gondel tijdens de rit, bezoeker op het dek op z 1.32.
+  - Arm 2.71 m langer (17 nov, Daan: "de arm en de gondel raken elkaar net niet"): de armmaat uit het schema kwam 2.7 m
+    tekort, daarom schoof de client de gondel onderin tot 8 studs opzij (CORR) en sloot de arm niet op het gondelmidden aan.
+    Nu: arm-meshes (Size.Y > 100) x 1.0703 langs de as vanaf de draaias, GondelLokaal.Y x 1.0703, gondel 8.14 studs omhoog in
+    de bouwstand, attribuut ArmFactor (maak_ritscript, direct na het plaatsen). Play: onderin gewricht-kern 0.04 studs, kern
+    precies op het stationsmidden; arm loopt tijdens de hele rit onder het gondelmidden in.
+  - Lantaarn in de buitenhoek zuid van de wachtrij (17 nov, Daan: "rechtsonder in de hoek, te onderbelicht"; daar hing geen
+    licht, alle lantaarns staan aan de noordkant): klassieke lantaarn lamp_hoek op r 26.7, 155.9 gr (randstrook naast het
+    onderpad, tegen buiten- en zuidhek) in 12_omgeving, keten 12-14-17-18-05-19 + 11_export; omgeving 107059610813282;
+    lantaarnlicht erbij (afwerking LAMPEN).
   - NPC-bezoekers (17 nov, Daan: "mensen in de rij", "ze blijven gewoon bezoekers, gaan daarna naar een andere attractie",
     "een wachtrij vullen dan de ander, recht erin staan", "het stoppen om te draaien is irritant"):
     ServerScriptService.PagodeBezoekers (bron roblox/PagodeBezoekers.server.luau + route build/22_bezoekersroute.py ->

@@ -472,6 +472,9 @@ def build():
     # A5 lantaarns, elk op een plek uit de video, NOOIT op een looppad (zie controle onderaan)
     for k, r in enumerate((19.0, 23.0)):             # klassiek, op de trapstrook tegen het hek op de laanmuur (0:18-0:24)
         p = pt(r, aW(r) + math.degrees(0.2 / r), ztop(int(r - 14.0))); lantaarn(f"AR_Pagode_O_lamp_trap{k}", p); vrij(f"lamp_trap{k}", p, 0.13)
+    # buitenhoek zuid van de wachtrij (Daan 17 nov: "rechtsonder in de hoek van de wachtrij een lantaarnpaal, te onderbelicht"):
+    # tegen het buitenhek (r 26.95) en het zuidhek, in de randstrook naast het onderpad (looppad tot r 26.45)
+    p = pt(26.7, A_ZUID - math.degrees(0.3 / 26.7), Z_P + 0.02); lantaarn("AR_Pagode_O_lamp_hoek", p); vrij("lamp_hoek", p, 0.13)
     for k, r in enumerate((R_OPEN + 0.08, 18.6)):     # sierlijk brons, op de trapreling (0:39-0:46); niet meer in de doorgang
         p = pt(r, aS(r), ztop(int(r - 14.0))); lantaarn_sier(f"AR_Pagode_O_lamp_sier{k}", p); vrij(f"lamp_sier{k}", p, 0.2)
     # lamp_zuid (r 20.12 op de rail) weg: staat sinds de verlengde relingen midden tussen de rijen (Daan 17 nov: "haal deze weg")

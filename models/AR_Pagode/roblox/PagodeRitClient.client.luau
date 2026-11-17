@@ -26,7 +26,7 @@ for _ = 1, 50 do
 end
 local TH_D = (lo + hi) / 2
 local jd = Jw(TH_D)
-local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- armmaat uit de foto komt 2.7 m tekort: schuif die pas onderin telt
+local CORR = Vector3.new(BAK.X - jd.X, 0, BAK.Z - jd.Z)        -- restafwijking; ~0 sinds de arm 2.71 m langer is (maak_ritscript ArmFactor)
 local function schuif(th: number): Vector3 local t = math.clamp(th / TH_D, 0, 1); return CORR * t ^ 4 end
 
 -- delen en hun vaste ligging t.o.v. arm-frame en gondelkern (eenmalig)
