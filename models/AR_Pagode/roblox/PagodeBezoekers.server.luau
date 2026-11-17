@@ -356,18 +356,19 @@ end
 
 -- medewerker in het controlehuisje (video 0:44: man achter de lessenaar; Daan 17 nov "doe maar medewerker"): staat achter de
 -- lessenaar (12_omgeving controlehuisje: pt(11.42, 106), lessenaar aan de voorkant), kijkt naar de tourniquets en de rij.
--- Uniform: bordeauxrood shirt, donkere broek. Staat stil (rust-animatie); knop-gebaar pas als Daan om animaties vraagt.
+-- Medewerkerspak (Daan: "geef hem echt een medewerkerspak"): klassieke Shirt/Pants uit build/23_uniform.py (groene jas,
+-- gouden knopen en biezen, bordeaux kraag, wit overhemd met das, naambadge PAGODE; antraciet broek met gouden bies). Staat stil (rust-animatie); knop-gebaar pas als Daan om animaties vraagt.
 do
 	local oud = pag:FindFirstChild("Medewerker"); if oud then oud:Destroy() end
 	local bron = ServerStorage:FindFirstChild("PagodeBezoekers")
-	local sjabloon = bron and (bron:FindFirstChild("man_muts") or bron:FindFirstChildOfClass("Model"))
+	local sjabloon = bron and (bron:FindFirstChild("vader") or bron:FindFirstChildOfClass("Model"))
 	if sjabloon then
 		local m = sjabloon:Clone(); m.Name = "Medewerker"
 		for _, d in m:GetDescendants() do
 			if d:IsA("Shirt") or d:IsA("Pants") or d:IsA("ShirtGraphic") or d:IsA("BodyColors") or d:IsA("Script") or d:IsA("LocalScript")
 				or (d:IsA("Accessory") and not string.find(string.lower(d.Name), "hair")) then d:Destroy() end
 		end
-		local SHIRT, BROEK = Color3.fromRGB(122, 28, 40), Color3.fromRGB(38, 38, 44)
+		local SHIRT, BROEK = Color3.fromRGB(22, 84, 64), Color3.fromRGB(40, 42, 48)
 		for _, d in m:GetDescendants() do
 			if d:IsA("BasePart") then
 				d.Anchored = false; d.CanCollide = false; d.CanTouch = false; d.CanQuery = false
@@ -376,6 +377,8 @@ do
 				elseif string.find(n, "Leg") or string.find(n, "Foot") then d.Color = BROEK end
 			end
 		end
+		local sh = Instance.new("Shirt"); sh.ShirtTemplate = "rbxassetid://72318330752161"; sh.Parent = m      -- MW_shirt
+		local pa = Instance.new("Pants"); pa.PantsTemplate = "rbxassetid://102868677288881"; pa.Parent = m     -- MW_broek
 		local hum = m:FindFirstChildOfClass("Humanoid") :: Humanoid
 		local hrp = m:FindFirstChild("HumanoidRootPart") :: BasePart
 		hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None

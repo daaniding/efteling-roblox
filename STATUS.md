@@ -315,8 +315,11 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     lantaarnlicht erbij (afwerking LAMPEN).
   - Eerst uitstappen, dan instappen (17 nov, Daan): bezoekers in een gangetje stappen pas in als niemand meer meerijdt en de
     uitstappers voorbij het uitstappoortje zijn (dekVrij). Play: laatste uitstapper van het dek op 14.3 s, eerste instapper 14.6 s.
-  - Medewerker in het controlehuisje (17 nov, Daan): R15 uit ServerStorage.PagodeBezoekers (man_muts), bordeauxrood
-    shirt (122,28,40) en donkere broek, achter de lessenaar, kijkt naar de tourniquets, rust-animatie (PagodeBezoekers).
+  - Medewerker in het controlehuisje (17 nov, Daan: "geef hem echt een medewerkerspak"): R15 uit ServerStorage.
+    PagodeBezoekers (vader, alleen haar), achter de lessenaar, kijkt naar de tourniquets, rust-animatie (PagodeBezoekers).
+    Pak = klassieke Shirt/Pants getekend met build/23_uniform.py: donkergroene jas met gouden knopen en biezen, bordeaux
+    revers en manchetten, wit overhemd met bordeaux das, gouden naambadge PAGODE; antraciet broek met riem en gouden bies.
+    Ids MW_shirt 72318330752161, MW_broek 102868677288881 (exports/asset_ids.json).
   - Wachttijdbord (17 nov, Daan): zwart frame op de linkerpaal van het ingangsbord (12_omgeving AR_Pagode_O_wachttijdbord,
     exports/wachttijdbord.json; omgeving 87648168829062), SurfaceGui "PAGODE / Waiting time / X min" (vertaling Wachttijd in
     PagodeTeksten). Rekent elke 5 s: bezoekers + spelers in de rij, 36 plekken per rit, cyclus 205 s, op 5 min, minimaal 5.
