@@ -2,6 +2,7 @@
 -- PagodeBeleving (StarterPlayerScripts): tekst in beeld voor wie op de gondel staat (Daan 17 nov: "gewoon in het beeld,
 -- iets vets en natuurlijk, in het Engels en dan vertalen"). Bij het instappen een titel: groot PAGODE in goudkleurige
 -- schreefletters met daaronder "Welcome aboard"; vlak voor vertrek "Gates closing"; na de rit "Exit: follow the signs".
+-- Plus muziek aan boord die met de gondel meereist.
 -- Teksten zijn Engels; de vertaling (nl) staat in LocalizationService.PagodeTeksten (maak_ritscript), Roblox vertaalt
 -- automatisch naar de taal van de speler (AutoLocalize). Leest Pagode.FaseLokaal en Gondel.Kern; verandert niets aan de rit.
 local Players = game:GetService("Players")
@@ -53,6 +54,22 @@ local function opDek(): boolean
 	local rel = kern.CFrame:PointToObjectSpace(hrp.Position)
 	return math.sqrt(rel.X * rel.X + rel.Z * rel.Z) < 8.3 * S and rel.Y > 6 and rel.Y < 16
 end
+
+-- muziek aan boord: speelt vanuit de gondel (hangt aan de kern, reist mee), zwelt aan bij vertrek en sterft weg bij aankomst
+-- (Daan 17 nov: "waar is de muziek in de pagode zelf"). Ruimtelijk: aan boord duidelijk, vanaf de grond niet als hij hoog is.
+local RIT_MUZIEK = 1845854732          -- APM "Plum Blossoms" (rustig, Oosters); wachtrij heeft "Fortune's Smiling"
+local aanBoordMuziek = Instance.new("Sound"); aanBoordMuziek.Name = "RitMuziek"
+aanBoordMuziek.SoundId = "rbxassetid://" .. RIT_MUZIEK; aanBoordMuziek.Looped = true; aanBoordMuziek.Volume = 0
+aanBoordMuziek.RollOffMode = Enum.RollOffMode.InverseTapered; aanBoordMuziek.RollOffMinDistance = 30; aanBoordMuziek.RollOffMaxDistance = 90
+aanBoordMuziek.Parent = kern
+local RIJDEN = {sluiten = 0.25, omhoog = 0.45, boven = 0.45, omlaag = 0.4}
+RunService.Heartbeat:Connect(function(dt)
+	local fase = pag:GetAttribute("FaseLokaal") :: string?
+	local doel = fase and RIJDEN[fase] or 0
+	if doel > 0 and not aanBoordMuziek.IsPlaying then aanBoordMuziek:Play() end
+	aanBoordMuziek.Volume += (doel - aanBoordMuziek.Volume) * math.clamp(dt * 0.6, 0, 1)
+	if doel == 0 and aanBoordMuziek.Volume < 0.005 and aanBoordMuziek.IsPlaying then aanBoordMuziek:Pause() end
+end)
 
 local vorige, welkomGezegd, gereden = "", false, false
 RunService.Heartbeat:Connect(function()

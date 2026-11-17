@@ -292,6 +292,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     1987". Kernwand-textuur (04_texturen kernwand, Daan: "ja, doe dat"): naar video loop_in s_055-s_058 geribbelde
     rode planken met donkere naden, op elke tweede plank een kolom oranje klokornamenten (knop + spits, klokvormig lijf,
     uitwaaierende vleugels, druppel) over de hele hoogte; kleur 136078988623224, normaal 86029428553252.
+  - Muziek aan boord (17 nov, Daan: "waar is de muziek in de Pagode zelf"): PagodeBeleving maakt per client een Sound
+    "RitMuziek" aan de Gondel.Kern (reist mee), APM "Plum Blossoms" 1845854732 (wachtrij blijft "Fortune's Smiling"),
+    InverseTapered 30-90 studs; volume zwelt aan bij sluiten (0.25), rijden 0.4-0.45, sterft weg bij aankomst.
+    Play: geladen, 0.24 bij sluiten, 0.45 tijdens omhoog.
 
 ### Scène rond de Pagode (16 nov 2026), Daan: "hoe het zit met erin gaan en hoe het eruit ziet", "zou vooral video's kijken"
 - Bron: video fmEZsIkqsl8 (iemand loopt de hele route; frames elke seconde: 0:03-1:02 in, 5:55-6:57 uit), Pagode-landing.jpg,
