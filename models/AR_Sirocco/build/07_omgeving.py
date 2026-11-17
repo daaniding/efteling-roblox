@@ -250,11 +250,125 @@ def haven(bms):
                 stam(bms["touw"], pts[i], pts[i + 1], 0.015, 0.015, 4, 0.0)
 
 
-def ingangsbord(bms):
-    """houten paal met bord SIROCCO bij het begin van de wachtrij (video f_007); tekst komt in Roblox (SurfaceGui)"""
-    x, y = WACHTRIJ[0][0] - 1.6, WACHTRIJ[0][1] + 0.3
-    stam(bms["stam"], Vector((x, y, -0.3)), Vector((x, y, 3.4)), 0.11, 0.09, 8, 0.1)
-    doos(bms["bord"], (x + 0.55, y, 2.9), (1.1, 0.08, 0.45), math.radians(35))
+BORD_OMTREK = [(0.12, -0.04), (0.28, -0.12), (0.42, -0.2), (0.6, -0.26), (2.15, -0.28), (2.4, -0.2), (2.52, -0.25), (2.72, -0.12),
+               (3.05, 0.0), (2.74, 0.08), (2.58, 0.2), (2.44, 0.15), (2.22, 0.3), (0.62, 0.3), (0.45, 0.24), (0.3, 0.16), (0.12, 0.06)]
+BORD_PAAL = (7.4, -16.9)                           # paal oost van de ingang; bord hangt naar links (west) boven de ingang
+Z_GROND = 0.27                                     # pleinhoogte (Roblox Y ~1,0)
+
+
+def uv_vlak(naam, rol, vlakken):
+    """los object met eigen UV's: vlakken = [(punten, uvs, richting)], uvs in 0..1 (atlas SI_bord_kleur); de normaal wordt naar
+    'richting' gedraaid (Roblox tekent achterkanten niet), daarna oor-triangulatie (hol bordprofiel); 05 laat de UV's staan"""
+    bm = bmesh.new(); uvl = bm.loops.layers.uv.new("UVMap")
+    for pts, uvs, richting in vlakken:
+        f = bm.faces.new([bm.verts.new(v) for v in pts])
+        for lp, uv in zip(f.loops, uvs): lp[uvl].uv = uv
+        f.normal_update()
+        if f.normal.dot(Vector(richting)) < 0: f.normal_flip()
+    bmesh.ops.triangulate(bm, faces=bm.faces, ngon_method="EAR_CLIP")
+    o = obj(naam, bm, rol); o["uv_klaar"] = 1
+    return o
+
+
+def lantaarn(bms, top, kap, lampen):
+    """hangende Arabische lantaarn (videoframes): ophangring, koepel met spits, zeskantig glas, gouden banden, punt onder"""
+    x, y, z = top
+    cil(bms["goud"], (x, y, z - 0.06), 0.03, 0.06, 8)
+    v = bol(bms[kap], (x, y, z - 0.17), 0.13, 10)
+    for q in v:
+        if q.co.z < z - 0.17: q.co.z = z - 0.17
+    cil(bms[kap], (x, y, z - 0.08), 0.02, 0.1, 6, 0.0)
+    cil(bms["goud"], (x, y, z - 0.21), 0.15, 0.04, 6)
+    cil(bms["lantaarnglas"], (x, y, z - 0.52), 0.12, 0.31, 6, 0.135)
+    for k in range(6):                             # stijlen
+        h = 2 * math.pi * (k + 0.5) / 6
+        stam(bms[kap], Vector((x + 0.125 * math.cos(h), y + 0.125 * math.sin(h), z - 0.52)),
+             Vector((x + 0.14 * math.cos(h), y + 0.14 * math.sin(h), z - 0.21)), 0.012, 0.012, 4, 0.0)
+    cil(bms["goud"], (x, y, z - 0.56), 0.14, 0.04, 6)
+    cil(bms[kap], (x, y, z - 0.74), 0.0, 0.18, 6, 0.12)
+    bol(bms["goud"], (x, y, z - 0.77), 0.03, 6)
+    lampen.append([x, y, z - 0.37])
+
+
+def ingangsbord(bms, lampen):
+    """ingangsbord naar de video (xloCDJYf-Tw 12-16 s): donkerbruine metalen paal met sokkel, ringen en spits; pluimvormig bord
+    met "Sirocco" en medaillon naar links boven de ingang; arm naar rechts met drie hangende lantaarns (groen, rood, groen);
+    infobord met spitsboog op de paal. Tekst en tekening zitten in textures/SI_bord_kleur.png (07t_bord.py)."""
+    px, py = BORD_PAAL; g = Z_GROND
+    m = "paalmetaal"
+    cil(bms[m], (px, py, g), 0.24, 0.12, 12); cil(bms[m], (px, py, g + 0.12), 0.19, 0.7, 12)      # sokkel
+    for zz in (g + 0.82, g + 1.1, g + 2.95, g + 4.85):                                               # ringen
+        cil(bms[m], (px, py, zz), 0.11, 0.07, 12)
+    cil(bms[m], (px, py, g + 0.8), 0.085, 4.9, 12, 0.07)                                             # paal
+    bol(bms[m], (px, py, g + 5.75), 0.1, 10)                                                         # knop + spits
+    cil(bms[m], (px, py, g + 5.8), 0.07, 0.3, 8, 0.0)
+    cil(bms[m], (px, py, g + 5.0), 0.06, 0.06, 8)
+    # arm met lantaarns (naar rechts/oost, iets naar achteren, licht omhoog)
+    a0 = Vector((px, py, g + 5.15)); a1 = Vector((px + 1.55, py + 0.35, g + 5.45))
+    stam(bms[m], a0, a1, 0.045, 0.04, 8, 0.0); bol(bms[m], a1, 0.07, 8)
+    stam(bms[m], Vector((px, py, g + 4.7)), a0.lerp(a1, 0.35), 0.025, 0.025, 6, 0.0)               # schoor
+    for t, val, kap in ((0.3, 0.55, "lamp_groen"), (0.6, 0.95, "lamp_rood"), (0.92, 0.35, "lamp_groen")):
+        q = a0.lerp(a1, t)
+        stam(bms["touw"], q, q - Vector((0, 0, val)), 0.012, 0.012, 4, 0.0)
+        lantaarn(bms, q - Vector((0, 0, val)), kap, lampen)
+    # pluimbord: voor- en achterkant met atlas (gebied A), rand rondom
+    zc = g + 4.35; dik = 0.07
+    def p3(u, z, y): return Vector((px - u, py + y, zc + z))
+    def uvA(u, z, spiegel=False):
+        x = (3.1 - u) / 3.1; x = 1 - x if spiegel else x
+        return (x, 1 - (0.34 - z) / 0.66 * (320 / 1024))
+    om = BORD_OMTREK
+    voor = ([p3(u, z, -0.13 - dik / 2) for u, z in om], [uvA(u, z) for u, z in om])
+    achter = ([p3(u, z, -0.13 + dik / 2) for u, z in om[::-1]], [uvA(u, z, True) for u, z in om[::-1]])
+    uv_vlak("SI_om_bordvlak", "bordvlak", [(*voor, (0, -1, 0)), (*achter, (0, 1, 0))])
+    for i in range(len(om)):                       # rand (goudbruin)
+        (u0, z0), (u1, z1) = om[i], om[(i + 1) % len(om)]
+        a, b = p3(u0, z0, -0.13 - dik / 2), p3(u1, z1, -0.13 - dik / 2)
+        c, e = p3(u1, z1, -0.13 + dik / 2), p3(u0, z0, -0.13 + dik / 2)
+        f = bms["bordrand"].faces.new([bms["bordrand"].verts.new(v) for v in (a, b, c, e)])
+        f.normal_update(); mid = (a + c) / 2; uit = Vector((mid.x - (px - 1.5), 0, mid.z - zc))
+        if f.normal.dot(uit) < 0: f.normal_flip()
+    for zz in (zc - 0.12, zc + 0.12):              # beugels aan de paal
+        stam(bms[m], Vector((px, py, zz)), Vector((px - 0.2, py - 0.13, zz)), 0.025, 0.025, 6, 0.0)
+    # medaillon onder het bord (gebied B) met gouden krul
+    mc = p3(1.45, -0.5, -0.13)
+    cil_v = []
+    R_M = 0.2; NM = 20
+    ring = [(mc.x + R_M * math.cos(2 * math.pi * k / NM), mc.z + R_M * math.sin(2 * math.pi * k / NM)) for k in range(NM)]
+    uvB = lambda k: (0.125 + 0.117 * math.cos(2 * math.pi * k / NM), 1 - (448 / 1024) + 0.117 * math.sin(2 * math.pi * k / NM))
+    uvB2 = lambda k: (0.125 - 0.117 * math.cos(2 * math.pi * k / NM), 1 - (448 / 1024) + 0.117 * math.sin(2 * math.pi * k / NM))
+    uv_vlak("SI_om_bordmedaillon", "bordvlak", [
+        ([Vector((x, mc.y - 0.03, z)) for x, z in ring], [uvB2(k) for k in range(NM)], (0, -1, 0)),
+        ([Vector((x, mc.y + 0.03, z)) for x, z in ring[::-1]], [uvB(k) for k in range(NM)][::-1], (0, 1, 0))])
+    for k in range(NM):
+        (x0, z0), (x1, z1) = ring[k], ring[(k + 1) % NM]
+        f = bms["goud"].faces.new([bms["goud"].verts.new(v) for v in (Vector((x0, mc.y - 0.03, z0)), Vector((x0, mc.y + 0.03, z0)),
+                                                                        Vector((x1, mc.y + 0.03, z1)), Vector((x1, mc.y - 0.03, z1)))])
+        f.normal_update()
+        if f.normal.dot(Vector(((x0 + x1) / 2 - mc.x, 0, (z0 + z1) / 2 - mc.z))) < 0: f.normal_flip()
+    vorig = mc + Vector((0, 0, R_M))
+    stam(bms["goud"], vorig, p3(1.45, -0.28, -0.13), 0.02, 0.02, 6, 0.0)
+    vorig = mc - Vector((0, 0, R_M))
+    for k in range(1, 9):                          # krul onder het medaillon
+        t = k / 8; q = mc + Vector((0.12 * math.sin(t * 5.5), 0, -R_M - 0.18 * t + 0.05 * math.sin(t * 6)))
+        stam(bms["goud"], vorig, q, 0.018, 0.012, 5, 0.0); vorig = q
+    # infobord op de paal (gebied C), aan de zuidkant
+    iy = py - 0.13; x0, x1, z0, z1 = px - 0.26, px + 0.26, g + 1.55, g + 2.55
+    uvC = lambda x, z: (0.25 + (x - x0) / (x1 - x0) * 0.25, 1 - (320 + (z1 - z) / (z1 - z0) * 512) / 1024)
+    vs = [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
+    uv_vlak("SI_om_infobord", "bordvlak", [([Vector((x, iy - 0.002, z)) for x, z in vs], [uvC(x, z) for x, z in vs], (0, -1, 0))])
+    doos(bms[m], (px, iy + 0.03, (z0 + z1) / 2), (0.56, 0.05, 1.04))
+    # vazen en een schaal citroenen naast de ingang (video 12 s)
+    for (vx, vy, r, h) in ((4.3, -17.5, 0.26, 0.95), (3.7, -16.9, 0.2, 0.6)):
+        v = cil(bms["vaas"], (vx, vy, g), r * 0.55, h, 12)
+        for q in v:
+            t = (q.co.z - g) / h; f = 0.55 + 0.75 * math.sin(math.pi * min(1, t * 1.15)) if t < 0.85 else 0.45
+            q.co.x = vx + (q.co.x - vx) / 0.55 * f; q.co.y = vy + (q.co.y - vy) / 0.55 * f
+        cil(bms["kurk"], (vx, vy, g + h), r * 0.42, 0.1, 10)
+    cil(bms["mand"], (4.9, -17.9, g), 0.35, 0.3, 14, 0.42)
+    for k in range(26):
+        a = random.uniform(0, 2 * math.pi); rr = random.uniform(0, 0.33)
+        bol(bms["fruit_geel"], (4.9 + rr * math.cos(a), -17.9 + rr * math.sin(a), g + 0.33 + 0.1 * (1 - rr / 0.33) + random.uniform(0, 0.05)), 0.065, 6)
 
 
 def main():
@@ -266,7 +380,8 @@ def main():
     for o in bpy.data.objects:
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
-              "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "bord")
+              "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
+              "bordrand", "vaas", "kurk", "mand", "fruit_geel")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)
@@ -275,7 +390,7 @@ def main():
     leuning(bms, links[:ZEIL_VANAF + 1], Z_VLONDER); leuning(bms, rechts[:ZEIL_VANAF + 1], Z_VLONDER)
     leuning(bms, links[ZEIL_VANAF:-1], Z_VLONDER, True); leuning(bms, rechts[ZEIL_VANAF:-1], Z_VLONDER, True)
     zeilkap(bms, WACHTRIJ[ZEIL_VANAF:-1], Z_VLONDER, lampen)
-    hutje(bms); brug(bms); vijverrand(bms); haven(bms); ingangsbord(bms)
+    hutje(bms); brug(bms); vijverrand(bms); haven(bms); ingangsbord(bms, lampen)
     # waterplaat in de vorm van de vijver (dun, bovenkant omhoog)
     bmw = bmesh.new()
     vs = [bmw.verts.new((x, y, -0.04)) for x, y in VIJVER]
@@ -286,7 +401,7 @@ def main():
     obj("SI_om_water", bmw, "water")
     for rol, bm in bms.items():
         if not bm.verts: bm.free(); continue
-        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet"):
+        if rol not in ("net", "zeil_turkoois", "zeilrand", "vlonder", "bestrating", "riet", "bordrand", "goud"):
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         obj(f"SI_om_{rol}", bm, rol)
     info = {"vijver": VIJVER, "wachtrij": WACHTRIJ, "zeil_vanaf": ZEIL_VANAF, "uitgang": UITGANG, "hut": HUT, "lampen": lampen,

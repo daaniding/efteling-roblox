@@ -1460,5 +1460,11 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   wees de bovenkant van vlonder en brugdek omlaag; Roblox tekent achterkanten niet, dus je keek door het dek heen naar gras of de
   binnenkant. Nu per vlak gecontroleerd (boven omhoog, onder omlaag, zijkanten naar buiten); vlonder lichter getint. Omgeving
   112633918280575. Les: bij losse vlakken (geen gedeelde hoekpunten) de normaal zelf zetten, niet op de volgorde vertrouwen.
+- Ingangsbord (17 nov), Daan: "deze moet echt gedetailleerder". Naar de video (xloCDJYf-Tw 12-16 s, hoge resolutie uit de mp4):
+  donkerbruine metalen paal (7.4; -16.9) met sokkel, ringen, knop en spits; pluimvormig cremekleurig bord naar links boven de ingang
+  met "Sirocco" (Georgia Bold, blauw), goudbruine rand en rond gouden medaillon met schip + krul; arm naar rechts met drie hangende
+  Arabische lantaarns (groen/rood/groen, koepel, zeskantig glas, gouden banden, punt) met licht; infobord met spitsboog en
+  pictogrammen op de paal; twee vazen en een mand citroenen. Atlas textures/SI_bord_kleur.png (07t_bord.py, 110695007842617);
+  objecten met eigen UV's krijgen o["uv_klaar"] en 05 laat ze staan. Omgeving 137519536283770.
 - VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

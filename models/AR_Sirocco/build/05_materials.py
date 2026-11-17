@@ -40,7 +40,9 @@ for o in list(bpy.data.objects):
     bm = bmesh.new(); bm.from_mesh(me)
     uvl = bm.loops.layers.uv.verify()
     M = o.matrix_world
-    if rol in ("riet", "beschot"):
+    if o.get("uv_klaar"):
+        pass                                           # UV's al gezet (07_omgeving: ingangsbord op de atlas)
+    elif rol in ("riet", "beschot"):
         hoek_uv(bm, uvl, lambda co: ((lambda h: h * 8.85 / 2.0), math.hypot((M @ co).x, (M @ co).y) / 2.0, math.atan2((M @ co).y, (M @ co).x)))
     elif rol in ("platform", "subschijf"):
         for f in bm.faces:
