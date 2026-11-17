@@ -656,6 +656,8 @@ local cils: {Cil} = {}
 for _, c in (pag:WaitForChild("Cilinders") :: Folder):GetChildren() do
 	if c:IsA("Folder") then
 		local v, k = c:GetAttribute("Voet") :: Vector3, c:GetAttribute("Kop") :: Vector3
+		-- de arm is langs zijn as geschaald (ArmFactor, maak_ritscript): het aangrijppunt op de arm schaalt mee (Daan 17 nov)
+		k = Vector3.new(k.X, k.Y * ((pag:GetAttribute("ArmFactor") :: number?) or 1), k.Z)
 		local Lup = (k - v).Magnitude
 		table.insert(cils, {voet = PIV:PointToWorldSpace(v), kop = k, huis = c:WaitForChild("Huis") :: BasePart,
 			stang = c:WaitForChild("Stang") :: BasePart, Lh = 0.62 * Lup + 0.9, Ls = 0.38 * Lup + 0.6})

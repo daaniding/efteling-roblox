@@ -320,6 +320,10 @@ Grond/gras/3D-gras zijn uit Studio gehaald (Daan niet tevreden over de grond); b
     Pak = klassieke Shirt/Pants getekend met build/23_uniform.py: donkergroene jas met gouden knopen en biezen, bordeaux
     revers en manchetten, wit overhemd met bordeaux das, gouden naambadge PAGODE; antraciet broek met riem en gouden bies.
     Ids MW_shirt 72318330752161, MW_broek 102868677288881 (exports/asset_ids.json).
+    Vertrekknop (17 nov, Daan): 1.6 s voor het sluiten (bel op tc 60) buigt hij naar het paneel op de lessenaar en drukt;
+    animatie gegenereerd met de Roblox animatiegenerator (2 s, 108791896595488), prioriteit Action. De rig gebruikt
+    AnimationConstraints (C0 alleen-lezen), dus tweenen van gewrichten kan niet; "point" (507770453) wees door het raam.
+    Hefcilinders: kop schaalt mee met ArmFactor (PagodeRitClient), verschoof 0.4 stud.
   - Meedraaien met de gondel (17 nov, Daan: "waarom draai ik niet mee, met normale physics beweeg je mee"): in eerste persoon
     (EerstePersoon, LockFirstPerson) draait Roblox het lichaam elk frame naar de camera, dus alleen het lichaam meedraaien
     werd teruggedraaid. PagodeRitClient telt de draaiing van de gondel om de verticaal op (meeDraai) en draait de camera

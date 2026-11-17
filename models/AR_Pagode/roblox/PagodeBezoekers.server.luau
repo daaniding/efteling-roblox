@@ -390,6 +390,25 @@ do
 		m:PivotTo(CFrame.lookAt(c, c + f))
 		hrp.Anchored = true
 		animeer(hum)
+		-- vertrekknop (Daan 17 nov: "doe maar" medewerker die op de knop drukt): 1.6 s voor het sluiten (bel op tc T_IN) reikt hij
+		-- naar het paneel op de lessenaar, drukt en laat los. De rig gebruikt AnimationConstraints (C0 alleen-lezen), dus via een
+		-- echte animatie: gegenereerd met de Roblox animatiegenerator (2 s, 108791896595488), prioriteit Action boven rust.
+		local animator = hum:FindFirstChildOfClass("Animator") or Instance.new("Animator", hum)
+		local anim = Instance.new("Animation"); anim.AnimationId = "rbxassetid://108791896595488"
+		local knop = (animator :: Animator):LoadAnimation(anim)
+		knop.Priority = Enum.AnimationPriority.Action; knop.Looped = false
+		task.spawn(function()
+			local vorig = tc()
+			while m.Parent do
+				local t = tc()
+				if vorig < T_IN - 1.6 and t >= T_IN - 1.6 then
+					knop:Play(0.35)
+					task.delay(2.2, function() knop:Stop(0.5) end)
+				end
+				vorig = t
+				task.wait(0.1)
+			end
+		end)
 	end
 end
 
