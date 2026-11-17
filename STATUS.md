@@ -1404,6 +1404,13 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   achterkant/dakrand/draaischijf vallen samen) en luchtfoto-overlay (review/gate_boven.jpg, dak op plek en maat).
   Binnenfoto's: geen middenpaal; dak op ruwe boomstampalen met schoren, radiale balkspanten en ringbalken; boten met mast en
   opgerold zeil op eigen blauwe ronde voet; platform blauw met golven, houten vlonder eromheen.
-- VOLGENDE: vormen (balkconstructie, riet met dikte, boten met snijwerk), kap-interieur (schalen, lantaarns, handelaar), scène
+- Vormen (build/03_forms.py, 67k driehoeken): riet met dikte en rafelrand + donker beschot eronder, nokstuk; 16 ruwe palen met
+  Y-schoren en schoor naar binnen, ringbalk, 16 dikke radiale spanten langs de dakonderkant, 3 rechte gordingringen; draaischijf,
+  subschijven, vlonderdek, tonnen; 12 boten (romp hout of rood, blauwe schubben op de boeg, blauw sierpaneel achter net boven de
+  rand, gouden rand, bankje, stuurwiel, mast met rondhout en opgerold zeil, vlaggetje, kistje sinaasappels en flessen, blauwe voet).
+- Aankleding (build/04_decor.py): 40 hangende dingen (rieten schalen met fruit, eikelmanden, 5 lantaarns = lichtpunten, lampions),
+  touwen naar het dak, touwslingers, touwladder in het midden (handelaar zelf later), gaashek met bamboepalen op r 7,25 met
+  openingen voor in- en uitstappen. Vergelijking: review/cmp_vormen.jpg (binnen + buiten naast de foto's).
+- VOLGENDE: scène
   (water en oevers uit de luchtfoto, wachtrij-vlonder met turquoise zeilkap, steiger/uitgang, haven met Sindbads boot), texturen,
   export, plaatsen op park (456,5; 191,2) m, looptest, bezoekers (Park.VOLGORDE na de Pagode).
