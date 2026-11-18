@@ -204,6 +204,18 @@ lichtlijst (asset instaphal 124291552965652). Uitganghalletje (07) en De Bazaar 
 pilasters, kroonlijst, lichtlijst (assets koepelgebouw 122930798099695, ingang 128192677817318). FataMorgana.Uitganggloed
 (roblox/plaats_uitganggloed.luau): 18 SurfaceLights onder de lichtlijsten van halletje en Bazaar. Uitgangsroute opnieuw gelopen: ok.
 De Bazaar zelf (winkel) wordt later beter gemaakt (Daan).
+Daarna (Daan: "die palen gaan door de boot heen ... maak de boot mooier"; "maak het ook echt water en kijk hoe die schijf er in het
+echt uitziet en laat hem ronddraaien"):
+- steunpalen onder de gaanderij (in het water) weg; de gaanderij hangt aan de muur.
+- sloepen opnieuw (17_boten, asset 115678478270707): ronde kim, crème boord met sierplaatjes (FM_bootplaket 71844881657698) in gouden
+  kader, rood knopje met witte ring op beide stevens, hoge ronde rugleuningen met zijschotten; 0,15 m hoger (vloer boven het water).
+- echt water: Terrain-water in het bassin (roblox/plaats_instaphalwater.luau, spiegel z -3,2); oude watermesh weg.
+- draaischijf naar de Eftepedia-foto en video (47 s): gladde lichte binnencirkel (r 4,2) en planken langs de omtrek in 24 sectoren,
+  donkere rand met witte streepjes (FM_draaischijf 126431821387104, 1 textuur = hele schijf); bovenblad/rand/streepjes als losse delen
+  in FataMorgana.Draaischijf (rollen dekhout, dekrand, witlijn). Asset instaphal 99757523328708.
+- ronddraaien: ServerScriptService.FataMorganaDraaischijf (roblox/FataMorganaDraaischijf.server.luau), 1 omwenteling per 2 min,
+  AssemblyAngularVelocity laat spelers meedraaien (getest: schijf 21 gr, speler 18 gr mee in 6 s, straal gelijk). Het controlehok en
+  de sloepen staan (nog) stil.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

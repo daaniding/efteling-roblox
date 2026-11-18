@@ -16,9 +16,9 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:16_instaphal"
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("balustrade",)
-T["KLEUR"].update({"balustrade": (0.6, 0.48, 0.38), "balmuur": (0.9, 0.86, 0.78), "onderwand": (0.35, 0.27, 0.2), "donkervloer": (0.3, 0.22, 0.17), "lichtlijst": (1.0, 0.8, 0.5), "soffit": (0.2, 0.15, 0.12), "boogvul": (0.2, 0.15, 0.12), "boogcreme": (0.9, 0.86, 0.78), "kegel": (0.92, 0.88, 0.8), "witlijn": (0.95, 0.95, 0.92), "lat": (0.62, 0.48, 0.34), "water": (0.12, 0.22, 0.26), "dekhout": (0.55, 0.38, 0.24), "plafond": (0.2, 0.16, 0.14), "rozet": (0.43, 0.27, 0.17), "gordijn": (0.84, 0.77, 0.63), "groenhek": (0.25, 0.58, 0.5), "groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "gangpleister": (0.92, 0.85, 0.72), "groenneg": (0.25, 0.58, 0.5), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
+T["KLEUR"].update({"balustrade": (0.6, 0.48, 0.38), "balmuur": (0.9, 0.86, 0.78), "onderwand": (0.35, 0.27, 0.2), "donkervloer": (0.3, 0.22, 0.17), "lichtlijst": (1.0, 0.8, 0.5), "soffit": (0.2, 0.15, 0.12), "boogvul": (0.2, 0.15, 0.12), "boogcreme": (0.9, 0.86, 0.78), "kegel": (0.92, 0.88, 0.8), "witlijn": (0.95, 0.95, 0.92), "lat": (0.62, 0.48, 0.34), "water": (0.12, 0.22, 0.26), "dekhout": (0.55, 0.38, 0.24), "dekrand": (0.16, 0.16, 0.18), "plafond": (0.2, 0.16, 0.14), "rozet": (0.43, 0.27, 0.17), "gordijn": (0.84, 0.77, 0.63), "groenhek": (0.25, 0.58, 0.5), "groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "gangpleister": (0.92, 0.85, 0.72), "groenneg": (0.25, 0.58, 0.5), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
                    "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5)})
-T["UVS"].update({"balustrade": 1.0, "balmuur": 4.0, "onderwand": 4.0, "donkervloer": 2.0, "lichtlijst": 1.0, "soffit": 4.0, "boogvul": 1.0, "boogcreme": 1.0, "kegel": 2.0, "witlijn": 1.0, "lat": 1.0, "water": 4.0, "dekhout": 4.0, "plafond": 4.0, "rozet": 1.0, "gordijn": 2.0, "groenhek": 1.0, "groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "gangpleister": 4.0, "groenneg": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
+T["UVS"].update({"balustrade": 1.0, "balmuur": 4.0, "onderwand": 4.0, "donkervloer": 2.0, "lichtlijst": 1.0, "soffit": 4.0, "boogvul": 1.0, "boogcreme": 1.0, "kegel": 2.0, "witlijn": 1.0, "lat": 1.0, "water": 4.0, "dekhout": 4.0, "dekrand": 2.0, "plafond": 4.0, "rozet": 1.0, "gordijn": 2.0, "groenhek": 1.0, "groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "gangpleister": 4.0, "groenneg": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
 
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -97,9 +97,7 @@ def rand(xa, ya, xb, yb, gaten=()):
         prisma("groen", [q + Vector((sx, sy, 0)) * 0.075 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 1.06, 1.16)   # voet
         lathe("goud", [(0.06, 0.0), (0.06, 0.04), (0.04, 0.06), (0.0, 0.08)], 2.9, 6, (q.x, q.y))
         lathe("bollamp", [(r * 0.07, z) for r, z in ((0.0, 0.0), (1.0, 0.03), (1.0, 0.16), (0.6, 0.2), (0.0, 0.22))], 2.98, 8, (q.x, q.y))
-        if i % 2 == 0:                                                   # steunpaal onder de gaanderij (in het water)
-            q2 = A + t * u - hal * 0.3
-            prisma("groen", [q2 + Vector((sx, sy, 0)) * 0.09 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], ZB, -0.3)
+        # (geen steunpalen in het water: de gaanderij hangt aan de muur, Daan: "die palen gaan door de boot heen")
 
 
 def wbox(rol, vl, u0, u1, v0, v1, n0, n1):
@@ -174,7 +172,7 @@ def bouw():
         box("gordijn", x, YN - 0.12 - (0.06 if k % 2 else 0.0), x + 0.18, YN - 0.02, ZW + 0.1, -0.42)
     quad("plafond", [L(XW, YN) + Vector((0, 0, HZ)), L(XE, YN) + Vector((0, 0, HZ)), L(XE, YS) + Vector((0, 0, HZ)), L(XW, YS) + Vector((0, 0, HZ))])
     box("donker", XW, YS, XE, YN, ZB - 0.2, ZB)
-    box("water", XW, YS, XE, YN, ZW - 0.05, ZW)
+    # (water = Terrain-water in Studio, Daan: "maak het ook echt water")
     # gaanderijvloeren (geen overlappende hoeken) + doorgang naar het halletje
     box("donkervloer", XW, YNI, XE, YN, -0.3, 0.12)
     box("donkervloer", XW, YS, XE, YSI, -0.3, 0.12)
@@ -289,10 +287,10 @@ def bouw():
         vlak_uv("balustrade", [A + Vector((kant * 0.045, 0, -0.15)), B + Vector((kant * 0.045, 0, -0.15)), B + Vector((kant * 0.045, 0, 0.95)), A + Vector((kant * 0.045, 0, 0.95))],
                 Vector((kant, 0, 0)), [(0, 0), (3.1, 0), (3.1, 1), (0, 1)])
     # draaischijf: houten dek (ringen planken), donkere rand, witte streepjes
-    lathe("dekhout", [(0.0, 0.0), (RT, 0.0), (RT, -0.5), (0.0, -0.5)], ZD, 72, (c.x, c.y))
-    lathe("donker", [(RT, 0.0), (RT + 0.1, 0.0), (RT + 0.1, -0.5), (RT, -0.5), (RT, 0.0)], ZD + 0.02, 72, (c.x, c.y))
-    for rr in (4.2, 4.26):                                               # donkere ring halverwege (video)
-        lathe("donker", [(rr - 0.02, 0.0), (rr + 0.02, 0.0)], ZD + 0.006, 72, (c.x, c.y))
+    # draaischijf (draait in Studio rond, Daan: "laat hem ronddraaien"): bovenblad met de schijftextuur (FM_draaischijf: gladde lichte
+    # binnencirkel, planken langs de omtrek in 24 sectoren), donkere rand en onderkant apart (rol dekrand)
+    lathe("dekhout", [(0.0, 0.0), (RT, 0.0), (RT, -0.06), (0.0, -0.06)], ZD, 96, (c.x, c.y))
+    lathe("dekrand", [(RT, 0.02), (RT + 0.1, 0.02), (RT + 0.1, -0.5), (0.3, -0.5), (0.3, -0.07), (RT, -0.07), (RT, 0.02)], ZD, 96, (c.x, c.y))
     for k in range(36):
         if k % 2: continue
         a0 = math.radians(k * 10.0); a1 = math.radians(k * 10.0 + 6.0)
@@ -332,6 +330,12 @@ def objecten():
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]
+        if rol == "dekhout":                                              # schijftextuur: 1 textuur = de hele schijf, midden in C0
+            cc = L(*C0)
+            for f in bm.faces:
+                for lp in f.loops:
+                    co = lp.vert.co; lp[uvl].uv = ((co.x - cc.x) / (2 * RT) + 0.5, (co.y - cc.y) / (2 * RT) + 0.5)
+            vast = True
         for f in ([] if vast else bm.faces):
             n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))
             for lp in f.loops:

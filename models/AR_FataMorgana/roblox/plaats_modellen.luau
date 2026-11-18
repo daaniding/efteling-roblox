@@ -3,13 +3,13 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 76192302631142, Koepelgebouw = 122930798099695, Zuidvleugel = 75793335061309, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 105227491479681, Instaphal = 124291552965652, Boten = 82019102059341}
+local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 76192302631142, Koepelgebouw = 122930798099695, Zuidvleugel = 75793335061309, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 105227491479681, Instaphal = 99757523328708, Boten = 115678478270707}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
 	zellige = 112364982933611, zigzag = 94009043451472, balkon = 115587625989953, fries = 96873829333423,
 	vloertegel = 112689883777106, schildering = 119976189330229, bord = 99448957611155,
-	tegelhal = 73063474660484, deurblad = 79743845630448, balustrade = 99934946723999, parket = 120995854106325}   -- naald: Pagode (dennennaalden)
+	tegelhal = 73063474660484, deurblad = 79743845630448, balustrade = 99934946723999, parket = 120995854106325, bootplaket = 71844881657698, draaischijf = 126431821387104}   -- naald: Pagode (dennennaalden)
 -- rol -> {textuur, normaal, kleur, materiaal, botsen, reflectie, alfa}
 local R = {
 	stuc = {"stuc_kleur", "stuc_normaal", Color3.new(1, 1, 1), Enum.Material.Plaster, true},
@@ -65,7 +65,8 @@ local R = {
 	gangpleister = {"stuc_kleur", "stuc_normaal", Color3.fromRGB(236, 218, 186), Enum.Material.Plaster, false},   -- zwikken boven de gangboog
 	-- instaphal (16_instaphal)
 	water = {nil, nil, Color3.fromRGB(30, 56, 66), Enum.Material.Glass, false, 0.25, nil, 0.15},
-	dekhout = {"parket", nil, Color3.new(1, 1, 1), Enum.Material.Wood, true},   -- visgraatparket draaischijf
+	dekhout = {"draaischijf", nil, Color3.new(1, 1, 1), Enum.Material.WoodPlanks, true},   -- bovenblad draaischijf (1 textuur = hele schijf)
+	dekrand = {nil, nil, Color3.fromRGB(40, 40, 46), Enum.Material.SmoothPlastic, true},   -- rand en onderkant draaischijf
 	plafond = {nil, nil, Color3.fromRGB(52, 42, 36), Enum.Material.SmoothPlastic, false},
 	rozet = {nil, nil, Color3.fromRGB(110, 70, 44), Enum.Material.SmoothPlastic, false},
 	gordijn = {nil, nil, Color3.fromRGB(214, 196, 160), Enum.Material.Fabric, true},
@@ -86,6 +87,9 @@ local R = {
 	boot_wit = {nil, nil, Color3.fromRGB(242, 236, 224), Enum.Material.SmoothPlastic, true, 0.03},
 	boot_vloer = {nil, nil, Color3.fromRGB(112, 22, 24), Enum.Material.Fabric, true},
 	boot_bank = {nil, nil, Color3.fromRGB(242, 236, 224), Enum.Material.SmoothPlastic, true, 0.03},
+	boot_plaket = {"bootplaket", nil, Color3.new(1, 1, 1), Enum.Material.Metal, false},
+	boot_kop = {nil, nil, Color3.fromRGB(150, 32, 28), Enum.Material.SmoothPlastic, false, 0.1},
+	boot_kopring = {nil, nil, Color3.fromRGB(242, 236, 224), Enum.Material.SmoothPlastic, false},
 }
 for _, r in {"vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet"} do
 	R[r] = {r, nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false, nil, true}
@@ -122,6 +126,14 @@ for naam, id in pairs(DELEN) do
 		if r[7] then p.CastShadow = false end
 		if r[8] then p.Transparency = r[8] end
 		if p.CanCollide then pcall(function() p.CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition end) end
+	end
+end
+-- draaischijf los van de instaphal (FataMorganaDraaischijf.server.luau laat hem ronddraaien)
+if fm:FindFirstChild("Instaphal") then
+	local ds = fm:FindFirstChild("Draaischijf"); if ds then ds:Destroy() end
+	ds = Instance.new("Model"); ds.Name = "Draaischijf"; ds.Parent = fm
+	for _, p in fm.Instaphal:GetChildren() do
+		if p.Name:find("^FM_dekhout") or p.Name:find("^FM_dekrand") or p.Name:find("^FM_witlijn") then p.Parent = ds end
 	end
 end
 return "Fata Morgana: " .. n .. " delen" .. (#onbekend > 0 and (", onbekend: " .. table.concat(onbekend, ", ")) or "")
