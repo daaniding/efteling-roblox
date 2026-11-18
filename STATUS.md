@@ -4,6 +4,15 @@
 
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
+## Fata Morgana (18 nov 2026) — stap voor stap (Daan: "echt stap voor stap, eerst ff buitenkant of deel van de buitenkant")
+Bron models/AR_FataMorgana: ref/lemma.txt, ref/luchtfoto (parkraster, midden -15;-315), ref/ahn (dsm/dtm 0,5 m), Eftepedia-foto's
+alleen lokaal. Plek: complex langs het Meer van Fantasie, x -90..60, y -350..-283; dak NAP 16,7, water/maaiveld NAP 8,7.
+Stap 1 — de grote toren met turquoise koepel (park -40;-295, top NAP 27,3): build/02_toren.py (onderblok 7x6x10 m met golvende
+Moorse rand en hoekpinakels, nissen, portaal; bovenstuk 4,6 m met lobbenrand; koepel + gouden spits), stuc 2048 px = 6 m
+(01t_texturen: Poly Haven red_plaster_weathered + grote okervlekken zoals Fata2013.jpg; Daan: "textures moeten mooier").
+In Studio: workspace.FataMorgana.Toren + terrein 36x30 m (bestrating Y 0,91, water ervoor). roblox/plaats_toren.luau.
+Volgende stukken (Daans keuze): noordgevel met kantelen en koepels, minaret, plein met fonteinen, wachtrij.
+
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
 kisten, 06_omgeving planten/keien/entree, 11_export, roblox/plaats_archipel.luau). Uit Studio weggehaald (18 nov, Daan): workspace.Archipel

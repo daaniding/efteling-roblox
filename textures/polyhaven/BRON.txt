@@ -2,3 +2,4 @@ Plantscans van polyhaven.com (CC0): shrub_02/03/04, fern_02, periwinkle_plant, n
 Poly Haven CC0: riet_01, stone_wall (Herberg De Ersteling, 13 nov; diff + nor_gl 2k)
 Poly Haven CC0: plastered_stone_wall, castle_wall_varriation, cliff_side, clay_roof_tiles_02, stacked_stone_wall (De Zes Zwanen, 13 nov)
 Poly Haven CC0 (Archipel, 18 nov): thatch_roof_angled, reed_roof_04, bamboo_wall, bamboo_wall_02, palm_bark, weathered_planks (diff + nor_gl 1k)
+Poly Haven CC0 (Fata Morgana, 18 nov): red_plaster_weathered, white_stucco, yellow_plaster (+ beige_wall_001/002, clay_plaster, plastered_wall_04, worn_plaster_wall, yellow_plaster_02 bekeken)
