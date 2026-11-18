@@ -100,7 +100,12 @@ def bouw():
         box("gangmuur", x0, y0, x1, y1, 0.0, HZ + 0.05)
         if onder: box("onderwand", x0, y0, x1, y1, ZB, 0.0)
     muur(XW - 0.25, YS - 0.25, XE + 0.25, YS)                                          # zuid
-    box("gangmuur", XW - 0.25, YN, XE + 0.25, YN + 0.25, 0.0, HZ + 0.05)               # noord boven
+    UX0, UX1, UZ = 13.3, 14.9, 2.6                                                     # uitgangsdeur noordoost (naar de open gang)
+    box("gangmuur", XW - 0.25, YN, UX0, YN + 0.25, 0.0, HZ + 0.05); box("gangmuur", UX1, YN, XE + 0.25, YN + 0.25, 0.0, HZ + 0.05)
+    box("gangmuur", UX0, YN, UX1, YN + 0.25, UZ, HZ + 0.05)                             # noord boven, met de uitgangsdeur
+    box("donkervloer", UX0, YN - 0.05, UX1, -321.75, -0.3, 0.12)                       # doorgang door de gevel naar buiten
+    box("gangmuur", UX0 - 0.2, YN + 0.25, UX0, -322.0, 0.0, UZ + 0.2); box("gangmuur", UX1, YN + 0.25, UX1 + 0.2, -322.0, 0.0, UZ + 0.2)
+    box("gangmuur", UX0 - 0.2, YN + 0.25, UX1 + 0.2, -322.0, UZ, UZ + 0.2)
     box("onderwand", XW + 3.0, YN, XE + 0.25, YN + 0.25, ZB, 0.0); box("onderwand", XW - 0.25, YN, XW + 0.2, YN + 0.25, ZB, 0.0)
     box("onderwand", XW + 0.2, YN, XW + 3.0, YN + 0.25, -0.4, 0.0)                     # boven de uitgang (noordwest)
     box("gangmuur", XW - 0.25, YS, XW, YN, 0.0, HZ + 0.05)                             # west boven
@@ -126,17 +131,27 @@ def bouw():
     box("gangmuur", XE, -330.0, 17.25, -329.8, 0.0, 3.05); box("gangmuur", XE, -328.2, 17.25, -328.0, 0.0, 3.05)   # neggen van de doorgang
     box("gangmuur", XE, -330.0, 17.25, -328.0, 3.0, 3.2)
     # randen (hal links van de looprichting): noord (oost->west), west (noord->zuid, met de brug), zuid (west->oost), oost (zuid->noord)
-    rand(XEI, YNI, XWI, YNI)
+    EX0, EX1 = C0[0] - 0.8, C0[0] + 0.8                                  # uittrap (links van het controlehok, vanaf de brug gezien)
+    rand(XEI, YNI, XWI, YNI, gaten=[(XEI - EX1 - 0.1, XEI - EX0 + 0.1)])
     rand(XWI, YNI, XWI, YSI, gaten=[(YNI - BY1 - 0.05, YNI - BY0 + 0.05)])
     rand(XWI, YSI, XEI, YSI)
     rand(XEI, YSI, XEI, YNI)
-    # Daan: "nu zou je rechts en links kunnen als je uit de deur gaat" -> de rij gaat maar één kant op (plattegrond: binnenkomst in de
-    # noordoosthoek, langs de noordgaanderij naar het westen): de oostgaanderij is links (zuid) van de doorgang afgesloten
-    yb = -330.45
-    box("balmuur", XEI - 0.05, yb - 0.16, XE, yb, 0.12, 1.0)
-    vlak_uv("balustrade", [L(XEI - 0.05, yb + 0.005) + Vector((0, 0, 0.14)), L(XE, yb + 0.005) + Vector((0, 0, 0.14)), L(XE, yb + 0.005) + Vector((0, 0, 1.0)), L(XEI - 0.05, yb + 0.005) + Vector((0, 0, 1.0))],
-           Vector((0, 1, 0)), [(0, 0), ((XE - XEI) / 1.6, 0), ((XE - XEI) / 1.6, 1), (0, 1)])
-    box("groen", XEI - 0.1, yb - 0.2, XE, yb + 0.04, 1.0, 1.07)
+    # gescheiden routes (Daan: "nu zou je rechts en links kunnen"; Eftepedia: in via de gaanderij, uit via een trap links van het
+    # controlehok en een gaanderij): IN = oost (zuid van de doorgang) -> zuid -> west -> brug; UIT = trap -> noordgaanderij -> deur
+    def afsluiting(x0, y0, x1, y1, wil):
+        box("balmuur", x0, y0, x1, y1, 0.12, 1.0)
+        lg = max(x1 - x0, y1 - y0)
+        for w_ in (wil, -wil):
+            if abs(w_.y) > 0:
+                yy = (y1 + 0.005) if w_.y > 0 else (y0 - 0.005)
+                pts = [L(x0, yy) + Vector((0, 0, 0.14)), L(x1, yy) + Vector((0, 0, 0.14)), L(x1, yy) + Vector((0, 0, 1.0)), L(x0, yy) + Vector((0, 0, 1.0))]
+            else:
+                xx = (x1 + 0.005) if w_.x > 0 else (x0 - 0.005)
+                pts = [L(xx, y0) + Vector((0, 0, 0.14)), L(xx, y1) + Vector((0, 0, 0.14)), L(xx, y1) + Vector((0, 0, 1.0)), L(xx, y0) + Vector((0, 0, 1.0))]
+            vlak_uv("balustrade", pts, w_, [(0, 0), (lg / 1.6, 0), (lg / 1.6, 1), (0, 1)])
+        box("groen", x0 - 0.04, y0 - 0.04, x1 + 0.04, y1 + 0.04, 1.0, 1.07)
+    afsluiting(XEI - 0.05, -327.75, XE, -327.6, Vector((0, -1, 0)))         # oostgaanderij noord van de doorgang
+    afsluiting(XW, -333.4, XWI + 0.05, -333.25, Vector((0, -1, 0)))         # westgaanderij noord van de brug
     # brug van de westgaanderij naar het controlehok, met balustrades
     bx1 = C0[0] - R8 + 0.3
     box("donkervloer", XWI - 0.1, BY0, bx1, BY1, -0.3, 0.12)
@@ -186,6 +201,18 @@ def bouw():
         ya = y + kant * 0.165
         vlak_uv("balustrade", [A + Vector((0, kant * 0.165, -0.25)), B + Vector((0, kant * 0.165, -0.25)), B + Vector((0, kant * 0.165, 0.95)), A + Vector((0, kant * 0.165, 0.95))],
                Vector((0, kant, 0)), [(0, 0), (2.9, 0), (2.9, 1), (0, 1)])
+    # uittrap (Eftepedia: "Via een trap aan de linkerzijde van het controlehok en een gaanderij kunnen we de hal verlaten"):
+    # van de schijf noordwaarts omhoog naar de noordgaanderij, panelenbalustrades aan beide kanten
+    ny = 18; ry = (YNI - (-331.2)) / ny
+    for i in range(ny):
+        y0 = -331.2 + ry * i; ztop = ZD + (0.12 - ZD) * (i + 1) / ny
+        box("donkervloer", EX0, y0, EX1, y0 + ry, ztop - 0.25, ztop)
+    for x, kant in ((EX0, -1), (EX1, 1)):
+        A, B = L(x, -331.2) + Vector((0, 0, ZD)), L(x, YNI) + Vector((0, 0, 0.12))
+        schuinbox("balmuur", A + Vector((kant * 0.08, 0, 0)), B + Vector((kant * 0.08, 0, 0)), -0.3, 1.0, 0.16)
+        schuinbox("groen", A + Vector((kant * 0.08, 0, 0)), B + Vector((kant * 0.08, 0, 0)), 1.0, 1.07, 0.24)
+        vlak_uv("balustrade", [A + Vector((kant * 0.165, 0, -0.25)), B + Vector((kant * 0.165, 0, -0.25)), B + Vector((kant * 0.165, 0, 0.95)), A + Vector((kant * 0.165, 0, 0.95))],
+               Vector((kant, 0, 0)), [(0, 0), (3.1, 0), (3.1, 1), (0, 1)])
     # draaischijf: houten dek (ringen planken), donkere rand, witte streepjes
     lathe("dekhout", [(0.0, 0.0), (RT, 0.0), (RT, -0.5), (0.0, -0.5)], ZD, 72, (c.x, c.y))
     lathe("donker", [(RT, 0.0), (RT + 0.1, 0.0), (RT + 0.1, -0.5), (RT, -0.5), (RT, 0.0)], ZD + 0.02, 72, (c.x, c.y))
@@ -210,7 +237,7 @@ def bouw():
         a = 2 * math.pi * k / 6; q2 = c + Vector((math.cos(a) * 5.0, math.sin(a) * 5.0, 0))
         lathe("donker", [(0.02, 0.0), (0.02, HZ - 4.1)], 4.1, 6, (q2.x, q2.y))
     # lichtlijst langs de achterwanden boven de gaanderij (fel verlichte achterwand op de video)
-    for (x0, y0, x1, y1) in ((XW, YN - 0.08, XE, YN), (XW, YS, XE, YS + 0.08), (XW, YS, XW + 0.08, YN), (XE - 0.08, YS, XE, -329.9), (XE - 0.08, -328.1, XE, YN)):
+    for (x0, y0, x1, y1) in ((XW, YN - 0.08, UX0 - 0.1, YN), (UX1 + 0.1, YN - 0.08, XE, YN), (XW, YS, XE, YS + 0.08), (XW, YS, XW + 0.08, YN), (XE - 0.08, YS, XE, -329.9), (XE - 0.08, -328.1, XE, YN)):
         box("lichtlijst", x0, y0, x1, y1, 3.0, 3.06)
 
 

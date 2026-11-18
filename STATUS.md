@@ -160,11 +160,20 @@ sectie 15; ~23 px/m, blok x -16..17,4 = px 1470..2240) + frames uit de POV-video
   (zuid) van de doorgang afgesloten met een balustrade (Daan: "nu zou je rechts en links kunnen") -> route: noord, west, brug, trap.
 Terrein in de hal weggehaald (cellen met middelpunt binnen x -16,2..17, y -350..-322,8). Licht: FataMorgana.Instaphallicht.
 Getest in Play: halletje -> oostgaanderij -> noord -> west -> brug -> controlehok -> trap -> draaischijf; zuid is dicht.
-Asset instaphal 101357473181413. Nog geen beweging (schijf/boten).
-Nog te doen (Daan: "en waar is de uitgang"): Eftepedia: "Via een trap aan de linkerzijde van het controlehok en een gaanderij
-kunnen we de hal verlaten. We passeren via een onoverdekte gang een gewoonlijk afgesloten hek en komen via de winkel De Bazaar
-weer op het voorplein uit." -> tweede trap bij het controlehok, uitgangsgaanderij, deur, open gang (binnenplaatsje x 12,5..17,4,
-y -316..-322), hek, De Bazaar (05_ingang) met een doorgang naar het plein.
+Nog geen beweging (schijf/boten).
+Uitgang (Daan: "en waar is de uitgang", 18 nov), naar Eftepedia ("via een trap aan de linkerzijde van het controlehok en een
+gaanderij ... onoverdekte gang ... afgesloten hek ... via de winkel De Bazaar weer op het voorplein"):
+- instaphal (16): afsluitingen nu op de oostgaanderij noord van de boog en op de westgaanderij noord van de brug -> instap:
+  boog -> oost zuid -> zuidgaanderij -> west -> brug -> hok -> trap oost; uitgang: uitgangstrap (x 5,5..7,1) van de schijf
+  noordwaarts omhoog naar de noordgaanderij -> deur in de noordmuur x 13,3..14,9 (asset 100859940779735);
+- kantelenblok (06): deur in de noordwand + open binnenplaatsje x 12,5..17,4, y -316..-321,75 met tegelvloer; het hek in de lage
+  muur (x 17,9, y -319..-320,8) is dicht (asset 76192302631142);
+- koepelgebouw-aanbouw (07): hol, gang x 12,9..17,6 met deur in de zuidwand x 14,4..16,0 en plafond (asset 84517254239285);
+- De Bazaar (05): hol, muren 0,3 m (binnen oud beige), deur in de westmuur y -306,6..-305,0 vanaf de gang, voordeur in het oostportaal
+  open (alleen de kielboog dicht), tegelvloer, plafond, open schappen + toonbank + 2 hanglampen (winkel voorlopig, Daan: "we regelen
+  de souvenirwinkel later") (asset 106814674593785).
+Licht: FataMorgana.Uitganglicht (5 PointLights 0,6/12 amber: winkel, gang, uitgangsdeur). Geen terrein in winkel/gang/hof.
+Getest in Play: schijf -> uitgangstrap -> noordgaanderij -> deur -> binnenplaats -> gang -> Bazaar -> voordeur -> plein; hek houdt tegen.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

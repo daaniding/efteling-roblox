@@ -13,8 +13,9 @@ G3 = {"__file__": F3, "__name__": "lib"}
 exec(compile(open(F3).read().rsplit("\nmain()", 1)[0], F3, "exec"), G3)
 T = G3["T"]; L, prisma, lathe, quad, strip, spitsboog, vul, raam, Vlak, buis = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "spitsboog", "vul", "raam", "Vlak", "buis")) if "buis" in G3 else (*(G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "spitsboog", "vul", "raam", "Vlak")), None)
 OWNER = "phase:05_ingang"
-T["KLEUR"].update({"wit": (0.95, 0.94, 0.9), "rood": (0.8, 0.3, 0.18), "koepel_blauw": (0.45, 0.68, 0.84), "witvlak": (0.95, 0.94, 0.9)})
-T["UVS"].update({"wit": 9.0, "rood": 1.0, "koepel_blauw": 2.0, "witvlak": 9.0})
+T["KLEUR"].update({"wit": (0.95, 0.94, 0.9), "rood": (0.8, 0.3, 0.18), "koepel_blauw": (0.45, 0.68, 0.84), "witvlak": (0.95, 0.94, 0.9),
+                   "gangmuur": (0.92, 0.85, 0.72), "vloertegel": (0.65, 0.42, 0.33)})
+T["UVS"].update({"wit": 9.0, "rood": 1.0, "koepel_blauw": 2.0, "witvlak": 9.0, "gangmuur": 4.0, "vloertegel": 2.0})
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
 X0, X1, Y0, Y1 = 17.5, 24.5, -314.0, -301.0
@@ -110,8 +111,46 @@ def zuil(p, h, r=0.17):
 def bouw():
     # hoofdblok: witte muren tot de dakrand, plint, dak (dak-rol)
     hk = [L(X0, Y0), L(X1, Y0), L(X1, Y1), L(X0, Y1)]
-    prisma("wit", hk, 0.0, H)
-    prisma("lijst", [L(X0 - 0.06, Y0 - 0.06), L(X1 + 0.06, Y0 - 0.06), L(X1 + 0.06, Y1 + 0.06), L(X0 - 0.06, Y1 + 0.06)], 0.0, 0.3)
+    # binnenkant (Daan: "de uitgang"; Eftepedia: de rit-uitgang loopt via een halletje door de winkel De Bazaar naar het plein):
+    # hol gebouw met muren van 0,3 m (buiten wit, binnen oud beige), deur van het halletje (west) en de voordeur in het portaal (oost)
+    t = 0.3; WD0, WD1, WDZ = -306.6, -305.0, 2.3; OD0, OD1, ODZ = -308.45, -306.55, 1.95
+    def bx(rol, x0, y0, x1, y1, z0, z1): prisma(rol, [L(x0, y0), L(x1, y0), L(x1, y1), L(x0, y1)], z0, z1)
+    bx("wit", X0, Y1 - t, X1, Y1, 0.0, H); bx("wit", X0, Y0, X1, Y0 + t, 0.0, H)
+    for (y0, y1) in ((Y0 + t, WD0), (WD1, Y1 - t)): bx("wit", X0, y0, X0 + t, y1, 0.0, H)
+    bx("wit", X0, WD0, X0 + t, WD1, WDZ, H)
+    for (y0, y1) in ((Y0 + t, OD0), (OD1, Y1 - t)): bx("wit", X1 - t, y0, X1, y1, 0.0, H)
+    bx("wit", X1 - t, OD0, X1, OD1, ODZ, H)
+    li = 0.03                                                                 # binnenbekleding oud beige
+    bx("gangmuur", X0 + t, Y1 - t - li, X1 - t, Y1 - t, 0.0, 2.9); bx("gangmuur", X0 + t, Y0 + t, X1 - t, Y0 + t + li, 0.0, 2.9)
+    for (y0, y1) in ((Y0 + t, WD0), (WD1, Y1 - t)): bx("gangmuur", X0 + t, y0, X0 + t + li, y1, 0.0, 2.9)
+    bx("gangmuur", X0 + t, WD0, X0 + t + li, WD1, WDZ, 2.9)
+    for (y0, y1) in ((Y0 + t, OD0), (OD1, Y1 - t)): bx("gangmuur", X1 - t - li, y0, X1 - t, y1, 0.0, 2.9)
+    bx("gangmuur", X1 - t - li, OD0, X1 - t, OD1, ODZ, 2.9)
+    bx("gangmuur", X0 + t, Y0 + t, X1 - t, Y1 - t, 2.9, 2.98)                 # plafond
+    bx("vloertegel", X0 + t, Y0 + t, X1 - t, Y1 - t, -0.25, 0.12)
+    bx("vloertegel", X0 - 0.45, WD0, X0 + t + 0.02, WD1, -0.25, 0.12); bx("vloertegel", X1 - t - 0.02, OD0, X1 + 0.05, OD1, -0.25, 0.12)
+    for (x0, y0, x1, y1) in ((X0 - 0.06, Y1 - 0.14, X1 + 0.06, Y1 + 0.06), (X0 - 0.06, Y0 - 0.06, X1 + 0.06, Y0 + 0.14),   # plint, open bij de deuren
+                             (X0 - 0.06, Y0 + 0.14, X0 + 0.14, WD0), (X0 - 0.06, WD1, X0 + 0.14, Y1 - 0.14),
+                             (X1 - 0.14, Y0 + 0.14, X1 + 0.06, OD0), (X1 - 0.14, OD1, X1 + 0.06, Y1 - 0.14)):
+        prisma("lijst", [L(x0, y0), L(x1, y0), L(x1, y1), L(x0, y1)], 0.0, 0.3)
+    # winkel: schappen langs noord- en zuidwand met souvenirs, toonbank, twee koperen hanglampen
+    for (y0, y1, kant) in ((Y1 - t - 0.5, Y1 - t - li, -1), (Y0 + t + li, Y0 + t + 0.5, 1)):   # open schappen: achterwand, zijkanten, planken
+        wy0, wy1 = (y1 - 0.05, y1) if kant < 0 else (y0, y0 + 0.05)
+        bx("hout", 18.6, wy0, 23.6, wy1, 0.0, 2.1)
+        for xs in (18.6, 23.55): bx("hout", xs, y0, xs + 0.05, y1, 0.0, 2.1)
+        bx("hout", 18.65, y0, 23.55, y1, 0.0, 0.12)
+        for z in (0.5, 0.95, 1.4, 1.85):
+            bx("hout", 18.65, y0, 23.55, y1, z - 0.04, z)
+            for i in range(9):
+                x = 18.85 + 0.55 * i; rol = ("rood", "koepel_blauw", "goud")[(i + int(z * 10)) % 3]
+                hh = 0.18 + 0.1 * ((i * 7 + int(z * 13)) % 3)
+                yy = (y0 + y1) / 2 + kant * 0.03
+                bx(rol, x - 0.14, yy - 0.12, x + 0.14, yy + 0.12, z + 0.005, z + 0.005 + hh)
+    bx("hout", 19.2, -309.0, 21.0, -308.3, 0.0, 1.0); bx("goud", 19.15, -309.05, 21.05, -308.25, 1.0, 1.05)
+    for (x, y) in ((19.8, -305.0), (22.6, -310.0)):
+        p_ = L(x, y)
+        lathe("goud", [(0.015, 0.0), (0.015, 0.5)], 2.4, 6, (p_.x, p_.y))
+        lathe("goud", [(r, z) for r, z in ((0.0, 0.0), (0.05, 0.02), (0.14, 0.1), (0.17, 0.22), (0.14, 0.34), (0.06, 0.42), (0.0, 0.45))], 1.95, 8, (p_.x, p_.y))
     quad("dak", [L(X0 + 0.2, Y0 + 0.2) + Vector((0, 0, H + 0.02)), L(X1 - 0.2, Y0 + 0.2) + Vector((0, 0, H + 0.02)),
                  L(X1 - 0.2, Y1 - 0.2) + Vector((0, 0, H + 0.02)), L(X0 + 0.2, Y1 - 0.2) + Vector((0, 0, H + 0.02))])
     oost, lo = vlak_vanaf((X1, Y1), (X1, Y0))          # voorkant naar het plein (u van noord naar zuid)
@@ -152,7 +191,7 @@ def bouw():
     prisma("tegel", [Vector((q.x, q.y, 0)) for q in (oost.p(zuilen_u[0] - 0.35, 0, 0), oost.p(zuilen_u[-1] + 0.35, 0, 0), oost.p(zuilen_u[-1] + 0.35, 0, diep + 0.1), oost.p(zuilen_u[0] - 0.35, 0, diep + 0.1))], -0.25, 0.12)
     # achter het portaal: ingang (donker), winkelraam rechts, raampje links
     deur = kielboog(uc, 1.9, 0.0, 1.95, 0.6)
-    vul("raam", oost, deur, 0.09); G3_buis([oost.p(u, v, 0.08) for u, v in deur], 0.07)
+    vul("raam", oost, deur[1:-1], 0.09); G3_buis([oost.p(u, v, 0.08) for u, v in deur], 0.07)   # alleen de kielboog dicht; eronder de echte deuropening
     for k in range(4):                                          # winkelraam met roedes
         pass
     wu = uc + 2.3

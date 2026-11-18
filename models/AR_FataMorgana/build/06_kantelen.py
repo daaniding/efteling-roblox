@@ -11,6 +11,7 @@ F3 = os.path.join(D, "build", "03_noordgevel.py")
 G3 = {"__file__": F3, "__name__": "lib"}
 exec(compile(open(F3).read().rsplit("\nmain()", 1)[0], F3, "exec"), G3)
 T = G3["T"]; L, prisma, lathe, quad, strip, raam, Vlak, muur = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "muur"))
+T["KLEUR"].setdefault("donker", (0.12, 0.13, 0.15)); T["UVS"].setdefault("donker", 1.0)
 OWNER = "phase:06_kantelen"
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -36,14 +37,29 @@ def wand(punten, hoogte, diep, ramen=()):
 def bouw():
     # lage muur ingang -> minaret; loopt 0,4 m het ingangsgebouw en 0,2 m de minaret in (Daan: "je laat nog steeds een beetje
     # ruimte zitten")
-    wand([(17.9, -313.6), (17.9, -326.9)], 3.3, 0.5, ramen=[(0, 6.6, 1.2, 2.2)])
+    # lage muur met het "gewoonlijk afgesloten hek" (Eftepedia) tussen de open uitgangsgang en het plein (y -319,0..-320,8)
+    wand([(17.9, -313.6), (17.9, -319.0)], 3.3, 0.5)
+    wand([(17.9, -320.8), (17.9, -326.9)], 3.3, 0.5)
+    prisma("stuc", [L(17.4, -320.8), L(17.9, -320.8), L(17.9, -319.0), L(17.4, -319.0)], 2.4, 3.3)
+    kantelen_recht(G3["Vlak"](L(17.9, -319.0), Vector((0, -1, 0)), Vector((1, 0, 0))), 1.8, 3.3)
+    for k in range(13):                                                  # dicht smeedijzeren hek
+        y = -319.05 - 1.7 * k / 12
+        prisma("donker", [L(17.62, y - 0.015), L(17.68, y - 0.015), L(17.68, y + 0.015), L(17.62, y + 0.015)], 0.0, 2.35)
+    for z in (0.15, 1.2, 2.3):
+        prisma("donker", [L(17.6, -320.8), L(17.7, -320.8), L(17.7, -319.0), L(17.6, -319.0)], z - 0.03, z + 0.03)
     # blok van 5,4 m (AHN) bij de minaret: x -16..17,4, y -322..-350; één massief blok (dak 5,3), dunne gevels (tot 5,4 m) en
     # een donker dakvlak op 5,42 dat niet over de gevelranden ligt (geen dubbele daken = geen z-fighting)
     # binnenkant (Daan 18 nov: "naar de binnenkant werken"): het blok is hol (ruimte voor gang en instaphal, 15_binnen); alleen een
     # dakplaat 4,9..5,3 m en een afsluitmuur aan de westkop van de wachtrijhal (x 17..17,45, y -350..-340,2)
     prisma("stuc", [L(-16.0, -350.0), L(17.4, -350.0), L(17.4, -322.0), L(-16.0, -322.0)], 4.9, 5.3)
     prisma("stuc", [L(17.0, -350.0), L(17.45, -350.0), L(17.45, -340.2), L(17.0, -340.2)], 0.0, 4.95)
-    wand([(-16.0, -322.0), (17.5, -322.0)], 5.4, 0.4, ramen=[(0, 17.5, 2.6, 3.9), (0, 24.5, 2.6, 3.9)])
+    # noordgevel met de uitgangsdeur van de instaphal (x 13,3..14,9, 2,6 m; Eftepedia: "via een onoverdekte gang ... De Bazaar")
+    wand([(-16.0, -322.0), (13.3, -322.0)], 5.4, 0.4, ramen=[(0, 17.5, 2.6, 3.9), (0, 24.5, 2.6, 3.9)])
+    wand([(14.9, -322.0), (17.5, -322.0)], 5.4, 0.4)
+    prisma("stuc", [L(13.2, -322.4), L(15.0, -322.4), L(15.0, -322.0), L(13.2, -322.0)], 2.6, 5.4)
+    kantelen_recht(G3["Vlak"](L(13.3, -322.0), Vector((1, 0, 0)), Vector((0, 1, 0))), 1.6, 5.4)
+    dv = G3["Vlak"](L(13.3, -322.0), Vector((1, 0, 0)), Vector((0, 1, 0)))
+    strip("lijst", dv, [(-0.1, 0.0), (-0.1, 2.7), (1.7, 2.7), (1.7, 0.0)], 0.2, 0.1)
     wand([(17.5, -322.0), (17.5, -326.9)], 5.4, 0.4)
     wand([(17.5, -331.1), (17.5, -340.2)], 5.4, 0.4, ramen=[(0, 2.6, 3.55, 4.5)])   # raam boven het verandadak (12_veranda)
     wand([(17.5, -350.0), (-16.0, -350.0)], 5.4, 0.4, ramen=[(0, 6.0, 2.6, 3.9), (0, 14.0, 2.6, 3.9), (0, 22.0, 2.6, 3.9)])

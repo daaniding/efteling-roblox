@@ -15,8 +15,8 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 wand = G6["wand"]
 OWNER = "phase:07_koepelgebouw"
-T["KLEUR"].update({"koepel_creme": (0.9, 0.84, 0.68), "wit": (0.95, 0.94, 0.9)})
-T["UVS"].update({"koepel_creme": 2.0, "wit": 9.0})
+T["KLEUR"].update({"koepel_creme": (0.9, 0.84, 0.68), "wit": (0.95, 0.94, 0.9), "gangmuur": (0.92, 0.85, 0.72), "vloertegel": (0.65, 0.42, 0.33)})
+T["UVS"].update({"koepel_creme": 2.0, "wit": 9.0, "gangmuur": 4.0, "vloertegel": 2.0})
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
 
@@ -31,6 +31,12 @@ def uikoepel(rol, c, z0, r, h):
     lathe(rol, prof, z0, 32, (c.x, c.y))
 
 
+def G6_kant(x0, lg):
+    """rechthoekige kantelen op de latei boven de deur (zelfde stijl als de muur ernaast)"""
+    vl = Vlak(L(x0 + lg, -316.0), Vector((-1, 0, 0)), Vector((0, -1, 0)))
+    G6["kantelen_recht"](vl, lg, 2.8)
+
+
 def bouw():
     # laag blok met kantelen (gevels tegen de klok in: noord west->oost, oost noord->zuid, zuid oost->west); loopt 0,3 m het
     # hoofdgebouw in (x -6,8)
@@ -40,10 +46,22 @@ def bouw():
     quad("dak", [L(-6.6, -318.05) + Vector((0, 0, 4.68)), L(12.05, -318.05) + Vector((0, 0, 4.68)), L(12.05, -308.8) + Vector((0, 0, 4.68)), L(-6.6, -308.8) + Vector((0, 0, 4.68))])   # 8 cm boven de muren
     # laag bijgebouw tussen koepelgebouw en ingangsgebouw (AHN 2,7-3,1 m, luchtfoto donker dak): x 9,7..17,5, y -300,9..-316;
     # loopt 0,4 m het ingangsgebouw in; kern + dunne gevels + dak 8 cm boven de muren (Daan: "moet dit connecten of komt daar nog iets")
-    prisma("stuc", [L(9.7, -316.0), L(17.9, -316.0), L(17.9, -300.9), L(9.7, -300.9)], 0.0, 2.5)
+    # binnenkant (Daan: "de uitgang"; Eftepedia: sinds 1995 is de attractie-uitgang "via een halletje direct verbonden aan de winkel"):
+    # het bijgebouw is hol en vormt dat halletje: van de open gang (binnenplaatsje) via een deur in de zuidgevel naar De Bazaar
     wand([(9.7, -300.9), (17.9, -300.9)], 2.8, 0.4, ramen=[(0, 2.5, 0.9, 2.0), (0, 5.5, 0.9, 2.0)])
     wand([(9.7, -308.5), (9.7, -300.9)], 2.8, 0.4, ramen=[(0, 3.8, 0.9, 2.0)])
-    wand([(17.9, -316.0), (12.5, -316.0)], 2.8, 0.4, ramen=[(0, 2.7, 0.9, 2.0)])
+    wand([(17.9, -316.0), (16.0, -316.0)], 2.8, 0.4)
+    wand([(14.4, -316.0), (12.5, -316.0)], 2.8, 0.4)
+    prisma("stuc", [L(14.3, -316.0), L(16.1, -316.0), L(16.1, -315.6), L(14.3, -315.6)], 2.3, 2.8)   # latei boven de deur
+    G6_kant(14.4, 1.6)
+    dz = Vlak(L(16.0, -316.0), Vector((-1, 0, 0)), Vector((0, -1, 0)))
+    strip("lijst", dz, [(-0.1, 0.0), (-0.1, 2.38), (1.7, 2.38), (1.7, 0.0)], 0.18, 0.08)
+    prisma("gangmuur", [L(12.5, -308.5), L(12.9, -308.5), L(12.9, -301.3), L(12.5, -301.3)], 0.0, 2.5)   # afsluiting westkant halletje
+    prisma("vloertegel", [L(12.9, -315.6), L(17.6, -315.6), L(17.6, -301.3), L(12.9, -301.3)], -0.25, 0.12)
+    prisma("vloertegel", [L(14.4, -316.05), L(16.0, -316.05), L(16.0, -315.55), L(14.4, -315.55)], -0.25, 0.12)  # drempel
+    prisma("gangmuur", [L(12.5, -316.0), L(17.6, -316.0), L(17.6, -300.9), L(12.5, -300.9)], 2.45, 2.6)   # plafond halletje
+    # open gang (binnenplaatsje) tussen de uitgang van de instaphal en het halletje: tegelvloer
+    prisma("vloertegel", [L(12.5, -321.75), L(17.4, -321.75), L(17.4, -316.0), L(12.5, -316.0)], -0.25, 0.12)
     quad("dak", [L(10.15, -315.55) + Vector((0, 0, 2.88)), L(17.4, -315.55) + Vector((0, 0, 2.88)), L(17.4, -301.35) + Vector((0, 0, 2.88)), L(10.15, -301.35) + Vector((0, 0, 2.88))])
     # verhoogd vierkant (AHN 6 m), eenvoudige witte rand
     wand([(5.0, -308.3), (11.6, -308.3)], 6.0, 6.8)

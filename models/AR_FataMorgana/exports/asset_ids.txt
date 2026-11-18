@@ -29,3 +29,8 @@ FM_deurblad_kleur 79743845630448
 AR_FataMorgana_binnen 120737100048532
 AR_FataMorgana_instaphal 101357473181413
 FM_balustrade_kleur 87936849308238
+AR_FataMorgana_ingang 79521480838243
+AR_FataMorgana_kantelen 76192302631142
+AR_FataMorgana_koepelgebouw 84517254239285
+AR_FataMorgana_instaphal 100859940779735
+AR_FataMorgana_ingang 106814674593785
