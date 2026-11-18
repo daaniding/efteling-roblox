@@ -84,6 +84,15 @@ end
 local deurStand = {in_ = -1, uit = -1}
 local muren = sir:WaitForChild("Routemuren", 10)
 local schotUit = muren and muren:FindFirstChild("eenrichting_uit") :: BasePart?
+-- ===== geluid (Daan 18 nov: "voeg ook geluid toe, bel en water"; Sirocco.Geluid uit sirocco_rit.luau, PSE-geluiden) =====
+-- water rond de vijver (altijd), kolkend water + machinebrom bij de schijf (volume volgt de ritsnelheid), wind voor wie in een
+-- boot zit, vertrekbel bij het hutje vlak voordat de instappoort dichtgaat, hekgeluid bij open/dicht van de deuren
+local geluid = sir:WaitForChild("Geluid", 10)
+local function snd(naam: string): Sound? return geluid and geluid:FindFirstChild(naam, true) :: Sound? end
+local sWas, sBrom, sWind, sBel, sHekIn, sHekUit = snd("was"), snd("brom"), snd("wind"), snd("bel"), snd("hekIn"), snd("hekUit")
+if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "water" then d:Play() end end end
+for _, x in {sWas, sBrom, sWind} do if x then x.Volume = 0; x:Play() end end
+local vorigTc, vorigIn, vorigUit = -1, false, false
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -418,6 +427,17 @@ RunService.PreSimulation:Connect(function(dt: number)
 		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, not blokkeer)
 		springUit = blokkeer
 	end
+	-- geluid
+	local tSnel = rijdt and v or 0
+	if sWas then sWas.Volume += (0.45 * tSnel - sWas.Volume) * 0.05 end
+	if sBrom then sBrom.Volume += (0.3 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
+	if sWind then sWind.Volume += ((inBoot and 0.35 * tSnel or 0) - sWind.Volume) * 0.05 end
+	if sBel and vorigTc >= 0 and vorigTc < T_IN - 1.5 and tc >= T_IN - 1.5 and tc < T_IN then sBel:Play() end    -- vertrekbel
+	vorigTc = tc
+	local nuIn, nuUit = openIn > 0.02, openUit > 0.02
+	if nuIn ~= vorigIn and sHekIn then sHekIn:Play() end
+	if nuUit ~= vorigUit and sHekUit then sHekUit:Play() end
+	vorigIn, vorigUit = nuIn, nuUit
 	-- beleving
 	local f = tc < T_IN and "instappen" or (rijdt and "rit" or "uitstappen")
 	if inBoot and not wasInBoot and f == "instappen" then toonTitel("Welcome aboard, sailor", 4) end

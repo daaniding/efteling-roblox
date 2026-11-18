@@ -1552,6 +1552,12 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   over de deuropening, SiroccoRitClient zet het dicht voor wie op de brug staat (een open deur staat tegen de muur en hield
   niemand tegen). review/routemuren.png = bovenaanzicht. Play: hele rij belopen zonder vastlopen; over reling/muurtje/dekhek
   springen lukt niet; van de brug naar binnen stopt op y -8,95, van het dek naar buiten gaat door.
-- VOLGENDE: Daans oordeel; geluid (bel, water);
+- Geluid (18 nov, Daan: "voeg ook geluid toe, bel en water, wordt er nog iets gezegd voor de attractie begint"): Sirocco.Geluid
+  (sirocco_rit.luau, gelicentieerde Pro Sound Effects): kabbelend water 9120570661 op 3 plekken op de vijver, kolkend water
+  "Ship Stern Wash" 9112871350 + machinebrom 9125767459 bij de schijf (volume/toonhoogte volgen de ritsnelheid), wind 9112777914
+  voor meerijders, vertrekbel 9119642644 bij het hutje 1,5 s voor vertrek, hekgeluid 9116875342 bij in- en uitgangsdeur.
+  Omroep: geen bron gevonden dat de echte Sirocco iets omroept (en de echte audio mag niet); de in-beeld-teksten blijven.
+  Play: alles geladen, bel op tc 13.5, waterkolk 0 -> 0.45 bij vertrek.
+- VOLGENDE: Daans oordeel (geluid beluisteren);
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

@@ -4,6 +4,7 @@
 --   ProximityPrompt "Board [E]" (Style Custom: eigen knop in SiroccoRitClient); geen aanraak-zitten (CanTouch uit), instappen alleen via de prompt (server)
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
 -- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
+-- - Sirocco.Geluid: water (3x op de vijver), kolkend water + brom (schijf), wind, bel (hutje), hekjes
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
 -- - ReplicatedStorage.SiroccoDraai (RemoteEvent, maakt SiroccoRit zelf aan als hij ontbreekt)
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
@@ -75,6 +76,40 @@ for naam, v in POORTEN do
 		p.CanCollide = true; p.CanQuery = true
 	end
 end
+
+-- geluid (Daan 18 nov: "bel en water"): gelicentieerde Pro Sound Effects (Creator Store), afgespeeld door SiroccoRitClient
+local GELUID = {
+	water = 9120570661,    -- PSE "Water Lap Active 2": kabbelend water, kleine golfjes (vijver)
+	was = 9112871350,      -- PSE "Ship Stern Wash 2": kolkend water (draaiende schijf, volume volgt de snelheid)
+	brom = 9125767459,     -- PSE machinetoon (zelfde als de Pagode), zacht onder de schijf
+	wind = 9112777914,     -- PSE wind (zelfde als de Pagode), 2D voor wie in een boot zit
+	bel = 9119642644,      -- PSE dubbele bel (vertrek, zelfde als de Pagode)
+	hek = 9116875342,      -- PSE hekje open/dicht
+}
+local oudG = sir:FindFirstChild("Geluid"); if oudG then oudG:Destroy() end
+local fg = Instance.new("Folder"); fg.Name = "Geluid"; fg.Parent = sir
+local function bron(naam, x, y, z)
+	local p = Instance.new("Part"); p.Name = naam; p.Size = Vector3.new(0.5, 0.5, 0.5); p.Transparency = 1
+	p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
+	p.Position = MIDDEN + Vector3.new(x * S, (z or 0.5) * S, -y * S); p.Parent = fg
+	return p
+end
+local function snd(ouder, naam, id, vol, minA, maxA, lus)
+	local so = Instance.new("Sound"); so.Name = naam; so.SoundId = "rbxassetid://" .. id; so.Volume = vol; so.Looped = lus
+	so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = minA; so.RollOffMaxDistance = maxA; so.Parent = ouder
+	return so
+end
+for i, p in {{-1.0, 11.5}, {-11.0, 2.0}, {-6.0, -9.8}} do                 -- noord, west, haven bij Sindbads boot (op het water)
+	local w = snd(bron("water" .. i, p[1], p[2], 0.1), "water", GELUID.water, 0.3, 8, 70, true)
+	w.TimePosition = i * 7                                                   -- niet allemaal tegelijk dezelfde golf
+end
+local midden = bron("schijf", 0, 0, 0.6)
+snd(midden, "was", GELUID.was, 0, 15, 140, true)
+snd(midden, "brom", GELUID.brom, 0, 10, 90, true)
+local w = Instance.new("Sound"); w.Name = "wind"; w.SoundId = "rbxassetid://" .. GELUID.wind; w.Volume = 0; w.Looped = true; w.Parent = fg
+snd(bron("hut", 0.7, -9.45, 1.5), "bel", GELUID.bel, 0.45, 10, 120, false)
+snd(bron("poortIn", 4.0, -7.5, 0.8), "hekIn", GELUID.hek, 0.4, 6, 60, false)
+snd(bron("poortUit", -2.0, -8.6, 0.8), "hekUit", GELUID.hek, 0.4, 6, 60, false)
 
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
@@ -374,6 +409,15 @@ end
 local deurStand = {in_ = -1, uit = -1}
 local muren = sir:WaitForChild("Routemuren", 10)
 local schotUit = muren and muren:FindFirstChild("eenrichting_uit") :: BasePart?
+-- ===== geluid (Daan 18 nov: "voeg ook geluid toe, bel en water"; Sirocco.Geluid uit sirocco_rit.luau, PSE-geluiden) =====
+-- water rond de vijver (altijd), kolkend water + machinebrom bij de schijf (volume volgt de ritsnelheid), wind voor wie in een
+-- boot zit, vertrekbel bij het hutje vlak voordat de instappoort dichtgaat, hekgeluid bij open/dicht van de deuren
+local geluid = sir:WaitForChild("Geluid", 10)
+local function snd(naam: string): Sound? return geluid and geluid:FindFirstChild(naam, true) :: Sound? end
+local sWas, sBrom, sWind, sBel, sHekIn, sHekUit = snd("was"), snd("brom"), snd("wind"), snd("bel"), snd("hekIn"), snd("hekUit")
+if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "water" then d:Play() end end end
+for _, x in {sWas, sBrom, sWind} do if x then x.Volume = 0; x:Play() end end
+local vorigTc, vorigIn, vorigUit = -1, false, false
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -708,6 +752,17 @@ RunService.PreSimulation:Connect(function(dt: number)
 		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, not blokkeer)
 		springUit = blokkeer
 	end
+	-- geluid
+	local tSnel = rijdt and v or 0
+	if sWas then sWas.Volume += (0.45 * tSnel - sWas.Volume) * 0.05 end
+	if sBrom then sBrom.Volume += (0.3 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
+	if sWind then sWind.Volume += ((inBoot and 0.35 * tSnel or 0) - sWind.Volume) * 0.05 end
+	if sBel and vorigTc >= 0 and vorigTc < T_IN - 1.5 and tc >= T_IN - 1.5 and tc < T_IN then sBel:Play() end    -- vertrekbel
+	vorigTc = tc
+	local nuIn, nuUit = openIn > 0.02, openUit > 0.02
+	if nuIn ~= vorigIn and sHekIn then sHekIn:Play() end
+	if nuUit ~= vorigUit and sHekUit then sHekUit:Play() end
+	vorigIn, vorigUit = nuIn, nuUit
 	-- beleving
 	local f = tc < T_IN and "instappen" or (rijdt and "rit" or "uitstappen")
 	if inBoot and not wasInBoot and f == "instappen" then toonTitel("Welcome aboard, sailor", 4) end
