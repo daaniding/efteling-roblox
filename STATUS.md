@@ -89,6 +89,12 @@ Route: ingang van de rij = opening in het voorhek aan de oostkant (x 53,4..54,6)
 achterwand en aan de voorkant), laatste baan komt aan de voorkant uit, westwaarts naar de veranda, rechtdoor naar de zijdeur in de
 minaret (tussenhek in de veranda weg). Op rustige dagen: opening in het verandahek op de zuidoosthoek. Assets: zuidvleugel
 77259417793952, veranda 90836151957540.
+Stap 12c (Daan: "fences staan nog steeds verkeerd", "maak het gewoon na"; zijn foto + video "Verlengde wachtrij 2020"):
+hal 7,2 m diep (achterwand y -347); banen van voor naar achter, 1,2 m, 29 banen vast aan het voorhek, achterhek op y -345,6 met
+een gang langs de achterwand. Route: ingang uit het plein aan de westkant (x 22..23,2, paaltjes met bollen), zigzag oostwaarts,
+laatste baan komt achter uit, gang langs de achterwand terug naar het westen, westvak (x 17,2..22) noordwaarts de veranda in, naar
+de zijdeur. Schuine luifel met de fries (video), zwart voorhek met rode plaquettes, spitsboogdoorgang westkant achterwand.
+Asset zuidvleugel 126456717543755.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

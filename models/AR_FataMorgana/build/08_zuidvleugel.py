@@ -13,12 +13,12 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:08_zuidvleugel"
 T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
-                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0})
+                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
-X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -349.4, -350.0     # voorkant palen, achterwand wachtrijhal (zo diep als het dak: AHN tot -350), achterkant
+X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -347.0, -350.0     # voorkant palen, achterwand wachtrijhal, achterkant
 H = 4.3
 
 
@@ -59,50 +59,82 @@ def bouw():
                 lp[uvl].uv = ((uu - c + 0.65) / 1.3, (vv_ - 1.3) / 1.7)
         strip("koepel_blauw", aw, om + [om[0]], 0.12, 0.08)
         # twee hoge rondboogramen (matglas), diep in de muur
-        for du in (-1.5, 1.5):
+        for du in ((1.5,) if k == 0 else (-1.5, 1.5)):
             r = spitsboog(c + du, 0.95, 2.25, 2.65, 10, 0.5)
             vul("matglas", aw, r, 0.03); strip("lijst", aw, r, 0.1, 0.12)
+    # spitsboogdoorgang in de achterwand aan de westkant (video 2020: de rij loopt erlangs naar de veranda)
+    db = spitsboog(1.25, 1.0, 0.0, 1.9, 8, 0.75); vul("raam", aw, db, 0.03); strip("wit", aw, db, 0.16, 0.1)
     # vloer (dambord tegels) en plafond met bollampen
     prisma("vloertegel", [L(X0, YA), L(X1, YA), L(X1, YV + 0.1), L(X0, YV + 0.1)], -0.25, 0.12)   # 12 cm boven het terrein
     quad("stucvlak", [L(X0, YA) + Vector((0, 0, 3.3)), L(X0, YV) + Vector((0, 0, 3.3)), L(X1, YV) + Vector((0, 0, 3.3)), L(X1, YA) + Vector((0, 0, 3.3))])
-    for y in (-342.6, -347.0):
+    for y in (-342.0, -345.6):
         x = X0 + 2.0
         while x < X1 - 1.0:
             p = L(x, y)
             lathe("lampmetaal", [(0.02, 0.0), (0.02, 0.35)], 2.95, 6, (p.x, p.y))
             lathe("matglas", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.3, 0.17))], 2.78, 12, (p.x, p.y))
             x += 3.4
-    # groene hekken (Daan 18 nov: "de rij staat andersom, niet horizontaal maar verticaal, niet breed genoeg en sluit niet aan op de
-    # hekken en de ingang"): banen van 1,2 m van voor naar achter (noord-zuid), afwisselend open bij de achterwand en bij de voorkant.
-    # Ingang van de rij aan de oostkant (opening in het voorhek), zigzag naar het westen, uitloop bij de veranda (12_veranda) naar de
-    # zijdeur in de minaret.
-    def hek(xa, ya, xb, yb):
+    # hekken binnen (video "Verlengde wachtrij - Fata Morgana 2020"): banen evenwijdig aan de achterwand. Ingang van de rij in het
+    # voorhek aan de westkant (x 20,8..22, naast de veranda en het ronde bord), baan 1 langs de voorkant naar het oosten, keren,
+    # terug, keren, achterste baan naar het westen, dan door de gang langs de westmuur (x 17,4..19) de veranda in naar de zijdeur.
+    def hek(xa, ya, xb, yb, rol="hekgroen", h=1.0, stap=2.4):
         a, b = L(xa, ya), L(xb, yb); d = (b - a); lg = d.length; t = d / lg; nn = Vector((-t.y, t.x, 0)) * 0.025
-        prisma("hekgroen", [a - nn, b - nn, b + nn, a + nn], 0.97, 1.03)
-        k = max(1, round(lg / 2.4))
+        prisma(rol, [a - nn, b - nn, b + nn, a + nn], h - 0.03, h + 0.03)
+        k = max(1, round(lg / stap))
         for i in range(k + 1):
             q = a + d * (i / k)
-            prisma("hekgroen", [q + Vector((sx, sy, 0)) * 0.025 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.0)
-    YH, YB = -340.35, YA + 0.25              # voorhek (achter de palen), achterkant van de banen
-    XW, XO = 21.0, 54.6                      # westelijkste en oostelijkste baanhek
-    hek(XW, YH, XO - 1.2, YH)                # voorhek; tussen XO-1,2 en XO de ingang van de rij
-    hek(XO, YH, XO, YB)                      # oostgrens van de banen
-    n = round((XO - XW) / 1.2); bw = (XO - XW) / n
-    for i in range(1, n):
-        x = XO - i * bw
-        if i % 2 == 1: hek(x, YH, x, YB + 1.25)          # baan 1 loopt naar achteren: keren bij de achterwand
-        else: hek(x, YH - 1.25, x, YB)                    # keren aan de voorkant
-    hek(XW, YH - 1.25, XW, YB)                            # laatste baan: uitloop aan de voorkant, westwaarts naar de veranda
-    hek(X0 + 0.4, YB, XW, YB)                             # achterkant van de uitloop
-    # dakrand boven de palen: lijst + fries (blauw-wit tegelwerk) + rode randen; dak
-    vv = Vlak(L(X0, YV), Vector((1, 0, 0)), Vector((0, 1, 0)))
-    prisma("wit", [L(X0 - 0.1, YV - 0.25), L(X1 + 0.1, YV - 0.25), L(X1 + 0.1, YV + 0.1), L(X0 - 0.1, YV + 0.1)], 3.3, H)
-    paneel("fries", vv, -0.1, lw + 0.1, 3.42, 4.18, 0.14, 1.8, 0.76, 3.42)
-    for z in (3.36, 4.24):
-        prisma("rood", [L(X0 - 0.12, YV - 0.25), L(X1 + 0.12, YV - 0.25), L(X1 + 0.12, YV + 0.17), L(X0 - 0.12, YV + 0.17)], z - 0.05, z + 0.05)
-    prisma("stuc", [L(X0, YA), L(X1, YA), L(X1, YV - 0.25), L(X0, YV - 0.25)], 3.3, H - 0.3)
+            prisma(rol, [q + Vector((sx, sy, 0)) * 0.025 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, h)
+    # Daan 18 nov ("de fences staan nog steeds verkeerd"; zijn foto): de banen lopen van voor naar achter (noord-zuid), ~1,2 m
+    # breed, vast aan het voorhek, en stoppen ~1,2 m voor de achterwand: daar loopt een gang langs de achterwand.
+    # Route: ingang uit het plein aan de westkant (opening x 22..23,2), zigzag oostwaarts door de banen, laatste baan komt achter
+    # uit, gang langs de achterwand terug naar het westen, dan noordwaarts door het westvak (x 17,2..22) de veranda in.
+    YF, YR = YV - 0.25, -345.6                           # voorhek, achterhek (scheiding banen / gang langs de achterwand)
+    BW = 1.2; X0B = 22.0; K = 29                         # baanbreedte, eerste hek, aantal banen (oneven: laatste baan loopt naar achteren)
+    for k in range(K + 1):
+        x = X0B + BW * k
+        if k == 0 or k == K: hek(x, YF, x, YR)                       # buitenste hekken: dicht
+        elif k % 2 == 1: hek(x, YF, x, YR + BW)                      # baan k loopt naar achteren: keren achter
+        else: hek(x, YF - BW, x, YR)                                 # keren aan de voorkant
+    hek(X0B, YR, X0B + BW * (K - 1), YR)                             # achterhek, open bij de laatste baan
+    hek(X0B + BW * K, YR, X1 - 0.3, YR)                              # dicht oostelijk van de banen
+    # voorhek tussen de palen: zwart smeedwerk met rode plaquettes met ster (video), opening voor de ingang bij x 20,8..22
+    for xa, xb in ((20.7, X0B), (X0B + BW, X1 - 0.3)):
+        for z in (0.1, 1.0):
+            prisma("donker", [L(xa, YF - 0.025), L(xb, YF - 0.025), L(xb, YF + 0.025), L(xa, YF + 0.025)], z - 0.03, z + 0.03)
+        x = xa
+        while x <= xb + 0.01:
+            prisma("donker", [L(x - 0.012, YF - 0.012), L(x + 0.012, YF - 0.012), L(x + 0.012, YF + 0.012), L(x - 0.012, YF + 0.012)], 0.1, 1.0)
+            x += 0.13
+        x = xa + 0.65
+        while x < xb - 0.4:
+            for rol, hw, n0, n1 in (("rood", 0.21, 0.03, 0.06), ("wit", 0.13, 0.06, 0.075), ("goud", 0.06, 0.075, 0.09)):
+                prisma(rol, [L(x - hw, YF + n0), L(x + hw, YF + n0), L(x + hw, YF + n1), L(x - hw, YF + n1)], 0.55 - hw, 0.55 + hw)
+            x += 2.6
+    for xx in (X0B, X0B + BW):                           # ingangspaaltjes met crème bollen
+        p = L(xx, YF)
+        prisma("donker", [p + Vector((sx, sy, 0)) * 0.05 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.1)
+        lathe("wit", [(r * 0.09, z) for r, z in ((0.0, -0.09), (0.7, -0.06), (1.0, 0.0), (0.7, 0.06), (0.0, 0.09))], 1.2, 10, (p.x, p.y))
+
+    # schuine luifel boven de palen (video 2020): aflopend dakvlak met de blauw-witte fries erop, rode randen, witte onderkant;
+    # erachter de gevel van het blok tot het dak (4,3 m) met witte borstwering
+    yv, ya_, zv, za_ = YV + 0.55, YV - 0.9, 3.22, 3.95
+    bm = T["G"]["fries"]; uvl = bm.loops.layers.uv.verify(); lsch = math.hypot(yv - ya_, za_ - zv)
+    pts = [L(X0 - 0.1, yv) + Vector((0, 0, zv + 0.08)), L(X1 + 0.1, yv) + Vector((0, 0, zv + 0.08)), L(X1 + 0.1, ya_) + Vector((0, 0, za_ + 0.08)), L(X0 - 0.1, ya_) + Vector((0, 0, za_ + 0.08))]
+    uvs = [(-0.1 / 1.8, 0.0), ((lw + 0.1) / 1.8, 0.0), ((lw + 0.1) / 1.8, 1.0), (-0.1 / 1.8, 1.0)]
+    f = bm.faces.new([bm.verts.new(q) for q in pts[::-1]])   # omgekeerd: normaal schuin omhoog en naar voren (plein)
+    for lp, t in zip(f.loops, uvs[::-1]): lp[uvl].uv = t
+    hb = T["G"]["wit"]
+    bot = [hb.verts.new(L(x_, y_) + Vector((0, 0, z_))) for x_, y_, z_ in ((X0 - 0.1, yv, zv - 0.06), (X1 + 0.1, yv, zv - 0.06), (X1 + 0.1, ya_, za_ - 0.06), (X0 - 0.1, ya_, za_ - 0.06))]
+    top = [hb.verts.new(L(x_, y_) + Vector((0, 0, z_))) for x_, y_, z_ in ((X0 - 0.1, yv, zv + 0.06), (X1 + 0.1, yv, zv + 0.06), (X1 + 0.1, ya_, za_ + 0.06), (X0 - 0.1, ya_, za_ + 0.06))]
+    hb.faces.new(top); hb.faces.new(bot[::-1])
+    for k in range(4):
+        j = (k + 1) % 4; hb.faces.new([bot[k], bot[j], top[j], top[k]])
+    prisma("rood", [L(X0 - 0.12, yv - 0.04), L(X1 + 0.12, yv - 0.04), L(X1 + 0.12, yv + 0.06), L(X0 - 0.12, yv + 0.06)], zv - 0.12, zv + 0.14)
+    prisma("rood", [L(X0 - 0.12, ya_ - 0.02), L(X1 + 0.12, ya_ - 0.02), L(X1 + 0.12, ya_ + 0.1), L(X0 - 0.12, ya_ + 0.1)], za_ - 0.02, za_ + 0.16)
+    prisma("stuc", [L(X0, YA), L(X1, YA), L(X1, ya_ - 0.05), L(X0, ya_ - 0.05)], 3.3, H - 0.3)
+    prisma("wit", [L(X0 - 0.1, ya_ - 0.3), L(X1 + 0.1, ya_ - 0.3), L(X1 + 0.1, ya_ - 0.02), L(X0 - 0.1, ya_ - 0.02)], za_ + 0.1, H + 0.15)
     quad("dak", [L(X0 + 0.1, YZ + 0.1) + Vector((0, 0, H + 0.08)), L(X1 - 0.1, YZ + 0.1) + Vector((0, 0, H + 0.08)),
-                 L(X1 - 0.1, YV - 0.2) + Vector((0, 0, H + 0.08)), L(X0 + 0.1, YV - 0.2) + Vector((0, 0, H + 0.08))])
+                 L(X1 - 0.1, ya_ - 0.35) + Vector((0, 0, H + 0.08)), L(X0 + 0.1, ya_ - 0.35) + Vector((0, 0, H + 0.08))])
     # rode palen (vierkant met voet en kopje), gouden bol op elke tweede paal
     n = int(lw / 3.0)
     for i in range(n + 1):
@@ -110,10 +142,11 @@ def bouw():
         prisma("rood", [p + Vector((a, b, 0)) * 0.12 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 3.3)
         prisma("rood", [p + Vector((a, b, 0)) * 0.2 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 0.25)
         prisma("rood", [p + Vector((a, b, 0)) * 0.19 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 3.12, 3.3)
+        prisma("rood", [L(x - 0.06, YV - 0.05), L(x + 0.06, YV - 0.05), L(x + 0.06, YV + 0.5), L(x - 0.06, YV + 0.5)], 3.0, 3.12)   # console onder de luifel
         if i % 2 == 0:
-            q = p + Vector((0, 0.02, 0))
-            prisma("goud", [q + Vector((a, b, 0)) * 0.1 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], H + 0.05, H + 0.2)
-            lathe("goud", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.0, 0.2))], H + 0.38, 12, (q.x, q.y))
+            q = L(x, -340.75)
+            prisma("goud", [q + Vector((a, b, 0)) * 0.08 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], H + 0.1, H + 0.25)
+            lathe("goud", [(r * 0.15, z) for r, z in ((0.0, -0.15), (0.7, -0.1), (1.0, 0.0), (0.7, 0.11), (0.0, 0.17))], H + 0.4, 12, (q.x, q.y))
             lathe("goud", [(0.03, 0.0), (0.0, 0.25)], H + 0.56, 6, (q.x, q.y))
     # oostkop en achterkant: gewone gevels met kantelen en verwering (tegen de klok in: buiten = links)
     G6["wand"]([(X1, YV), (X1, YZ)], H, 0.4)
