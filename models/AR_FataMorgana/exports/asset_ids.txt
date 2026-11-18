@@ -2,7 +2,7 @@ AR_FataMorgana_toren 93537759416227
 FM_lijst_kleur 84200753761674
 FM_stuc_kleur 87378813833395
 FM_stuc_normaal 93453765359013
-AR_FataMorgana_noordgevel 84493841734401
+AR_FataMorgana_noordgevel 130556259967074
 FM_vlek1_kleur 139447230717275
 FM_vlek2_kleur 130335827998969
 FM_vlek3_kleur 89523083759406
@@ -13,8 +13,8 @@ AR_FataMorgana_minaret 103454423403658
 FM_zellige_kleur 112364982933611
 FM_zigzag_kleur 94009043451472
 FM_balkon_kleur 115587625989953
-AR_FataMorgana_ingang 137939058457250
+AR_FataMorgana_ingang 100985437413419
 AR_FataMorgana_kantelen 96319370402611
 AR_FataMorgana_koepelgebouw 120417804311765
-AR_FataMorgana_zuidvleugel 86870501167042
+AR_FataMorgana_zuidvleugel 73113709225547
 FM_fries_kleur 96873829333423

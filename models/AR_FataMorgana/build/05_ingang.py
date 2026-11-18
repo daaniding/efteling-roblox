@@ -123,7 +123,7 @@ def bouw():
         prisma("wit", [Vector((p.x, p.y, 0)) for p in (oost.p(u - 0.12, 0, 0), oost.p(u + 0.12, 0, 0), oost.p(u + 0.12, 0, diep), oost.p(u - 0.12, 0, diep))], hz, HP)
     prisma("wit", [Vector((p.x, p.y, 0)) for p in (oost.p(zuilen_u[0] - 0.35, 0, 0), oost.p(zuilen_u[-1] + 0.35, 0, 0), oost.p(zuilen_u[-1] + 0.35, 0, diep + 0.12), oost.p(zuilen_u[0] - 0.35, 0, diep + 0.12))], HP - 0.02, HP + 0.15)
     G3_buis([oost.p(zuilen_u[0] - 0.35, HP + 0.16, diep + 0.14), oost.p(zuilen_u[-1] + 0.35, HP + 0.16, diep + 0.14)], 0.09)
-    quad("tegel", [oost.p(zuilen_u[0] - 0.35, 0.03, 0), oost.p(zuilen_u[-1] + 0.35, 0.03, 0), oost.p(zuilen_u[-1] + 0.35, 0.03, diep + 0.1), oost.p(zuilen_u[0] - 0.35, 0.03, diep + 0.1)][::-1][::-1])
+    prisma("tegel", [Vector((q.x, q.y, 0)) for q in (oost.p(zuilen_u[0] - 0.35, 0, 0), oost.p(zuilen_u[-1] + 0.35, 0, 0), oost.p(zuilen_u[-1] + 0.35, 0, diep + 0.1), oost.p(zuilen_u[0] - 0.35, 0, diep + 0.1))], -0.25, 0.12)
     # achter het portaal: ingang (donker), winkelraam rechts, raampje links
     deur = kielboog(uc, 1.9, 0.0, 1.95, 0.6)
     vul("raam", oost, deur, 0.09); G3_buis([oost.p(u, v, 0.08) for u, v in deur], 0.07)
@@ -162,7 +162,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur", "dak", "witvlak", "tegel"):
+        if not vast and rol not in ("raam", "deur", "dak", "witvlak"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]

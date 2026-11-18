@@ -44,7 +44,7 @@ def bouw():
         strip("lijst", aw, om, 0.1, 0.07)
         u += 2.9; k += 1
     # vloer en plafond van de gang
-    quad("tegel", [L(X0, YA) + Vector((0, 0, 0.03)), L(X1, YA) + Vector((0, 0, 0.03)), L(X1, YV) + Vector((0, 0, 0.03)), L(X0, YV) + Vector((0, 0, 0.03))])
+    prisma("tegel", [L(X0, YA), L(X1, YA), L(X1, YV + 0.1), L(X0, YV + 0.1)], -0.25, 0.12)   # 12 cm boven het terrein
     quad("stucvlak", [L(X0, YA) + Vector((0, 0, 3.3)), L(X0, YV) + Vector((0, 0, 3.3)), L(X1, YV) + Vector((0, 0, 3.3)), L(X1, YA) + Vector((0, 0, 3.3))])
     # dakrand boven de palen: lijst + fries (blauw-wit tegelwerk) + rode randen; dak
     vv = Vlak(L(X0, YV), Vector((1, 0, 0)), Vector((0, 1, 0)))
@@ -78,7 +78,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "tegel"):
+        if not vast and rol not in ("raam", "deur", "dak", "stucvlak"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]

@@ -154,7 +154,7 @@ def galerij(vl, u0, u1, h=3.4, diep=1.6, n=5):
         lathe("lijst", [(0.21, 0.0), (0.21, 0.12), (0.16, 0.2), (0.12, 0.28), (0.11, vs - 0.42), (0.14, vs - 0.34), (0.2, vs - 0.18),
                         (0.22, vs - 0.06), (0.22, vs), (0.0, vs)], 0.0, 12, (p.x, p.y))
     # ruimte erachter: tegelvloer, plafond, achterwand (licht stuc) met deur en ramen
-    quad("tegel", [vl.p(u0, 0.02, -dik), vl.p(u1, 0.02, -dik), vl.p(u1, 0.02, -diep), vl.p(u0, 0.02, -diep)][::-1])
+    prisma("tegel", [Vector((q.x, q.y, 0)) for q in (vl.p(u0, 0, -dik), vl.p(u1, 0, -dik), vl.p(u1, 0, -diep), vl.p(u0, 0, -diep))], -0.25, 0.12)   # 12 cm boven het terrein (geen z-fighting)
     quad("stucvlak", [vl.p(u0, h - 0.02, -dik), vl.p(u0, h - 0.02, -diep), vl.p(u1, h - 0.02, -diep), vl.p(u1, h - 0.02, -dik)][::-1])
     va = Vlak(vl.p(0, 0, -diep + 0.01), vl.U, vl.N)
     deur = spitsboog((u0 + u1) / 2, 1.1, 0.0, 1.8, 8)
@@ -323,7 +323,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         ov = rol in T["OVERLAY"]
-        if not ov and rol not in ("raam", "deur", "dak", "stucvlak", "tegel"): bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        if not ov and rol not in ("raam", "deur", "dak", "stucvlak"): bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()                                   # vlakken zonder recalc hebben anders normaal (0,0,0) -> verkeerde UV-as
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]
         for f in ([] if ov else bm.faces):
