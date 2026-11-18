@@ -425,3 +425,5 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Park.maak haalt het Animate-script weg: zitten (Seat) moet je zelf een zitanimatie geven (R15 2506281703, priority Action).
 - Rit-klok laten wachten op NPC's via attributen (bezig met instappen / uitstappen) en een wachtvenster een paar seconden voor
   het einde van de fase, zodat deuren dan nog helemaal open staan.
+- Eenrichting bij een klapdeur: een botsende deur in open stand staat tegen de muur en houdt niemand tegen; zet een apart
+  onzichtbaar schot dwars over de opening en laat de client het alleen dichtzetten voor wie aan de verkeerde kant staat.

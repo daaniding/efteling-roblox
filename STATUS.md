@@ -1545,6 +1545,13 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   1,5 s geen voortgang = op het looppunt zetten. SiroccoRit wacht op NPC's (attributen NpcInstap/NpcUit, wachtvensters 3 s voor
   het einde van instappen/uitstappen, max 40 s); uitstappen nu 16 s. Play: 12/12 boten vol voor vertrek, 4 wachten; alle 12
   uitstappers in ~12 s van het dek, geen sprongen; daarna naar de Pagode.
+- Route-muren (18 nov, Daan: "regel ook ff de barriers weer", "ik kan via de uitgang alsnog naar binnen"): roblox/maak_routemuren.py
+  -> sirocco_routemuren.luau: 198 onzichtbare muren van 14 studs (groep Routemuur: spelers botsen, bezoekers niet) op de
+  relinglijnen van 07_omgeving: beide wachtrijrelingen (binnen open bij de instap-zijtak, eind dicht), zijtak, dekhek r 8,55
+  (open bij in- en uitstap), gaashek r 7,25 (open bij -62/-106), brugmuurtjes. Eenrichting uitgang: schot eenrichting_uit dwars
+  over de deuropening, SiroccoRitClient zet het dicht voor wie op de brug staat (een open deur staat tegen de muur en hield
+  niemand tegen). review/routemuren.png = bovenaanzicht. Play: hele rij belopen zonder vastlopen; over reling/muurtje/dekhek
+  springen lukt niet; van de brug naar binnen stopt op y -8,95, van het dek naar buiten gaat door.
 - VOLGENDE: Daans oordeel; geluid (bel, water);
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

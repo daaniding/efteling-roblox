@@ -82,6 +82,8 @@ for _, naam in {"poort_in_l", "poort_in_r", "poort_uit_l", "poort_uit_r"} do
 	end
 end
 local deurStand = {in_ = -1, uit = -1}
+local muren = sir:WaitForChild("Routemuren", 10)
+local schotUit = muren and muren:FindFirstChild("eenrichting_uit") :: BasePart?
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -388,6 +390,17 @@ RunService.PreSimulation:Connect(function(dt: number)
 		end
 		deurStand.in_, deurStand.uit = openIn, openUit
 	end
+	-- uitgang eenrichting (Daan 18 nov: "regel de barriers", "ik kan via de uitgang alsnog naar binnen"): wie op de brug staat,
+	-- voorbij de uitstapdeur (y -8,6), kan niet terug naar binnen. Een open deur staat tegen de brugmuur en blokkeert de doorgang
+	-- dus niet: daarom een onzichtbaar schot dwars over de opening (Routemuren.eenrichting_uit), alleen dicht voor wie op de brug
+	-- staat (lokaal); bezoekers lopen er altijd door (groep Routemuur)
+	local hrpE = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local opBrug = false
+	if hrpE then
+		local mx, my = (hrpE.Position.X - MIDDEN.X) / 3, -(hrpE.Position.Z - MIDDEN.Z) / 3
+		opBrug = my < -8.75 and math.abs(mx + 2) < 1.6
+	end
+	if schotUit then schotUit.CanCollide = opBrug end
 	-- eigen speler in een boot: camera mee, niet uit de boot springen tot het uitstappen, geen andere instapknoppen
 	if inBoot and zit then
 		local cf = zit.CFrame
