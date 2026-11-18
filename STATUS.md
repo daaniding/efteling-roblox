@@ -40,7 +40,9 @@ Stap 5 — kantelenmuren (build/06_kantelen.py): lage muur 3,3 m van de ZW-hoek 
 verweringsvlekken; grond alleen onder de muren.
 Stap 6 — koepelgebouw (build/07_koepelgebouw.py): laag blok met rechthoekige kantelen x -6,8..12,5, y -308,5..-318,5 (4,6 m),
 verhoogd deel x 5..11,6 (6 m), hoektorentje op de oosthoek van het hoofdgebouw (-4; -310,6) met boogopeningen en crème
-uikoepel tot 13,9 m (AHN), klein wit koepeltje met gouden spits (-2,5; -316,3) (Fmplein1986.jpg, luchtfoto).
+uikoepel tot 13,9 m (AHN), klein wit koepeltje met gouden spits (-2,5; -316,3) (Fmplein1986.jpg, luchtfoto). Laag bijgebouw
+(2,8 m) x 9,7..17,5, y -300,9..-316 tussen koepelgebouw en ingang; grond in het binnenplaatsje (x 12,5..17,4, y -316..-322) en het
+hofje met de boom (x -6..9,7, y -298..-308,5).
 Controle (bovenaanzicht model over luchtfoto, review/top_over.jpg): alle delen liggen op hun dak/koepel.
 Stap 7 — zuidvleugel (build/08_zuidvleugel.py): x 17,2..58, y -339,8..-350 (AHN 4,3 m), overdekte buitenwachtrij langs het plein:
 rode palen, blauw-witte fries (FM_fries, 04t_tegels), rode randen, gouden bollen, achterwand met boognissen (FataVoorplein1993.jpg).

@@ -38,6 +38,13 @@ def bouw():
     wand([(12.5, -308.5), (12.5, -318.5)], 4.6, 0.4, ramen=[(0, 5.0, 1.6, 2.9)])
     wand([(12.5, -318.5), (-6.8, -318.5)], 4.6, 0.4, ramen=[(0, 6.0, 1.6, 2.9), (0, 12.0, 1.6, 2.9)])
     quad("dak", [L(-6.6, -318.05) + Vector((0, 0, 4.68)), L(12.05, -318.05) + Vector((0, 0, 4.68)), L(12.05, -308.8) + Vector((0, 0, 4.68)), L(-6.6, -308.8) + Vector((0, 0, 4.68))])   # 8 cm boven de muren
+    # laag bijgebouw tussen koepelgebouw en ingangsgebouw (AHN 2,7-3,1 m, luchtfoto donker dak): x 9,7..17,5, y -300,9..-316;
+    # loopt 0,4 m het ingangsgebouw in; kern + dunne gevels + dak 8 cm boven de muren (Daan: "moet dit connecten of komt daar nog iets")
+    prisma("stuc", [L(9.7, -316.0), L(17.9, -316.0), L(17.9, -300.9), L(9.7, -300.9)], 0.0, 2.5)
+    wand([(9.7, -300.9), (17.9, -300.9)], 2.8, 0.4, ramen=[(0, 2.5, 0.9, 2.0), (0, 5.5, 0.9, 2.0)])
+    wand([(9.7, -308.5), (9.7, -300.9)], 2.8, 0.4, ramen=[(0, 3.8, 0.9, 2.0)])
+    wand([(17.9, -316.0), (12.5, -316.0)], 2.8, 0.4, ramen=[(0, 2.7, 0.9, 2.0)])
+    quad("dak", [L(10.15, -315.55) + Vector((0, 0, 2.88)), L(17.4, -315.55) + Vector((0, 0, 2.88)), L(17.4, -301.35) + Vector((0, 0, 2.88)), L(10.15, -301.35) + Vector((0, 0, 2.88))])
     # verhoogd vierkant (AHN 6 m), eenvoudige witte rand
     wand([(5.0, -308.3), (11.6, -308.3)], 6.0, 6.8)
     # hoektorentje op de oosthoek van het hoofdgebouw: vierkante voet tot boven het dak, open stage met boogopeningen,
