@@ -3,10 +3,10 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 78216314839709, Noordgevel = 122493078909719}
+local DELEN = {Toren = 78216314839709, Noordgevel = 122927178695906}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
-	streep = 137986762588861, voet = 96092065348033}
+	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761}   -- naald: Pagode (dennennaalden)
 -- rol -> {textuur, normaal, kleur, materiaal, botsen, reflectie, alfa}
 local R = {
 	stuc = {"stuc_kleur", "stuc_normaal", Color3.new(1, 1, 1), Enum.Material.Plaster, true},
@@ -22,7 +22,7 @@ local R = {
 	dak = {nil, nil, Color3.fromRGB(58, 58, 60), Enum.Material.Asphalt, true},
 	lampmetaal = {nil, nil, Color3.fromRGB(86, 42, 32), Enum.Material.Metal, true},
 	lampglas = {nil, nil, Color3.fromRGB(255, 236, 200), Enum.Material.Glass, false, nil, nil, 0.25},
-	cipres = {nil, nil, Color3.fromRGB(32, 56, 30), Enum.Material.Grass, false},
+	cipres = {"naald", nil, Color3.fromRGB(215, 240, 190), Enum.Material.Grass, false},
 	hout = {nil, nil, Color3.fromRGB(86, 56, 34), Enum.Material.Wood, true},
 }
 for _, r in {"vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet"} do

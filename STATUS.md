@@ -14,7 +14,8 @@ In Studio: workspace.FataMorgana.Toren + terrein 36x30 m (bestrating Y 0,91, wat
 Stap 2 — noordgevel (build/03_noordgevel.py): west- en oostvleugel volgens AHN-voorlijn, hoofdvolume met plat donker dak
 (x -73..-6, y -297..-339) zodat alles aan elkaar zit (Daan: "het zit niet aan elkaar"), witte/grijze/gouden koepel,
 westtorentje, galerij met groen afdak (echt uitgespaard), erkers met roosterwerk, kade met pijlers en bolbekroningen langs het
-water, sierlantaarnpalen, cipressen, muurlampjes. Textuur (Daan: "copy paste van hetzelfde ridleltje"): stuc-tegel zonder grote
+water, sierlantaarnpalen, cipressen (kort stammetje + kern + onregelmatige kluiten, Pagode-naaldtextuur; Daan: gladde spoel
+"ziet er niet uit"), muurlampjes. Textuur (Daan: "copy paste van hetzelfde ridleltje"): stuc-tegel zonder grote
 vlekken + losse verweringsoverlays (vlek1..4, streep, voet; willekeurig per muur, 02_toren.verwering), openingen vrij.
 Alles herladen met roblox/plaats_modellen.luau; terrein met plaats_noordgevel.luau.
 Les: Roblox toont alleen voorkanten — losse vlakken (overlays, dak, galerijwand) met de normaal naar buiten bouwen en niet door

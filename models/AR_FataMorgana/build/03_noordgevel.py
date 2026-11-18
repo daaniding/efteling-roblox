@@ -17,7 +17,7 @@ T["KLEUR"].update({"koepel_wit": (0.94, 0.93, 0.9), "koepel_grijs": (0.8, 0.8, 0
                    "kade": (0.95, 0.93, 0.88), "dak": (0.22, 0.22, 0.23), "lampmetaal": (0.32, 0.16, 0.12), "lampglas": (1.0, 0.92, 0.75),
                    "cipres": (0.12, 0.22, 0.12), "hout": (0.32, 0.2, 0.12)})
 T["UVS"].update({"koepel_wit": 2.0, "koepel_grijs": 2.0, "pannen": 1.0, "kade": 9.0, "dak": 4.0, "lampmetaal": 1.0, "lampglas": 1.0,
-                 "cipres": 2.0, "hout": 1.0})
+                 "cipres": 0.8, "hout": 1.0})
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 quad, doos, strip, spitsboog, vul, raam, nis, lathe, bol, Vlak = (T[k] for k in ("quad", "doos", "strip", "spitsboog", "vul", "raam", "nis", "lathe", "bol", "Vlak"))
 O = (-40.0, -295.0)
@@ -190,10 +190,38 @@ def lantaarnpaal(x, y):
         lathe("lampmetaal", [(0.07, 0.0), (0.1, 0.06), (0.0, 0.14)], z + 0.22, 8, (p.x, p.y))
 
 
-def cipres(x, y, h):
-    c = L(x, y)
-    prof = [(0.0, 0.0)] + [(0.42 * math.sin(math.pi * min(1, t * 1.25)) ** 0.7 * (1 - t) ** 0.35 + 0.02, h * t) for t in [k / 14 for k in range(1, 14)]] + [(0.0, h)]
-    lathe("cipres", prof, 0.0, 10, (c.x, c.y))
+def cipres(x, y, h, seed=0):
+    """Italiaanse cipres (Fata2013.jpg, voor de westmuur): kort stammetje, kruin uit veel onregelmatige bolletjes; breed onderin
+    (max ~ een kwart van de hoogte), spits naar boven, rafelig silhouet (Daan 18 nov: de gladde spoel "ziet er niet uit")"""
+    import random as _r
+    r = _r.Random(seed); c = L(x, y)
+    lathe("hout", [(0.09, 0.0), (0.07, 0.75)], 0.0, 8, (c.x, c.y))
+    def breedte(t):                                        # t = 0 onderkant kruin .. 1 top
+        return 0.55 * (min(1.0, t / 0.22) ** 0.6) * (1 - t) ** 0.85 + 0.07
+    z0 = 0.45; hk = h - z0
+    # kern: dichte spoel onder de kluiten, zodat er nergens gaten tussen zitten
+    lathe("cipres", [(0.0, 0.0)] + [(breedte(t) * 0.62, t * hk * 0.97) for t in [k / 16 for k in range(1, 16)]] + [(0.0, hk)], z0 + 0.05, 12, (c.x, c.y))
+    n = int(hk / 0.24)
+    for k in range(n):
+        t = (k + r.uniform(0, 0.6)) / n; z = z0 + t * hk
+        for j in range(3 if t < 0.8 else 2):
+            a = r.uniform(0, 2 * math.pi); off = breedte(t) * r.uniform(0.15, 0.55)
+            rr = breedte(t) * r.uniform(0.55, 0.85)
+            klont(c + Vector((math.cos(a) * off, math.sin(a) * off, z)), rr, rr * r.uniform(1.2, 1.7), r)
+
+
+def klont(c, rx, rz, r, ringen=7, seg=12):
+    """onregelmatig bolletje (bladkluit)"""
+    ns = [[1 + r.uniform(-0.22, 0.22) for _ in range(seg)] for _ in range(ringen + 1)]
+    pts = []
+    for i in range(ringen + 1):
+        b = math.pi * (i / ringen - 0.5)
+        pts.append([c + Vector((math.cos(2 * math.pi * k / seg) * math.cos(b) * rx * ns[i][k], math.sin(2 * math.pi * k / seg) * math.cos(b) * rx * ns[i][k],
+                                math.sin(b) * rz * (ns[i][k] if 0 < i < ringen else 1))) for k in range(seg)])
+    for i in range(ringen):
+        for k in range(seg):
+            k1 = (k + 1) % seg
+            quad("cipres", [pts[i][k], pts[i][k1], pts[i + 1][k1], pts[i + 1][k]])
 
 
 def luifel(vl, u, z, w=1.0):
@@ -226,7 +254,7 @@ def rooster(vl, u, v0, w, h, n=0.06):
 def bouw():
     romp(); kade()
     for x in (-35.4, -29.6): lantaarnpaal(x, -290.6)
-    for x, y, h in ((-47.0, -298.6, 5.8), (-57.5, -297.9, 6.4), (-63.0, -297.2, 5.2)): cipres(x, y, h)
+    for k, (x, y, h) in enumerate(((-47.0, -298.6, 5.8), (-57.5, -297.9, 6.4), (-63.0, -297.2, 5.2))): cipres(x, y, h, k)
     # westvleugel (AHN-voorlijn), oostvleugel
     west = muur([(-72.5, -296.5), (-66.0, -297.5), (-60.0, -298.5), (-51.0, -299.5), (-43.5, -299.5)])
     L0 = (L(-30.0, -292.0) - L(-36.5, -292.5)).length
