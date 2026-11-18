@@ -70,11 +70,18 @@ for zij in (-1, 1):
     x = UITGANG_X + zij * 1.35
     lijnen.append([(x, -math.sqrt(DEK_HEK_R ** 2 - x ** 2)), (x, -17.3)])
 
+# plafond onder de zeilkap (Daan 18 nov: "zorg dat ik niet door het blauwe heen kan klimmen"): over het overdekte deel van de
+# rij (07_omgeving: zeilkap over WACHTRIJ[ZEIL_VANAF:-2], doek op 2,55-2,75 m), 2,3 m boven de vlonder, net breder dan de baan
+ZEIL_VANAF = 7
+dak = []
+for a, b in zip(WACHTRIJ[ZEIL_VANAF:], WACHTRIJ[ZEIL_VANAF + 1:]):
+    dak.append((a[0], a[1], b[0], b[1]))
 seg = []
 for l in lijnen:
     for a, b in zip(l, l[1:]):
         if math.hypot(b[0] - a[0], b[1] - a[1]) > 0.02: seg.append((a[0], a[1], b[0], b[1]))
 rijen = ',\n'.join('\t{%.3f, %.3f, %.3f, %.3f}' % s for s in seg)
+dakrijen = ',\n'.join('\t{%.3f, %.3f, %.3f, %.3f}' % s for s in dak)
 luau = f'''-- sirocco_routemuren (gemaakt door roblox/maak_routemuren.py): onzichtbare route-muren voor spelers (groep Routemuur; bezoekers
 -- lopen erdoor). {len(seg)} stukken in modelmeters (x0, y0, x1, y1); 14 studs hoog vanaf het dek.
 local S = 3
@@ -96,6 +103,19 @@ for i, s in SEG do
 	local p = Instance.new("Part"); p.Name = "routemuur"
 	p.Size = Vector3.new(DIK, H, L + DIK)
 	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, Y0 + H / 2 - MIDDEN.Y, 0)
+	p.Anchored = true; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.Transparency = 1; p.CastShadow = false
+	p.CollisionGroup = "Routemuur"; p.Parent = map
+end
+-- plafond onder de zeilkap: niet bovenop de zeilkap klimmen (via schoren en balken) en dan over de muren
+local DAK = {{
+{dakrijen}
+}}
+for _, s in DAK do
+	local a = MIDDEN + Vector3.new(s[1] * S, 0, -s[2] * S)
+	local b = MIDDEN + Vector3.new(s[3] * S, 0, -s[4] * S)
+	local p = Instance.new("Part"); p.Name = "plafond"
+	p.Size = Vector3.new(2.7 * S, 0.4, (b - a).Magnitude + 1.2)
+	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, Y0 + 2.3 * S - MIDDEN.Y, 0)
 	p.Anchored = true; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.Transparency = 1; p.CastShadow = false
 	p.CollisionGroup = "Routemuur"; p.Parent = map
 end

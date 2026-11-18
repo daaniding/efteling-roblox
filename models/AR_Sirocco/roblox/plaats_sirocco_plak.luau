@@ -59,8 +59,8 @@ local R = {
 	lantaarn = {nil, nil, Color3.fromRGB(150, 110, 50), Enum.Material.Metal, false},
 	lantaarnglas = {nil, nil, Color3.fromRGB(255, 170, 80), Enum.Material.Neon, false, "glas"},
 	-- omgeving (07_omgeving)
-	zeil_turkoois = {nil, nil, Color3.fromRGB(38, 150, 140), Enum.Material.Fabric, false},   -- turquoise zeilkap (Sirocco-meandering.jpg)
-	zeilrand = {nil, nil, Color3.fromRGB(26, 112, 108), Enum.Material.Fabric, false},
+	zeil_turkoois = {nil, nil, Color3.fromRGB(38, 150, 140), Enum.Material.Fabric, true},   -- turquoise zeilkap (Sirocco-meandering.jpg)
+	zeilrand = {nil, nil, Color3.fromRGB(26, 112, 108), Enum.Material.Fabric, true},
 	bamboewand = {nil, nil, Color3.fromRGB(190, 160, 105), Enum.Material.Wood, true},
 	raam = {nil, nil, Color3.fromRGB(22, 18, 16), Enum.Material.SmoothPlastic, false},
 	bestrating = {nil, nil, Color3.fromRGB(150, 140, 128), Enum.Material.Cobblestone, true},

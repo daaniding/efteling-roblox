@@ -3,7 +3,8 @@
 import os
 R = os.path.dirname(os.path.abspath(__file__))
 s = open(os.path.join(R, 'sirocco_rit.luau')).read()
-for k, f in (('__SERVER__', 'SiroccoRit.server.luau'), ('__CLIENT__', 'SiroccoRitClient.client.luau')):
+for k, f in (('__SERVER__', 'SiroccoRit.server.luau'), ('__CLIENT__', 'SiroccoRitClient.client.luau'),
+             ('__BEZOEKERS__', 'SiroccoBezoekers.server.luau'), ('__KIEZER__', 'SiroccoMuziekKiezer.client.luau')):
     bron = open(os.path.join(R, f)).read()
     assert ']==]' not in bron
     s = s.replace(k, bron)

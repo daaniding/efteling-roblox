@@ -4,7 +4,7 @@
 --   ProximityPrompt "Board [E]" (Style Custom: eigen knop in SiroccoRitClient); geen aanraak-zitten (CanTouch uit), instappen alleen via de prompt (server)
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
 -- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
--- - Sirocco.Geluid: water (3x op de vijver), kolkend water + brom (schijf), wind, bel (hutje), hekjes
+-- - Sirocco.Geluid: wachtrijmuziek (speakers langs de rij), muziek in de attractie (dak), water (3x op de vijver), kolkend water + brom (schijf), wind, bel (hutje), hekjes
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
 -- - ReplicatedStorage.SiroccoDraai (RemoteEvent, maakt SiroccoRit zelf aan als hij ontbreekt)
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
@@ -111,6 +111,16 @@ snd(bron("hut", 0.7, -9.45, 1.5), "bel", GELUID.bel, 0.45, 10, 120, false)
 snd(bron("poortIn", 4.0, -7.5, 0.8), "hekIn", GELUID.hek, 0.4, 6, 60, false)
 snd(bron("poortUit", -2.0, -8.6, 0.8), "hekUit", GELUID.hek, 0.4, 6, 60, false)
 
+-- muziek (Daan 18 nov: "de wachtrij muziek en de muziek in de attractie"); echte Efteling-muziek mag niet (auteursrecht), dus
+-- gelicentieerde APM-muziek uit de Creator Store, te wisselen met SiroccoMuziekKiezer (Studio: K = wachtrij, L = attractie)
+local MUZIEK = {rij = 1836725599, rit = 1840889607}   -- APM "Desert Sands" (wachtrij), APM "Land Of Adventure" (attractie)
+local RIJ_SPEAKERS = {{5.8, -15.8}, {11.0, -11.9}, {15.6, -6.5}, {15.9, 3.0}, {15.75, 8.0}, {11.35, 11.69}, {8.88, 5.12}, {10.23, -0.6}, {8.22, -6.12}, {3.51, -9.63}}   -- langs 07_omgeving.WACHTRIJ, om de ~5 m
+for i, p in RIJ_SPEAKERS do
+	local m = snd(bron("speaker" .. i, p[1], p[2], 0.45), "muziekRij", MUZIEK.rij, 0.22, 10, 55, true)
+	m:SetAttribute("Speaker", true)
+end
+snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.15, 20, 120, true)          -- vanuit het dak boven de schijf
+
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
 local oudT = LS:FindFirstChild("SiroccoTeksten"); if oudT then oudT:Destroy() end
@@ -132,4 +142,6 @@ local function zet(ouder, klasse, naam, bron)
 end
 zet(game:GetService("ServerScriptService"), "Script", "SiroccoRit", [==[__SERVER__]==])
 zet(game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"), "LocalScript", "SiroccoRitClient", [==[__CLIENT__]==])
+zet(game:GetService("ServerScriptService"), "Script", "SiroccoBezoekers", [==[__BEZOEKERS__]==])
+zet(game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"), "LocalScript", "SiroccoMuziekKiezer", [==[__KIEZER__]==])
 return "Sirocco rijklaar: " .. n .. " delen, 12 stoelen"

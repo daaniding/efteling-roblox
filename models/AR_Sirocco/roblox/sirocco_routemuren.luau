@@ -219,6 +219,41 @@ for i, s in SEG do
 	p.Anchored = true; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.Transparency = 1; p.CastShadow = false
 	p.CollisionGroup = "Routemuur"; p.Parent = map
 end
+-- plafond onder de zeilkap: niet bovenop de zeilkap klimmen (via schoren en balken) en dan over de muren
+local DAK = {
+	{15.750, 6.000, 15.750, 8.000},
+	{15.750, 8.000, 15.524, 9.283},
+	{15.524, 9.283, 14.873, 10.410},
+	{14.873, 10.410, 13.875, 11.248},
+	{13.875, 11.248, 12.651, 11.693},
+	{12.651, 11.693, 11.349, 11.693},
+	{11.349, 11.693, 10.125, 11.248},
+	{10.125, 11.248, 9.127, 10.410},
+	{9.127, 10.410, 8.476, 9.283},
+	{8.476, 9.283, 8.250, 8.000},
+	{8.250, 8.000, 8.877, 5.125},
+	{8.877, 5.125, 9.526, 3.784},
+	{9.526, 3.784, 9.974, 2.364},
+	{9.974, 2.364, 10.211, 0.893},
+	{10.211, 0.893, 10.233, -0.596},
+	{10.233, -0.596, 10.038, -2.073},
+	{10.038, -2.073, 9.632, -3.506},
+	{9.632, -3.506, 9.022, -4.865},
+	{9.022, -4.865, 8.222, -6.121},
+	{8.222, -6.121, 7.248, -7.248},
+	{7.248, -7.248, 6.121, -8.222},
+	{6.121, -8.222, 4.865, -9.022},
+	{4.865, -9.022, 3.506, -9.632}
+}
+for _, s in DAK do
+	local a = MIDDEN + Vector3.new(s[1] * S, 0, -s[2] * S)
+	local b = MIDDEN + Vector3.new(s[3] * S, 0, -s[4] * S)
+	local p = Instance.new("Part"); p.Name = "plafond"
+	p.Size = Vector3.new(2.7 * S, 0.4, (b - a).Magnitude + 1.2)
+	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, Y0 + 2.3 * S - MIDDEN.Y, 0)
+	p.Anchored = true; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.Transparency = 1; p.CastShadow = false
+	p.CollisionGroup = "Routemuur"; p.Parent = map
+end
 -- eenrichting bij de uitgang: schot dwars over de deuropening (y -8,6), standaard open; SiroccoRitClient zet het dicht voor wie
 -- op de brug staat (een opengeslagen deur staat tegen de muur en houdt niemand tegen)
 local a, b = MIDDEN + Vector3.new(-3.2 * S, 0, 8.6 * S), MIDDEN + Vector3.new(-0.8 * S, 0, 8.6 * S)

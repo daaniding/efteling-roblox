@@ -1558,6 +1558,15 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   voor meerijders, vertrekbel 9119642644 bij het hutje 1,5 s voor vertrek, hekgeluid 9116875342 bij in- en uitgangsdeur.
   Omroep: geen bron gevonden dat de echte Sirocco iets omroept (en de echte audio mag niet); de in-beeld-teksten blijven.
   Play: alles geladen, bel op tc 13.5, waterkolk 0 -> 0.45 bij vertrek.
-- VOLGENDE: Daans oordeel (geluid beluisteren);
+- Zeilkap dicht (18 nov, Daan: "zorg dat ik niet door het blauwe heen kan klimmen"): turquoise doek en zeilrand botsen nu
+  (plaats_sirocco R-tabel + Studio), onzichtbaar plafond (Routemuren.plafond, 23 stukken) 2,3 m boven de vlonder onder het hele
+  overdekte deel: niet meer via schoren/balken bovenop de zeilkap en over de muren.
+- Muziek (18 nov, Daan: "de wachtrij muziek en de muziek in de attractie"): echte Sirocco-muziek mag niet (auteursrecht), dus
+  gelicentieerde Creator Store-muziek. Wachtrij: 10 onzichtbare speakers langs de rij (synchroon, 10-55 studs, vol 0.22),
+  APM "Desert Sands" 1836725599. Attractie: vanuit het dak boven de schijf, APM "Land Of Adventure" 1840889607, zacht bij
+  instappen (0.15) en vol tijdens de rit (0.5). SiroccoMuziekKiezer (Studio, Play): K = volgend wachtrijnummer (8 keuzes),
+  L = volgend ritnummer (5 keuzes); gekozen ID vastzetten in sirocco_rit.luau (MUZIEK). sirocco_rit.luau zet nu ook
+  SiroccoBezoekers en de kiezer neer. Play: alles geladen, speakers binnen 0,08 s gelijk.
+- VOLGENDE: Daan kiest de muziek (K/L) en luistert het geluid;
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
