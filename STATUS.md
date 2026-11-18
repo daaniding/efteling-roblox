@@ -121,7 +121,8 @@ luifelplaat (nu 5 cm), witte achterwand stak tot in de oostgevel (nu 45 cm korte
 Wachtrijlicht (Daan: "lichtsfeer een beetje geel bruinig ... ik bedoelde de lichten bij de wachtrij"): de algemene belichting
 heb ik eerst warmer gezet en daarna weer exact terug (place-instellingen ongewijzigd). De bollampen hebben een eigen rol bollamp
 (Neon, amber 176,104,48) en eronder 24 PointLights (Daan: "het moet ook echt licht geven": 255,170,90; helderheid 1,1; bereik
-14 studs; met schaduw; 1,6/16 was overbelicht, 0,45/11 te zwak) in
+14 studs; met schaduw; 1,6/16 was overbelicht, 0,45/11 te zwak; daarna Daan: "erg overbelicht" in Play -> 0,6 / 12 studs
+(255,176,100)) in
 FataMorgana.Wachtrijlicht via roblox/plaats_wachtrijlicht.luau. Assets: zuidvleugel 85395946512629, veranda 105227491479681.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
