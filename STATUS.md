@@ -98,6 +98,11 @@ Asset zuidvleugel 126456717543755.
 Stap 12d (Daan: "je moet er aan het begin in, niet aan het einde en dan teruglopen"): ingang nu aan de OOSTkant (opening in het
 voorhek bij de oostelijkste baan, paaltjes met bollen), zigzag westwaarts, westelijkste baan komt achter uit in het westvak en
 loopt zo de veranda in naar de zijdeur; geen terugloopgang meer. Asset zuidvleugel 79597442500625.
+Hoek veranda/hal (Daan: "dit moet ook nog kloppen, en dat grijze steen daarachter ook"): alle Fata Morgana-modellen behalve de net
+geplaatste zuidvleugel stonden 1 stud west, 1 stud zuid en 1,29 stud omhoog (per ongeluk versleept in Studio; pivot -121; 2,2; 886
+i.p.v. -120; 0,91; 885) -> allemaal terug op VOET gezet en alle onderdelen Locked. Veranda: hoekpaal weg (de eerste paal van de hal
+is de hoekpaal), vloer met dezelfde dambordtegels als de hal (asset veranda 129865839477936).
+Les: na het plaatsen de WorldPivot van alle delen controleren (moet -120; 0,91; 885 zijn).
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

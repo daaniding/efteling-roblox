@@ -14,8 +14,8 @@ exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6)
 G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:12_veranda"
-T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "donker": (0.12, 0.13, 0.15)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "donker": 1.0})
+T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "donker": (0.12, 0.13, 0.15), "vloertegel": (0.65, 0.42, 0.33)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "donker": 1.0, "vloertegel": 2.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries",)
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -36,10 +36,10 @@ def bouw():
     vv = Vlak(L(XV, YN), Vector((0, -1, 0)), Vector((1, 0, 0)))            # voorkant (oost), u van noord naar zuid
     lw = YN - YZ
     # betegelde vloer, 12 cm boven het terrein
-    prisma("tegel", [L(XM, YZ), L(XV + 0.25, YZ), L(XV + 0.25, YN), L(XM, YN)], -0.25, 0.12)
+    prisma("vloertegel", [L(XM, YZ), L(XV + 0.25, YZ), L(XV + 0.25, YN), L(XM, YN)], -0.25, 0.12)   # zelfde tegels als de wachtrijhal
     # rode palen (voet, schacht, kopje), gelijk verdeeld
     n = 3
-    for i in range(n + 1):
+    for i in range(n):                                   # de hoekpaal is de eerste paal van de wachtrijhal (08): geen dubbele paal
         p = L(XV, YN - 0.35 - (lw - 0.7) * i / n)
         for hw, z0, z1 in ((0.2, 0.0, 0.25), (0.11, 0.0, ZV), (0.18, ZV - 0.16, ZV)):
             prisma("rood", [p + Vector((a, b, 0)) * hw for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], z0, z1)
