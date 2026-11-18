@@ -13,8 +13,8 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:08_zuidvleugel"
 T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
-                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
+                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5), "gangmuur": (0.92, 0.85, 0.72)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0, "gangmuur": 4.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering", "bord")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -37,12 +37,17 @@ def bouw():
     # tegelrand en twee hoge rondboogramen van matglas, lijsten op 1,15 en 2,1 m
     aw = Vlak(L(X0, YA), Vector((1, 0, 0)), Vector((0, 1, 0)))
     lw = X1 - X0
-    prisma("wit", [L(X0, YA - 0.3), L(X1 - 0.45, YA - 0.3), L(X1 - 0.45, YA), L(X0, YA)], 0.0, 3.35)   # oosteinde in de oostgevel
+    prisma("gangmuur", [L(X0, YA - 0.3), L(X1 - 0.45, YA - 0.3), L(X1 - 0.45, YA), L(X0, YA)], 0.0, 3.35)   # oosteinde in de oostgevel; oud beige pleister (Daan: "doe dat ook in de wachtrij")
+    gaten = [(0.55, 1.95, -1, 2.7)]                                   # doorgang westkant
+    for k in range(8):
+        c = (k + 0.5) * lw / 8
+        gaten += [(c - 0.85, c + 0.85, 1.15, 3.1), (c - 2.1, c - 0.9, 2.1, 3.3), (c + 0.9, c + 2.1, 2.1, 3.3)]   # schildering, ramen
+    T["verwering"](aw, 0.5, lw - 0.8, 0.0, 3.2, 8800, gaten)          # losse vochtvlekken en strepen, niet over ramen/schilderingen
     strip("lijst", aw, [(0.0, 1.15), (lw, 1.15)], 0.1, 0.05); strip("lijst", aw, [(0.0, 2.1), (lw, 2.1)], 0.08, 0.05)
     nvak = 8; bv = lw / nvak
     for k in range(nvak + 1):                               # pilasters
         u = k * bv; u0, u1 = max(0.0, u - 0.3), min(lw, u + 0.3)
-        prisma("wit", [Vector((q.x, q.y, 0)) for q in (aw.p(u0, 0, -0.05), aw.p(u1, 0, -0.05), aw.p(u1, 0, 0.22), aw.p(u0, 0, 0.22))], 0.0, 3.3)
+        prisma("gangmuur", [Vector((q.x, q.y, 0)) for q in (aw.p(u0, 0, -0.05), aw.p(u1, 0, -0.05), aw.p(u1, 0, 0.22), aw.p(u0, 0, 0.22))], 0.0, 3.3)
         pv = Vlak(aw.p(0, 0, 0.22), aw.U, aw.N)
         vul("raam", pv, spitsboog(u, 0.26, 1.3, 1.95, 6, 0.75), 0.03)
         prisma("lijst", [Vector((q.x, q.y, 0)) for q in (aw.p(u0 - 0.04, 0, -0.05), aw.p(u1 + 0.04, 0, -0.05), aw.p(u1 + 0.04, 0, 0.28), aw.p(u0 - 0.04, 0, 0.28))], 2.95, 3.1)

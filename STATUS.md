@@ -142,6 +142,8 @@ Westplint van de minaret weg (lag binnen, als drempel in de boog). Getest in Pla
 eind. Assets: minaret 73472127840695, kantelen 139989623236326.
 Gangmuren (Daan: "die witte muren moeten iets meer beige oud-achtig"): eigen rol gangmuur (FM_stuc verweerd, tint 236,218,186,
 botst) + losse vochtvlekken (verwering); gangkant van de groene boog (gangwand) hetzelfde. Asset binnen 72636392296267.
+Wachtrijhal ook (Daan: "doe dat ook in de wachtrij"): achterwand en pilasters rol gangmuur + vochtvlekken (niet over ramen,
+schilderingen en de doorgang, verwering met gaten). Asset zuidvleugel 75793335061309.
 Volgende binnenstap: de gaanderij en de instaphal met de draaischijf (in het holle kantelenblok).
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
