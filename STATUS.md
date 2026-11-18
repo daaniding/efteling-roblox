@@ -144,7 +144,19 @@ Gangmuren (Daan: "die witte muren moeten iets meer beige oud-achtig"): eigen rol
 botst) + losse vochtvlekken (verwering); gangkant van de groene boog (gangwand) hetzelfde. Asset binnen 72636392296267.
 Wachtrijhal ook (Daan: "doe dat ook in de wachtrij"): achterwand en pilasters rol gangmuur + vochtvlekken (niet over ramen,
 schilderingen en de doorgang, verwering met gaten). Asset zuidvleugel 75793335061309.
-Volgende binnenstap: de gaanderij en de instaphal met de draaischijf (in het holle kantelenblok).
+BINNENKANT stap 3 — instaphal (Daan: "doe binnen overal die kleur en maak het verder"; build/16_instaphal.py, deel "instaphal",
+asset 86544521314371; Eftepedia "Wachtrij en instaphal" + video's): in het holle kantelenblok, binnen x -15..10,4, y -348,9..-322,6
+(west/zuid 0,5 m naar binnen zodat afgerond terrein van buiten achter de muur blijft). Gaanderij (2,6 m) langs noord- en oostmuur op
+vloerniveau (sluit aan op de gang; gangeind 15_binnen nu echt open in de groene kielboog), balustrade crème met lijst, groene zuilen
+en kielbogen, balk met amber lampjes; bakwand donker met band crème panelen en bruine rozetten. Verdiepte bak: bodem -2,6, water
+-2,1 (rol water, glas, transparant 0,15), draaischijf r 8,5 m dek -1,8 (WoodPlanks, radiale naden, gouden naaf) in het midden
+(-3,6; -337,05). Bordes + trap (12 treden, groene leuningen) vanaf de noordgaanderij naar de schijf, controlehokje ernaast. Grote
+ronde houten lattenkap (64 latten) boven de schijf, donker plafond, uitgang naar de rit achter een beige gordijn in de zuidmuur.
+Licht: FataMorgana.Instaphallicht (14 PointLights). Terrein in de bak + onder de gaanderij weggehaald (cellen met middelpunt
+binnen x -16,2..9,6, y -350..-323,2). Halletje-plafond ook oud beige. Nog geen beweging (schijf/boten staan stil).
+Getest in Play: gang -> gaanderij -> bordes -> trap -> draaischijf. Assets: minaret 104784345799444, binnen 120737100048532.
+Nieuwe rollen: gangpleister, water, dekhout, plafond, rozet, gordijn, groenhek.
+Mogelijke vervolgstappen: sloepen (rood, 14) aan de schijf (statisch), details (bordjes, lamp boven de schijf), de rit zelf.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

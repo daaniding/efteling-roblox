@@ -232,7 +232,7 @@ def zijdeur_en_halletje(hw, HZ=3.2, t=0.5):   # t 0,5: de hoekblokken (tot 1,8 m
                       ((x1 - t - 0.02, y1 - t), (x1 - t - 0.02, y0 + t), Vector((-1, 0, 0)))):
         A, B = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0)); lg = (B - A).length
         vlak_n("tegelhal", [A, B, B + Vector((0, 0, hz)), A + Vector((0, 0, hz))], wil, [(0, 0), (lg, 0), (lg, hz), (0, hz)])
-    vlak_n("poortrand", [Vector((x0 + t, y0 + t, hz)), Vector((x1 - t, y0 + t, hz)), Vector((x1 - t, y1 - t, hz)), Vector((x0 + t, y1 - t, hz))], Vector((0, 0, -1)))
+    vlak_n("gangwand", [Vector((x0 + t, y0 + t, hz)), Vector((x1 - t, y0 + t, hz)), Vector((x1 - t, y1 - t, hz)), Vector((x0 + t, y1 - t, hz))], Vector((0, 0, -1)))   # plafond oud beige (Daan: "binnen overal die kleur")
     prisma("vloertegel", [Vector((x0 + t, L(0, -331.1).y + 0, 0)) * 0 + Vector((x0 + t, L(19.5, -331.1).y, 0)), Vector((x1 - t, L(19.5, -331.1).y, 0)),
                           Vector((x1 - t, y1 - t, 0)), Vector((x0 + t, y1 - t, 0))], -0.25, 0.12)
     # deurblad: hangt aan de westelijke neg en staat naar buiten open (haaks op de muur, de veranda in)
