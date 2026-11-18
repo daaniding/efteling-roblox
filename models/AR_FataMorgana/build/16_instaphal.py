@@ -16,9 +16,9 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:16_instaphal"
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("balustrade",)
-T["KLEUR"].update({"balustrade": (0.6, 0.48, 0.38), "balmuur": (0.9, 0.86, 0.78), "onderwand": (0.35, 0.27, 0.2), "donkervloer": (0.3, 0.22, 0.17), "lichtlijst": (1.0, 0.8, 0.5), "witlijn": (0.95, 0.95, 0.92), "lat": (0.62, 0.48, 0.34), "water": (0.12, 0.22, 0.26), "dekhout": (0.55, 0.38, 0.24), "plafond": (0.2, 0.16, 0.14), "rozet": (0.43, 0.27, 0.17), "gordijn": (0.84, 0.77, 0.63), "groenhek": (0.25, 0.58, 0.5), "groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "gangpleister": (0.92, 0.85, 0.72), "groenneg": (0.25, 0.58, 0.5), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
+T["KLEUR"].update({"balustrade": (0.6, 0.48, 0.38), "balmuur": (0.9, 0.86, 0.78), "onderwand": (0.35, 0.27, 0.2), "donkervloer": (0.3, 0.22, 0.17), "lichtlijst": (1.0, 0.8, 0.5), "soffit": (0.2, 0.15, 0.12), "witlijn": (0.95, 0.95, 0.92), "lat": (0.62, 0.48, 0.34), "water": (0.12, 0.22, 0.26), "dekhout": (0.55, 0.38, 0.24), "plafond": (0.2, 0.16, 0.14), "rozet": (0.43, 0.27, 0.17), "gordijn": (0.84, 0.77, 0.63), "groenhek": (0.25, 0.58, 0.5), "groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "gangpleister": (0.92, 0.85, 0.72), "groenneg": (0.25, 0.58, 0.5), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
                    "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5)})
-T["UVS"].update({"balustrade": 1.0, "balmuur": 4.0, "onderwand": 4.0, "donkervloer": 2.0, "lichtlijst": 1.0, "witlijn": 1.0, "lat": 1.0, "water": 4.0, "dekhout": 1.5, "plafond": 4.0, "rozet": 1.0, "gordijn": 2.0, "groenhek": 1.0, "groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "gangpleister": 4.0, "groenneg": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
+T["UVS"].update({"balustrade": 1.0, "balmuur": 4.0, "onderwand": 4.0, "donkervloer": 2.0, "lichtlijst": 1.0, "soffit": 4.0, "witlijn": 1.0, "lat": 1.0, "water": 4.0, "dekhout": 1.5, "plafond": 4.0, "rozet": 1.0, "gordijn": 2.0, "groenhek": 1.0, "groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "gangpleister": 4.0, "groenneg": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
 
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -81,7 +81,7 @@ def rand(xa, ya, xb, yb, gaten=()):
         tp = max(v for _, v in bg); hl = len(bg) // 2
         bg = [p for p in bg[:hl] if p[1] < tp - 0.06] + [(st / 2, tp + 0.12)] + [p for p in bg[hl:] if p[1] < tp - 0.06]
         strip("groen", vl, bg, 0.07, 0.07)
-        prisma("gangmuur", [p0 + hal * 0.05, p1 + hal * 0.05, p1 - hal * 0.3, p0 - hal * 0.3], 3.2, 3.42)
+        prisma("soffit", [p0 + hal * 0.05, p1 + hal * 0.05, p1 - hal * 0.3, p0 - hal * 0.3], 3.2, 3.42)   # donker plafond boven de gaanderij (video)
     for i in range(n + 1):
         u = i * st
         if open_(u - 0.01, u + 0.01) and not (open_(u - 0.3, u) ^ open_(u, u + 0.3)): continue
@@ -239,6 +239,12 @@ def bouw():
     # lichtlijst langs de achterwanden boven de gaanderij (fel verlichte achterwand op de video)
     for (x0, y0, x1, y1) in ((XW, YN - 0.08, UX0 - 0.1, YN), (UX1 + 0.1, YN - 0.08, XE, YN), (XW, YS, XE, YS + 0.08), (XW, YS, XW + 0.08, YN), (XE - 0.08, YS, XE, -329.9), (XE - 0.08, -328.1, XE, YN)):
         box("lichtlijst", x0, y0, x1, y1, 3.0, 3.06)
+    # donkerbruine band boven de gaanderij op de achterwanden (video: boven de verlichte bogen is alles donker)
+    for (x0, y0, x1, y1) in ((XW, YN - 0.04, XE, YN), (XW, YS, XE, YS + 0.04), (XW, YS + 0.04, XW + 0.04, YN - 0.04), (XE - 0.04, YS + 0.04, XE, YN - 0.04)):
+        box("soffit", x0, y0, x1, y1, 3.1, HZ)
+    for (x0, y0, x1, y1) in ((XW + 0.04, YNI, XE - 0.04, YN - 0.04), (XW + 0.04, YS + 0.04, XE - 0.04, YSI),
+                             (XW + 0.04, YSI, XWI, YNI), (XEI, YSI, XE - 0.04, YNI)):          # plafond van de gaanderijen
+        box("soffit", x0, y0, x1, y1, 3.3, 3.39)
 
 
 def objecten():

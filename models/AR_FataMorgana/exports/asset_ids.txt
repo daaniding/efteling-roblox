@@ -34,3 +34,4 @@ AR_FataMorgana_kantelen 76192302631142
 AR_FataMorgana_koepelgebouw 84517254239285
 AR_FataMorgana_instaphal 100859940779735
 AR_FataMorgana_ingang 106814674593785
+AR_FataMorgana_instaphal 85529083561579

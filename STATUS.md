@@ -174,6 +174,12 @@ gaanderij ... onoverdekte gang ... afgesloten hek ... via de winkel De Bazaar we
   de souvenirwinkel later") (asset 106814674593785).
 Licht: FataMorgana.Uitganglicht (5 PointLights 0,6/12 amber: winkel, gang, uitgangsdeur). Geen terrein in winkel/gang/hof.
 Getest in Play: schijf -> uitgangstrap -> noordgaanderij -> deur -> binnenplaats -> gang -> Bazaar -> voordeur -> plein; hek houdt tegen.
+Niveau/sfeer-ronde (Daan 18 nov: "het niveau is echt niet goed ... de sfeer klopt echt niet"), plan: 1 lichtzone + gloeiende
+achterwanden, 2 gaanderij slank (paaltjes, kielboogjes, fijne balustrade), 3 controlehok-paviljoen + visgraatparket, 4 stille boten,
+5 gang/uitgang afwerken. Stap 1 klaar: LocalScript StarterPlayerScripts.FataMorganaSfeer (roblox/FataMorganaSfeer.client.luau) maakt het
+binnen (hal, halletje, gang, Bazaar) donker en warm; FataMorgana.Instaphalgloed (roblox/plaats_instaphalgloed.luau, 18 SurfaceLights
+amber langs de achterwanden); 16_instaphal: donker plafond over de gaanderijen (z 3,3) en donkere band boven z 3,1 (rol soffit),
+asset instaphal 85529083561579.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
