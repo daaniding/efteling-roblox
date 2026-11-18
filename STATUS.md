@@ -228,6 +228,11 @@ ze eruit zien"):
 - Terrein: roblox/plaats_routewater.luau (onder de route leeg, Terrain-water tot z -3,2 in de vaargoot, hal-water opnieuw); 26
   randcellen bij de gevels daarna weer bestraat (Pavement 0,725). Werklicht: roblox/plaats_routelicht.luau (26 PointLights).
   Lichtzone FataMorganaSfeer kent nu ook de vaarroute.
+- Kamerindeling opnieuw (Daan: "helemaal niet de kamer indelingen"): raster 0,1 m zodat de dunne lichtgroene lijntjes tussen
+  zandvlakken (scheidingen tussen kamers) blijven; route-afstand langs de rode stippellijn (308 stippels, 238 m); waar een
+  scènevlak tegen een stuk route ligt dat >9 m verder op de route zit (bv. tussen sectie 4/5 en 10/11, 3A/12) komt een
+  scheidingsmuur. Muren, toneelranden, bodem en plafond als enkelzijdige vlakken (onder de Roblox-driehoekgrens); plafond loopt
+  over de muren door. Asset route 80339656288456.
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 

@@ -2,7 +2,8 @@
 de kamers niet hoe ze eruit zien"). Vorm uit de Eftepedia-plattegrond via build/18p_routeplan.py (ref/route_plan.npz):
   - vaargoot (blauw op de plattegrond, secties 1-14): bodem op z -3,7; water = Terrain-water tot z -3,2 (in Studio, plaats_routewater)
   - scènevlakken (zandkleur = de kamers waar later de scènes komen): verhoogd toneel tot z -2,6
-  - muren langs de buitenrand van vaargoot+kamers (0,3 m dik), plafond z -0,05..0,12 (de route ligt onder de begane grond,
+  - muren langs de buitenrand van elke kamer en scheidingsmuren tussen kamers die op de plattegrond naast elkaar liggen maar ver uit
+    elkaar op de route (bv. sectie 4 en 11); enkelzijdige vlakken naar de kamer; plafond op z -0,05 (de route ligt onder de begane grond,
     op hetzelfde waterpeil als de instaphal); bij onze hal geen extra muur (die heeft al doorvaarten in de noord- en westmuur)
 Nog niets aan aankleding of scènes. Modelstelsel = 02/03. Deel "route". Gebruik: blender --background --python build/18_route.py"""
 import bpy, bmesh, sys, os, math
@@ -29,21 +30,35 @@ def klem(x0, y0, x1, y1):
     return x0, y0, x1, y1
 
 
-def box(rol, x0, y0, x1, y1, z0, z1):
+def vlak(rol, pts, wil):
+    bm = T["G"][rol]; f = bm.faces.new([bm.verts.new(q) for q in pts]); f.normal_update()
+    if f.normal.dot(wil) < 0: f.normal_flip()
+
+
+def plat(rol, x0, y0, x1, y1, z, op):
     x0, y0, x1, y1 = klem(x0, y0, x1, y1)
     if x1 - x0 < 0.01 or y1 - y0 < 0.01: return
-    prisma(rol, [L(x0, y0), L(x1, y0), L(x1, y1), L(x0, y1)], z0, z1)
+    vlak(rol, [L(x0, y0) + Vector((0, 0, z)), L(x1, y0) + Vector((0, 0, z)), L(x1, y1) + Vector((0, 0, z)), L(x0, y1) + Vector((0, 0, z))],
+         Vector((0, 0, 1 if op else -1)))
+
+
+def wand(rol, seg, z0, z1, uitw, naar_binnen):
+    """verticaal vlak langs een contourlijn; uitw = verschuiving naar buiten (m); normaal naar binnen of buiten"""
+    ax, ay, bx, by, nx, ny = seg
+    a, b, n = Vector((ax, ay, 0)), Vector((bx, by, 0)), Vector((nx, ny, 0))
+    t = (b - a).normalized(); a -= t * 0.05; b += t * 0.05
+    a += n * uitw; b += n * uitw
+    pa, pb = L(a.x, a.y), L(b.x, b.y)
+    vlak(rol, [pa + Vector((0, 0, z0)), pb + Vector((0, 0, z0)), pb + Vector((0, 0, z1)), pa + Vector((0, 0, z1))], -n if naar_binnen else n)
 
 
 def bouw():
     P = np.load(os.path.join(D, "ref", "route_plan.npz"))
-    for x0, y0, x1, y1 in P["r_blauw"]: box("routebodem", x0, y0, x1, y1, ZB - 0.2, ZB)
-    for x0, y0, x1, y1 in P["r_zand"]: box("toneel", x0, y0, x1, y1, ZB - 0.2, ZT)
-    for x0, y0, x1, y1 in P["r_uni"]: box("routeplafond", x0, y0, x1, y1, ZP0, ZP1)
-    for ax, ay, bx, by, nx, ny in P["muren"]:
-        a, b = Vector((ax, ay, 0)), Vector((bx, by, 0)); t = (b - a).normalized(); n = Vector((nx, ny, 0))
-        a -= t * 0.15; b += t * 0.15                                      # hoeken dicht
-        prisma("routewand", [L(*(a + n * 0.12).xy), L(*(b + n * 0.12).xy), L(*(b + n * 0.42).xy), L(*(a + n * 0.42).xy)], ZB - 0.2, ZP1)
+    for x0, y0, x1, y1 in P["r_blauw"]: plat("routebodem", x0, y0, x1, y1, ZB, True)
+    for x0, y0, x1, y1 in P["r_zand"]: plat("toneel", x0, y0, x1, y1, ZT, True)
+    for x0, y0, x1, y1 in P["r_uni"]: plat("routeplafond", x0, y0, x1, y1, ZP0, False)
+    for seg in P["toneelrand"]: wand("toneel", seg, ZB, ZT, 0.0, False)          # zijkant toneel naar het water
+    for seg in P["muren"]: wand("routewand", seg, ZB - 0.05, ZP0 + 0.01, 0.05, True)   # muren en scheidingsmuren, naar de kamer
 
 
 def objecten():
@@ -52,7 +67,7 @@ def objecten():
     for rol in KL:
         bm = T["G"][rol]
         if not bm.faces: continue
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.normal_update()
+        bm.normal_update()                                                       # vlakken hebben al de goede kant
         uvl = bm.loops.layers.uv.verify()
         for f in bm.faces:
             n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))
