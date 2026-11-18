@@ -158,7 +158,7 @@ def galerij(vl, u0, u1, h=3.4, diep=1.6, n=5):
     quad("stucvlak", [vl.p(u0, h - 0.02, -dik), vl.p(u0, h - 0.02, -diep), vl.p(u1, h - 0.02, -diep), vl.p(u1, h - 0.02, -dik)][::-1])
     va = Vlak(vl.p(0, 0, -diep + 0.01), vl.U, vl.N)
     deur = spitsboog((u0 + u1) / 2, 1.1, 0.0, 1.8, 8)
-    vul("deur", va, deur, 0.05); strip("lijst", va, deur, 0.16, 0.1)
+    vul("deur", va, deur, 0.09); strip("lijst", va, deur, 0.16, 0.1)
     for uu in (u0 + (u1 - u0) * 0.2, u0 + (u1 - u0) * 0.8): raam(va, uu, 0.55, 1.0, 2.0)
     # pannendak: schuin van de muur naar buiten, met dikte, op houten schoren
     t = 0.14; uit = 1.15
@@ -292,7 +292,7 @@ def bouw():
                 uitsparing={0: (0.9, L0 - 0.2, 3.4, 1.9)})
     # westvleugel: ramen, deurtje, erker
     vl, l = west[1]; raam(vl, l * 0.5, 0.6, 4.3, 5.6)
-    vl, l = west[2]; raam(vl, 2.5, 0.6, 4.3, 5.6); deur = spitsboog(6.2, 1.2, 0.0, 1.7, 8); vul("deur", vl, deur, 0.05); strip("lijst", vl, deur, 0.2, 0.14)
+    vl, l = west[2]; raam(vl, 2.5, 0.6, 4.3, 5.6); deur = spitsboog(6.2, 1.2, 0.0, 1.7, 8); vul("deur", vl, deur, 0.09); strip("lijst", vl, deur, 0.2, 0.14)
     vl, l = west[3]; erker(vl, l * 0.45, 5.0); rooster(vl, l * 0.45, 5.25, 1.4, 0.95, 0.83)
     luifel(vl, l * 0.85, 3.2, 1.1); raam(vl, l * 0.85, 0.6, 1.6, 2.6)
     vl, l = west[2]; muurlamp(vl, 4.9, 1.9); muurlamp(vl, 7.5, 1.9)

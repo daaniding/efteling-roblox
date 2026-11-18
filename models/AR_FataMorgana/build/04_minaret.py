@@ -59,7 +59,7 @@ def balkon(hw, z, h_rand, rol_rand, bollen):
     hb = hw + 0.32
     for vl in vlakken(hb):
         prisma("wit", [Vector((p.x, p.y, 0)) for p in (vl.p(-hb, 0, 0), vl.p(hb, 0, 0), vl.p(hb, 0, -0.16), vl.p(-hb, 0, -0.16))], z + 0.16, z + 0.16 + h_rand)
-        if rol_rand: paneel(rol_rand, vl, -hb + 0.25, hb - 0.25, z + 0.24, z + 0.08 + h_rand, 0.015, 1.0, h_rand - 0.16, 0.0, z + 0.24)
+        if rol_rand: paneel(rol_rand, vl, -hb + 0.25, hb - 0.25, z + 0.24, z + 0.08 + h_rand, 0.04, 1.0, h_rand - 0.16, 0.0, z + 0.24)
     blok("lijst", hb + 0.05, z + 0.16 + h_rand, z + 0.26 + h_rand) if False else None
     for vl in vlakken(hb):
         prisma("lijst", [Vector((p.x, p.y, 0)) for p in (vl.p(-hb - 0.05, 0, 0.05), vl.p(hb + 0.05, 0, 0.05), vl.p(hb + 0.05, 0, -0.22), vl.p(-hb - 0.05, 0, -0.22))],
@@ -83,16 +83,16 @@ def bouw():
     blok("lijst", hw + 0.08, 0.0, 0.35)
     for i, vl in enumerate(vlakken(hw)):
         if i == 0:                                         # voorkant (oost): tegelpaneel met deur, vensters erboven
-            paneel("zellige", vl, -1.25, 1.25, 0.35, 4.6, 0.02, 1.2, 1.2)
+            paneel("zellige", vl, -1.25, 1.25, 0.35, 4.6, 0.04, 1.2, 1.2)
             strip("lijst", vl, [(-1.32, 0.35), (-1.32, 4.67), (1.32, 4.67), (1.32, 0.35)], 0.14, 0.08)
             deur = spitsboog(0, 1.25, 0.0, 2.15, 10, 0.62)
-            vul("deur", vl, deur, 0.06); strip("rood", vl, deur, 0.22, 0.12)
+            vul("deur", vl, deur, 0.09); strip("rood", vl, deur, 0.22, 0.12)
             raam(vl, -0.55, 0.5, 5.6, 6.9); raam(vl, 0.55, 0.5, 5.6, 6.9)
-            paneel("zellige", vl, -1.05, 1.05, 5.3, 7.35, 0.015, 1.2, 1.2)
+            paneel("zellige", vl, -1.05, 1.05, 5.3, 7.35, 0.04, 1.2, 1.2)
         else:
             raam(vl, 0.0, 0.6, 5.6, 7.0)
-            paneel("zellige", vl, -0.75, 0.75, 5.3, 7.4, 0.015, 1.2, 1.2)
-    band("zigzag", hw, 7.75, 8.4, 0.03)
+            paneel("zellige", vl, -0.75, 0.75, 5.3, 7.4, 0.04, 1.2, 1.2)
+    band("zigzag", hw, 7.75, 8.4, 0.05)
     balkon(hw, 8.55, 0.85, None, True)
     # bovenschacht: wit, donkere hoeklijnen, boogvenstertjes
     hs = 1.6
@@ -103,7 +103,7 @@ def bouw():
     for vl in vlakken(hs):
         raam(vl, 0.0, 0.42, 10.6, 11.7); raam(vl, 0.0, 0.42, 14.3, 15.4)
         strip("lijst", vl, [(-hs + 0.12, 9.7), (-hs + 0.12, 17.1), (hs - 0.12, 17.1), (hs - 0.12, 9.7)], 0.08, 0.04)
-    band("zigzag", hs, 17.6, 18.1, 0.03)
+    band("zigzag", hs, 17.6, 18.1, 0.05)
     for k, f in enumerate((0.1, 0.22, 0.34, 0.46)):           # diepe consolezone onder het tweede balkon (Fmplein1986)
         blok("lijst", hs + f, 18.1 + k * 0.2, 18.3 + k * 0.2)
     balkon(hs, 18.9, 1.0, "balkon", False)
@@ -113,7 +113,7 @@ def bouw():
         prisma("wit", [Vector((p.x, p.y, 0)) for p in (vl.p(-hl, 0, 0), vl.p(-0.42, 0, 0), vl.p(-0.42, 0, -0.18), vl.p(-hl, 0, -0.18))], z0, z0 + 2.15)
         prisma("wit", [Vector((p.x, p.y, 0)) for p in (vl.p(0.42, 0, 0), vl.p(hl, 0, 0), vl.p(hl, 0, -0.18), vl.p(0.42, 0, -0.18))], z0, z0 + 2.15)
         prisma("wit", [Vector((p.x, p.y, 0)) for p in (vl.p(-0.42, 0, 0), vl.p(0.42, 0, 0), vl.p(0.42, 0, -0.18), vl.p(-0.42, 0, -0.18))], z0 + 1.7, z0 + 2.15)
-        paneel("zellige", vl, -0.92, -0.5, z0 + 0.25, z0 + 1.9, 0.01, 1.2, 1.2); paneel("zellige", vl, 0.5, 0.92, z0 + 0.25, z0 + 1.9, 0.01, 1.2, 1.2)
+        paneel("zellige", vl, -0.92, -0.5, z0 + 0.25, z0 + 1.9, 0.04, 1.2, 1.2); paneel("zellige", vl, 0.5, 0.92, z0 + 0.25, z0 + 1.9, 0.04, 1.2, 1.2)
         om = spitsboog(0, 0.84, z0, z0 + 1.35, 8, 0.6)
         strip("lijst", vl, om, 0.08, 0.05)
     blok("donker", 0.8, z0, z0 + 2.1)

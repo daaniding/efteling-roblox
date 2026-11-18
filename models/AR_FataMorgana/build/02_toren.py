@@ -23,7 +23,7 @@ _laag = [0]
 
 def overlay(rol, vl, u, v, w, h, fu=False, fv=False):
     """half doorzichtige verweringskaart op een gevel (eigen UV 0..1), elke kaart iets verder naar voren tegen z-fighting"""
-    _laag[0] = (_laag[0] + 1) % 12; n = 0.012 + 0.0025 * _laag[0]
+    _laag[0] = (_laag[0] + 1) % 12; n = 0.03 + 0.004 * _laag[0]          # >= 3 cm voor de muur (z-fighting op afstand)
     bm = G[rol]; uvl = bm.loops.layers.uv.verify()
     pts = [vl.p(u - w / 2, v, n), vl.p(u + w / 2, v, n), vl.p(u + w / 2, v + h, n), vl.p(u - w / 2, v + h, n)]
     uv = [(0, 0), (1, 0), (1, 1), (0, 1)]
@@ -97,7 +97,7 @@ def spitsboog(xc, w, v0, vs, n=8, r_f=0.75):
     return [(x0, v0)] + links + rechts[1:] + [(xc + w / 2, v0)]
 
 
-def vul(rol, vl, omtrek, n=0.05):
+def vul(rol, vl, omtrek, n=0.09):
     """vlak gevuld met een waaier vanuit het midden (raam/deur), n voor de muur"""
     c = (sum(u for u, _ in omtrek) / len(omtrek), sum(v for _, v in omtrek) / len(omtrek))
     for a, b in zip(omtrek, omtrek[1:] + omtrek[:1]):
@@ -106,7 +106,7 @@ def vul(rol, vl, omtrek, n=0.05):
 
 def raam(vl, xc, w, v0, vs):
     om = spitsboog(xc, w, v0, vs)
-    vul("raam", vl, om, 0.015); strip("lijst", vl, om, 0.12, 0.08)
+    vul("raam", vl, om, 0.09); strip("lijst", vl, om, 0.12, 0.08)
     strip("lijst", vl, [(xc - w / 2 - 0.12, v0 - 0.05), (xc + w / 2 + 0.12, v0 - 0.05)], 0.12, 0.12)
 
 
@@ -208,7 +208,7 @@ def bouw():
     nis(voor, -1.45, 2.0, 3.75, 7.4); nis(voor, 1.45, 2.0, 3.75, 7.4)
     strip("lijst", voor, [(0, 3.5), (0, 9.4)], 0.18, 0.1)                # middenlisene tussen de nissen
     deur = spitsboog(0, 1.5, 0.0, 1.85, 8)
-    vul("deur", voor, deur, 0.05); strip("lijst", voor, deur, 0.22, 0.15)
+    vul("deur", voor, deur, 0.09); strip("lijst", voor, deur, 0.22, 0.15)
     for v in (rechts, links):
         nis(v, 0.0, 2.4, 3.75, 7.4)
     # bovenstuk (4,6 m) op het onderblok
