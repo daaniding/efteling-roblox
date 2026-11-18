@@ -1,0 +1,117 @@
+"""08_zuidvleugel: stap 7 — de zuidvleugel langs het plein met de overdekte buitenwachtrij (FataVoorplein1993.jpg; AHN ref/ahn).
+AHN: x 17,2..58, y -339,8..-350, 4,3 m. Foto: lange zuilengang met rode palen, brede fries van blauw-wit tegelwerk (FM_fries) met
+rode randen, gouden bollen op de palen, achterwand met witte boognissen en donkere doorkijkjes; plat dak.
+Modelstelsel = 02/03. Deel "zuidvleugel". Gebruik: blender --background --python build/08_zuidvleugel.py -- [--render]"""
+import bpy, bmesh, sys, os, math
+from mathutils import Vector
+
+D = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+F6 = os.path.join(D, "build", "06_kantelen.py")
+G6 = {"__file__": F6, "__name__": "lib"}
+exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6)
+G3 = G6["G3"]; T = G6["T"]
+L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
+OWNER = "phase:08_zuidvleugel"
+T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0})
+T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries",)
+for r in T["KLEUR"]: T["G"][r] = bmesh.new()
+
+X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -343.0, -350.0     # voorkant palen, achterwand gang, achterkant
+H = 4.3
+
+
+def paneel(rol, vl, u0, u1, v0, v1, n, su, sv, dv=0.0):
+    bm = T["G"][rol]; uvl = bm.loops.layers.uv.verify()
+    pts = [vl.p(u0, v0, n), vl.p(u1, v0, n), vl.p(u1, v1, n), vl.p(u0, v1, n)][::-1]
+    uv = [(u0 / su, (v0 - dv) / sv), (u1 / su, (v0 - dv) / sv), (u1 / su, (v1 - dv) / sv), (u0 / su, (v1 - dv) / sv)][::-1]
+    f = bm.faces.new([bm.verts.new(p) for p in pts])
+    for lp, t in zip(f.loops, uv): lp[uvl].uv = t
+
+
+def bouw():
+    # achterblok (kern) achter de gang, tot de achterkant
+    prisma("stuc", [L(X0, YZ), L(X1, YZ), L(X1, YA), L(X0, YA)], 0.0, H - 0.3)
+    # achterwand van de gang (west -> oost: voorkant = noord) met witte boognissen en donkere doorkijkjes
+    aw = Vlak(L(X0, YA), Vector((1, 0, 0)), Vector((0, 1, 0)))
+    lw = X1 - X0
+    prisma("wit", [L(X0, YA - 0.3), L(X1, YA - 0.3), L(X1, YA), L(X0, YA)], 0.0, H - 0.3)
+    k = 0; u = 1.6
+    while u < lw - 1.0:
+        om = spitsboog(u, 1.0, 1.0, 2.4, 10, 0.55)
+        if k % 3 == 1: vul("raam", aw, om, 0.09)
+        else: vul("wit", aw, om, 0.05)
+        strip("lijst", aw, om, 0.1, 0.07)
+        u += 2.9; k += 1
+    # vloer en plafond van de gang
+    quad("tegel", [L(X0, YA) + Vector((0, 0, 0.03)), L(X1, YA) + Vector((0, 0, 0.03)), L(X1, YV) + Vector((0, 0, 0.03)), L(X0, YV) + Vector((0, 0, 0.03))])
+    quad("stucvlak", [L(X0, YA) + Vector((0, 0, 3.3)), L(X0, YV) + Vector((0, 0, 3.3)), L(X1, YV) + Vector((0, 0, 3.3)), L(X1, YA) + Vector((0, 0, 3.3))])
+    # dakrand boven de palen: lijst + fries (blauw-wit tegelwerk) + rode randen; dak
+    vv = Vlak(L(X0, YV), Vector((1, 0, 0)), Vector((0, 1, 0)))
+    prisma("wit", [L(X0 - 0.1, YV - 0.25), L(X1 + 0.1, YV - 0.25), L(X1 + 0.1, YV + 0.1), L(X0 - 0.1, YV + 0.1)], 3.3, H)
+    paneel("fries", vv, -0.1, lw + 0.1, 3.42, 4.18, 0.14, 1.8, 0.76, 3.42)
+    for z in (3.36, 4.24):
+        prisma("rood", [L(X0 - 0.12, YV - 0.25), L(X1 + 0.12, YV - 0.25), L(X1 + 0.12, YV + 0.17), L(X0 - 0.12, YV + 0.17)], z - 0.05, z + 0.05)
+    prisma("stuc", [L(X0, YA), L(X1, YA), L(X1, YV - 0.25), L(X0, YV - 0.25)], 3.3, H - 0.3)
+    quad("dak", [L(X0 + 0.1, YZ + 0.1) + Vector((0, 0, H + 0.08)), L(X1 - 0.1, YZ + 0.1) + Vector((0, 0, H + 0.08)),
+                 L(X1 - 0.1, YV - 0.2) + Vector((0, 0, H + 0.08)), L(X0 + 0.1, YV - 0.2) + Vector((0, 0, H + 0.08))])
+    # rode palen (vierkant met voet en kopje), gouden bol op elke tweede paal
+    n = int(lw / 3.0)
+    for i in range(n + 1):
+        x = X0 + 0.3 + (lw - 0.6) * i / n; p = L(x, YV - 0.05)
+        prisma("rood", [p + Vector((a, b, 0)) * 0.12 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 3.3)
+        prisma("rood", [p + Vector((a, b, 0)) * 0.2 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 0.25)
+        prisma("rood", [p + Vector((a, b, 0)) * 0.19 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 3.12, 3.3)
+        if i % 2 == 0:
+            q = p + Vector((0, 0.02, 0))
+            prisma("goud", [q + Vector((a, b, 0)) * 0.1 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], H + 0.05, H + 0.2)
+            lathe("goud", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.0, 0.2))], H + 0.38, 12, (q.x, q.y))
+            lathe("goud", [(0.03, 0.0), (0.0, 0.25)], H + 0.56, 6, (q.x, q.y))
+    # oostkop en achterkant: gewone gevels met kantelen en verwering (tegen de klok in: buiten = links)
+    G6["wand"]([(X1, YV), (X1, YZ)], H, 0.4)
+    G6["wand"]([(X1, YZ), (X0, YZ)], H, 0.4, ramen=[(0, 8.0, 1.6, 2.9), (0, 20.0, 1.6, 2.9), (0, 32.0, 1.6, 2.9)])
+
+
+def objecten():
+    col = bpy.data.collections.get("LOW") or bpy.data.collections.new("LOW")
+    if col.name not in bpy.context.scene.collection.children: bpy.context.scene.collection.children.link(col)
+    for rol, bm in T["G"].items():
+        if not bm.faces: continue
+        vast = rol in T["OVERLAY"]
+        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "tegel"):
+            bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.normal_update()
+        uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]
+        for f in ([] if vast else bm.faces):
+            n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))
+            for lp in f.loops:
+                co = lp.vert.co
+                lp[uvl].uv = (co.y / s, co.z / s) if ax == 0 else (co.x / s, co.z / s) if ax == 1 else (co.x / s, co.y / s)
+        me = bpy.data.meshes.new("FM_zuidvleugel_" + rol); bm.to_mesh(me); bm.free()
+        o = bpy.data.objects.new("FM_zuidvleugel_" + rol, me); o["owner"] = OWNER; o["rol"] = rol; o["deel"] = "zuidvleugel"
+        m = bpy.data.materials.get("FM_" + rol) or bpy.data.materials.new("FM_" + rol)
+        m.diffuse_color = (*T["KLEUR"][rol], 1); me.materials.append(m); col.objects.link(o)
+
+
+def render(uit):
+    sc = bpy.context.scene; sc.render.engine = "BLENDER_WORKBENCH"
+    sc.display.shading.light = "STUDIO"; sc.display.shading.color_type = "MATERIAL"; sc.display.shading.show_shadows = True
+    sc.render.film_transparent = True; sc.render.resolution_x, sc.render.resolution_y = 1400, 700
+    cd = bpy.data.cameras.new("cam"); cam = bpy.data.objects.new("cam", cd); sc.collection.objects.link(cam); sc.camera = cam
+    cd.lens = 26
+    p = L(40.0, -318.0) + Vector((0, 0, 1.8)); q = L(38.0, -344.0) + Vector((0, 0, 2.6))
+    cam.location = p; cam.rotation_euler = (q - p).to_track_quat("-Z", "Y").to_euler()
+    sc.render.filepath = os.path.join(uit, "zuidvleugel.png"); bpy.ops.render.render(write_still=True)
+
+
+def main():
+    bpy.ops.wm.open_mainfile(filepath=T["MASTER"])
+    for o in [o for o in bpy.data.objects if o.get("owner") == OWNER]: bpy.data.objects.remove(o)
+    bouw(); objecten()
+    bpy.ops.wm.save_as_mainfile(filepath=T["MASTER"])
+    print("[08_zuidvleugel] klaar:", sum(len(o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER), "vlakken")
+    if "--render" in sys.argv:
+        uit = os.path.join(D, "review", "08_zuidvleugel"); os.makedirs(uit, exist_ok=True); render(uit)
+
+
+main()

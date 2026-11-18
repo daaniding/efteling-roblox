@@ -181,11 +181,11 @@ def romp():
     oostvleugel horen bij één gebouw (Daan 18 nov: "het zit niet aan elkaar")"""
     # 2 m achter de gevellijn (gevelmuren zijn 6 m diep), zodat de galerij open blijft
     omtrek = [(-72.5, -299.0), (-43.5, -299.0), (-43.5, -297.0), (-36.5, -297.0),
-              (-36.5, -294.5), (-30.0, -294.0), (-27.0, -296.0), (-21.0, -296.5), (-12.0, -297.5), (-8.0, -297.5), (-6.5, -318.0),
-              (-25.0, -318.0), (-25.0, -339.0), (-73.0, -339.0)]
+              (-36.5, -294.5), (-30.0, -294.0), (-27.0, -296.0), (-21.0, -296.5), (-12.0, -297.5), (-8.0, -297.5), (-6.5, -315.0),
+              (-2.3, -315.0), (-2.3, -321.3), (-15.7, -321.3), (-15.7, -339.0), (-73.0, -339.0)]   # AHN: hal 8,2 m tot x -2,5 en x -16
     pts = [L(x, y) for x, y in omtrek][::-1]                   # tegen de klok in
-    prisma("stuc", pts, 0.0, H - 0.02)
-    quad("dak", [p + Vector((0, 0, H - 0.01)) for p in pts])
+    prisma("stuc", pts, 0.0, H - 0.3)                         # kern onder het dak (geen dubbele vlakken)
+    quad("dak", [p + Vector((0, 0, H + 0.08)) for p in pts])   # 8 cm boven de muurbovenkanten: geen z-fighting
 
 
 def kade():

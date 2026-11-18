@@ -37,7 +37,7 @@ def bouw():
     noord = wand([(-6.8, -308.5), (12.5, -308.5)], 4.6, 10.0, ramen=[(0, 9.0, 1.6, 2.9), (0, 12.5, 1.6, 2.9), (0, 16.5, 1.6, 2.9)])
     wand([(12.5, -308.5), (12.5, -318.5)], 4.6, 0.4, ramen=[(0, 5.0, 1.6, 2.9)])
     wand([(12.5, -318.5), (-6.8, -318.5)], 4.6, 0.4, ramen=[(0, 6.0, 1.6, 2.9), (0, 12.0, 1.6, 2.9)])
-    quad("dak", [L(-6.6, -318.2) + Vector((0, 0, 4.56)), L(12.2, -318.2) + Vector((0, 0, 4.56)), L(12.2, -308.8) + Vector((0, 0, 4.56)), L(-6.6, -308.8) + Vector((0, 0, 4.56))])
+    quad("dak", [L(-6.6, -318.05) + Vector((0, 0, 4.68)), L(12.05, -318.05) + Vector((0, 0, 4.68)), L(12.05, -308.8) + Vector((0, 0, 4.68)), L(-6.6, -308.8) + Vector((0, 0, 4.68))])   # 8 cm boven de muren
     # verhoogd vierkant (AHN 6 m), eenvoudige witte rand
     wand([(5.0, -308.3), (11.6, -308.3)], 6.0, 6.8)
     # hoektorentje op de oosthoek van het hoofdgebouw: vierkante voet tot boven het dak, open stage met boogopeningen,

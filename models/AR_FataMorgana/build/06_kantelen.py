@@ -34,17 +34,17 @@ def wand(punten, hoogte, diep, ramen=()):
 
 
 def bouw():
-    # lage muur ingang -> minaret (noord naar zuid: voorkant = oost, naar het plein)
-    # loopt 0,4 m het ingangsgebouw en 0,2 m de minaret in (Daan: "je laat nog steeds een beetje ruimte zitten")
+    # lage muur ingang -> minaret; loopt 0,4 m het ingangsgebouw en 0,2 m de minaret in (Daan: "je laat nog steeds een beetje
+    # ruimte zitten")
     wand([(17.9, -313.6), (17.9, -326.9)], 3.3, 0.5, ramen=[(0, 6.6, 1.2, 2.2)])
-    # hoog blok: oostgevel noord en zuid van de minaret, achter de minaret door gevuld
-    wand([(17.5, -322.0), (17.5, -326.9)], 5.4, 24.0)
-    wand([(17.5, -331.1), (17.5, -336.0)], 5.4, 24.0, ramen=[(0, 2.6, 2.6, 3.9)])
-    prisma("stuc", [L(-6.5, -331.4), L(17.4, -331.4), L(17.4, -326.6), L(-6.5, -326.6)], 0.0, 5.38)
-    # noordgevel van het blok (naar de binnenplaats, west -> oost: voorkant = noord) en zuidgevel (oost -> west: voorkant = zuid)
-    wand([(-6.5, -322.0), (17.5, -322.0)], 5.4, 0.4, ramen=[(0, 8.0, 2.6, 3.9), (0, 15.0, 2.6, 3.9)])
-    wand([(17.5, -336.0), (-6.5, -336.0)], 5.4, 0.4, ramen=[(0, 6.0, 2.6, 3.9), (0, 12.0, 2.6, 3.9)])
-    quad("dak", [L(-6.4, -335.6) + Vector((0, 0, 5.36)), L(16.7, -335.6) + Vector((0, 0, 5.36)), L(16.7, -322.4) + Vector((0, 0, 5.36)), L(-6.4, -322.4) + Vector((0, 0, 5.36))])
+    # blok van 5,4 m (AHN) bij de minaret: x -16..17,4, y -322..-350; één massief blok (dak 5,3), dunne gevels (tot 5,4 m) en
+    # een donker dakvlak op 5,42 dat niet over de gevelranden ligt (geen dubbele daken = geen z-fighting)
+    prisma("stuc", [L(-16.0, -350.0), L(17.4, -350.0), L(17.4, -322.0), L(-16.0, -322.0)], 0.0, 5.3)
+    wand([(-16.0, -322.0), (17.5, -322.0)], 5.4, 0.4, ramen=[(0, 17.5, 2.6, 3.9), (0, 24.5, 2.6, 3.9)])
+    wand([(17.5, -322.0), (17.5, -326.9)], 5.4, 0.4)
+    wand([(17.5, -331.1), (17.5, -340.2)], 5.4, 0.4, ramen=[(0, 2.6, 2.6, 3.9)])
+    wand([(17.5, -350.0), (-16.0, -350.0)], 5.4, 0.4, ramen=[(0, 6.0, 2.6, 3.9), (0, 14.0, 2.6, 3.9), (0, 22.0, 2.6, 3.9)])
+    quad("dak", [L(-15.5, -349.55) + Vector((0, 0, 5.42)), L(17.0, -349.55) + Vector((0, 0, 5.42)), L(17.0, -322.45) + Vector((0, 0, 5.42)), L(-15.5, -322.45) + Vector((0, 0, 5.42))])
 
 
 def objecten():

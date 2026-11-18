@@ -41,7 +41,12 @@ verweringsvlekken; grond alleen onder de muren.
 Stap 6 — koepelgebouw (build/07_koepelgebouw.py): laag blok met rechthoekige kantelen x -6,8..12,5, y -308,5..-318,5 (4,6 m),
 verhoogd deel x 5..11,6 (6 m), hoektorentje op de oosthoek van het hoofdgebouw (-4; -310,6) met boogopeningen en crème
 uikoepel tot 13,9 m (AHN), klein wit koepeltje met gouden spits (-2,5; -316,3) (Fmplein1986.jpg, luchtfoto).
-Volgende stukken (alleen het gebouw): oost- en achterkant van het hoofdgebouw, koepels op het dak.
+Controle (bovenaanzicht model over luchtfoto, review/top_over.jpg): alle delen liggen op hun dak/koepel.
+Stap 7 — zuidvleugel (build/08_zuidvleugel.py): x 17,2..58, y -339,8..-350 (AHN 4,3 m), overdekte buitenwachtrij langs het plein:
+rode palen, blauw-witte fries (FM_fries, 04t_tegels), rode randen, gouden bollen, achterwand met boognissen (FataVoorplein1993.jpg).
+Hoofdgebouw-dak doorgetrokken (hal 8,2 m tot x -2,3 en x -15,7), blok bij de minaret tot y -350 (één massief blok + dunne gevels).
+Les: geen dubbele daken: kern 30 cm onder de dakrand, dakvlak 8 cm boven de muurbovenkanten (anders z-fighting op het dak).
+Volgende stukken (alleen het gebouw): westkant (x -90..-73, wit koepeltje bij (-78; -334)), achterkant (zuid, bos/dienstweg).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/

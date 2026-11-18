@@ -62,3 +62,17 @@ for i in range(8):
         d.ellipse([cx - 12, cy - 12, cx + 12, cy + 12], fill=(238, 236, 228))
 im = ruis_tint(im.filter(ImageFilter.GaussianBlur(0.8))); im.save(os.path.join(T, "FM_balkon_kleur.png"))
 print("[04t_tegels] klaar")
+
+# fries van de buitenwachtrij (FataVoorplein1993.jpg): blauw met wit vlechtwerk van ruiten en achthoeken, rode/witte randjes
+im = Image.new("RGB", (N, N), (34, 72, 150)); d = ImageDraw.Draw(im)
+d.rectangle([0, 0, N, 70], fill=(180, 52, 40)); d.rectangle([0, 70, N, 100], fill=(236, 232, 220))
+d.rectangle([0, N - 100, N, N - 70], fill=(236, 232, 220)); d.rectangle([0, N - 70, N, N], fill=(180, 52, 40))
+n = 6; w = N / n; y0, y1 = 100, N - 100; ym = (y0 + y1) / 2; hh = (y1 - y0) / 2
+for k in range(n + 1):
+    cx = k * w
+    d.polygon([(cx, y0 + 30), (cx + w / 2, ym), (cx, y1 - 30), (cx - w / 2, ym)], outline=(236, 236, 240), width=16)
+    d.polygon([(cx, y0 + 90), (cx + w / 2 - 60, ym), (cx, y1 - 90), (cx - w / 2 + 60, ym)], fill=(60, 140, 200))
+    d.ellipse([cx + w / 2 - 34, ym - 34, cx + w / 2 + 34, ym + 34], fill=(236, 236, 240))
+    d.ellipse([cx + w / 2 - 14, ym - 14, cx + w / 2 + 14, ym + 14], fill=(214, 170, 72))
+im = ruis_tint(im.filter(ImageFilter.GaussianBlur(0.8))); im.save(os.path.join(T, "FM_fries_kleur.png"))
+print("[04t_tegels] fries klaar")
