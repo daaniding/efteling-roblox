@@ -100,26 +100,26 @@ local function snd(ouder, naam, id, vol, minA, maxA, lus)
 	return so
 end
 for i, p in {{-1.0, 11.5}, {-11.0, 2.0}, {-6.0, -9.8}} do                 -- noord, west, haven bij Sindbads boot (op het water)
-	local w = snd(bron("water" .. i, p[1], p[2], 0.1), "water", GELUID.water, 0.3, 8, 70, true)
+	local w = snd(bron("water" .. i, p[1], p[2], 0.1), "water", GELUID.water, 0.15, 8, 70, true)
 	w.TimePosition = i * 7                                                   -- niet allemaal tegelijk dezelfde golf
 end
 local midden = bron("schijf", 0, 0, 0.6)
 snd(midden, "was", GELUID.was, 0, 15, 140, true)
 snd(midden, "brom", GELUID.brom, 0, 10, 90, true)
 local w = Instance.new("Sound"); w.Name = "wind"; w.SoundId = "rbxassetid://" .. GELUID.wind; w.Volume = 0; w.Looped = true; w.Parent = fg
-snd(bron("hut", 0.7, -9.45, 1.5), "bel", GELUID.bel, 0.45, 10, 120, false)
-snd(bron("poortIn", 4.0, -7.5, 0.8), "hekIn", GELUID.hek, 0.4, 6, 60, false)
-snd(bron("poortUit", -2.0, -8.6, 0.8), "hekUit", GELUID.hek, 0.4, 6, 60, false)
+snd(bron("hut", 0.7, -9.45, 1.5), "bel", GELUID.bel, 0.3, 10, 120, false)
+snd(bron("poortIn", 4.0, -7.5, 0.8), "hekIn", GELUID.hek, 0.25, 6, 60, false)
+snd(bron("poortUit", -2.0, -8.6, 0.8), "hekUit", GELUID.hek, 0.25, 6, 60, false)
 
 -- muziek (Daan 18 nov: "de wachtrij muziek en de muziek in de attractie"); echte Efteling-muziek mag niet (auteursrecht), dus
 -- gelicentieerde APM-muziek uit de Creator Store, te wisselen met SiroccoMuziekKiezer (Studio: K = wachtrij, L = attractie)
 local MUZIEK = {rij = 1836725599, rit = 1840889607}   -- APM "Desert Sands" (wachtrij), APM "Land Of Adventure" (attractie)
 local RIJ_SPEAKERS = {{5.8, -15.8}, {11.0, -11.9}, {15.6, -6.5}, {15.9, 3.0}, {15.75, 8.0}, {11.35, 11.69}, {8.88, 5.12}, {10.23, -0.6}, {8.22, -6.12}, {3.51, -9.63}}   -- langs 07_omgeving.WACHTRIJ, om de ~5 m
 for i, p in RIJ_SPEAKERS do
-	local m = snd(bron("speaker" .. i, p[1], p[2], 0.45), "muziekRij", MUZIEK.rij, 0.22, 10, 55, true)
+	local m = snd(bron("speaker" .. i, p[1], p[2], 0.45), "muziekRij", MUZIEK.rij, 0.1, 10, 55, true)
 	m:SetAttribute("Speaker", true)
 end
-snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.15, 20, 120, true)          -- vanuit het dak boven de schijf
+snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.07, 20, 120, true)          -- vanuit het dak boven de schijf
 
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
@@ -429,7 +429,7 @@ if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Na
 for _, x in {sWas, sBrom, sWind} do if x then x.Volume = 0; x:Play() end end
 local vorigTc, vorigIn, vorigUit = -1, false, false
 -- muziek: alle wachtrijspeakers tegelijk starten (synchroon); de muziek in de attractie is zacht tijdens het instappen en vol
--- tijdens de rit (volume volgt de ritsnelheid)
+-- tijdens de rit (volume volgt de ritsnelheid); Daan 18 nov "het staat te hard": alles ongeveer gehalveerd
 local sRitMuziek = snd("muziekRit")
 if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "muziekRij" then d.TimePosition = 0; d:Play() end end end
 if sRitMuziek then sRitMuziek:Play() end
@@ -769,10 +769,10 @@ RunService.PreSimulation:Connect(function(dt: number)
 	end
 	-- geluid
 	local tSnel = rijdt and v or 0
-	if sWas then sWas.Volume += (0.45 * tSnel - sWas.Volume) * 0.05 end
-	if sBrom then sBrom.Volume += (0.3 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
-	if sWind then sWind.Volume += ((inBoot and 0.35 * tSnel or 0) - sWind.Volume) * 0.05 end
-	if sRitMuziek then sRitMuziek.Volume += ((0.15 + 0.35 * tSnel) - sRitMuziek.Volume) * 0.03 end
+	if sWas then sWas.Volume += (0.22 * tSnel - sWas.Volume) * 0.05 end
+	if sBrom then sBrom.Volume += (0.15 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
+	if sWind then sWind.Volume += ((inBoot and 0.18 * tSnel or 0) - sWind.Volume) * 0.05 end
+	if sRitMuziek then sRitMuziek.Volume += ((0.07 + 0.18 * tSnel) - sRitMuziek.Volume) * 0.03 end
 	if sBel and vorigTc >= 0 and vorigTc < T_IN - 1.5 and tc >= T_IN - 1.5 and tc < T_IN then sBel:Play() end    -- vertrekbel
 	vorigTc = tc
 	local nuIn, nuUit = openIn > 0.02, openUit > 0.02

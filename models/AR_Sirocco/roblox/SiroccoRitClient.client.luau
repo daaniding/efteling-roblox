@@ -94,7 +94,7 @@ if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Na
 for _, x in {sWas, sBrom, sWind} do if x then x.Volume = 0; x:Play() end end
 local vorigTc, vorigIn, vorigUit = -1, false, false
 -- muziek: alle wachtrijspeakers tegelijk starten (synchroon); de muziek in de attractie is zacht tijdens het instappen en vol
--- tijdens de rit (volume volgt de ritsnelheid)
+-- tijdens de rit (volume volgt de ritsnelheid); Daan 18 nov "het staat te hard": alles ongeveer gehalveerd
 local sRitMuziek = snd("muziekRit")
 if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "muziekRij" then d.TimePosition = 0; d:Play() end end end
 if sRitMuziek then sRitMuziek:Play() end
@@ -434,10 +434,10 @@ RunService.PreSimulation:Connect(function(dt: number)
 	end
 	-- geluid
 	local tSnel = rijdt and v or 0
-	if sWas then sWas.Volume += (0.45 * tSnel - sWas.Volume) * 0.05 end
-	if sBrom then sBrom.Volume += (0.3 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
-	if sWind then sWind.Volume += ((inBoot and 0.35 * tSnel or 0) - sWind.Volume) * 0.05 end
-	if sRitMuziek then sRitMuziek.Volume += ((0.15 + 0.35 * tSnel) - sRitMuziek.Volume) * 0.03 end
+	if sWas then sWas.Volume += (0.22 * tSnel - sWas.Volume) * 0.05 end
+	if sBrom then sBrom.Volume += (0.15 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
+	if sWind then sWind.Volume += ((inBoot and 0.18 * tSnel or 0) - sWind.Volume) * 0.05 end
+	if sRitMuziek then sRitMuziek.Volume += ((0.07 + 0.18 * tSnel) - sRitMuziek.Volume) * 0.03 end
 	if sBel and vorigTc >= 0 and vorigTc < T_IN - 1.5 and tc >= T_IN - 1.5 and tc < T_IN then sBel:Play() end    -- vertrekbel
 	vorigTc = tc
 	local nuIn, nuUit = openIn > 0.02, openUit > 0.02

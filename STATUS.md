@@ -1567,6 +1567,8 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   instappen (0.15) en vol tijdens de rit (0.5). SiroccoMuziekKiezer (Studio, Play): K = volgend wachtrijnummer (8 keuzes),
   L = volgend ritnummer (5 keuzes); gekozen ID vastzetten in sirocco_rit.luau (MUZIEK). sirocco_rit.luau zet nu ook
   SiroccoBezoekers en de kiezer neer. Play: alles geladen, speakers binnen 0,08 s gelijk.
+- Volume (18 nov, Daan: "het staat sowieso te hard"): alles ongeveer gehalveerd: wachtrijmuziek 0.1, attractiemuziek 0.07 ->
+  0.25 tijdens de rit, kolkend water max 0.22, brom 0.15, wind 0.18, vijverwater 0.15, bel 0.3, hekjes 0.25.
 - VOLGENDE: Daan kiest de muziek (K/L) en luistert het geluid;
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
