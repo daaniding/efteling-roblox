@@ -14,12 +14,13 @@ G3 = {"__file__": F3, "__name__": "lib"}
 exec(compile(open(F3).read().rsplit("\nmain()", 1)[0], F3, "exec"), G3)
 T = G3["T"]; L, prisma, lathe, quad, strip, spitsboog, vul, raam, Vlak = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "spitsboog", "vul", "raam", "Vlak"))
 OWNER = "phase:04_minaret"
-VAST = ("zellige", "zigzag", "balkon", "fries")
-EIGEN = ("raam", "deur", "poort", "poortrand")                 # vaste windingsrichting, geen recalc
+VAST = ("zellige", "zigzag", "balkon", "fries", "tegelhal", "deurblad")
+EIGEN = ("raam", "deur", "poort", "poortrand", "zandvlak")                 # vaste windingsrichting, geen recalc
 T["KLEUR"].update({"zandsteen": (0.84, 0.72, 0.56), "wit": (0.95, 0.94, 0.9), "rood": (0.66, 0.18, 0.14), "zellige": (0.2, 0.5, 0.6),
                    "zigzag": (0.66, 0.18, 0.14), "balkon": (0.85, 0.88, 0.95), "donker": (0.12, 0.16, 0.22),
-                   "fries": (0.2, 0.3, 0.6), "poort": (0.05, 0.05, 0.07), "poortrand": (0.95, 0.94, 0.9)})
-T["UVS"].update({"zandsteen": 9.0, "wit": 9.0, "rood": 1.0, "zellige": 1.0, "zigzag": 1.0, "balkon": 1.0, "donker": 1.0, "fries": 1.0, "poort": 1.0, "poortrand": 1.0})
+                   "fries": (0.2, 0.3, 0.6), "poort": (0.05, 0.05, 0.07), "poortrand": (0.95, 0.94, 0.9),
+                   "tegelhal": (0.6, 0.27, 0.18), "deurblad": (0.75, 0.5, 0.25), "vloertegel": (0.65, 0.42, 0.33), "zandvlak": (0.84, 0.72, 0.56), "botsing": (1.0, 0.0, 1.0)})
+T["UVS"].update({"zandsteen": 9.0, "wit": 9.0, "rood": 1.0, "zellige": 1.0, "zigzag": 1.0, "balkon": 1.0, "donker": 1.0, "fries": 1.0, "poort": 1.0, "poortrand": 1.0, "tegelhal": 1.0, "deurblad": 1.0, "vloertegel": 2.0, "zandvlak": 9.0, "botsing": 1.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + VAST
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -156,25 +157,93 @@ def poort(vl, P=0.3, w=1.8, vs=1.9, pu=1.15, ph=4.9):
     vlak_n("zellige", [vl.p(-pu, ph, 0), vl.p(pu, ph, 0), vl.p(pu, ph, P), vl.p(-pu, ph, P)], Vector((0, 0, -1)), [(0, 0), (1, 0), (1, 0.25), (0, 0.25)])
 
 
+def zijdeur_en_halletje(hw, HZ=3.2, t=0.5):   # t 0,5: de hoekblokken (tot 1,8 m uit het midden) blijven binnen de muur
+    """minaretvoet onderin hol (POV-video 2025, 25-30 s): zijdeur in de zuidgevel vanuit de overdekte wachtrij (veranda),
+    kielboog met dikke witte omlijsting, houten deurblad "Open" dat naar buiten open staat, en een halletje met
+    roodbruine tegelwanden, wit plafond en tegelvloer. De rest van de toren (boven HZ) blijft een massief blok."""
+    blok("zandsteen", hw, HZ, 8.4)
+    x0, x1, y0, y1 = C.x - hw, C.x + hw, C.y - hw, C.y + hw          # modelcoordinaten
+    def kast(ax, ay, bx, by): prisma("zandsteen", [Vector((ax, ay, 0)), Vector((bx, ay, 0)), Vector((bx, by, 0)), Vector((ax, by, 0))], 0.0, HZ)
+    kast(x0, y0, x0 + t, y1); kast(x1 - t, y0, x1, y1); kast(x0 + t, y1 - t, x1 - t, y1)   # west, oost, noord
+    # zuidmuur met deuropening: vlakken met gat (waaier vanuit de deur), buiten en binnen, plus witte neggen
+    vz = vlakken(hw)[3]                                              # zuid: u = 19,5 - x (park), n naar buiten (-y)
+    # Daan: "hier past toch geen 1 Roblox-character in" -> 1,6 m breed (4,8 studs), top ~3,0 m net onder het verandadak
+    uc, w, vs = 0.5, 1.6, 1.95                                       # deur bij park-x 19,0 (in de veranda)
+    boog = spitsboog(uc, w, 0.0, vs, 10, 0.55)[1:-1]
+    top = max(v for _, v in boog); hlft = len(boog) // 2
+    boog = [p for p in boog[:hlft] if p[1] < top - 0.1] + [(uc, top + 0.16)] + [p for p in boog[hlft:] if p[1] < top - 0.1]   # kielpunt
+    om = [(uc - w / 2, 0.0)] + [(uc - w / 2, vs * k / 4) for k in range(1, 4)] + boog + [(uc + w / 2, vs * k / 4) for k in range(3, 0, -1)] + [(uc + w / 2, 0.0)]
+    c = (uc, 1.1)
+    def raak(p, pu0, pu1, ph):
+        du, dv = p[0] - c[0], p[1] - c[1]; ts = []
+        if du < -1e-9: ts.append(((pu0 - c[0]) / du, "l"))
+        if du > 1e-9: ts.append(((pu1 - c[0]) / du, "r"))
+        if dv < -1e-9: ts.append(((0.0 - c[1]) / dv, "o"))
+        if dv > 1e-9: ts.append(((ph - c[1]) / dv, "b"))
+        tt, kant = min(ts); return (c[0] + du * tt, c[1] + dv * tt), kant
+    for n_, wil, rol, uvs in ((0.0, vz.N, "zandvlak", None), (-t, -vz.N, "tegelhal", 1.0)):
+        pu0, pu1 = (-hw, hw) if n_ == 0 else (-hw + t, hw - t)
+        ph = HZ if n_ == 0 else HZ - 0.04
+        hoek = {("l", "b"): (pu0, ph), ("b", "l"): (pu0, ph), ("b", "r"): (pu1, ph), ("r", "b"): (pu1, ph),
+                ("l", "o"): (pu0, 0.0), ("o", "l"): (pu0, 0.0), ("r", "o"): (pu1, 0.0), ("o", "r"): (pu1, 0.0)}
+        hits = [raak(p, pu0, pu1, ph) for p in om]
+        nn = n_ if n_ == 0 else n_ - 0.02                              # tegels 2 cm voor de binnenkant
+        for i in range(len(om) - 1):
+            (h0, k0), (h1, k1) = hits[i], hits[i + 1]
+            rand = [om[i], om[i + 1], h1] + ([hoek[(k1, k0)]] if k0 != k1 and (k1, k0) in hoek else []) + [h0]
+            vlak_n(rol, [vz.p(u, v, nn) for u, v in rand], wil, [(u / uvs, v / uvs) for u, v in rand] if uvs else None)
+    for (ua, va), (ub, vb) in zip(om, om[1:]):                       # neggen
+        mu, mv = (ua + ub) / 2, (va + vb) / 2
+        vlak_n("poortrand", [vz.p(ua, va, 0), vz.p(ub, vb, 0), vz.p(ub, vb, -t - 0.02), vz.p(ua, va, -t - 0.02)], vz.U * (c[0] - mu) + Vector((0, 0, c[1] - mv)))
+    strip("wit", vz, om[1:-1], 0.26, 0.1)                             # dikke witte omlijsting
+    strip("wit", vz, [om[0], om[1]], 0.26, 0.1); strip("wit", vz, [om[-2], om[-1]], 0.26, 0.1)
+    # binnenwanden west, noord, oost: tegels; plafond wit; vloer tegels (sluit aan op de verandavloer)
+    hz = HZ - 0.04
+    for a, b, wil in (((x0 + t + 0.02, y0 + t), (x0 + t + 0.02, y1 - t), Vector((1, 0, 0))),
+                      ((x0 + t, y1 - t - 0.02), (x1 - t, y1 - t - 0.02), Vector((0, -1, 0))),
+                      ((x1 - t - 0.02, y1 - t), (x1 - t - 0.02, y0 + t), Vector((-1, 0, 0)))):
+        A, B = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0)); lg = (B - A).length
+        vlak_n("tegelhal", [A, B, B + Vector((0, 0, hz)), A + Vector((0, 0, hz))], wil, [(0, 0), (lg, 0), (lg, hz), (0, hz)])
+    vlak_n("poortrand", [Vector((x0 + t, y0 + t, hz)), Vector((x1 - t, y0 + t, hz)), Vector((x1 - t, y1 - t, hz)), Vector((x0 + t, y1 - t, hz))], Vector((0, 0, -1)))
+    prisma("vloertegel", [Vector((x0 + t, L(0, -331.1).y + 0, 0)) * 0 + Vector((x0 + t, L(19.5, -331.1).y, 0)), Vector((x1 - t, L(19.5, -331.1).y, 0)),
+                          Vector((x1 - t, y1 - t, 0)), Vector((x0 + t, y1 - t, 0))], -0.25, 0.12)
+    # deurblad: hangt aan de westelijke neg en staat naar buiten open (haaks op de muur, de veranda in)
+    xs = C.x - (uc + w / 2) + 0.03                                     # scharnierkant (park-x 18,45)
+    ya, yb = y0 - 0.05, y0 - 0.05 - (w - 0.04)
+    prisma("deur", [Vector((xs - 0.03, yb, 0)), Vector((xs + 0.03, yb, 0)), Vector((xs + 0.03, ya, 0)), Vector((xs - 0.03, ya, 0))], 0.03, vs + 0.45)
+    for dx, wil in ((0.035, Vector((1, 0, 0))), (-0.035, Vector((-1, 0, 0)))):
+        pts = [Vector((xs + dx, ya, 0.03)), Vector((xs + dx, yb, 0.03)), Vector((xs + dx, yb, vs + 0.45)), Vector((xs + dx, ya, vs + 0.45))]
+        uvs = [(1, 0), (0, 0), (0, 1), (1, 1)] if dx > 0 else [(0, 0), (1, 0), (1, 1), (0, 1)]   # "Open" leesbaar vanuit de rij (oostkant)
+        vlak_n("deurblad", pts, wil, uvs)
+    prisma("goud", [Vector((xs + 0.03, yb + 0.12, 0)), Vector((xs + 0.09, yb + 0.12, 0)), Vector((xs + 0.09, yb + 0.26, 0)), Vector((xs + 0.03, yb + 0.26, 0))], 1.0, 1.04)   # klink
+    # koperen filigraanlamp aan het plafond (Eftepedia: "aan het plafond is een lamp van koperfiligraan uit Marokko te vinden")
+    lathe("goud", [(0.015, 0.0), (0.015, 0.45)], hz - 0.45, 6, (C.x, C.y))
+    lathe("goud", [(r, z) for r, z in ((0.0, 0.0), (0.06, 0.02), (0.16, 0.12), (0.2, 0.26), (0.17, 0.4), (0.08, 0.5), (0.04, 0.56), (0.0, 0.6))], hz - 1.05, 8, (C.x, C.y))
+    # botsing: de zuidmuur bestaat alleen uit gevelvlakken (botsen niet); onzichtbare blokken naast en boven de deur
+    yb0, yb1 = y0, y0 + t
+    for a, b, z0, z1 in ((x0, C.x - uc - w / 2, 0.0, HZ), (C.x - uc + w / 2, x1, 0.0, HZ), (C.x - uc - w / 2, C.x - uc + w / 2, vs + 1.1, HZ)):
+        prisma("botsing", [Vector((a, yb0, 0)), Vector((b, yb0, 0)), Vector((b, yb1, 0)), Vector((a, yb1, 0))], z0, z1)
+    # plint rondom, met een opening voor de deur
+    for a, b in (((x0 - 0.08, y1 - 0.08), (x1 + 0.08, y1 + 0.08)), ((x0 - 0.08, y0 - 0.08), (x0 + 0.08, y1 + 0.08)), ((x1 - 0.08, y0 - 0.08), (x1 + 0.08, y1 + 0.08)),
+                 ((x0 - 0.08, y0 - 0.08), (C.x - uc - w / 2 - 0.15, y0 + 0.08)), ((C.x - uc + w / 2 + 0.15, y0 - 0.08), (x1 + 0.08, y0 + 0.08))):
+        prisma("lijst", [Vector((a[0], a[1], 0)), Vector((b[0], a[1], 0)), Vector((b[0], b[1], 0)), Vector((a[0], b[1], 0))], 0.0, 0.35)
+
+
 def bouw():
     # onderblok: zandsteen met hoekblokken (lijst), plint
     hw = 2.3
-    blok("zandsteen", hw, 0.0, 8.4)
+    zijdeur_en_halletje(hw)
     for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
         p = C + Vector((sx * (hw - 0.22), sy * (hw - 0.22), 0))
         for k in range(14):                                # om-en-om lange en korte hoekblokken
             z0 = k * 0.56; l = 0.55 if k % 2 == 0 else 0.4
             prisma("lijst", [p + Vector((a * (0.28 if k % 2 == 0 else 0.25), b * (0.28 if k % 2 == 0 else 0.25), 0)) for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], z0, z0 + 0.52)
-    blok("lijst", hw + 0.08, 0.0, 0.35)
     for i, vl in enumerate(vlakken(hw)):
         if i == 0:                                         # voorkant (oost): tegelpaneel met deur, vensters erboven
             poort(vl)                                      # grote poort (Eftepedia: hoofdingang op rustige dagen)
             raam(vl, -0.55, 0.5, 5.6, 6.9); raam(vl, 0.55, 0.5, 5.6, 6.9)
             paneel("zellige", vl, -1.05, 1.05, 5.3, 7.35, 0.04, 1.2, 1.2)
         else:
-            if i == 3:                                     # zuidkant: zijdeur vanuit de overdekte wachtrij (POV-video)
-                zd = spitsboog(0.3, 1.05, 0.0, 1.75, 10, 0.7)
-                vul("deur", vl, zd, 0.09); strip("wit", vl, zd, 0.2, 0.1)
             raam(vl, 0.0, 0.6, 5.6, 7.0)
             paneel("zellige", vl, -0.75, 0.75, 5.3, 7.4, 0.04, 1.2, 1.2)
     band("zigzag", hw, 7.75, 8.4, 0.05)

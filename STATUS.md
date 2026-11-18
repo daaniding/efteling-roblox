@@ -124,6 +124,15 @@ heb ik eerst warmer gezet en daarna weer exact terug (place-instellingen ongewij
 14 studs; met schaduw; 1,6/16 was overbelicht, 0,45/11 te zwak; daarna Daan: "erg overbelicht" in Play -> 0,6 / 12 studs
 (255,176,100)) in
 FataMorgana.Wachtrijlicht via roblox/plaats_wachtrijlicht.luau. Assets: zuidvleugel 85395946512629, veranda 105227491479681.
+BINNENKANT stap 1 — zijdeur + halletje in de minaretvoet (Daan: "daarna naar de binnenkant, eerst de deur waar je doorheen
+komt"; POV-video 2025, 25-30 s; Eftepedia: klein halletje in de voet van de toren, betegeld, koperen filigraanlamp):
+minaretvoet onderin hol (04_minaret.zijdeur_en_halletje: massief blok pas vanaf 3,2 m, muren 0,5 m zodat de hoekblokken
+erin vallen), zuidmuur met kielboog-deur 1,6 m breed / ~3,0 m hoog (Daan: "hier past toch geen Roblox-character in" ->
+eerst 1,1 m), dikke witte omlijsting, witte neggen, houten deurblad "Open" (FM_deurblad 79743845630448) naar buiten open,
+halletje met roodbruine tegelwanden (FM_tegelhal 73063474660484, 14t_halletje.py), wit plafond, tegelvloer (sluit aan op de
+verandavloer), koperen lamp + PointLight (FataMorgana.Halletjelicht). Botsing: gevelvlakken/tegels/neggen botsen niet,
+onzichtbare botsblokken (rol botsing, transparant) naast en boven de deur. Getest in Play: een character loopt erdoor.
+Asset minaret 108386648836200. Volgende binnenstap: de groene kielboog en de gang naar de instaphal.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

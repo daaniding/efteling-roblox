@@ -9,7 +9,7 @@ FM_vlek3_kleur 89523083759406
 FM_vlek4_kleur 71188191265340
 FM_streep_kleur 137986762588861
 FM_voet_kleur 96092065348033
-AR_FataMorgana_minaret 122476350036812
+AR_FataMorgana_minaret 108386648836200
 FM_zellige_kleur 112364982933611
 FM_zigzag_kleur 94009043451472
 FM_balkon_kleur 115587625989953
@@ -24,3 +24,5 @@ AR_FataMorgana_veranda 105227491479681
 FM_vloertegel_kleur 112689883777106
 FM_schildering_kleur 119976189330229
 FM_bord_kleur 99448957611155
+FM_tegelhal_kleur 73063474660484
+FM_deurblad_kleur 79743845630448
