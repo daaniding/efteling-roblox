@@ -439,3 +439,4 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - screen_capture van een bovenaanzicht in Edit kan 180 graden gedraaid zijn: richting altijd met coördinaten van onderdelen checken.
 - Na een globale transformatie (spiegelen/draaien) alles nalopen wat op hoek of positie selecteert (groepen, splitsingen), en de
   rit meteen in Play meten (max straal van bewegende delen), niet alleen kijken of hij laadt.
+- Terrein terugzetten op parkhoogte (Y 0,91): vol tot Y -4, laag [-4,0] bezetting 0,725, laag [0,4] LEEG. Bezetting 0,725 in [0,4] geeft Y 4,91. Na WriteVoxels loopt raycast-botsing achter: task.wait(2) voor je meet.

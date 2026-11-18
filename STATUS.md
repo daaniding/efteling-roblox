@@ -7,7 +7,7 @@ Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
 kisten, 06_omgeving planten/keien/entree, 11_export, roblox/plaats_archipel.luau). Uit Studio weggehaald (18 nov, Daan): workspace.Archipel
-verwijderd, uitgegraven terrein weer vol (Ground + Grass 0,725 = Y ~1), zuid van y 151,5 weer leeg zoals ervoor. Assets blijven
+verwijderd, uitgegraven terrein weer vol (Ground tot Y -4, Grass 0,725 in laag [-4,0], [0,4] leeg = Y 0,91 zoals de rest), zuid van y 151,5 weer leeg zoals ervoor. Assets blijven
 bestaan (exports/asset_ids.txt). Niet verder aan werken tenzij Daan erom vraagt. Video's/Eftepedia-foto's
 staan alleen lokaal (gitignore). Les: luchtfoto per jaar ophalen via PDOK-lagen <jaar>_orthoHR (droog 2022 vs water 2023).
 
