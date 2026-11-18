@@ -441,3 +441,4 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   rit meteen in Play meten (max straal van bewegende delen), niet alleen kijken of hij laadt.
 - Terrein terugzetten op parkhoogte (Y 0,91): vol tot Y -4, laag [-4,0] bezetting 0,725, laag [0,4] LEEG. Bezetting 0,725 in [0,4] geeft Y 4,91. Na WriteVoxels loopt raycast-botsing achter: task.wait(2) voor je meet.
 - Z-fighting: losse vlakken (ramen, deuren, tegelpanelen, verweringskaarten) minstens 3-4 cm (0,1 stud) voor de muur; ramen/deuren 9 cm (voor de overlays). Zoeken met een scan op coplanaire overlappende vlakken (scratch zfight.py: zelfde normaal, afstand < 2,5 cm, bbox-overlap); vals alarm = driehoeken van hetzelfde vlak op schuine muren.
+- Aansluitingen: muren die tegen een ander deel komen een stukje (0,2-0,4 m) in dat deel laten doorlopen, nooit precies tegen de rand bouwen (Daan: "je laat nog steeds een beetje ruimte zitten").
