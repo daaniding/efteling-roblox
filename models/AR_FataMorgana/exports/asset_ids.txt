@@ -15,3 +15,4 @@ FM_zigzag_kleur 94009043451472
 FM_balkon_kleur 115587625989953
 AR_FataMorgana_ingang 137939058457250
 AR_FataMorgana_kantelen 123563704260847
+AR_FataMorgana_koepelgebouw 132770664653119

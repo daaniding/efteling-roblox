@@ -38,8 +38,10 @@ plattegrond. Les: gevelvlakken in 05 eerst met de klok mee -> losse vlakken naar
 Stap 5 — kantelenmuren (build/06_kantelen.py): lage muur 3,3 m van de ZW-hoek van de ingang (17,4; -314) naar de minaret, en een
 5,4 m hoog blok links (zuid) van de minaret (x -6,5..17,1, y -322..-336, AHN), rechthoekige kantelen zoals Fmplein1986, boogvensters,
 verweringsvlekken; grond alleen onder de muren.
-Volgende stukken (alleen het gebouw): gebouwtje met koepel tussen ingang en hoofdgebouw (x 0..10, y -310..-322, AHN 4,6-8,2 m),
-oost- en achterkant van het hoofdgebouw, koepels op het dak.
+Stap 6 — koepelgebouw (build/07_koepelgebouw.py): laag blok met rechthoekige kantelen x -6,8..12,5, y -308,5..-318,5 (4,6 m),
+verhoogd deel x 5..11,6 (6 m), hoektorentje op de oosthoek van het hoofdgebouw (-4; -310,6) met boogopeningen en crème
+uikoepel tot 13,9 m (AHN), klein wit koepeltje met gouden spits (-2,5; -316,3) (Fmplein1986.jpg, luchtfoto).
+Volgende stukken (alleen het gebouw): oost- en achterkant van het hoofdgebouw, koepels op het dak.
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
