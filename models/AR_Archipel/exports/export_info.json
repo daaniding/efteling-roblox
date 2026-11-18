@@ -1,0 +1,80 @@
+{
+ "delen": {
+  "AR_Archipel_bad": {
+   "AR_beton_0_bd": 9328,
+   "AR_epdm_0_bd": 2762,
+   "AR_kade_0_bd": 440,
+   "AR_aarde_0_bd": 88,
+   "AR_water_0_bd": 43
+  },
+  "AR_Archipel_hutten": {
+   "AR_stam_0_ht": 6992,
+   "AR_plank_0_ht": 864,
+   "AR_touw_0_ht": 2560,
+   "AR_piron_0_ht": 2900,
+   "AR_raam_0_ht": 896,
+   "AR_lantaarn_0_ht": 432,
+   "AR_lantaarnglas_0_ht": 112,
+   "AR_net_0_ht": 52,
+   "AR_riet_0_ht": 9500,
+   "AR_riet_1_ht": 9500,
+   "AR_riet_2_ht": 2444,
+   "AR_bamboe_0_ht": 932
+  },
+  "AR_Archipel_decor": {
+   "AR_plank_0_dc": 1312,
+   "AR_romp_0_dc": 448,
+   "AR_goud_0_dc": 1832,
+   "AR_krul_0_dc": 24,
+   "AR_mast_0_dc": 332,
+   "AR_baard_0_dc": 120,
+   "AR_broek_0_dc": 544,
+   "AR_hemd_0_dc": 356,
+   "AR_hengel_0_dc": 52,
+   "AR_huid_0_dc": 824,
+   "AR_sjerp_0_dc": 92,
+   "AR_tulband_0_dc": 468,
+   "AR_vis_0_dc": 142,
+   "AR_stam_0_dc": 1048,
+   "AR_kist_blauw_0_dc": 60,
+   "AR_raam_0_dc": 72,
+   "AR_kist_hout_0_dc": 2064,
+   "AR_kist_rood_0_dc": 102,
+   "AR_touw_0_dc": 440,
+   "AR_lantaarn_0_dc": 128,
+   "AR_lantaarnglas_0_dc": 28,
+   "AR_ijzer_0_dc": 576,
+   "AR_ton_0_dc": 272,
+   "AR_tondeksel_0_dc": 272,
+   "AR_schubben_0_dc": 708,
+   "AR_vlag_0_dc": 2
+  }
+ },
+ "lampen": [
+  [
+   -5.800000143051148,
+   -11.800000190734863,
+   2.4529998302459717
+  ],
+  [
+   -1.2000000596046447,
+   -5.599999952316284,
+   2.6529998779296875
+  ],
+  [
+   -8.399999618530273,
+   -2.4000000953674316,
+   2.7530000686645506
+  ],
+  [
+   -3.799999976158142,
+   4.199999809265137,
+   2.6529998779296875
+  ],
+  [
+   10.699999904632568,
+   -1.4500000596046447,
+   6.524999666213989
+  ]
+ ]
+}

@@ -4,6 +4,13 @@
 
 Lees dit eerst in een nieuwe sessie. Repo: https://github.com/daaniding/efteling-roblox
 
+## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
+Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
+kisten, 06_omgeving planten/keien/entree, 11_export, roblox/plaats_archipel.luau). In Studio staat workspace.Archipel (bad, hutten,
+decor; ids in exports/asset_ids.txt) en het terrein eronder is uitgegraven; de omgeving (06) is niet geëxporteerd. Niet verder aan
+werken tenzij Daan erom vraagt; weghalen = workspace.Archipel verwijderen (terreingat dan dichtmaken). Video's/Eftepedia-foto's
+staan alleen lokaal (gitignore). Les: luchtfoto per jaar ophalen via PDOK-lagen <jaar>_orthoHR (droog 2022 vs water 2023).
+
 ## OPNIEUW BEGINNEN (16 nov 2026) — de place is helemaal leeg (daarna: licht, en nu de Pagode)
 Daan: "echt alles bij 0 beginnen", daarna ook het licht en het archief weg. In Studio is gewist: alle attracties, paden,
 water, bomen/groen, het terrein, het licht (Lighting op Roblox-standaard, Technology niet aangeraakt), heel ServerStorage
