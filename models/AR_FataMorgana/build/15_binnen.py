@@ -13,9 +13,9 @@ exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6)
 G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:15_binnen"
-T["KLEUR"].update({"groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
+T["KLEUR"].update({"groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
                    "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5)})
-T["UVS"].update({"groen": 1.0, "poort": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
+T["UVS"].update({"groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
 
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -27,18 +27,19 @@ HG = 3.0                       # hoogte gang
 def bouw():
     # vloer (zelfde tegels als halletje en wachtrij; sluit aan op de halletjevloer bij x 17,7) en plafond
     prisma("vloertegel", [L(XW, YS), L(XO, YS), L(XO, YN), L(XW, YN)], -0.25, 0.12)
-    prisma("wit", [L(XW - 0.2, YS - 0.2), L(17.25, YS - 0.2), L(17.25, YN + 0.2), L(XW - 0.2, YN + 0.2)], HG, HG + 0.15)
-    # wanden: crème gepleisterd, plint en lijst op 1,1 m
+    prisma("gangmuur", [L(XW - 0.2, YS - 0.2), L(17.25, YS - 0.2), L(17.25, YN + 0.2), L(XW - 0.2, YN + 0.2)], HG, HG + 0.15)
+    # wanden: oud beige pleisterwerk (Daan: "die witte muren moeten iets meer beige oud-achtig"), plint en lijst op 1,1 m
     for y0, y1 in ((YS - 0.2, YS), (YN, YN + 0.2)):
-        prisma("wit", [L(XW - 0.2, y0), L(17.25, y0), L(17.25, y1), L(XW - 0.2, y1)], 0.0, HG)
+        prisma("gangmuur", [L(XW - 0.2, y0), L(17.25, y0), L(17.25, y1), L(XW - 0.2, y1)], 0.0, HG)
     for y, n in ((YS, 1), (YN, -1)):
         vl = Vlak(L(XW, y), Vector((1, 0, 0)) * n, Vector((0, n, 0)))
         lg = 17.2 - XW
         u0, u1 = (0.0, lg) if n == 1 else (-lg, 0.0)
         strip("lijst", vl, [(u0, 0.08), (u1, 0.08)], 0.16, 0.04)
         strip("lijst", vl, [(u0, 1.1), (u1, 1.1)], 0.06, 0.03)
+        T["verwering"](vl, u0 + 0.2, u1 - 0.2, 0.0, HG - 0.1, 4100 + n)   # losse vochtvlekken en strepen
     # westeinde: muur met een groene kielboog en een donkere doorgang (naar de gaanderij van de instaphal, volgende stap)
-    prisma("wit", [L(XW - 0.2, YS - 0.2), L(XW, YS - 0.2), L(XW, YN + 0.2), L(XW - 0.2, YN + 0.2)], 0.0, HG)
+    prisma("gangmuur", [L(XW - 0.2, YS - 0.2), L(XW, YS - 0.2), L(XW, YN + 0.2), L(XW - 0.2, YN + 0.2)], 0.0, HG)
     ve = Vlak(L(XW, -329.0), Vector((0, -1, 0)), Vector((1, 0, 0)))   # naar het oosten kijkend vlak, u = -(y + 329)
     w, vs = 1.6, 1.95
     boog = spitsboog(0.0, w, 0.0, vs, 10, 0.55)[1:-1]

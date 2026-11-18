@@ -140,6 +140,8 @@ PointLights (FataMorgana.Ganglicht), aan het eind een groene kielboog met donker
 kantelenblok (06) is hol: alleen een dakplaat 4,9-5,3 m en een afsluitmuur bij de westkop van de wachtrijhal (x 17..17,45).
 Westplint van de minaret weg (lag binnen, als drempel in de boog). Getest in Play: veranda -> zijdeur -> halletje -> gang tot het
 eind. Assets: minaret 73472127840695, kantelen 139989623236326.
+Gangmuren (Daan: "die witte muren moeten iets meer beige oud-achtig"): eigen rol gangmuur (FM_stuc verweerd, tint 236,218,186,
+botst) + losse vochtvlekken (verwering); gangkant van de groene boog (gangwand) hetzelfde. Asset binnen 72636392296267.
 Volgende binnenstap: de gaanderij en de instaphal met de draaischijf (in het holle kantelenblok).
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 

@@ -26,4 +26,4 @@ FM_schildering_kleur 119976189330229
 FM_bord_kleur 99448957611155
 FM_tegelhal_kleur 73063474660484
 FM_deurblad_kleur 79743845630448
-AR_FataMorgana_binnen 107127998668600
+AR_FataMorgana_binnen 72636392296267
