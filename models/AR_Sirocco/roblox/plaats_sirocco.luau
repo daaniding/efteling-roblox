@@ -8,7 +8,7 @@ local S = 3
 local CX, CY = 456.5, 191.2
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 131869393173401, rit = 112959171658722, omgeving = 82705200382373, bord_kleur = 138476476235233,
+local ID = {gebouw = 131869393173401, rit = 112959171658722, omgeving = 126360511346530, bord_kleur = 138476476235233,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -37,6 +37,11 @@ local R = {
 	mand = {"mand_kleur", nil, Color3.new(1, 1, 1), Enum.Material.Fabric, false},
 	net = {"net_kleur", nil, Color3.new(1, 1, 1), Enum.Material.Metal, false, "alfa"},
 	bamboe = {nil, nil, Color3.fromRGB(196, 160, 96), Enum.Material.Wood, true},   -- effen (de Pagode-textuur is een plant met blaadjes)
+	-- klapdeuren instap / uitstap (07_omgeving.poorten; bewegen in SiroccoRitClient, scharnieren in sirocco_rit.luau)
+	poort_in_l = {nil, nil, Color3.fromRGB(196, 160, 96), Enum.Material.Wood, true},
+	poort_in_r = {nil, nil, Color3.fromRGB(196, 160, 96), Enum.Material.Wood, true},
+	poort_uit_l = {nil, nil, Color3.fromRGB(196, 160, 96), Enum.Material.Wood, true},
+	poort_uit_r = {nil, nil, Color3.fromRGB(196, 160, 96), Enum.Material.Wood, true},
 	voet = {nil, nil, Color3.fromRGB(32, 78, 150), Enum.Material.SmoothPlastic, true},
 	goud = {nil, nil, Color3.fromRGB(205, 160, 64), Enum.Material.Metal, false},
 	zeil = {nil, nil, Color3.fromRGB(214, 200, 172), Enum.Material.Fabric, false},
@@ -110,7 +115,7 @@ end
 local t = workspace.Terrain
 -- Daan 17 nov: "gewoon de ondergrond plat, niet dit rare relief". Terrein op het voxelraster (4 studs) met volle voxels, dus
 -- vlak. Gemeten: bovenkant = 4 * (bezetting bovenste laag - 0,5); bezetting 0,725 -> grond Y 0,9-1,0, net onder de wachtrijvlonder
--- (1,1) en de brug (1,16), boven het water (0,35). Vijverkolommen: bovenste laag leeg (bodem Y -2).
+-- (1,1) en de brug (0,95; terrein daaronder lager), boven het water (0,35). Vijverkolommen: bovenste laag leeg (bodem Y -2).
 t:FillBlock(CFrame.new(MIDDEN.X, 40, MIDDEN.Z), Vector3.new(70 * S + 8, 80, 70 * S + 8), Enum.Material.Air)
 local x0 = math.floor((MIDDEN.X - 35 * S) / 4) * 4; local z0 = math.floor((MIDDEN.Z - 35 * S) / 4) * 4
 local nx = math.ceil((MIDDEN.X + 35 * S - x0) / 4); local nz = math.ceil((MIDDEN.Z + 35 * S - z0) / 4)
@@ -126,13 +131,16 @@ for ix = 1, nx do
 		local water = inVijver(x, y)
 		local rij = KLASSEN[math.clamp(math.floor(y) + 36, 1, 70)]
 		local k = string.sub(rij, math.clamp(math.floor(x) + 36, 1, 70), math.clamp(math.floor(x) + 36, 1, 70))
+		-- onder de uitgangsbrug (bestrating Y 0,95) ruim lager: terreinvoxels renderen hoger dan ze meten en gaven z-fighting
+		-- (Daan 18 nov); land: bovenste laag leeg, oever: geen modderbult
+		local brug = x > -4.0 and x < 0.0 and y > -17.6 and y < -8
 		for iy = 1, NY do
 			if water then                         -- vijver: modderbodem, terreinwater tot ~Y 0,35 (zie laag erboven)
-				mat[ix][iy][iz] = iy == NY and Enum.Material.Water or (iy == NY - 1 and Enum.Material.Mud or Enum.Material.Ground)
-				occ[ix][iy][iz] = 1
+				mat[ix][iy][iz] = iy == NY and Enum.Material.Water or ((iy == NY - 1 and not brug) and Enum.Material.Mud or Enum.Material.Ground)
+				occ[ix][iy][iz] = (brug and iy == NY - 1) and 0.6 or 1
 			else
 				mat[ix][iy][iz] = iy == NY and (MAT[k] or Enum.Material.Grass) or Enum.Material.Ground
-				occ[ix][iy][iz] = iy == NY and 0.725 or 1
+				occ[ix][iy][iz] = iy == NY and (brug and 0 or 0.725) or ((brug and iy == NY - 1) and 0.8 or 1)
 			end
 		end
 	end

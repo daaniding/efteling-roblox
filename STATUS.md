@@ -1517,6 +1517,14 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   camera draait mee; springen uit tot het uitstappen; titel S I R O C C O / "Welcome aboard, sailor", "Hold on tight!",
   "Welcome back in port"; eigen instapknop (donkerblauwe pil, gouden rand en toets, vasthoudbalk, touch werkt).
   Getest in Play: rit draait, rijder zit vast en draait mee, camera volgt per frame, uitstappen zet je op het dek.
+- Rit v2 (18 nov, Daan: "doe gewoon gelijk zwart beeld", "hier is z-fighting", "poort bij ingang en uitgang die sluit"):
+  uitstappen = direct zwart "Welcome back in port", je staat op de brug voorbij de uitstappoort en kijkt de brug af (T_UIT 8 s).
+  07_omgeving.poorten: 4 bamboe klapdeuren (instap op de dekhekpalen bij -62 graden, draaien het dek op; uitstap tegen de brugmuren
+  op y -8,6, draaien naar het zuiden), elk een eigen onderdeel SI_poort_*_0_om (omgeving-asset 126360511346530); scharnier en hoek
+  als attribuut (sirocco_rit.luau), SiroccoRitClient draait ze: instap open tijdens het instappen, uitstap tijdens het uitstappen,
+  dicht = botsen. Z-fighting brug: de stenen vijverrand liep onder de brug door op exact bestratingshoogte (overgeslagen) en het
+  terrein (gras/modder) kwam door de bestrating (onder de brug nu bovenste voxellaag leeg, ook in plaats_sirocco).
+  Getest in Play: poorten open/dicht, rit, zwart beeld, op de brug, camera naar het zuiden.
 - VOLGENDE: Daans oordeel over snelheid/knop/uitstappen; bezoekers in de boten (Park.registreer Sirocco); geluid (bel, water);
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

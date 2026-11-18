@@ -3,6 +3,7 @@
 -- - per boot 1 onzichtbare Seat "Stoel_rt<b>" op de bank achterin (tegen het sierpaneel), kijkend naar de boeg, met
 --   ProximityPrompt "Board [E]" (Style Custom: eigen knop in SiroccoRitClient); geen aanraak-zitten (CanTouch uit), instappen alleen via de prompt (server)
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
+-- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
 local S = 3
@@ -50,13 +51,37 @@ for _, a in {-62, -106} do
 	b.Parent = afs
 end
 
+-- klapdeuren (07_omgeving.poorten, exports/omgeving_info.json: scharnier, vrij eind dicht, eind open; modelmeters): attributen
+-- Scharnier (wereld) en Hoek (+-90 graden, de kant waar het eind naar het open-punt draait) voor SiroccoRitClient
+local POORTEN = {
+	poort_in_l = {4.8694, -7.0279, 4.0394, -7.4692, 4.4281, -6.1979},
+	poort_in_r = {3.1035, -7.9669, 3.9335, -7.5256, 2.6622, -7.1369},
+	poort_uit_l = {-3.17, -8.6, -2.05, -8.6, -3.17, -9.72},
+	poort_uit_r = {-0.83, -8.6, -1.95, -8.6, -0.83, -9.72},
+}
+local om = sir:WaitForChild("Omgeving")
+local function W(x, y) return MIDDEN + Vector3.new(x * S, 0, -y * S) end
+for naam, v in POORTEN do
+	local p = om:FindFirstChild("SI_" .. naam .. "_0_om")
+	if p then
+		local H, E, O = W(v[1], v[2]), W(v[3], v[4]), W(v[5], v[6])
+		local best, hoek = math.huge, 0
+		for _, h in {math.pi / 2, -math.pi / 2} do
+			local d = ((CFrame.Angles(0, h, 0) * (E - H)) - (O - H)).Magnitude
+			if d < best then best, hoek = d, h end
+		end
+		p:SetAttribute("Scharnier", Vector3.new(H.X, p.Position.Y, H.Z)); p:SetAttribute("Hoek", hoek)
+		p.CanCollide = true; p.CanQuery = true
+	end
+end
+
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
 local oudT = LS:FindFirstChild("SiroccoTeksten"); if oudT then oudT:Destroy() end
 local lt = Instance.new("LocalizationTable"); lt.Name = "SiroccoTeksten"; lt.SourceLocaleId = "en-us"
 local T = {
 	{"Board", "Instappen"}, {"Welcome aboard, sailor", "Welkom aan boord, zeeman"}, {"Hold on tight!", "Hou je goed vast!"},
-	{"Welcome back in port", "Welkom terug in de haven"}, {"Please leave your boat  -  exit via the bridge", "Stap maar uit je boot  -  uitgang via de brug"},
+	{"Welcome back in port", "Welkom terug in de haven"},
 	{"The attendant walks you to the exit", "De medewerker brengt je naar de uitgang"},
 	{"Take a seat in a boat to ride", "Neem plaats in een boot om mee te varen"},
 }
@@ -73,17 +98,16 @@ zet(game:GetService("ServerScriptService"), "Script", "SiroccoRit", [==[--!stric
 -- (SiroccoRitClient.client.luau) uit workspace:GetServerTimeNow() - RitStart: zelfde stand voor iedereen, geen schokken
 -- (Pagode-les: niets bewegen vanaf de server). Daan 18 nov: 1 zitplaats per boot, boot draait vanzelf, "moet echt sneller",
 -- "uitstappen moet vetter, Engels of vertaald", "als er iemand is ingestapt kan jij natuurlijk niet instappen".
--- Ronde: instappen T_IN s (eigen prompt "Board" per boot, alleen als de boot vrij is), rit T_RIT s, uitstappen T_UIT s:
--- stoel los, zelf uit je boot stappen naar de brug; wie na T_BEGELEID s nog op de schijf staat brengt de medewerker weg
--- (beeld zwart). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
+-- Ronde: instappen T_IN s (eigen prompt "Board" per boot, alleen als de boot vrij is; instappoort open), rit T_RIT s,
+-- uitstappen T_UIT s: direct zwart beeld "Welcome back in port" en je staat op de brug voorbij de uitstappoort (Daan 18 nov:
+-- "doe gewoon gelijk zwart beeld"). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
 -- Zolang niemand zit houdt de server de klok vast op WACHT (instappen blijft open); daarna nog T_IN - WACHT s.
 -- Fasen moeten gelijk zijn aan SiroccoRitClient.
 local Players = game:GetService("Players")
 
 local S = 3
-local T_IN, T_RIT, T_UIT = 15, 60, 14          -- = SiroccoRitClient
+local T_IN, T_RIT, T_UIT = 15, 60, 8           -- = SiroccoRitClient
 local WACHT = 5
-local T_BEGELEID = 9                           -- s na het einde van de rit: wie dan nog op de schijf staat, wordt weggebracht
 local CYCLUS = T_IN + T_RIT + T_UIT
 local R_SCHIJF = 7.25                          -- gaashek rond de draaischijf (m)
 
@@ -111,12 +135,11 @@ local function klok(): (number, number)
 	return (nu - (rit:GetAttribute("RitStart") :: number)) % CYCLUS, nu
 end
 
--- uitgang: op het dek bij de uitstapopening (-104 graden, richting brug), plekken naast elkaar zodat niemand op elkaar landt
+-- uitgang: op de brug voorbij de uitstappoort (07_omgeving: brug x -2, poort y -8,6), naast elkaar, kijkend naar het zuiden
 local function uitPlek(k: number): CFrame
-	local a = math.rad(-104 + ((k % 5) - 2) * 2.6)
-	local r = 7.7 + (k // 5 % 2) * 0.45
-	local p = MIDDEN + Vector3.new(r * math.cos(a) * S, 0.3 * S + 3.2, -r * math.sin(a) * S)
-	return CFrame.lookAt(p, p + Vector3.new(math.cos(a), 0, -math.sin(a)))
+	local x, y = -2 + ((k % 3) - 1) * 0.7, -10.2 - (k // 3 % 4) * 0.8
+	local p = MIDDEN + Vector3.new(x * S, 0.25 * S + 3.2, -y * S)
+	return CFrame.lookAt(p, p + Vector3.new(0, 0, 1))
 end
 
 local function opSchijf(ch: Model): boolean
@@ -151,7 +174,7 @@ local function begeleid(plr: Player, k: number, tekst: string)
 		task.wait(0.1)
 		ch:PivotTo(uitPlek(k))
 	end
-	task.wait(0.9)
+	task.wait(1.6)
 	plr:SetAttribute("SiroccoUit", 0)
 	bezig[plr] = nil
 end
@@ -201,7 +224,6 @@ local function iemandAanBoord(): boolean
 end
 
 local vorige = ""
-local weggebracht = false
 while true do
 	task.wait(0.2)
 	local tc, nu = klok()
@@ -215,20 +237,10 @@ while true do
 		if f == "rit" then
 			wegVanDeSchijf("Take a seat in a boat to ride", false)   -- wie los op de schijf staat, mag niet mee draaien
 		elseif f == "uitstappen" then
-			weggebracht = false
-			task.delay(2.5, function()                              -- eerst de titel, dan de stoelen los: zelf uitstappen
-				for _, st in stoelen do
-					local hum = st.Occupant
-					if hum then losVanStoel(hum) end
-				end
-			end)
+			wegVanDeSchijf("Welcome back in port", true)                -- direct zwart beeld en naar de brug
 		end
 		vorige = f
 		bijwerken(f)
-	end
-	if f == "uitstappen" and not weggebracht and tc >= T_IN + T_RIT + T_BEGELEID then
-		weggebracht = true
-		wegVanDeSchijf("The attendant walks you to the exit", true)
 	end
 end
 ]==])
@@ -239,14 +251,15 @@ zet(game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"), "Loca
 -- elke boot (ba..bl) om zijn voet, plus licht dobberen. Onderdelen heten ..._rt<groep> (11_export); draaipunten als attribuut
 -- P_<groep> op Rit (sirocco_rit.luau). Hele omwentelingen per rit: na de rit staat alles weer in de instapstand.
 -- Wie in een boot zit hangt met een SeatWeld aan de (verankerde) stoel en gaat vanzelf mee; de camera draait mee.
--- Beleving (Daan 18 nov): titel bij het instappen, "Hold on tight!" bij vertrek, na de rit "Welcome back in port" en zelf je
--- boot uit stappen; eigen instapknop (ProximityPrompt Style Custom). Teksten Engels, nl in LocalizationService.SiroccoTeksten.
+-- Beleving (Daan 18 nov): titel bij het instappen, "Hold on tight!" bij vertrek, na de rit direct zwart (server); eigen
+-- instapknop (ProximityPrompt Style Custom); klapdeuren bij instap (open tijdens het instappen) en uitstap (open tijdens het
+-- uitstappen), scharnier + hoek als attribuut op de deur (sirocco_rit.luau). Teksten Engels, nl in SiroccoTeksten.
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local PPS = game:GetService("ProximityPromptService")
 
-local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 14, 5     -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
+local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 8, 5      -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
 local CYCLUS = T_IN + T_RIT + T_UIT
 local OMW_M, OMW_S = 5, -11                         -- hele omwentelingen per rit: hoofdschijf, subschijf (t.o.v. de hoofdschijf)
 local I_TOT = T_RIT - RAMP
@@ -295,6 +308,19 @@ for _, p in rit:GetChildren() do
 		if pr then table.insert(prompts, pr) end
 	end
 end
+
+-- klapdeuren (07_omgeving.poorten): attribuut Scharnier (wereld) en Hoek (rad, dicht -> open) op elk blad
+type Deur = {p: BasePart, rust: CFrame, H: Vector3, hoek: number, uit: boolean}
+local deuren: {Deur} = {}
+local om = sir:WaitForChild("Omgeving")
+for _, naam in {"poort_in_l", "poort_in_r", "poort_uit_l", "poort_uit_r"} do
+	local p = om:WaitForChild("SI_" .. naam .. "_0_om", 10) :: BasePart?
+	if p and p:GetAttribute("Scharnier") then
+		table.insert(deuren, {p = p, rust = p.CFrame, H = p:GetAttribute("Scharnier") :: Vector3, hoek = p:GetAttribute("Hoek") :: number,
+			uit = naam:find("uit") ~= nil})
+	end
+end
+local deurStand = {in_ = -1, uit = -1}
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -373,6 +399,14 @@ plr:GetAttributeChangedSignal("SiroccoUit"):Connect(function()
 	local info = TweenInfo.new(aan and 0.5 or 0.9, Enum.EasingStyle.Sine)
 	TweenService:Create(zwart, info, {BackgroundTransparency = aan and 0 or 1}):Play()
 	TweenService:Create(zwartTekst, info, {TextTransparency = aan and 0 or 1}):Play()
+	if not aan then                                   -- na de medewerker: camera de brug af (zuid = +Z, SiroccoRit.uitPlek); het
+		local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") :: BasePart?   -- lichaam volgt in 1e persoon de camera
+		if hrp then
+			local cam = workspace.CurrentCamera
+			local oog = hrp.Position + Vector3.new(0, 1.5, 0)
+			cam.CFrame = CFrame.lookAt(oog, oog + Vector3.new(0, -0.15, 1))
+		end
+	end
 end)
 
 -- ===== instapknop (ProximityPrompt Style Custom): donkerblauwe pil, gouden rand, gouden toets, vasthoudbalk =====
@@ -490,6 +524,18 @@ RunService.PreSimulation:Connect(function()
 		workspace:BulkMoveTo(delen, cfs, Enum.BulkMoveMode.FireCFrameChanged)
 		vorigF, vorigV = F, v
 	end
+	-- klapdeuren: 1,5 s open/dicht aan begin en eind van hun fase
+	local openIn = tc < T_IN and e(math.min(tc, T_IN - tc) / 1.5) or 0
+	local tu = tc - T_IN - T_RIT
+	local openUit = tu >= 0 and e(math.min(tu - 0.5, T_UIT - tu) / 1.5) or 0
+	if openIn ~= deurStand.in_ or openUit ~= deurStand.uit then
+		for _, d in deuren do
+			local f = d.uit and openUit or openIn
+			d.p.CFrame = CFrame.new(d.H) * CFrame.Angles(0, d.hoek * f, 0) * CFrame.new(-d.H) * d.rust
+			d.p.CanCollide = f < 0.5
+		end
+		deurStand.in_, deurStand.uit = openIn, openUit
+	end
 	-- eigen speler in een boot: camera mee, niet uit de boot springen tot het uitstappen, geen andere instapknoppen
 	local ch = plr.Character
 	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
@@ -506,7 +552,7 @@ RunService.PreSimulation:Connect(function()
 	else
 		vorigStoel = nil
 	end
-	local blokkeer = inBoot and tc < T_IN + T_RIT + 2.5
+	local blokkeer = inBoot
 	if hum and blokkeer ~= springUit then
 		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, not blokkeer)
 		springUit = blokkeer
@@ -516,16 +562,6 @@ RunService.PreSimulation:Connect(function()
 	if inBoot and not wasInBoot and f == "instappen" then toonTitel("Welcome aboard, sailor", 4) end
 	if f ~= vorigeFase then
 		if f == "rit" and inBoot then meld("Hold on tight!", 2.5)
-		elseif f == "uitstappen" and inBoot then
-			toonTitel("Welcome back in port", 3.5)
-			task.delay(2.6, function()
-				meld("Please leave your boat  -  exit via the bridge", 5)
-				local h = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-				if h and h.SeatPart and h.SeatPart:IsDescendantOf(rit) then
-					h:SetStateEnabled(Enum.HumanoidStateType.Jumping, true); springUit = false
-					h.Sit = false; h.Jump = true                                  -- met een sprongetje uit de stoel
-				end
-			end)
 		end
 		vorigeFase = f
 	end

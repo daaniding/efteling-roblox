@@ -410,4 +410,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Vloeren langs een gebogen rand niet in losse stukken per meter bouwen (zaagtand, gras ertussen): een strook met stations om de
   25 cm, en de rand tot onder het hek/de rotsen door laten lopen. Terrein eronder minstens zo ver omlaag.
 - Na elke hekwijziging: losse hekeinden laten zoeken (eind verder dan 25 cm van ander hek) en elk eind verklaren of aansluiten.
-
+- Sirocco (18 nov): bij het vervangen van een model in Studio de CollisionFidelity NIET op Box zetten: een samengevoegde mesh
+  (alle muren, de hele vlonder) wordt dan één groot blok en spelers vallen door/staan op lucht. PreciseConvexDecomposition, en
+  het wordt pas na een paar tellen echt toegepast (opnieuw uitlezen).
+- Draaiende rit met stoelen: Seat verankerd en op de client met BulkMoveTo bewegen werkt; de SeatWeld neemt de speler vanzelf
+  mee (geen eigen meeneem-code nodig). Na een teleport in eerste persoon de camera zelf richten: het lichaam draait naar de camera.
+- Testonderdelen (GetPartsInPart-zone) altijd in pcall/finally opruimen: een losse Part bleef in workspace staan en leek een fout.

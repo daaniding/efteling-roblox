@@ -3,6 +3,7 @@
 -- - per boot 1 onzichtbare Seat "Stoel_rt<b>" op de bank achterin (tegen het sierpaneel), kijkend naar de boeg, met
 --   ProximityPrompt "Board [E]" (Style Custom: eigen knop in SiroccoRitClient); geen aanraak-zitten (CanTouch uit), instappen alleen via de prompt (server)
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
+-- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
 local S = 3
@@ -50,13 +51,37 @@ for _, a in {-62, -106} do
 	b.Parent = afs
 end
 
+-- klapdeuren (07_omgeving.poorten, exports/omgeving_info.json: scharnier, vrij eind dicht, eind open; modelmeters): attributen
+-- Scharnier (wereld) en Hoek (+-90 graden, de kant waar het eind naar het open-punt draait) voor SiroccoRitClient
+local POORTEN = {
+	poort_in_l = {4.8694, -7.0279, 4.0394, -7.4692, 4.4281, -6.1979},
+	poort_in_r = {3.1035, -7.9669, 3.9335, -7.5256, 2.6622, -7.1369},
+	poort_uit_l = {-3.17, -8.6, -2.05, -8.6, -3.17, -9.72},
+	poort_uit_r = {-0.83, -8.6, -1.95, -8.6, -0.83, -9.72},
+}
+local om = sir:WaitForChild("Omgeving")
+local function W(x, y) return MIDDEN + Vector3.new(x * S, 0, -y * S) end
+for naam, v in POORTEN do
+	local p = om:FindFirstChild("SI_" .. naam .. "_0_om")
+	if p then
+		local H, E, O = W(v[1], v[2]), W(v[3], v[4]), W(v[5], v[6])
+		local best, hoek = math.huge, 0
+		for _, h in {math.pi / 2, -math.pi / 2} do
+			local d = ((CFrame.Angles(0, h, 0) * (E - H)) - (O - H)).Magnitude
+			if d < best then best, hoek = d, h end
+		end
+		p:SetAttribute("Scharnier", Vector3.new(H.X, p.Position.Y, H.Z)); p:SetAttribute("Hoek", hoek)
+		p.CanCollide = true; p.CanQuery = true
+	end
+end
+
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
 local oudT = LS:FindFirstChild("SiroccoTeksten"); if oudT then oudT:Destroy() end
 local lt = Instance.new("LocalizationTable"); lt.Name = "SiroccoTeksten"; lt.SourceLocaleId = "en-us"
 local T = {
 	{"Board", "Instappen"}, {"Welcome aboard, sailor", "Welkom aan boord, zeeman"}, {"Hold on tight!", "Hou je goed vast!"},
-	{"Welcome back in port", "Welkom terug in de haven"}, {"Please leave your boat  -  exit via the bridge", "Stap maar uit je boot  -  uitgang via de brug"},
+	{"Welcome back in port", "Welkom terug in de haven"},
 	{"The attendant walks you to the exit", "De medewerker brengt je naar de uitgang"},
 	{"Take a seat in a boat to ride", "Neem plaats in een boot om mee te varen"},
 }

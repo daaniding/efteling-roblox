@@ -281,14 +281,40 @@ def brug(bms):
         y0m = -math.sqrt(DEK_HEK_R ** 2 - x ** 2)                     # muur begint precies bij de hekpaal op de dekrand
         doos(bms["muur"], ((x), (y0m + b[1]) / 2, Z_PLAT + 0.35), (0.3, abs(b[1] - y0m), 0.9))
         doos(bms["afdek"], ((x), (y0m + b[1]) / 2, Z_PLAT + 0.84), (0.4, abs(b[1] - y0m) + 0.1, 0.1))
-    # hek van twee latten-deuren bij het hutje (f_136), opengeslagen tegen de muurtjes zodat de looproute vrij is
-    y0 = -8.6
-    for zij in (-1, 1):
-        x = UITGANG_X + zij * 1.05
-        for k in range(7):
-            yy = y0 - k * 0.16
-            stam(bms["bamboe"], Vector((x, yy, Z_PLAT)), Vector((x, yy, Z_PLAT + 1.1)), 0.035, 0.035, 6, 0.0)
-        stam(bms["bamboe"], Vector((x, y0, Z_PLAT + 0.9)), Vector((x, y0 - 1.0, Z_PLAT + 0.9)), 0.03, 0.03, 6, 0.0)
+    # hek van twee latten-deuren bij het hutje (f_136): echte klapdeuren, zie poorten()
+
+
+def poortblad(bm, h, e, z):
+    """bamboe klapdeur in DICHTE stand van scharnier h naar vrij eind e (Daan 18 nov: "poort bij ingang en uitgang die sluit"):
+    staande latten met spitse koppen om en om, twee regels en een schoor; draait in Roblox om de verticaal door h"""
+    d = e - h; L = d.length; n = max(4, int(L / 0.14))
+    for k in range(n):
+        p = h + d * ((k + 0.5) / n)
+        top = 1.02 if k % 2 == 0 else 1.1
+        stam(bm, Vector((p.x, p.y, z + 0.06)), Vector((p.x, p.y, z + top)), 0.032, 0.026, 6, 0.0)
+    for zz in (0.28, 0.88):
+        stam(bm, Vector((h.x, h.y, z + zz)), Vector((e.x, e.y, z + zz)), 0.03, 0.03, 6, 0.0)
+    stam(bm, Vector((h.x, h.y, z + 0.3)), Vector((e.x, e.y, z + 0.86)), 0.024, 0.024, 6, 0.0)
+
+
+POORTEN = {}                                        # naam -> (scharnier, vrij eind dicht, punt waar het eind open naartoe draait)
+
+
+def poorten(bms):
+    """instap: twee bladen op de hekpalen van het dek (r 8,55, -62 graden), draaien open het dek op; uitstap: twee bladen tegen
+    de brugmuren (y -8,6), draaien open naar het zuiden langs de muren"""
+    u = Vector((math.cos(math.radians(-62)), math.sin(math.radians(-62)), 0)); tg = Vector((-u.y, u.x, 0))
+    for zij, naam in ((1, "poort_in_l"), (-1, "poort_in_r")):
+        hk = math.radians(-62 + zij * math.degrees(math.asin(1.0 / DEK_HEK_R)))
+        h = Vector((DEK_HEK_R * math.cos(hk), DEK_HEK_R * math.sin(hk), 0))
+        e = h - zij * tg * 0.94
+        POORTEN[naam] = (h, e, h - u * 0.94)
+    for zij, naam in ((-1, "poort_uit_l"), (1, "poort_uit_r")):
+        h = Vector((UITGANG_X + zij * 1.17, -8.6, 0))
+        e = h - Vector((zij * 1.12, 0, 0))
+        POORTEN[naam] = (h, e, h + Vector((0, -1.12, 0)))
+    for naam, (h, e, _) in POORTEN.items():
+        poortblad(bms[naam], h, e, Z_PLAT)
 
 
 def vijverrand(bms):
@@ -300,6 +326,7 @@ def vijverrand(bms):
         d = (b - a); L = d.length; d = d.normalized(); n = Vector((d.y, -d.x, 0))
         if m.x < -11.0 and -12.6 < m.y < -5.5: continue      # strand: geen rand, het zand loopt het water in
         if pts[k] in HAVENMUUR and pts[k + 1] in HAVENMUUR: continue   # zandstenen muur, zie havenmuur()
+        if abs(m.x - UITGANG_X) < 1.9 and UITGANG[1][1] < m.y < UITGANG[0][1]: continue   # onder de uitgangsbrug: de brug is de rand
         if pts[k] in BEDRAND and pts[k + 1] in BEDRAND:      # gladde witte betonrand om het plantvak
             c = m + n * 0.15
             doos(bms["witrand"], (c.x, c.y, 0.12), (L + 0.32, 0.3, 0.62), math.atan2(d.y, d.x))
@@ -310,7 +337,7 @@ def vijverrand(bms):
         doos(bms[rol], (c.x, c.y, 0.05 if plein else 0.0), (L + 0.35, 0.45 if plein else 0.5, 0.55 if plein else 0.5), math.atan2(d.y, d.x))
         if not plein:
             for p, _ in lijn_punten([pts[k], pts[k + 1]], 1.6)[:-1]:
-                if random.random() < 0.6:
+                if random.random() < 0.6 and not (abs(p.x - UITGANG_X) < 1.9 and UITGANG[1][1] < p.y < UITGANG[0][1]):
                     r = random.uniform(0.25, 0.42); cc = p + n * random.uniform(0.25, 0.5) + Vector((0, 0, 0.1))
                     vv = bol(bms["steen"], cc, r, 7)
                     for q in vv:
@@ -699,7 +726,8 @@ def main():
         if o.name == "SI_blk_water": o.hide_render = True; o.hide_viewport = True
     rollen = ("stam", "bamboe", "net", "vlonder", "zeil_turkoois", "zeilrand", "lantaarn", "lantaarnglas", "bamboewand", "riet", "raam",
               "bestrating", "muur", "afdek", "steen", "touw", "boei_geel", "boei_blauw", "paalmetaal", "lamp_groen", "lamp_rood", "goud",
-              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog", "zandsteenvlak", "blauwglas", "raamglas", "deur", "beschot_om")
+              "bordrand", "dhow", "baal", "kruik", "ton", "zand", "kei", "witrand", "zandsteen", "afdek_zand", "muursteen", "boog", "zandsteenvlak", "blauwglas", "raamglas", "deur", "beschot_om",
+              "poort_in_l", "poort_in_r", "poort_uit_l", "poort_uit_r")
     bms = {r: bmesh.new() for r in rollen}
     lampen = []
     links, rechts = strook(bms["vlonder"], WACHTRIJ, B_RIJ, Z_VLONDER)
@@ -724,7 +752,7 @@ def main():
         a0 = 9.2 * u + zij * 1.0 * tg; a1 = 8.49 * u + zij * 1.0 * tg      # eindigt op de hekpaal van het dek (r 8,55)
         leuning(bms, [a0, a1], Z_VLONDER, True, True)
     dekhek(bms)
-    hutje(bms); brug(bms); vijverrand(bms); havenmuur(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
+    hutje(bms); brug(bms); poorten(bms); vijverrand(bms); havenmuur(bms); strand(bms); haven(bms); ingangsbord(bms, lampen)
     # waterplaat in de vorm van de vijver (dun, bovenkant omhoog)
     bmw = bmesh.new()
     vs = [bmw.verts.new((x, y, -0.04)) for x, y in VIJVER]
@@ -739,7 +767,8 @@ def main():
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         obj(f"SI_om_{rol}", bm, rol)
     info = {"vijver": VIJVER, "wachtrij": WACHTRIJ, "zeil_vanaf": ZEIL_VANAF, "uitgang": UITGANG, "hut": HUT, "lampen": lampen,
-            "z_vlonder": Z_VLONDER, "breedte": B_RIJ}
+            "z_vlonder": Z_VLONDER, "breedte": B_RIJ,
+            "poorten": {k: [list(h.xy), list(e.xy), list(o.xy)] for k, (h, e, o) in POORTEN.items()}, "z_plat": Z_PLAT}
     json.dump(info, open(os.path.join(D, "exports", "omgeving_info.json"), "w"), indent=1)
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=master)

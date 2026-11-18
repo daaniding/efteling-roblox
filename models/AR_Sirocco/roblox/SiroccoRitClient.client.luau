@@ -5,14 +5,15 @@
 -- elke boot (ba..bl) om zijn voet, plus licht dobberen. Onderdelen heten ..._rt<groep> (11_export); draaipunten als attribuut
 -- P_<groep> op Rit (sirocco_rit.luau). Hele omwentelingen per rit: na de rit staat alles weer in de instapstand.
 -- Wie in een boot zit hangt met een SeatWeld aan de (verankerde) stoel en gaat vanzelf mee; de camera draait mee.
--- Beleving (Daan 18 nov): titel bij het instappen, "Hold on tight!" bij vertrek, na de rit "Welcome back in port" en zelf je
--- boot uit stappen; eigen instapknop (ProximityPrompt Style Custom). Teksten Engels, nl in LocalizationService.SiroccoTeksten.
+-- Beleving (Daan 18 nov): titel bij het instappen, "Hold on tight!" bij vertrek, na de rit direct zwart (server); eigen
+-- instapknop (ProximityPrompt Style Custom); klapdeuren bij instap (open tijdens het instappen) en uitstap (open tijdens het
+-- uitstappen), scharnier + hoek als attribuut op de deur (sirocco_rit.luau). Teksten Engels, nl in SiroccoTeksten.
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local PPS = game:GetService("ProximityPromptService")
 
-local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 14, 5     -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
+local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 8, 5      -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
 local CYCLUS = T_IN + T_RIT + T_UIT
 local OMW_M, OMW_S = 5, -11                         -- hele omwentelingen per rit: hoofdschijf, subschijf (t.o.v. de hoofdschijf)
 local I_TOT = T_RIT - RAMP
@@ -61,6 +62,19 @@ for _, p in rit:GetChildren() do
 		if pr then table.insert(prompts, pr) end
 	end
 end
+
+-- klapdeuren (07_omgeving.poorten): attribuut Scharnier (wereld) en Hoek (rad, dicht -> open) op elk blad
+type Deur = {p: BasePart, rust: CFrame, H: Vector3, hoek: number, uit: boolean}
+local deuren: {Deur} = {}
+local om = sir:WaitForChild("Omgeving")
+for _, naam in {"poort_in_l", "poort_in_r", "poort_uit_l", "poort_uit_r"} do
+	local p = om:WaitForChild("SI_" .. naam .. "_0_om", 10) :: BasePart?
+	if p and p:GetAttribute("Scharnier") then
+		table.insert(deuren, {p = p, rust = p.CFrame, H = p:GetAttribute("Scharnier") :: Vector3, hoek = p:GetAttribute("Hoek") :: number,
+			uit = naam:find("uit") ~= nil})
+	end
+end
+local deurStand = {in_ = -1, uit = -1}
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -139,6 +153,14 @@ plr:GetAttributeChangedSignal("SiroccoUit"):Connect(function()
 	local info = TweenInfo.new(aan and 0.5 or 0.9, Enum.EasingStyle.Sine)
 	TweenService:Create(zwart, info, {BackgroundTransparency = aan and 0 or 1}):Play()
 	TweenService:Create(zwartTekst, info, {TextTransparency = aan and 0 or 1}):Play()
+	if not aan then                                   -- na de medewerker: camera de brug af (zuid = +Z, SiroccoRit.uitPlek); het
+		local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") :: BasePart?   -- lichaam volgt in 1e persoon de camera
+		if hrp then
+			local cam = workspace.CurrentCamera
+			local oog = hrp.Position + Vector3.new(0, 1.5, 0)
+			cam.CFrame = CFrame.lookAt(oog, oog + Vector3.new(0, -0.15, 1))
+		end
+	end
 end)
 
 -- ===== instapknop (ProximityPrompt Style Custom): donkerblauwe pil, gouden rand, gouden toets, vasthoudbalk =====
@@ -256,6 +278,18 @@ RunService.PreSimulation:Connect(function()
 		workspace:BulkMoveTo(delen, cfs, Enum.BulkMoveMode.FireCFrameChanged)
 		vorigF, vorigV = F, v
 	end
+	-- klapdeuren: 1,5 s open/dicht aan begin en eind van hun fase
+	local openIn = tc < T_IN and e(math.min(tc, T_IN - tc) / 1.5) or 0
+	local tu = tc - T_IN - T_RIT
+	local openUit = tu >= 0 and e(math.min(tu - 0.5, T_UIT - tu) / 1.5) or 0
+	if openIn ~= deurStand.in_ or openUit ~= deurStand.uit then
+		for _, d in deuren do
+			local f = d.uit and openUit or openIn
+			d.p.CFrame = CFrame.new(d.H) * CFrame.Angles(0, d.hoek * f, 0) * CFrame.new(-d.H) * d.rust
+			d.p.CanCollide = f < 0.5
+		end
+		deurStand.in_, deurStand.uit = openIn, openUit
+	end
 	-- eigen speler in een boot: camera mee, niet uit de boot springen tot het uitstappen, geen andere instapknoppen
 	local ch = plr.Character
 	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
@@ -272,7 +306,7 @@ RunService.PreSimulation:Connect(function()
 	else
 		vorigStoel = nil
 	end
-	local blokkeer = inBoot and tc < T_IN + T_RIT + 2.5
+	local blokkeer = inBoot
 	if hum and blokkeer ~= springUit then
 		hum:SetStateEnabled(Enum.HumanoidStateType.Jumping, not blokkeer)
 		springUit = blokkeer
@@ -282,16 +316,6 @@ RunService.PreSimulation:Connect(function()
 	if inBoot and not wasInBoot and f == "instappen" then toonTitel("Welcome aboard, sailor", 4) end
 	if f ~= vorigeFase then
 		if f == "rit" and inBoot then meld("Hold on tight!", 2.5)
-		elseif f == "uitstappen" and inBoot then
-			toonTitel("Welcome back in port", 3.5)
-			task.delay(2.6, function()
-				meld("Please leave your boat  -  exit via the bridge", 5)
-				local h = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-				if h and h.SeatPart and h.SeatPart:IsDescendantOf(rit) then
-					h:SetStateEnabled(Enum.HumanoidStateType.Jumping, true); springUit = false
-					h.Sit = false; h.Jump = true                                  -- met een sprongetje uit de stoel
-				end
-			end)
 		end
 		vorigeFase = f
 	end

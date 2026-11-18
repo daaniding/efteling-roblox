@@ -3,17 +3,16 @@
 -- (SiroccoRitClient.client.luau) uit workspace:GetServerTimeNow() - RitStart: zelfde stand voor iedereen, geen schokken
 -- (Pagode-les: niets bewegen vanaf de server). Daan 18 nov: 1 zitplaats per boot, boot draait vanzelf, "moet echt sneller",
 -- "uitstappen moet vetter, Engels of vertaald", "als er iemand is ingestapt kan jij natuurlijk niet instappen".
--- Ronde: instappen T_IN s (eigen prompt "Board" per boot, alleen als de boot vrij is), rit T_RIT s, uitstappen T_UIT s:
--- stoel los, zelf uit je boot stappen naar de brug; wie na T_BEGELEID s nog op de schijf staat brengt de medewerker weg
--- (beeld zwart). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
+-- Ronde: instappen T_IN s (eigen prompt "Board" per boot, alleen als de boot vrij is; instappoort open), rit T_RIT s,
+-- uitstappen T_UIT s: direct zwart beeld "Welcome back in port" en je staat op de brug voorbij de uitstappoort (Daan 18 nov:
+-- "doe gewoon gelijk zwart beeld"). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
 -- Zolang niemand zit houdt de server de klok vast op WACHT (instappen blijft open); daarna nog T_IN - WACHT s.
 -- Fasen moeten gelijk zijn aan SiroccoRitClient.
 local Players = game:GetService("Players")
 
 local S = 3
-local T_IN, T_RIT, T_UIT = 15, 60, 14          -- = SiroccoRitClient
+local T_IN, T_RIT, T_UIT = 15, 60, 8           -- = SiroccoRitClient
 local WACHT = 5
-local T_BEGELEID = 9                           -- s na het einde van de rit: wie dan nog op de schijf staat, wordt weggebracht
 local CYCLUS = T_IN + T_RIT + T_UIT
 local R_SCHIJF = 7.25                          -- gaashek rond de draaischijf (m)
 
@@ -41,12 +40,11 @@ local function klok(): (number, number)
 	return (nu - (rit:GetAttribute("RitStart") :: number)) % CYCLUS, nu
 end
 
--- uitgang: op het dek bij de uitstapopening (-104 graden, richting brug), plekken naast elkaar zodat niemand op elkaar landt
+-- uitgang: op de brug voorbij de uitstappoort (07_omgeving: brug x -2, poort y -8,6), naast elkaar, kijkend naar het zuiden
 local function uitPlek(k: number): CFrame
-	local a = math.rad(-104 + ((k % 5) - 2) * 2.6)
-	local r = 7.7 + (k // 5 % 2) * 0.45
-	local p = MIDDEN + Vector3.new(r * math.cos(a) * S, 0.3 * S + 3.2, -r * math.sin(a) * S)
-	return CFrame.lookAt(p, p + Vector3.new(math.cos(a), 0, -math.sin(a)))
+	local x, y = -2 + ((k % 3) - 1) * 0.7, -10.2 - (k // 3 % 4) * 0.8
+	local p = MIDDEN + Vector3.new(x * S, 0.25 * S + 3.2, -y * S)
+	return CFrame.lookAt(p, p + Vector3.new(0, 0, 1))
 end
 
 local function opSchijf(ch: Model): boolean
@@ -81,7 +79,7 @@ local function begeleid(plr: Player, k: number, tekst: string)
 		task.wait(0.1)
 		ch:PivotTo(uitPlek(k))
 	end
-	task.wait(0.9)
+	task.wait(1.6)
 	plr:SetAttribute("SiroccoUit", 0)
 	bezig[plr] = nil
 end
@@ -131,7 +129,6 @@ local function iemandAanBoord(): boolean
 end
 
 local vorige = ""
-local weggebracht = false
 while true do
 	task.wait(0.2)
 	local tc, nu = klok()
@@ -145,19 +142,9 @@ while true do
 		if f == "rit" then
 			wegVanDeSchijf("Take a seat in a boat to ride", false)   -- wie los op de schijf staat, mag niet mee draaien
 		elseif f == "uitstappen" then
-			weggebracht = false
-			task.delay(2.5, function()                              -- eerst de titel, dan de stoelen los: zelf uitstappen
-				for _, st in stoelen do
-					local hum = st.Occupant
-					if hum then losVanStoel(hum) end
-				end
-			end)
+			wegVanDeSchijf("Welcome back in port", true)                -- direct zwart beeld en naar de brug
 		end
 		vorige = f
 		bijwerken(f)
-	end
-	if f == "uitstappen" and not weggebracht and tc >= T_IN + T_RIT + T_BEGELEID then
-		weggebracht = true
-		wegVanDeSchijf("The attendant walks you to the exit", true)
 	end
 end
