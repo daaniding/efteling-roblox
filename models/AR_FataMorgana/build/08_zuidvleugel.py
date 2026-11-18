@@ -12,12 +12,13 @@ exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6)
 G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:08_zuidvleugel"
-T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0})
-T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries",)
+T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
+                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0})
+T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
-X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -343.0, -350.0     # voorkant palen, achterwand gang, achterkant
+X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -348.4, -350.0     # voorkant palen, achterwand wachtrijhal, achterkant
 H = 4.3
 
 
@@ -30,22 +31,56 @@ def paneel(rol, vl, u0, u1, v0, v1, n, su, sv, dv=0.0):
 
 
 def bouw():
-    # achterblok (kern) achter de gang, tot de achterkant
+    # achterblok (kern) achter de wachtrijhal, tot de achterkant
     prisma("stuc", [L(X0, YZ), L(X1, YZ), L(X1, YA), L(X0, YA)], 0.0, H - 0.3)
-    # achterwand van de gang (west -> oost: voorkant = noord) met witte boognissen en donkere doorkijkjes
+    # achterwand van de wachtrijhal (foto Daan): pilasters met smalle spitse nis, per vak een geschilderd paneel met blauwe
+    # tegelrand en twee hoge rondboogramen van matglas, lijsten op 1,15 en 2,1 m
     aw = Vlak(L(X0, YA), Vector((1, 0, 0)), Vector((0, 1, 0)))
     lw = X1 - X0
-    prisma("wit", [L(X0, YA - 0.3), L(X1, YA - 0.3), L(X1, YA), L(X0, YA)], 0.0, H - 0.3)
-    k = 0; u = 1.6
-    while u < lw - 1.0:
-        om = spitsboog(u, 1.0, 1.0, 2.4, 10, 0.55)
-        if k % 3 == 1: vul("raam", aw, om, 0.09)
-        else: vul("wit", aw, om, 0.05)
-        strip("lijst", aw, om, 0.1, 0.07)
-        u += 2.9; k += 1
-    # vloer en plafond van de gang
-    prisma("tegel", [L(X0, YA), L(X1, YA), L(X1, YV + 0.1), L(X0, YV + 0.1)], -0.25, 0.12)   # 12 cm boven het terrein
+    prisma("wit", [L(X0, YA - 0.3), L(X1, YA - 0.3), L(X1, YA), L(X0, YA)], 0.0, 3.35)
+    strip("lijst", aw, [(0.0, 1.15), (lw, 1.15)], 0.1, 0.05); strip("lijst", aw, [(0.0, 2.1), (lw, 2.1)], 0.08, 0.05)
+    nvak = 8; bv = lw / nvak
+    for k in range(nvak + 1):                               # pilasters
+        u = k * bv; u0, u1 = max(0.0, u - 0.3), min(lw, u + 0.3)
+        prisma("wit", [Vector((q.x, q.y, 0)) for q in (aw.p(u0, 0, -0.05), aw.p(u1, 0, -0.05), aw.p(u1, 0, 0.22), aw.p(u0, 0, 0.22))], 0.0, 3.3)
+        pv = Vlak(aw.p(0, 0, 0.22), aw.U, aw.N)
+        vul("raam", pv, spitsboog(u, 0.26, 1.3, 1.95, 6, 0.75), 0.03)
+        prisma("lijst", [Vector((q.x, q.y, 0)) for q in (aw.p(u0 - 0.04, 0, -0.05), aw.p(u1 + 0.04, 0, -0.05), aw.p(u1 + 0.04, 0, 0.28), aw.p(u0 - 0.04, 0, 0.28))], 2.95, 3.1)
+    for k in range(nvak):
+        c = (k + 0.5) * bv
+        # geschilderd paneel met rondboog, blauwe tegelrand
+        om = spitsboog(c, 1.3, 1.3, 2.35, 10, 0.5)
+        sch = T["G"]["schildering"]; uvl = sch.loops.layers.uv.verify()
+        cu, cv = c, 1.95
+        for (ua, va), (ub, vb) in zip(om, om[1:] + om[:1]):
+            pts = [aw.p(cu, cv, 0.06), aw.p(ua, va, 0.06), aw.p(ub, vb, 0.06)]       # zelfde volgorde als vul(): normaal +N
+            f = sch.faces.new([sch.verts.new(q) for q in pts])
+            for lp, (uu, vv_) in zip(f.loops, ((cu, cv), (ua, va), (ub, vb))):
+                lp[uvl].uv = ((uu - c + 0.65) / 1.3, (vv_ - 1.3) / 1.7)
+        strip("koepel_blauw", aw, om + [om[0]], 0.12, 0.08)
+        # twee hoge rondboogramen (matglas), diep in de muur
+        for du in (-1.5, 1.5):
+            r = spitsboog(c + du, 0.95, 2.25, 2.65, 10, 0.5)
+            vul("matglas", aw, r, 0.03); strip("lijst", aw, r, 0.1, 0.12)
+    # vloer (dambord tegels) en plafond met bollampen
+    prisma("vloertegel", [L(X0, YA), L(X1, YA), L(X1, YV + 0.1), L(X0, YV + 0.1)], -0.25, 0.12)   # 12 cm boven het terrein
     quad("stucvlak", [L(X0, YA) + Vector((0, 0, 3.3)), L(X0, YV) + Vector((0, 0, 3.3)), L(X1, YV) + Vector((0, 0, 3.3)), L(X1, YA) + Vector((0, 0, 3.3))])
+    for y in (-342.2, -346.0):
+        x = X0 + 2.0
+        while x < X1 - 1.0:
+            p = L(x, y)
+            lathe("lampmetaal", [(0.02, 0.0), (0.02, 0.35)], 2.95, 6, (p.x, p.y))
+            lathe("matglas", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.3, 0.17))], 2.78, 12, (p.x, p.y))
+            x += 3.4
+    # groene hekken: zigzagbanen evenwijdig aan de achterwand, afwisselend open aan oost- en westkant
+    rijen = [-341.3 - 0.85 * i for i in range(8)]
+    for i, y in enumerate(rijen):
+        xa, xb = (X0 + 2.5, X1 - 3.0) if i % 2 == 0 else (X0 + 4.0, X1 - 1.5)
+        prisma("hekgroen", [L(xa, y - 0.025), L(xb, y - 0.025), L(xb, y + 0.025), L(xa, y + 0.025)], 0.97, 1.03)
+        x = xa
+        while x <= xb + 0.01:
+            prisma("hekgroen", [L(x - 0.025, y - 0.025), L(x + 0.025, y - 0.025), L(x + 0.025, y + 0.025), L(x - 0.025, y + 0.025)], 0.0, 1.0)
+            x += 2.4
     # dakrand boven de palen: lijst + fries (blauw-wit tegelwerk) + rode randen; dak
     vv = Vlak(L(X0, YV), Vector((1, 0, 0)), Vector((0, 1, 0)))
     prisma("wit", [L(X0 - 0.1, YV - 0.25), L(X1 + 0.1, YV - 0.25), L(X1 + 0.1, YV + 0.1), L(X0 - 0.1, YV + 0.1)], 3.3, H)
@@ -78,7 +113,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur", "dak", "stucvlak"):
+        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "matglas"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]
@@ -99,7 +134,7 @@ def render(uit):
     sc.render.film_transparent = True; sc.render.resolution_x, sc.render.resolution_y = 1400, 700
     cd = bpy.data.cameras.new("cam"); cam = bpy.data.objects.new("cam", cd); sc.collection.objects.link(cam); sc.camera = cam
     cd.lens = 26
-    p = L(40.0, -318.0) + Vector((0, 0, 1.8)); q = L(38.0, -344.0) + Vector((0, 0, 2.6))
+    p = L(52.0, -340.5) + Vector((0, 0, 1.7)); q = L(30.0, -348.0) + Vector((0, 0, 1.6))
     cam.location = p; cam.rotation_euler = (q - p).to_track_quat("-Z", "Y").to_euler()
     sc.render.filepath = os.path.join(uit, "zuidvleugel.png"); bpy.ops.render.render(write_still=True)
 

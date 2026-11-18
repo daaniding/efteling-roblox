@@ -3,11 +3,12 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 122476350036812, Ingang = 115016590222449, Kantelen = 97214135684394, Koepelgebouw = 83588828374633, Zuidvleugel = 73113709225547, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 98846122997959}
+local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 122476350036812, Ingang = 115016590222449, Kantelen = 97214135684394, Koepelgebouw = 83588828374633, Zuidvleugel = 83780141937006, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 98846122997959}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
-	zellige = 112364982933611, zigzag = 94009043451472, balkon = 115587625989953, fries = 96873829333423}   -- naald: Pagode (dennennaalden)
+	zellige = 112364982933611, zigzag = 94009043451472, balkon = 115587625989953, fries = 96873829333423,
+	vloertegel = 112689883777106, schildering = 119976189330229}   -- naald: Pagode (dennennaalden)
 -- rol -> {textuur, normaal, kleur, materiaal, botsen, reflectie, alfa}
 local R = {
 	stuc = {"stuc_kleur", "stuc_normaal", Color3.new(1, 1, 1), Enum.Material.Plaster, true},
@@ -43,6 +44,11 @@ local R = {
 	-- ingangspoort minaret (04_minaret): donkere doorgang en witte neggen
 	poort = {nil, nil, Color3.fromRGB(14, 14, 18), Enum.Material.SmoothPlastic, true},
 	poortrand = {nil, nil, Color3.fromRGB(244, 240, 230), Enum.Material.Plaster, true},
+	-- wachtrijhal (08_zuidvleugel)
+	vloertegel = {"vloertegel", nil, Color3.new(1, 1, 1), Enum.Material.Slate, true},
+	matglas = {nil, nil, Color3.fromRGB(236, 240, 242), Enum.Material.SmoothPlastic, true},
+	schildering = {"schildering", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true},
+	hekgroen = {nil, nil, Color3.fromRGB(64, 92, 82), Enum.Material.Metal, true},
 }
 for _, r in {"vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet"} do
 	R[r] = {r, nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false, nil, true}

@@ -76,7 +76,14 @@ pijlers + kroonlijst; asset 122476350036812), zijdeur zuidkant minaret, veranda 
 x 17,3..20,7, y -331,1..-339,65, rode palen, fries met rode randen, aflopend dak 2,45-3,15 m met houten onderkant, tegelvloer,
 zwarte hekken met bollen, tussenhek), raam in de kantelenmuur boven het verandadak gezet (06_kantelen, asset 97214135684394).
 Nieuwe rollen in plaats_modellen: poort, poortrand. Grond: strook x 16,5..26, y -341..-322 voor poort en veranda.
-Mogelijke vervolgstap: binnenkant (pas als Daan erom vraagt).
+Stap 12 — de wachtrijhal (foto van Daan: "dit is de wachtrij"): de zuidvleugel is geen smalle zuilengang maar een diepe overdekte
+hal onder het dak van 4,3 m: achterwand op y -348,4 (was -343). Achterwand: pilasters met smalle spitse nis, per vak (8x) een
+geschilderd paneel met rondboog en blauwe rand (FM_schildering: EIGEN woestijnschildering, geen kopie) en twee hoge
+rondboogramen van matglas, lijsten op 1,15 en 2,1 m; witte plafondplaat op 3,3 m met bollampen in twee rijen; dambordvloer
+(FM_vloertegel); groene zigzaghekken in 8 banen evenwijdig aan de achterwand. Texturen: build/13t_wachtrij.py.
+Asset zuidvleugel 83780141937006. Nieuwe rollen in plaats_modellen: vloertegel, matglas, schildering, hekgroen.
+Let op: Roblox toont de bollampen/ramen op afstand pas na laden (LOD); dichtbij kijken.
+Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
