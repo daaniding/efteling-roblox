@@ -3,6 +3,8 @@
                         naadloos, 1 textuur = 2 m
   FM_schildering_kleur: eigen (niet nagemaakte) pastelschildering voor de wandpanelen: woestijn met duinen, palmen en een
                         koepelstad in de verte; geen kopie van de Efteling-schilderingen
+  FM_bord_kleur       : ingangsbord boven de opening in het voorhek (Daan: "laat daarboven even weten dat daar de ingang is"):
+                        crème bord met blauwe rand en gouden binnenlijn, "INGANG" groot, "Fata Morgana" erboven
 Gebruik: python3 build/13t_wachtrij.py"""
 import os, math
 import numpy as np
@@ -56,4 +58,16 @@ def schildering(W=512, H=640):
     Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).save(os.path.join(T, "FM_schildering_kleur.png"))
 
 
-vloer(); schildering(); print("[13t_wachtrij] klaar")
+def bord(W=1024, H=384):
+    from PIL import ImageFont
+    im = Image.new("RGB", (W, H), (244, 234, 210)); d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, W - 1, H - 1], outline=(40, 90, 160), width=28)
+    d.rectangle([40, 40, W - 41, H - 41], outline=(200, 150, 60), width=6)
+    f1 = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Bold.ttf", 150)
+    f2 = ImageFont.truetype("/System/Library/Fonts/Supplemental/Georgia Italic.ttf", 64)
+    for txt, f, y, kl in (("Fata Morgana", f2, 70, (40, 90, 160)), ("INGANG", f1, 160, (120, 36, 26))):
+        w = d.textlength(txt, font=f); d.text(((W - w) / 2, y), txt, font=f, fill=kl)
+    im.save(os.path.join(T, "FM_bord_kleur.png"))
+
+
+vloer(); schildering(); bord(); print("[13t_wachtrij] klaar")

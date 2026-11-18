@@ -13,9 +13,9 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:08_zuidvleugel"
 T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
-                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0})
-T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering")
+                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0})
+T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering", "bord")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
 X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -347.0, -350.0     # voorkant palen, achterwand wachtrijhal, achterkant
@@ -137,6 +137,21 @@ def bouw():
             for rol, hw, n0, n1 in (("rood", 0.21, 0.03, 0.06), ("wit", 0.13, 0.06, 0.075), ("goud", 0.06, 0.075, 0.09)):
                 prisma(rol, [L(x - hw, YF + n0), L(x + hw, YF + n0), L(x + hw, YF + n1), L(x - hw, YF + n1)], 0.55 - hw, 0.55 + hw)
             x += 2.6
+    # ingangsbord boven de opening (Daan: "laat daarboven even weten dat daar de ingang is"): aan twee kettinkjes onder de luifel,
+    # aan beide kanten leesbaar (FM_bord, 13t_wachtrij)
+    bx, by, bw_, bz0, bz1 = XI + BW / 2, YV + 0.2, 1.5, 2.35, 2.91
+    prisma("goud", [L(bx - bw_ / 2 - 0.04, by - 0.02), L(bx + bw_ / 2 + 0.04, by - 0.02), L(bx + bw_ / 2 + 0.04, by + 0.02), L(bx - bw_ / 2 - 0.04, by + 0.02)], bz0 - 0.04, bz1 + 0.04)
+    bb = T["G"]["bord"]; buv = bb.loops.layers.uv.verify()
+    for dy, wil, spiegel in ((0.025, 1, False), (-0.025, -1, True)):
+        hk = [(bx - bw_ / 2, bz0), (bx + bw_ / 2, bz0), (bx + bw_ / 2, bz1), (bx - bw_ / 2, bz1)]
+        f = bb.faces.new([bb.verts.new(L(x_, by + dy) + Vector((0, 0, z_))) for x_, z_ in hk])
+        for lp, (x_, z_) in zip(f.loops, hk):
+            u_ = (x_ - (bx - bw_ / 2)) / bw_
+            lp[buv].uv = ((u_ if spiegel else 1 - u_), (z_ - bz0) / (bz1 - bz0))   # van voren (noord) gelezen: x loopt naar links
+        f.normal_update()
+        if f.normal.y * wil < 0: f.normal_flip()
+    for dx in (-0.55, 0.55):
+        prisma("donker", [L(bx + dx - 0.015, by - 0.015), L(bx + dx + 0.015, by - 0.015), L(bx + dx + 0.015, by + 0.015), L(bx + dx - 0.015, by + 0.015)], bz1 + 0.04, 3.32)
     for xx in (XI, XI + BW, XO, XO + BW):                # paaltjes met crème bollen bij de ingang en de afgesloten oude ingang
         p = L(xx, YF)
         prisma("donker", [p + Vector((sx, sy, 0)) * 0.05 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.1)
