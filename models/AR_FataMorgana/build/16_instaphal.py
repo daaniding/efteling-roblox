@@ -165,8 +165,7 @@ def bouw():
     box("gangmuur", XE, YS, XE + 0.2, -329.8, 0.0, HZ + 0.05); box("gangmuur", XE, -328.2, XE + 0.2, YN, 0.0, HZ + 0.05)
     box("gangmuur", XE, -329.8, XE + 0.2, -328.2, 3.05, HZ + 0.05)                     # boven de doorgang naar het halletje
     box("onderwand", XE, YS, XE + 0.2, YN, ZB, 0.0)
-    for (x0, y0, x1, y1) in ((XW - 1.0, YN + 0.25, XW + 3.2, YN + 1.4), (XW - 1.4, -346.5, XW - 0.25, -342.8)):   # donkere doorvaarten
-        box("poort", x0, y0, x1, y1, ZW, 0.0)
+    # (doorvaarten noordwest en zuidwest lopen nu door in de vaarroute, 18_route; geen donkere vulblokken meer)
     for k in range(14):                                                                # gordijn bij de uitgang (Eftepedia: beige gordijntje)
         x = XW + 0.3 + 0.18 * k
         box("gordijn", x, YN - 0.12 - (0.06 if k % 2 else 0.0), x + 0.18, YN - 0.02, ZW + 0.1, -0.42)

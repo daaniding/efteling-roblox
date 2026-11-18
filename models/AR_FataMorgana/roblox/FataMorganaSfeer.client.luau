@@ -8,6 +8,7 @@ local ZONES = {
 	{17.2, -330.6, 21.0, -327.4, -1.0, 4.0},   -- halletje minaretvoet (binnenkant)
 	{12.9, -315.6, 17.6, -301.3, -1.0, 3.0},   -- uitganggang aanbouw
 	{17.8, -313.7, 24.2, -301.3, -1.0, 3.0},   -- De Bazaar
+	{-74.0, -352.0, 12.6, -294.0, -4.0, -0.1},  -- vaarroute (onder de begane grond, 18_route)
 }
 local BINNEN = {Ambient = Color3.fromRGB(16, 12, 10), OutdoorAmbient = Color3.fromRGB(20, 15, 12),
 	EnvironmentDiffuseScale = 0.05, EnvironmentSpecularScale = 0.15, ExposureCompensation = 0.3}

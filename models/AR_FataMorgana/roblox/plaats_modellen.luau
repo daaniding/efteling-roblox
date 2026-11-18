@@ -3,7 +3,7 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 76192302631142, Koepelgebouw = 122930798099695, Zuidvleugel = 75793335061309, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 105227491479681, Instaphal = 99757523328708, Boten = 115678478270707}
+local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 76192302631142, Koepelgebouw = 122930798099695, Zuidvleugel = 75793335061309, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 105227491479681, Instaphal = 120033530878287, Boten = 115678478270707, Route = 89589173413784}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
@@ -90,6 +90,11 @@ local R = {
 	boot_plaket = {"bootplaket", nil, Color3.new(1, 1, 1), Enum.Material.Metal, false},
 	boot_kop = {nil, nil, Color3.fromRGB(150, 32, 28), Enum.Material.SmoothPlastic, false, 0.1},
 	boot_kopring = {nil, nil, Color3.fromRGB(242, 236, 224), Enum.Material.SmoothPlastic, false},
+	-- vaarroute met kamers, nog kaal (18_route)
+	routebodem = {nil, nil, Color3.fromRGB(22, 24, 26), Enum.Material.Slate, true},
+	toneel = {nil, nil, Color3.fromRGB(82, 70, 58), Enum.Material.Concrete, true},
+	routewand = {nil, nil, Color3.fromRGB(78, 70, 62), Enum.Material.Plaster, true},
+	routeplafond = {nil, nil, Color3.fromRGB(16, 16, 18), Enum.Material.SmoothPlastic, true},
 }
 for _, r in {"vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet"} do
 	R[r] = {r, nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false, nil, true}

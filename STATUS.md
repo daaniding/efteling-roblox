@@ -216,6 +216,19 @@ echt uitziet en laat hem ronddraaien"):
 - ronddraaien: ServerScriptService.FataMorganaDraaischijf (roblox/FataMorganaDraaischijf.server.luau), 1 omwenteling per 2 min,
   AssemblyAngularVelocity laat spelers meedraaien (getest: schijf 21 gr, speler 18 gr mee in 6 s, straal gelijk). Het controlehok en
   de sloepen staan (nog) stil.
+Vaarroute met kamers, nog kaal (Daan: "je hebt de blue print dus je weet de route dus alleen ff de route maken met de kamers niet hoe
+ze eruit zien"):
+- build/18p_routeplan.py leest de Eftepedia-plattegrond (ref/eftepedia/Plattegrondfata.jpg; 23 px/m, draaischijf (1935,995) = model
+  (6,3; -335,8), noord boven) naar een raster van 0,25 m: blauw = vaargoot (secties 1-14), zand = scènevlakken; onze instaphal eruit,
+  doorvaarten naar de hal-noordwest (sectie 1) en hal-zuidwest (sectie 14) erbij; alleen onder het dak (build/18d_dakmasker.py ->
+  ref/route_dak.npy; uitzondering: de door kantelenmuren omsloten strook tussen hal en koepelgebouw). Uit: ref/route_plan.npz.
+- build/18_route.py (deel "route", asset 89589173413784, FataMorgana.Route): vaargootbodem z -3,7, scènevlakken als verhoogd toneel
+  tot z -2,6, muren langs de buitenrand (0,3 m), plafond z -0,05..0,12. Op hetzelfde waterpeil als de hal (de route ligt onder de
+  begane grond). 16: de donkere vulblokken in de doorvaarten van de hal zijn weg. Asset instaphal 120033530878287.
+- Terrein: roblox/plaats_routewater.luau (onder de route leeg, Terrain-water tot z -3,2 in de vaargoot, hal-water opnieuw); 26
+  randcellen bij de gevels daarna weer bestraat (Pavement 0,725). Werklicht: roblox/plaats_routelicht.luau (26 PointLights).
+  Lichtzone FataMorganaSfeer kent nu ook de vaarroute.
+- Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
