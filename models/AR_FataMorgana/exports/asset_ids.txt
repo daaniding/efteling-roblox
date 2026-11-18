@@ -48,3 +48,6 @@ AR_FataMorgana_instaphal 74484438706432
 AR_FataMorgana_instaphal 85900016049288
 AR_FataMorgana_instaphal 139542993746719
 AR_FataMorgana_boten 82019102059341
+AR_FataMorgana_instaphal 124291552965652
+AR_FataMorgana_ingang 128192677817318
+AR_FataMorgana_koepelgebouw 122930798099695

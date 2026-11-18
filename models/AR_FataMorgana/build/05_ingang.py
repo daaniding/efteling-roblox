@@ -14,8 +14,10 @@ exec(compile(open(F3).read().rsplit("\nmain()", 1)[0], F3, "exec"), G3)
 T = G3["T"]; L, prisma, lathe, quad, strip, spitsboog, vul, raam, Vlak, buis = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "spitsboog", "vul", "raam", "Vlak", "buis")) if "buis" in G3 else (*(G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "spitsboog", "vul", "raam", "Vlak")), None)
 OWNER = "phase:05_ingang"
 T["KLEUR"].update({"wit": (0.95, 0.94, 0.9), "rood": (0.8, 0.3, 0.18), "koepel_blauw": (0.45, 0.68, 0.84), "witvlak": (0.95, 0.94, 0.9),
-                   "gangmuur": (0.92, 0.85, 0.72), "vloertegel": (0.65, 0.42, 0.33)})
-T["UVS"].update({"wit": 9.0, "rood": 1.0, "koepel_blauw": 2.0, "witvlak": 9.0, "gangmuur": 4.0, "vloertegel": 2.0})
+                   "gangmuur": (0.92, 0.85, 0.72), "vloertegel": (0.65, 0.42, 0.33),
+                   "onderwand": (0.35, 0.27, 0.2), "groen": (0.46, 0.67, 0.62), "balmuur": (0.9, 0.86, 0.78), "lichtlijst": (1.0, 0.8, 0.5)})
+T["UVS"].update({"wit": 9.0, "rood": 1.0, "koepel_blauw": 2.0, "witvlak": 9.0, "gangmuur": 4.0, "vloertegel": 2.0,
+                 "onderwand": 4.0, "groen": 1.0, "balmuur": 4.0, "lichtlijst": 1.0})
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
 X0, X1, Y0, Y1 = 17.5, 24.5, -314.0, -301.0
@@ -133,6 +135,10 @@ def bouw():
                              (X0 - 0.06, Y0 + 0.14, X0 + 0.14, WD0), (X0 - 0.06, WD1, X0 + 0.14, Y1 - 0.14),
                              (X1 - 0.14, Y0 + 0.14, X1 + 0.06, OD0), (X1 - 0.14, OD1, X1 + 0.06, Y1 - 0.14)):
         prisma("lijst", [L(x0, y0), L(x1, y0), L(x1, y1), L(x0, y1)], 0.0, 0.3)
+    # wanddetails (plint, lambrisering, pilasters, kroonlijst, lichtlijst); achter de schappen geen lambrisering/pilasters
+    G7 = {"L": L, "prisma": prisma}; exec(open(os.path.join(D, "build", "wandlijsten.py")).read(), G7)
+    G7["wandlijsten"](X0 + t + li, Y0 + t + li, X1 - t - li, Y1 - t - li, 2.9, gaten={"W": [(WD0, WD1, WDZ)], "O": [(OD0, OD1, ODZ)]},
+                      geen_lambrisering={"N": [(18.5, 23.7)], "Z": [(18.5, 23.7)]})
     # winkel: schappen langs noord- en zuidwand met souvenirs, toonbank, twee koperen hanglampen
     for (y0, y1, kant) in ((Y1 - t - 0.5, Y1 - t - li, -1), (Y0 + t + li, Y0 + t + 0.5, 1)):   # open schappen: achterwand, zijkanten, planken
         wy0, wy1 = (y1 - 0.05, y1) if kant < 0 else (y0, y0 + 0.05)

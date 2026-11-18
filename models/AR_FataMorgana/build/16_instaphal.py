@@ -102,6 +102,51 @@ def rand(xa, ya, xb, yb, gaten=()):
             prisma("groen", [q2 + Vector((sx, sy, 0)) * 0.09 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], ZB, -0.3)
 
 
+def wbox(rol, vl, u0, u1, v0, v1, n0, n1):
+    """blok op een wandvlak: u langs de wand, v omhoog, n uit de wand (naar de hal)"""
+    bm = T["G"][rol]
+    v = [bm.verts.new(vl.p(u, w_, n)) for (u, w_, n) in ((u0, v0, n0), (u1, v0, n0), (u1, v1, n0), (u0, v1, n0), (u0, v0, n1), (u1, v0, n1), (u1, v1, n1), (u0, v1, n1))]
+    for f in ((0, 3, 2, 1), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)): bm.faces.new([v[i] for i in f])
+
+
+def wanddetail(xa, ya, xb, yb, open_=()):
+    """Daan: "de muren moeten veel gedetailleerder": achterwand achter de gaanderij (zelfde vakken als rand()): plint, groene
+    lambriseringslijst met panelen eronder, pilasters achter elke paal met kapiteel, blinde kielboog per vak en een kroonlijst onder
+    de lichtlijst. open_ = [(u0, u1)] langs de wand (vanaf het hoekpunt van de rand) waar een opening zit."""
+    A, B = L(xa, ya), L(xb, yb); d = B - A; lg = d.length; t = d / lg; hal = Vector((-t.y, t.x, 0))
+    vl = Vlak(A - hal * GB, t, hal)                      # wandvlak (binnenkant muur)
+    n = max(1, round(lg / 1.6)); st = lg / n
+    def vrij(u0, u1): return not any(u0 < g1 + 0.1 and u1 > g0 - 0.1 for g0, g1 in open_)
+    # doorlopende lijsten van hoek tot hoek, onderbroken bij openingen
+    stukken = []; u = -GB
+    for g0, g1 in sorted(open_):
+        if g0 - 0.1 > u: stukken.append((u, g0 - 0.1))
+        u = max(u, g1 + 0.1)
+    if lg + GB > u: stukken.append((u, lg + GB))
+    for u0, u1 in stukken:
+        wbox("onderwand", vl, u0, u1, 0.12, 0.3, -0.01, 0.03)          # plint
+        wbox("groen", vl, u0, u1, 1.0, 1.06, -0.01, 0.045)             # lambriseringslijst
+        wbox("balmuur", vl, u0, u1, 2.9, 2.98, -0.01, 0.1)             # kroonlijst onder de lichtlijst
+        wbox("groen", vl, u0, u1, 2.86, 2.9, -0.01, 0.07)
+    for i in range(n + 1):                                             # pilasters achter de palen
+        u = i * st
+        if not vrij(u - 0.2, u + 0.2): continue
+        wbox("balmuur", vl, u - 0.14, u + 0.14, 0.3, 2.86, -0.01, 0.06)
+        wbox("balmuur", vl, u - 0.19, u + 0.19, 2.62, 2.86, -0.01, 0.085)    # kapiteel
+        wbox("groen", vl, u - 0.16, u + 0.16, 0.3, 0.42, -0.01, 0.075)       # voet
+    for i in range(n):                                                 # per vak: blinde kielboog en lambriseringspaneel
+        u0, u1 = i * st, (i + 1) * st
+        if not vrij(u0, u1): continue
+        bg = spitsboog(st / 2, st - 0.5, 1.3, 2.2, 8, 0.6)
+        tp = max(v for _, v in bg); hl = len(bg) // 2
+        bg = [p for p in bg[:hl] if p[1] < tp - 0.05] + [(st / 2, tp + 0.1)] + [p for p in bg[hl:] if p[1] < tp - 0.05]
+        vl2 = Vlak(vl.p(u0, 0, 0.0), t, hal)
+        strip("groen", vl2, bg, 0.05, 0.03)
+        strip("groen", vl2, [(0.25, 1.3), (st - 0.25, 1.3)], 0.05, 0.03)
+        for (a0, a1, b0, b1) in ((0.3, st - 0.3, 0.42, 0.46), (0.3, st - 0.3, 0.9, 0.94), (0.3, 0.34, 0.42, 0.94), (st - 0.34, st - 0.3, 0.42, 0.94)):
+            wbox("balmuur", vl2, a0, a1, b0, b1, -0.01, 0.025)         # paneelkader onder de lambrisering
+
+
 def bouw():
     # muren: boven de gaanderij oud beige, eronder donker hout; openingen: halletje (oost, y -329), boten in (west, zuid) en uit (noord, west)
     def muur(x0, y0, x1, y1, onder=True):
@@ -148,6 +193,11 @@ def bouw():
     rand(XWI, YNI, XWI, YSI)                                             # dicht: geen brug meer
     rand(XWI, YSI, XEI, YSI)
     rand(XEI, YSI, XEI, YNI)
+    # wanddetails: noord (deur x 13,3..14,9 -> u = XEI - x), west, zuid, oost (doorgang halletje y -329,8..-328,2 -> u = y - YSI)
+    wanddetail(XEI, YNI, XWI, YNI, open_=[(XEI - 14.9, XEI - 13.3)])
+    wanddetail(XWI, YNI, XWI, YSI)
+    wanddetail(XWI, YSI, XEI, YSI)
+    wanddetail(XEI, YSI, XEI, YNI, open_=[(-329.8 - YSI, -328.2 - YSI)])
     # gescheiden routes (Daan: "nu zou je rechts en links kunnen"; Eftepedia: in via de gaanderij, uit via een trap links van het
     # controlehok en een gaanderij): IN = oost (zuid van de doorgang) -> zuid -> west -> brug; UIT = trap -> noordgaanderij -> deur
     def afsluiting(x0, y0, x1, y1, wil):

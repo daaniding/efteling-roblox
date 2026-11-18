@@ -198,6 +198,12 @@ vrij in het midden op zijn trompet, rondom dicht (personeel). Westgaanderij door
 Stap 4 klaar: build/17_boten.py (deel "boten", asset 82019102059341, FataMorgana.Boten): drie stilliggende sloepen van 6,0 x 1,9 m
 (rode romp, witte sierband, gouden boord, opgekrulde steven met dekjes, witte binnenkant, vijf witte banken, rode vloer): aan de
 draaischijf (oost), in het zuidkanaal en in het noordkanaal richting uitgang. Nog geen beweging.
+Stap 5 klaar (Daan: "de muren moeten veel gedetailleerder"): instaphal (16, wanddetail()): achterwanden met plint, groene
+lambriseringslijst met paneelkaders, pilasters met kapiteel achter elke gaanderijpaal, blinde kielboog per vak en kroonlijst onder de
+lichtlijst (asset instaphal 124291552965652). Uitganghalletje (07) en De Bazaar (05) via build/wandlijsten.py: plint, lambrisering,
+pilasters, kroonlijst, lichtlijst (assets koepelgebouw 122930798099695, ingang 128192677817318). FataMorgana.Uitganggloed
+(roblox/plaats_uitganggloed.luau): 18 SurfaceLights onder de lichtlijsten van halletje en Bazaar. Uitgangsroute opnieuw gelopen: ok.
+De Bazaar zelf (winkel) wordt later beter gemaakt (Daan).
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

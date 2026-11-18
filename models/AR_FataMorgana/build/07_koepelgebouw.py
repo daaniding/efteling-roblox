@@ -15,8 +15,9 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 wand = G6["wand"]
 OWNER = "phase:07_koepelgebouw"
-T["KLEUR"].update({"koepel_creme": (0.9, 0.84, 0.68), "wit": (0.95, 0.94, 0.9), "gangmuur": (0.92, 0.85, 0.72), "vloertegel": (0.65, 0.42, 0.33)})
-T["UVS"].update({"koepel_creme": 2.0, "wit": 9.0, "gangmuur": 4.0, "vloertegel": 2.0})
+T["KLEUR"].update({"koepel_creme": (0.9, 0.84, 0.68), "wit": (0.95, 0.94, 0.9), "gangmuur": (0.92, 0.85, 0.72), "vloertegel": (0.65, 0.42, 0.33),
+                   "onderwand": (0.35, 0.27, 0.2), "groen": (0.46, 0.67, 0.62), "balmuur": (0.9, 0.86, 0.78), "lichtlijst": (1.0, 0.8, 0.5)})
+T["UVS"].update({"koepel_creme": 2.0, "wit": 9.0, "gangmuur": 4.0, "vloertegel": 2.0, "onderwand": 4.0, "groen": 1.0, "balmuur": 4.0, "lichtlijst": 1.0})
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
 
@@ -60,6 +61,9 @@ def bouw():
     prisma("vloertegel", [L(12.9, -315.6), L(17.6, -315.6), L(17.6, -301.3), L(12.9, -301.3)], -0.25, 0.12)
     prisma("vloertegel", [L(14.4, -316.05), L(16.0, -316.05), L(16.0, -315.55), L(14.4, -315.55)], -0.25, 0.12)  # drempel
     prisma("gangmuur", [L(12.5, -316.0), L(17.6, -316.0), L(17.6, -300.9), L(12.5, -300.9)], 2.45, 2.6)   # plafond halletje
+    # wanddetails in het halletje (plint, lambrisering, pilasters, kroonlijst, lichtlijst); deuren: zuid x 14,4..16,0, oost (Bazaar) y -306,6..-305,0
+    G7 = {"L": L, "prisma": prisma}; exec(open(os.path.join(D, "build", "wandlijsten.py")).read(), G7)
+    G7["wandlijsten"](12.9, -315.6, 17.5, -301.3, 2.45, gaten={"Z": [(14.4, 16.0, 2.3)], "O": [(-306.6, -305.0, 2.3)]})
     # open gang (binnenplaatsje) tussen de uitgang van de instaphal en het halletje: tegelvloer
     prisma("vloertegel", [L(12.5, -321.75), L(17.4, -321.75), L(17.4, -316.0), L(12.5, -316.0)], -0.25, 0.12)
     quad("dak", [L(10.15, -315.55) + Vector((0, 0, 2.88)), L(17.4, -315.55) + Vector((0, 0, 2.88)), L(17.4, -301.35) + Vector((0, 0, 2.88)), L(10.15, -301.35) + Vector((0, 0, 2.88))])
