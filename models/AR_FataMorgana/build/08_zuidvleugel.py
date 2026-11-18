@@ -18,7 +18,7 @@ T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matg
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
-X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -348.4, -350.0     # voorkant palen, achterwand wachtrijhal, achterkant
+X0, X1, YV, YA, YZ = 17.2, 58.0, -339.8, -349.4, -350.0     # voorkant palen, achterwand wachtrijhal (zo diep als het dak: AHN tot -350), achterkant
 H = 4.3
 
 
@@ -65,22 +65,35 @@ def bouw():
     # vloer (dambord tegels) en plafond met bollampen
     prisma("vloertegel", [L(X0, YA), L(X1, YA), L(X1, YV + 0.1), L(X0, YV + 0.1)], -0.25, 0.12)   # 12 cm boven het terrein
     quad("stucvlak", [L(X0, YA) + Vector((0, 0, 3.3)), L(X0, YV) + Vector((0, 0, 3.3)), L(X1, YV) + Vector((0, 0, 3.3)), L(X1, YA) + Vector((0, 0, 3.3))])
-    for y in (-342.2, -346.0):
+    for y in (-342.6, -347.0):
         x = X0 + 2.0
         while x < X1 - 1.0:
             p = L(x, y)
             lathe("lampmetaal", [(0.02, 0.0), (0.02, 0.35)], 2.95, 6, (p.x, p.y))
             lathe("matglas", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.3, 0.17))], 2.78, 12, (p.x, p.y))
             x += 3.4
-    # groene hekken: zigzagbanen evenwijdig aan de achterwand, afwisselend open aan oost- en westkant
-    rijen = [-341.3 - 0.85 * i for i in range(8)]
-    for i, y in enumerate(rijen):
-        xa, xb = (X0 + 2.5, X1 - 3.0) if i % 2 == 0 else (X0 + 4.0, X1 - 1.5)
-        prisma("hekgroen", [L(xa, y - 0.025), L(xb, y - 0.025), L(xb, y + 0.025), L(xa, y + 0.025)], 0.97, 1.03)
-        x = xa
-        while x <= xb + 0.01:
-            prisma("hekgroen", [L(x - 0.025, y - 0.025), L(x + 0.025, y - 0.025), L(x + 0.025, y + 0.025), L(x - 0.025, y + 0.025)], 0.0, 1.0)
-            x += 2.4
+    # groene hekken (Daan 18 nov: "de rij staat andersom, niet horizontaal maar verticaal, niet breed genoeg en sluit niet aan op de
+    # hekken en de ingang"): banen van 1,2 m van voor naar achter (noord-zuid), afwisselend open bij de achterwand en bij de voorkant.
+    # Ingang van de rij aan de oostkant (opening in het voorhek), zigzag naar het westen, uitloop bij de veranda (12_veranda) naar de
+    # zijdeur in de minaret.
+    def hek(xa, ya, xb, yb):
+        a, b = L(xa, ya), L(xb, yb); d = (b - a); lg = d.length; t = d / lg; nn = Vector((-t.y, t.x, 0)) * 0.025
+        prisma("hekgroen", [a - nn, b - nn, b + nn, a + nn], 0.97, 1.03)
+        k = max(1, round(lg / 2.4))
+        for i in range(k + 1):
+            q = a + d * (i / k)
+            prisma("hekgroen", [q + Vector((sx, sy, 0)) * 0.025 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.0)
+    YH, YB = -340.35, YA + 0.25              # voorhek (achter de palen), achterkant van de banen
+    XW, XO = 21.0, 54.6                      # westelijkste en oostelijkste baanhek
+    hek(XW, YH, XO - 1.2, YH)                # voorhek; tussen XO-1,2 en XO de ingang van de rij
+    hek(XO, YH, XO, YB)                      # oostgrens van de banen
+    n = round((XO - XW) / 1.2); bw = (XO - XW) / n
+    for i in range(1, n):
+        x = XO - i * bw
+        if i % 2 == 1: hek(x, YH, x, YB + 1.25)          # baan 1 loopt naar achteren: keren bij de achterwand
+        else: hek(x, YH - 1.25, x, YB)                    # keren aan de voorkant
+    hek(XW, YH - 1.25, XW, YB)                            # laatste baan: uitloop aan de voorkant, westwaarts naar de veranda
+    hek(X0 + 0.4, YB, XW, YB)                             # achterkant van de uitloop
     # dakrand boven de palen: lijst + fries (blauw-wit tegelwerk) + rode randen; dak
     vv = Vlak(L(X0, YV), Vector((1, 0, 0)), Vector((0, 1, 0)))
     prisma("wit", [L(X0 - 0.1, YV - 0.25), L(X1 + 0.1, YV - 0.25), L(X1 + 0.1, YV + 0.1), L(X0 - 0.1, YV + 0.1)], 3.3, H)

@@ -74,11 +74,7 @@ def bouw():
     for i in range(1, k):
         y = h0 - (h0 - h1) * i / k
         prisma("donker", [L(XV + 0.035, y - 0.01), L(XV + 0.065, y - 0.01), L(XV + 0.065, y + 0.01), L(XV + 0.035, y + 0.01)], 0.12, 0.98)
-    # tussenhek in de rij (zigzag van de wachtrij), evenwijdig aan de muur
-    for x in (18.7,):
-        prisma("donker", [L(x - 0.02, YZ + 1.6), L(x + 0.02, YZ + 1.6), L(x + 0.02, YN - 1.2), L(x - 0.02, YN - 1.2)], 0.96, 1.0)
-        for y in (YZ + 1.6, (YZ + YN) / 2 + 0.2, YN - 1.2):
-            prisma("donker", [L(x - 0.03, y - 0.03), L(x + 0.03, y - 0.03), L(x + 0.03, y + 0.03), L(x - 0.03, y + 0.03)], 0.0, 1.0)
+    # geen tussenhek: de rij komt uit de wachtrijhal (zuid) en loopt rechtdoor naar de zijdeur in de minaret (noord)
 
 
 def objecten():

@@ -83,6 +83,12 @@ rondboogramen van matglas, lijsten op 1,15 en 2,1 m; witte plafondplaat op 3,3 m
 (FM_vloertegel); groene zigzaghekken in 8 banen evenwijdig aan de achterwand. Texturen: build/13t_wachtrij.py.
 Asset zuidvleugel 83780141937006. Nieuwe rollen in plaats_modellen: vloertegel, matglas, schildering, hekgroen.
 Let op: Roblox toont de bollampen/ramen op afstand pas na laden (LOD); dichtbij kijken.
+Stap 12b (Daan: "de rij staat andersom, niet horizontaal maar verticaal, niet breed genoeg, sluit niet aan op de hekken en de
+ingang"): banen nu van voor naar achter (noord-zuid), 1,2 m breed, 28 banen tussen x 21 en 54,6; hal dieper (achterwand y -349,4).
+Route: ingang van de rij = opening in het voorhek aan de oostkant (x 53,4..54,6), zigzag westwaarts (keren afwisselend bij de
+achterwand en aan de voorkant), laatste baan komt aan de voorkant uit, westwaarts naar de veranda, rechtdoor naar de zijdeur in de
+minaret (tussenhek in de veranda weg). Op rustige dagen: opening in het verandahek op de zuidoosthoek. Assets: zuidvleugel
+77259417793952, veranda 90836151957540.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
