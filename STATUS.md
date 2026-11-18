@@ -31,8 +31,11 @@ rode zigzagfries), wit balkon met vier bollen, witte schacht 3,2 m met donkere h
 (borstwering tot 20 m), lantaarntje 2,2 m met boogopeningen, geribde turquoise koepel, gouden spits met halve maan. Deur naar het
 plein (oost). Alleen grond direct onder de minaret (Daan: "niet een heel plein maken, gewoon alles wat te maken heeft met het uiterlijk
 van de fata morgana"): roblox/plaats_minaret_terrein.luau. Herladen: plaats_modellen.luau (DELEN Toren/Noordgevel/Minaret).
-Volgende stukken (alleen het gebouw, geen plein): ingangsgebouw met blauwe koepel + kantelenmuur naar de minaret, oost- en
-achterkant, koepels op het dak.
+Stap 4 — ingangsgebouw (build/05_ingang.py): x 17,5..24,5, y -301..-314 (luchtfoto), 3 m muur + golvende Moorse dakrand met
+dikke rood-oranje rand en grote kielboog boven het portaal, voorportaal met 4 rode zuilen en bogen (oost, naar het plein), donkere
+ingang, winkelraam met roedes, raampjes met rode omlijsting, hemelsblauwe koepel (5 m) met gouden spits. Alleen grond onder de
+plattegrond. Les: gevelvlakken in 05 eerst met de klok mee -> losse vlakken naar binnen; altijd tegen de klok in (buiten = links).
+Volgende stukken (alleen het gebouw): kantelenmuur tussen ingang en minaret, oost- en achterkant, koepels op het dak.
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/

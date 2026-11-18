@@ -3,7 +3,7 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 93537759416227, Noordgevel = 108509340106987, Minaret = 103454423403658}
+local DELEN = {Toren = 93537759416227, Noordgevel = 108509340106987, Minaret = 103454423403658, Ingang = 137939058457250}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
@@ -30,7 +30,10 @@ local R = {
 	-- minaret (04_minaret)
 	zandsteen = {"lijst_kleur", "stuc_normaal", Color3.fromRGB(240, 222, 192), Enum.Material.Sandstone, true},
 	wit = {"lijst_kleur", "stuc_normaal", Color3.fromRGB(255, 253, 248), Enum.Material.Plaster, true},
-	rood = {nil, nil, Color3.fromRGB(168, 46, 36), Enum.Material.SmoothPlastic, true},
+	rood = {nil, nil, Color3.fromRGB(186, 66, 42), Enum.Material.SmoothPlastic, true},
+	-- ingangsgebouw (05_ingang)
+	witvlak = {"lijst_kleur", "stuc_normaal", Color3.fromRGB(255, 253, 248), Enum.Material.Plaster, true},
+	koepel_blauw = {nil, nil, Color3.fromRGB(104, 172, 214), Enum.Material.SmoothPlastic, true, 0.15},
 	donker = {nil, nil, Color3.fromRGB(30, 40, 56), Enum.Material.SmoothPlastic, true},
 	zellige = {"zellige", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true, 0.06},
 	zigzag = {"zigzag", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, true},
