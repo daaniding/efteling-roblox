@@ -6,6 +6,8 @@
 -- Ronde: instappen T_IN s (eigen prompt "Board" per boot, alleen als de boot vrij is; instappoort open), rit T_RIT s,
 -- uitstappen T_UIT s: direct zwart beeld "Welcome back in port" en je staat op de brug voorbij de uitstappoort (Daan 18 nov:
 -- "doe gewoon gelijk zwart beeld"). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
+-- Zelf draaien: client stuurt (hoek, snelheid) van zijn eigen boot via RemoteEvent ReplicatedStorage.SiroccoDraai; de server
+-- controleert dat je echt in die boot zit en dat de rit draait, en zet X_<boot> = (hoek, snelheid, servertijd) op Rit.
 -- Zolang niemand zit houdt de server de klok vast op WACHT (instappen blijft open); daarna nog T_IN - WACHT s.
 -- Fasen moeten gelijk zijn aan SiroccoRitClient.
 local Players = game:GetService("Players")
@@ -123,6 +125,30 @@ for _, st in stoelen do
 	st:GetPropertyChangedSignal("Occupant"):Connect(function() bijwerken(fase((klok()))) end)
 end
 
+-- zelf draaien
+local draaiEvent = game:GetService("ReplicatedStorage"):FindFirstChild("SiroccoDraai") :: RemoteEvent?
+if not draaiEvent then
+	local re = Instance.new("RemoteEvent"); re.Name = "SiroccoDraai"; re.Parent = game:GetService("ReplicatedStorage"); draaiEvent = re
+end
+local laatst: {[Player]: number} = {}
+Players.PlayerRemoving:Connect(function(plr) laatst[plr] = nil end)
+;(draaiEvent :: RemoteEvent).OnServerEvent:Connect(function(plr: Player, hoek: unknown, w: unknown)
+	if typeof(hoek) ~= "number" or typeof(w) ~= "number" or hoek ~= hoek or w ~= w or math.abs(hoek) > 1e4 then return end
+	local nu = workspace:GetServerTimeNow()
+	if nu - (laatst[plr] or 0) < 0.05 then return end
+	laatst[plr] = nu
+	if fase((klok())) ~= "rit" then return end
+	local ch = plr.Character
+	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
+	local zit = hum and hum.SeatPart
+	if not (zit and zit:IsDescendantOf(rit)) then return end
+	local boot = zit.Name:match("_rt(%a+)$")
+	if boot then rit:SetAttribute("X_" .. boot, Vector3.new(hoek, math.clamp(w, -3, 3), nu)) end
+end)
+local function draaiWissen()
+	for naam in rit:GetAttributes() do if naam:sub(1, 2) == "X_" then rit:SetAttribute(naam, nil) end end
+end
+
 local function iemandAanBoord(): boolean
 	for _, st in stoelen do if st.Occupant then return true end end
 	return false
@@ -140,9 +166,11 @@ while true do
 	rit:SetAttribute("Wacht", tc >= WACHT and tc < WACHT + 1)
 	if f ~= vorige then
 		if f == "rit" then
+			draaiWissen()
 			wegVanDeSchijf("Take a seat in a boat to ride", false)   -- wie los op de schijf staat, mag niet mee draaien
 		elseif f == "uitstappen" then
 			wegVanDeSchijf("Welcome back in port", true)                -- direct zwart beeld en naar de brug
+			draaiWissen()
 		end
 		vorige = f
 		bijwerken(f)

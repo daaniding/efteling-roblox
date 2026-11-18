@@ -5,6 +5,7 @@
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
 -- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
+-- - ReplicatedStorage.SiroccoDraai (RemoteEvent, maakt SiroccoRit zelf aan als hij ontbreekt)
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
 local S = 3
 local sir = workspace:WaitForChild("Sirocco")
@@ -84,6 +85,7 @@ local T = {
 	{"Welcome back in port", "Welkom terug in de haven"},
 	{"The attendant walks you to the exit", "De medewerker brengt je naar de uitgang"},
 	{"Take a seat in a boat to ride", "Neem plaats in een boot om mee te varen"},
+	{"Spin your boat: A / D", "Draai je boot: A / D"}, {"Spin your boat with the arrows", "Draai je boot met de pijltjes"},
 }
 local entries = {}
 for _, t in T do table.insert(entries, {Key = "", Source = t[1], Context = "", Values = {nl = t[2]}}) end
@@ -101,6 +103,8 @@ zet(game:GetService("ServerScriptService"), "Script", "SiroccoRit", [==[--!stric
 -- Ronde: instappen T_IN s (eigen prompt "Board" per boot, alleen als de boot vrij is; instappoort open), rit T_RIT s,
 -- uitstappen T_UIT s: direct zwart beeld "Welcome back in port" en je staat op de brug voorbij de uitstappoort (Daan 18 nov:
 -- "doe gewoon gelijk zwart beeld"). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
+-- Zelf draaien: client stuurt (hoek, snelheid) van zijn eigen boot via RemoteEvent ReplicatedStorage.SiroccoDraai; de server
+-- controleert dat je echt in die boot zit en dat de rit draait, en zet X_<boot> = (hoek, snelheid, servertijd) op Rit.
 -- Zolang niemand zit houdt de server de klok vast op WACHT (instappen blijft open); daarna nog T_IN - WACHT s.
 -- Fasen moeten gelijk zijn aan SiroccoRitClient.
 local Players = game:GetService("Players")
@@ -218,6 +222,30 @@ for _, st in stoelen do
 	st:GetPropertyChangedSignal("Occupant"):Connect(function() bijwerken(fase((klok()))) end)
 end
 
+-- zelf draaien
+local draaiEvent = game:GetService("ReplicatedStorage"):FindFirstChild("SiroccoDraai") :: RemoteEvent?
+if not draaiEvent then
+	local re = Instance.new("RemoteEvent"); re.Name = "SiroccoDraai"; re.Parent = game:GetService("ReplicatedStorage"); draaiEvent = re
+end
+local laatst: {[Player]: number} = {}
+Players.PlayerRemoving:Connect(function(plr) laatst[plr] = nil end)
+;(draaiEvent :: RemoteEvent).OnServerEvent:Connect(function(plr: Player, hoek: unknown, w: unknown)
+	if typeof(hoek) ~= "number" or typeof(w) ~= "number" or hoek ~= hoek or w ~= w or math.abs(hoek) > 1e4 then return end
+	local nu = workspace:GetServerTimeNow()
+	if nu - (laatst[plr] or 0) < 0.05 then return end
+	laatst[plr] = nu
+	if fase((klok())) ~= "rit" then return end
+	local ch = plr.Character
+	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
+	local zit = hum and hum.SeatPart
+	if not (zit and zit:IsDescendantOf(rit)) then return end
+	local boot = zit.Name:match("_rt(%a+)$")
+	if boot then rit:SetAttribute("X_" .. boot, Vector3.new(hoek, math.clamp(w, -3, 3), nu)) end
+end)
+local function draaiWissen()
+	for naam in rit:GetAttributes() do if naam:sub(1, 2) == "X_" then rit:SetAttribute(naam, nil) end end
+end
+
 local function iemandAanBoord(): boolean
 	for _, st in stoelen do if st.Occupant then return true end end
 	return false
@@ -235,9 +263,11 @@ while true do
 	rit:SetAttribute("Wacht", tc >= WACHT and tc < WACHT + 1)
 	if f ~= vorige then
 		if f == "rit" then
+			draaiWissen()
 			wegVanDeSchijf("Take a seat in a boat to ride", false)   -- wie los op de schijf staat, mag niet mee draaien
 		elseif f == "uitstappen" then
 			wegVanDeSchijf("Welcome back in port", true)                -- direct zwart beeld en naar de brug
+			draaiWissen()
 		end
 		vorige = f
 		bijwerken(f)
@@ -254,10 +284,17 @@ zet(game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"), "Loca
 -- Beleving (Daan 18 nov): titel bij het instappen, "Hold on tight!" bij vertrek, na de rit direct zwart (server); eigen
 -- instapknop (ProximityPrompt Style Custom); klapdeuren bij instap (open tijdens het instappen) en uitstap (open tijdens het
 -- uitstappen), scharnier + hoek als attribuut op de deur (sirocco_rit.luau). Teksten Engels, nl in SiroccoTeksten.
+-- Zelf draaien (Daan 18 nov: "kan ik mijn karretje zelf laten draaien"): tijdens de rit A/D (pijltjes, L1/R1, op mobiel twee
+-- knoppen) geeft je boot extra draai met vaart en uitlopen. Je eigen boot reageert direct; de stand gaat via RemoteEvent
+-- SiroccoDraai naar de server, die hem als attribuut X_<boot> = (hoek, snelheid, servertijd) op Rit zet voor de anderen.
+-- Bij het uitlopen draait elke boot terug naar een hele omwenteling, zodat hij weer in de instapstand eindigt.
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local PPS = game:GetService("ProximityPromptService")
+local CAS = game:GetService("ContextActionService")
+local UIS = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 8, 5      -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
 local CYCLUS = T_IN + T_RIT + T_UIT
@@ -501,23 +538,87 @@ local vorigStoel: CFrame? = nil
 local springUit = false
 local vorigeFase = ""
 local wasInBoot = false
+local gemeld = false
 plr.CharacterAdded:Connect(function() springUit = false; vorigStoel = nil; wasInBoot = false end)
 
-RunService.PreSimulation:Connect(function()
+-- ===== zelf draaien =====
+local draaiEvent = ReplicatedStorage:WaitForChild("SiroccoDraai") :: RemoteEvent
+local MAX_W, VERSNEL, REM = 2.6, 3.2, 1.6          -- rad/s extra draai, rad/s2 aandrijven, rad/s2 uitlopen
+local eigenBoot: string? = nil
+local eigenX, eigenW = 0, 0
+local links, rechts = false, false
+local gebonden = false
+local verzonden, vorigZend = 0, 0
+local gladX: {[string]: number} = {}
+local function knop(naam: string, state: Enum.UserInputState): Enum.ContextActionResult
+	local aan = state == Enum.UserInputState.Begin
+	if state == Enum.UserInputState.Cancel then aan = false end
+	if naam == "SiroccoLinks" then links = aan else rechts = aan end
+	return Enum.ContextActionResult.Sink
+end
+local function binden(aan: boolean)
+	if aan == gebonden then return end
+	gebonden = aan
+	if aan then
+		CAS:BindActionAtPriority("SiroccoLinks", knop, true, 3000, Enum.KeyCode.A, Enum.KeyCode.Left, Enum.KeyCode.ButtonL1)
+		CAS:BindActionAtPriority("SiroccoRechts", knop, true, 3000, Enum.KeyCode.D, Enum.KeyCode.Right, Enum.KeyCode.ButtonR1)
+		CAS:SetTitle("SiroccoLinks", "<"); CAS:SetTitle("SiroccoRechts", ">")
+		CAS:SetPosition("SiroccoLinks", UDim2.new(1, -230, 1, -130)); CAS:SetPosition("SiroccoRechts", UDim2.new(1, -120, 1, -130))
+	else
+		CAS:UnbindAction("SiroccoLinks"); CAS:UnbindAction("SiroccoRechts")
+		links, rechts = false, false
+	end
+end
+local function extraVan(n: string, nu: number, dt: number): number
+	if n == eigenBoot then return eigenX end
+	local x = rit:GetAttribute("X_" .. n) :: Vector3?
+	local doel = 0
+	if x then doel = x.X + x.Y * math.clamp(nu - x.Z, 0, 0.3) end
+	local g = gladX[n] or doel
+	if math.abs(doel - g) > 3 then g = doel end
+	g += (doel - g) * math.min(1, dt * 10)
+	gladX[n] = g
+	return g
+end
+
+RunService.PreSimulation:Connect(function(dt: number)
 	local start = rit:GetAttribute("RitStart") :: number?
 	if not start then return end
-	local tc = (workspace:GetServerTimeNow() - start) % CYCLUS
+	local nu = workspace:GetServerTimeNow()
+	local tc = (nu - start) % CYCLUS
 	local rijdt = tc >= T_IN and tc < T_IN + T_RIT
 	local F, v = 0, 0
 	if rijdt then F, v = voortgang(tc - T_IN) end
-	if F ~= vorigF or v ~= vorigV then
+	local ch = plr.Character
+	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
+	local zit = hum and hum.SeatPart
+	local inBoot = zit ~= nil and zit:IsDescendantOf(rit)
+	-- eigen boot: aandrijven alleen op volle vaart (niet bij optrekken/uitlopen), daarna uitlopen
+	eigenBoot = inBoot and zit and zit.Name:match("_rt(%a+)$") or nil
+	local mag = inBoot and rijdt and tc - T_IN > RAMP and tc - T_IN < T_RIT - RAMP
+	binden(mag)
+	if eigenBoot and rijdt then
+		local invoer = mag and ((rechts and 1 or 0) - (links and 1 or 0)) or 0
+		if invoer ~= 0 then eigenW = math.clamp(eigenW + invoer * VERSNEL * dt, -MAX_W, MAX_W)
+		else eigenW -= math.sign(eigenW) * math.min(math.abs(eigenW), REM * dt) end
+		eigenX += eigenW * dt
+		if nu - verzonden > 0.1 and (math.abs(eigenX - vorigZend) > 1e-3 or eigenW ~= 0) then
+			draaiEvent:FireServer(eigenX, eigenW); verzonden = nu; vorigZend = eigenX
+		end
+	else
+		eigenX, eigenW, vorigZend = 0, 0, 0
+	end
+	if rijdt or F ~= vorigF or v ~= vorigV then
 		T.m = draai(MIDDEN, OMW_M * TAU * F)
+		local uitloop = rijdt and tc - T_IN > T_RIT - RAMP
 		for _, n in NAMEN do
 			local g = groepen[n]
 			if n:sub(1, 1) == "s" then T[n] = T.m * draai(g.P, OMW_S * TAU * F)
 			elseif n:sub(1, 1) == "b" then
 				local P = g.P
-				T[n] = T[g.ouder :: string] * CFrame.new(P) * CFrame.Angles(0, bootHoek(g.i, F), 0) * dobber(g.i, tc, v) * CFrame.new(-P)
+				local x = rijdt and extraVan(n, nu, dt) or 0
+				if uitloop then local doel = math.round(x / TAU) * TAU; x = doel + (x - doel) * v end   -- terug naar instapstand
+				T[n] = T[g.ouder :: string] * CFrame.new(P) * CFrame.Angles(0, bootHoek(g.i, F) + x, 0) * dobber(g.i, tc, v) * CFrame.new(-P)
 			end
 		end
 		for k, p in delen do cfs[k] = T[groepVan[k]] * rust[k] end
@@ -537,10 +638,6 @@ RunService.PreSimulation:Connect(function()
 		deurStand.in_, deurStand.uit = openIn, openUit
 	end
 	-- eigen speler in een boot: camera mee, niet uit de boot springen tot het uitstappen, geen andere instapknoppen
-	local ch = plr.Character
-	local hum = ch and ch:FindFirstChildOfClass("Humanoid")
-	local zit = hum and hum.SeatPart
-	local inBoot = zit ~= nil and zit:IsDescendantOf(rit)
 	if inBoot and zit then
 		local cf = zit.CFrame
 		if vorigStoel then
@@ -561,9 +658,14 @@ RunService.PreSimulation:Connect(function()
 	local f = tc < T_IN and "instappen" or (rijdt and "rit" or "uitstappen")
 	if inBoot and not wasInBoot and f == "instappen" then toonTitel("Welcome aboard, sailor", 4) end
 	if f ~= vorigeFase then
-		if f == "rit" and inBoot then meld("Hold on tight!", 2.5)
-		end
+		if f == "rit" and inBoot then meld("Hold on tight!", 2.5) end
+		gemeld = false
 		vorigeFase = f
+	end
+	if mag and not gemeld then                        -- uitleg zodra je zelf mag draaien
+		gemeld = true
+		local touch = UIS.TouchEnabled and not UIS.KeyboardEnabled
+		meld(touch and "Spin your boat with the arrows" or "Spin your boat: A / D", 5)
 	end
 	wasInBoot = inBoot
 end)

@@ -1525,6 +1525,11 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   dicht = botsen. Z-fighting brug: de stenen vijverrand liep onder de brug door op exact bestratingshoogte (overgeslagen) en het
   terrein (gras/modder) kwam door de bestrating (onder de brug nu bovenste voxellaag leeg, ook in plaats_sirocco).
   Getest in Play: poorten open/dicht, rit, zwart beeld, op de brug, camera naar het zuiden.
+- Zelf draaien (18 nov, Daan: "kan ik mijn karretje zelf laten draaien"): tijdens de rit op volle vaart A/D (pijltjes, L1/R1,
+  op mobiel twee knoppen via ContextActionService) = extra draai met vaart (max 2,6 rad/s) en uitlopen; eigen boot direct op je
+  scherm, stand via RemoteEvent ReplicatedStorage.SiroccoDraai naar de server (controleert dat je in die boot zit) -> attribuut
+  X_<boot> op Rit voor de andere spelers; bij het uitlopen draait elke boot terug naar een hele omwenteling (instapstand).
+  Uitleg in beeld "Spin your boat: A / D" (nl vertaald). Getest in Play met echte toetsaanslagen.
 - VOLGENDE: Daans oordeel over snelheid/knop/uitstappen; bezoekers in de boten (Park.registreer Sirocco); geluid (bel, water);
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

@@ -5,6 +5,7 @@
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
 -- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
+-- - ReplicatedStorage.SiroccoDraai (RemoteEvent, maakt SiroccoRit zelf aan als hij ontbreekt)
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
 local S = 3
 local sir = workspace:WaitForChild("Sirocco")
@@ -84,6 +85,7 @@ local T = {
 	{"Welcome back in port", "Welkom terug in de haven"},
 	{"The attendant walks you to the exit", "De medewerker brengt je naar de uitgang"},
 	{"Take a seat in a boat to ride", "Neem plaats in een boot om mee te varen"},
+	{"Spin your boat: A / D", "Draai je boot: A / D"}, {"Spin your boat with the arrows", "Draai je boot met de pijltjes"},
 }
 local entries = {}
 for _, t in T do table.insert(entries, {Key = "", Source = t[1], Context = "", Values = {nl = t[2]}}) end
