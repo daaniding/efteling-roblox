@@ -16,7 +16,7 @@ FM_balkon_kleur 115587625989953
 AR_FataMorgana_ingang 115016590222449
 AR_FataMorgana_kantelen 97214135684394
 AR_FataMorgana_koepelgebouw 83588828374633
-AR_FataMorgana_zuidvleugel 79597442500625
+AR_FataMorgana_zuidvleugel 81252503099465
 FM_fries_kleur 96873829333423
 AR_FataMorgana_westkant 118665351344067
 AR_FataMorgana_achterkant 119797591567252

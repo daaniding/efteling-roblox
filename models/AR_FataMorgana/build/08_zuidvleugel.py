@@ -13,7 +13,7 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:08_zuidvleugel"
 T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
-                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15)})
+                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12)})
 T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
@@ -95,9 +95,37 @@ def bouw():
         if k == K: hek(x, YF, x, YW)                                 # oostgrens: dicht
         elif k % 2 == 0: hek(x, YF, x, YR)                           # achter open (ook hek 0: uitloop naar het westvak)
         else: hek(x, YF - BW, x, YW)                                 # voor open
-    XI = X0B + BW * (K - 1)                                          # ingang: opening in het voorhek tussen XI en XI + BW
+    XO = X0B + BW * (K - 1)                                          # oude ingang aan de oostkop (nu met touw dicht)
+    # Daan: "het duurt wel lang om het te lopen" -> zoals de Efteling op rustige dagen: alleen de westelijke banen open, de rest
+    # afgezet met paaltjes en touw. A = aantal open banen (oneven: baan 1 loopt naar achteren de uitloop in).
+    A = 9                                                           # 9: de opening valt tussen twee rode palen (bij 7 stond er een paal midden in)
+    XI = X0B + BW * (A - 1)                                          # ingang: opening in het voorhek tussen XI en XI + BW
+
+    def touwpaal(x, y):
+        p = L(x, y)
+        lathe("donker", [(0.11, 0.0), (0.11, 0.04), (0.035, 0.07), (0.03, 0.92), (0.05, 0.95), (0.0, 0.97)], 0.0, 10, (p.x, p.y))
+        lathe("goud", [(r * 0.06, z) for r, z in ((0.0, -0.06), (0.7, -0.04), (1.0, 0.0), (0.7, 0.04), (0.0, 0.06))], 1.02, 10, (p.x, p.y))
+
+    def touw(xa, ya, xb, yb, z=0.9, zak=0.14):
+        pts = [L(xa + (xb - xa) * k / 12, ya + (yb - ya) * k / 12) + Vector((0, 0, z - zak * 4 * (k / 12) * (1 - k / 12))) for k in range(13)]
+        bm = T["G"]["hout"]
+        for a, b in zip(pts, pts[1:]):
+            d = (b - a); m = (a + b) / 2; hl = d.length / 2 + 0.01
+            t_ = d.normalized(); x_ = t_.cross(Vector((0, 0, 1))).normalized() * 0.018; zz = x_.cross(t_).normalized() * 0.018
+            ra = [bm.verts.new(m - t_ * hl + x_ * sx + zz * sz) for sx, sz in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+            rb = [bm.verts.new(m + t_ * hl + x_ * sx + zz * sz) for sx, sz in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+            for k in range(4):
+                j = (k + 1) % 4; f = bm.faces.new([ra[k], ra[j], rb[j], rb[k]]); f.normal_update()
+                if (f.calc_center_median() - m).dot(f.normal) < 0: f.normal_flip()
+            fa = bm.faces.new(ra[::-1]); fb = bm.faces.new(rb); fa.normal_update(); fb.normal_update()
+            if fa.normal.dot(-t_) < 0: fa.normal_flip()
+            if fb.normal.dot(t_) < 0: fb.normal_flip()
+
+    touw(XO, YF, XO + BW, YF)                                        # oude ingang dicht
+    touwpaal(X0B + BW * A, YF - BW + 0.05)                           # doorgang van de laatste open baan naar de volgende: touw
+    touw(X0B + BW * A, YF, X0B + BW * A, YF - BW + 0.05)
     # voorhek tussen de palen: zwart smeedwerk met rode plaquettes met ster (video), opening voor de ingang bij x 20,8..22
-    for xa, xb in ((20.7, XI), (XI + BW, X1 - 0.3)):
+    for xa, xb in ((20.7, XI), (XI + BW, XO), (XO + BW, X1 - 0.3)):
         for z in (0.1, 1.0):
             prisma("donker", [L(xa, YF - 0.025), L(xb, YF - 0.025), L(xb, YF + 0.025), L(xa, YF + 0.025)], z - 0.03, z + 0.03)
         x = xa
@@ -109,7 +137,7 @@ def bouw():
             for rol, hw, n0, n1 in (("rood", 0.21, 0.03, 0.06), ("wit", 0.13, 0.06, 0.075), ("goud", 0.06, 0.075, 0.09)):
                 prisma(rol, [L(x - hw, YF + n0), L(x + hw, YF + n0), L(x + hw, YF + n1), L(x - hw, YF + n1)], 0.55 - hw, 0.55 + hw)
             x += 2.6
-    for xx in (XI, XI + BW):                             # ingangspaaltjes met crème bollen
+    for xx in (XI, XI + BW, XO, XO + BW):                # paaltjes met crème bollen bij de ingang en de afgesloten oude ingang
         p = L(xx, YF)
         prisma("donker", [p + Vector((sx, sy, 0)) * 0.05 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.1)
         lathe("wit", [(r * 0.09, z) for r, z in ((0.0, -0.09), (0.7, -0.06), (1.0, 0.0), (0.7, 0.06), (0.0, 0.09))], 1.2, 10, (p.x, p.y))
@@ -158,7 +186,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "matglas"):
+        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "matglas", "hout"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]

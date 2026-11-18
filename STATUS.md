@@ -108,6 +108,10 @@ met gouden knop en een doorhangend touw; schildvormig bord met blauwe rand en go
 altijd via de ingang aan de oostkant door de wachtrijhal. Asset veranda 72481974604568.
 Ondergrond (Daan: "er is nog niet genoeg ondergrond"): terrein (Ground + Pavement, Y 1,0) aangevuld over x 16..62, y -353..-318:
 het plein voor de wachtrijhal en rond de oostkop van de hal.
+Kortere rij (Daan: "het duurt wel lang om het te lopen" -> optie 1, zoals de Efteling op rustige dagen): alleen de 9 westelijkste
+banen open (constante A in 08_zuidvleugel), ingang in het voorhek bij x 31,6..32,8 (valt tussen twee rode palen; bij 7 banen stond
+er een paal midden in de opening); de oude ingang aan de oostkop en de doorgang naar baan 10 dicht met paaltjes en touw. De rest
+van de hal staat er nog vol hekken. Asset zuidvleugel 81252503099465.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
