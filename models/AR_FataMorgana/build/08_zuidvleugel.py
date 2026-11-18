@@ -13,8 +13,8 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:08_zuidvleugel"
 T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
-                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0})
+                   "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries", "schildering", "bord")
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -32,12 +32,12 @@ def paneel(rol, vl, u0, u1, v0, v1, n, su, sv, dv=0.0):
 
 def bouw():
     # achterblok (kern) achter de wachtrijhal, tot de achterkant
-    prisma("stuc", [L(X0, YZ), L(X1, YZ), L(X1, YA), L(X0, YA)], 0.0, H - 0.3)
+    prisma("stuc", [L(X0, YZ), L(X1, YZ), L(X1, YA - 0.15), L(X0, YA - 0.15)], 0.0, H - 0.3)   # kern eindigt in de achterwand (geen gedeeld vlak)
     # achterwand van de wachtrijhal (foto Daan): pilasters met smalle spitse nis, per vak een geschilderd paneel met blauwe
     # tegelrand en twee hoge rondboogramen van matglas, lijsten op 1,15 en 2,1 m
     aw = Vlak(L(X0, YA), Vector((1, 0, 0)), Vector((0, 1, 0)))
     lw = X1 - X0
-    prisma("wit", [L(X0, YA - 0.3), L(X1, YA - 0.3), L(X1, YA), L(X0, YA)], 0.0, 3.35)
+    prisma("wit", [L(X0, YA - 0.3), L(X1 - 0.45, YA - 0.3), L(X1 - 0.45, YA), L(X0, YA)], 0.0, 3.35)   # oosteinde in de oostgevel
     strip("lijst", aw, [(0.0, 1.15), (lw, 1.15)], 0.1, 0.05); strip("lijst", aw, [(0.0, 2.1), (lw, 2.1)], 0.08, 0.05)
     nvak = 8; bv = lw / nvak
     for k in range(nvak + 1):                               # pilasters
@@ -72,7 +72,7 @@ def bouw():
         while x < X1 - 1.0:
             p = L(x, y)
             lathe("lampmetaal", [(0.02, 0.0), (0.02, 0.35)], 2.95, 6, (p.x, p.y))
-            lathe("matglas", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.3, 0.17))], 2.78, 12, (p.x, p.y))
+            lathe("bollamp", [(r * 0.17, z) for r, z in ((0.0, -0.17), (0.7, -0.12), (1.0, 0.0), (0.7, 0.13), (0.3, 0.17))], 2.78, 12, (p.x, p.y))
             x += 3.4
     # hekken binnen (video "Verlengde wachtrij - Fata Morgana 2020"): banen evenwijdig aan de achterwand. Ingang van de rij in het
     # voorhek aan de westkant (x 20,8..22, naast de veranda en het ronde bord), baan 1 langs de voorkant naar het oosten, keren,
@@ -161,7 +161,7 @@ def bouw():
     # erachter de gevel van het blok tot het dak (4,3 m) met witte borstwering
     yv, ya_, zv, za_ = YV + 0.55, YV - 0.9, 3.22, 3.95
     bm = T["G"]["fries"]; uvl = bm.loops.layers.uv.verify(); lsch = math.hypot(yv - ya_, za_ - zv)
-    pts = [L(X0 - 0.1, yv) + Vector((0, 0, zv + 0.08)), L(X1 + 0.1, yv) + Vector((0, 0, zv + 0.08)), L(X1 + 0.1, ya_) + Vector((0, 0, za_ + 0.08)), L(X0 - 0.1, ya_) + Vector((0, 0, za_ + 0.08))]
+    pts = [L(X0 - 0.1, yv) + Vector((0, 0, zv + 0.11)), L(X1 + 0.1, yv) + Vector((0, 0, zv + 0.11)), L(X1 + 0.1, ya_) + Vector((0, 0, za_ + 0.11)), L(X0 - 0.1, ya_) + Vector((0, 0, za_ + 0.11))]   # 5 cm boven de luifelplaat
     uvs = [(-0.1 / 1.8, 0.0), ((lw + 0.1) / 1.8, 0.0), ((lw + 0.1) / 1.8, 1.0), (-0.1 / 1.8, 1.0)]
     f = bm.faces.new([bm.verts.new(q) for q in pts[::-1]])   # omgekeerd: normaal schuin omhoog en naar voren (plein)
     for lp, t in zip(f.loops, uvs[::-1]): lp[uvl].uv = t
@@ -173,7 +173,7 @@ def bouw():
         j = (k + 1) % 4; hb.faces.new([bot[k], bot[j], top[j], top[k]])
     prisma("rood", [L(X0 - 0.12, yv - 0.04), L(X1 + 0.12, yv - 0.04), L(X1 + 0.12, yv + 0.06), L(X0 - 0.12, yv + 0.06)], zv - 0.12, zv + 0.14)
     prisma("rood", [L(X0 - 0.12, ya_ - 0.02), L(X1 + 0.12, ya_ - 0.02), L(X1 + 0.12, ya_ + 0.1), L(X0 - 0.12, ya_ + 0.1)], za_ - 0.02, za_ + 0.16)
-    prisma("stuc", [L(X0, YA), L(X1, YA), L(X1, ya_ - 0.05), L(X0, ya_ - 0.05)], 3.3, H - 0.3)
+    prisma("stuc", [L(X0, YA), L(X1, YA), L(X1, ya_ - 0.05), L(X0, ya_ - 0.05)], 3.35, H - 0.3)   # 5 cm boven het plafond
     prisma("wit", [L(X0 - 0.1, ya_ - 0.3), L(X1 + 0.1, ya_ - 0.3), L(X1 + 0.1, ya_ - 0.02), L(X0 - 0.1, ya_ - 0.02)], za_ + 0.1, H + 0.15)
     quad("dak", [L(X0 + 0.1, YZ + 0.1) + Vector((0, 0, H + 0.08)), L(X1 - 0.1, YZ + 0.1) + Vector((0, 0, H + 0.08)),
                  L(X1 - 0.1, ya_ - 0.35) + Vector((0, 0, H + 0.08)), L(X0 + 0.1, ya_ - 0.35) + Vector((0, 0, H + 0.08))])
@@ -201,7 +201,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "matglas", "hout"):
+        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "matglas", "hout", "bollamp"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]

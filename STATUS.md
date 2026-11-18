@@ -115,6 +115,13 @@ van de hal staat er nog vol hekken.
 Ingangsbord (Daan: "laat daarboven even weten dat daar de ingang is"): crème bord "Fata Morgana / INGANG" met blauwe rand en
 gouden lijst aan twee kettinkjes onder de luifel boven de opening, aan beide kanten leesbaar (FM_bord 99448957611155,
 13t_wachtrij.py). Nieuwe rol bord. Asset zuidvleugel 131209847767313.
+Z-fighting wachtrijhal (Daan: "die muur daar achter heeft z-fighting"; zfight.py): kern van het blok eindigde op hetzelfde vlak
+als de witte achterwand (nu 15 cm erin), blok boven de luifel lag op het plafond (nu 5 cm erboven), fries 2 cm boven de
+luifelplaat (nu 5 cm), witte achterwand stak tot in de oostgevel (nu 45 cm korter); veranda: dak 2 cm boven de houten plaat (nu 6).
+Wachtrijlicht (Daan: "lichtsfeer een beetje geel bruinig ... ik bedoelde de lichten bij de wachtrij"): de algemene belichting
+heb ik eerst warmer gezet en daarna weer exact terug (place-instellingen ongewijzigd). De bollampen hebben een eigen rol bollamp
+(Neon, amber 176,104,48) en eronder 24 PointLights (255,186,112; helderheid 0,45; bereik 11 studs; geen schaduw) in
+FataMorgana.Wachtrijlicht via roblox/plaats_wachtrijlicht.luau. Assets: zuidvleugel 85395946512629, veranda 105227491479681.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

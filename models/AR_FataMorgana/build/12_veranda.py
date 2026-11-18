@@ -59,8 +59,8 @@ def bouw():
         bm.faces.new(top); bm.faces.new(bot[::-1])
         for k in range(4):
             j = (k + 1) % 4; bm.faces.new([bot[k], bot[j], top[j], top[k]])
-    quad("dak", [L(XV + 0.2, YZ + 0.02) + Vector((0, 0, za + 0.12)), L(XV + 0.2, YN - 0.02) + Vector((0, 0, za + 0.12)),
-                 L(XM, YN - 0.02) + Vector((0, 0, zb + 0.12)), L(XM, YZ + 0.02) + Vector((0, 0, zb + 0.12))])   # tegen de klok in: normaal omhoog
+    quad("dak", [L(XV + 0.2, YZ + 0.02) + Vector((0, 0, za + 0.16)), L(XV + 0.2, YN - 0.02) + Vector((0, 0, za + 0.16)),
+                 L(XM, YN - 0.02) + Vector((0, 0, zb + 0.16)), L(XM, YZ + 0.02) + Vector((0, 0, zb + 0.16))])   # tegen de klok in: normaal omhoog
     # hekken langs de open kant met cremekleurige bollen; opening voor de ingang op de zuidoosthoek
     h0, h1 = YN - 0.6, YZ + 1.6
     m = int((h0 - h1) / 1.2)
