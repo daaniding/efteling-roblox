@@ -1581,6 +1581,15 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   (PlaybackLoudness bij volume 1: muziek ~300, kreet 57, steen-stap 37, water 25, gegil 20, gepraat 11, hout-stap 6; Volume
   verandert PlaybackLoudness niet). Volumes daarop afgestemd: gepraat 1.4, gegil tot 1.0 tijdens de rit, kreet 0.35,
   voetstappen per ondergrond hout 2.0 / steen 0.35 / gras 0.8.
+- SPIEGELING RECHTGEZET (18 nov): tools/uitsnede.py verwisselde rij en kolom (np.meshgrid zonder indexing='ij'), waardoor elke
+  uitsnede-luchtfoto gespiegeld was om de diagonaal (foto, niet de OSM-lijnen: daarom zag niemand het). De Sirocco-omgeving was
+  daarop gebouwd en lag dus gespiegeld; ontdekt bij de Archipel (OSM: Archipel 26 m ten ZUIDEN van de Sirocco, niet oost).
+  Hersteld: uitsnede.py (indexing='ij'); bouwdata blijft in het oude modelstelsel, 11_export spiegelt alle meshes (x, y) -> (-y, -x)
+  met flip_normals; alle Luau-omrekeningen oud (x, y) -> MIDDEN + (-3y, 3z, 3x); modelmidden nu park (451,8; 186,5) (gemeten op de
+  goede luchtfoto, = voorspelling); bordtekst vooraf in spiegelbeeld (07t_bord). Nieuwe assets: gebouw 85415189887953, rit
+  90703871759170, omgeving 131977708132078, bord 126287596115870. Studio: oud terrein weg, alles opnieuw geplaatst (terrein,
+  modellen, setup, 267 routemuren, scriptpatches, spawn). ref/luchtfoto = echt, ref/luchtfoto_gespiegeld = de oude meetbasis.
+  Play: 12/12 boten vol voor vertrek, uitstappers in 10 s van het dek, speler na zwart beeld op de brug (Y 3.95), console schoon.
 - SIROCCO AF (18 nov, Daan: "deze attractie is ook weer af").
 - Later eventueel:
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.

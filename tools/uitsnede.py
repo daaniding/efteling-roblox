@@ -48,7 +48,7 @@ for ty in range(0, th, T):
 RA = np.asarray(rdimg)
 # park-raster -> RD -> pixel (afbeelding is bijna een verschuiving + mini-draaiing; lineair benaderen uit 3 punten)
 o = np.array(geo.park_to_rd(cx, cy)); ex = np.array(geo.park_to_rd(cx + 1, cy)) - o; ey = np.array(geo.park_to_rd(cx, cy + 1)) - o
-ii, jj = np.meshgrid(np.arange(W), np.arange(W))
+ii, jj = np.meshgrid(np.arange(W), np.arange(W), indexing='ij')   # ii = rij, jj = kolom (zonder 'ij' gespiegeld beeld, fout t/m 18 nov)
 px_ = (jj + 0.5) * PX - R; py_ = R - (ii + 0.5) * PX
 RX = o[0] + px_ * ex[0] + py_ * ey[0]; RY = o[1] + px_ * ex[1] + py_ * ey[1]
 col = np.clip(((RX - rx0) / PX).astype(int), 0, tw - 1); row = np.clip(((ry1 - RY) / PX).astype(int), 0, th - 1)

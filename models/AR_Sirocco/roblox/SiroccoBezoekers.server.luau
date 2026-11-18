@@ -31,7 +31,8 @@ local VERTREK = 0.35                           -- s tussen twee bezoekers die na
 local sir = workspace:WaitForChild("Sirocco") :: Model
 local rit = sir:WaitForChild("Rit") :: Model
 local MIDDEN = rit:GetAttribute("Midden") :: Vector3
-local function W(x: number, y: number, z: number?): Vector3 return MIDDEN + Vector3.new(x * S, (z or Z_DEK) * S, -y * S) end
+-- oud (gespiegeld) modelstelsel -> echt park (18 nov): (x, y) -> MIDDEN + (-3y, 3z, 3x)
+local function W(x: number, y: number, z: number?): Vector3 return MIDDEN + Vector3.new(-y * S, (z or Z_DEK) * S, x * S) end
 local function pol(r: number, a: number, z: number?): Vector3 return W(r * math.cos(math.rad(a)), r * math.sin(math.rad(a)), z) end
 
 -- botsgroepen (zoals PagodeBezoekers): poortbladen en schotten zijn voor bezoekers geen obstakel
@@ -90,7 +91,7 @@ local NC = math.ceil(2 * RMAX / CEL)
 local BOOT_R, AGENT = 1.2, 0.35
 local function celXY(i: number, j: number): (number, number) return -RMAX + (i + 0.5) * CEL, -RMAX + (j + 0.5) * CEL end
 local function celVan(x: number, y: number): (number, number) return math.floor((x + RMAX) / CEL), math.floor((y + RMAX) / CEL) end
-local function modelVan(p: Vector3): (number, number) return (p.X - MIDDEN.X) / S, -(p.Z - MIDDEN.Z) / S end
+local function modelVan(p: Vector3): (number, number) return (p.Z - MIDDEN.Z) / S, -(p.X - MIDDEN.X) / S end
 local obst: {{number}} = {{0, 0, 0.55}, {0.85, 0.3, 0.35}, {-0.5, 0.75, 0.32}}      -- tonnen (03_forms.platform)
 for _, st in stoelen do local x, y = modelVan(midden(st)); table.insert(obst, {x, y, BOOT_R}) end
 local vrijCel: {boolean} = {}

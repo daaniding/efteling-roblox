@@ -14,6 +14,10 @@ a = sys.argv[sys.argv.index("--") + 1:]
 master = os.path.abspath(a[a.index("--master") + 1]); uit = os.path.abspath(a[a.index("--uit") + 1])
 os.makedirs(uit, exist_ok=True)
 LIMIT = 9500
+# Spiegeling (18 nov): de Sirocco is gebouwd op een gespiegelde luchtfoto (tools/uitsnede.py verwisselde rij en kolom). Alle
+# bouwdata blijft in dat oude modelstelsel; hier gaat alles naar het echte park: (x, y) -> (-y, -x), z blijft. Het modelmidden
+# ligt daarmee op park (451,8; 186,5) (plaats_sirocco MIDDEN). Luau-scripts gebruiken dezelfde omrekening (W(x, y) in studs).
+SPIEGEL = Matrix(((0, -1, 0, 0), (-1, 0, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
 VOOR = math.radians(-124.0)                # = 03_forms (subschijven op VOOR + 90 + 120 k)
 bpy.ops.wm.open_mainfile(filepath=master)
 dg = bpy.context.evaluated_depsgraph_get()
@@ -36,6 +40,7 @@ def verzamel(deel):
         me = bpy.data.meshes.new_from_object(o.evaluated_get(dg), preserve_all_data_layers=True, depsgraph=dg)
         if not me.polygons: bpy.data.meshes.remove(me); continue
         me.transform(o.matrix_world)
+        me.transform(SPIEGEL); me.flip_normals()          # naar het echte park (zie SPIEGEL), buitenkant blijft buiten
         if not me.uv_layers: me.uv_layers.new(name="UVMap")
         if deel != "rit":
             groepen["SI_" + o["rol"]].append((me, [p.index for p in me.polygons])); continue

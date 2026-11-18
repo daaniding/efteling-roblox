@@ -46,8 +46,8 @@ end
 -- uitgang: op de brug voorbij de uitstappoort (07_omgeving: brug x -2, poort y -8,6), naast elkaar, kijkend naar het zuiden
 local function uitPlek(k: number): CFrame
 	local x, y = -2 + ((k % 3) - 1) * 0.7, -10.2 - (k // 3 % 4) * 0.8
-	local p = MIDDEN + Vector3.new(x * S, 0.25 * S + 3.2, -y * S)
-	return CFrame.lookAt(p, p + Vector3.new(0, 0, 1))
+	local p = MIDDEN + Vector3.new(-y * S, 0.25 * S + 3.2, x * S)          -- oud (x, y) -> echt park (spiegeling 18 nov)
+	return CFrame.lookAt(p, p + Vector3.new(1, 0, 0))                       -- de brug af (oud -y)
 end
 
 local function opSchijf(ch: Model): boolean

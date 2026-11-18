@@ -11,7 +11,8 @@
 local S = 3
 local sir = workspace:WaitForChild("Sirocco")
 local rit = sir:WaitForChild("Rit")
-local MIDDEN = Vector3.new(456.5 * S, 0.2, -191.2 * S)
+local MIDDEN = Vector3.new(451.8 * S, 0.2, -186.5 * S)
+-- Spiegeling (18 nov): bouwdata in het oude (gespiegelde) modelstelsel; naar Roblox: oud (x, y) -> MIDDEN + (-3y, 3z, 3x)
 rit:SetAttribute("Midden", MIDDEN)
 for _, p in rit:GetChildren() do if p:IsA("Seat") then p:Destroy() end end
 local function deel(naam)
@@ -45,8 +46,8 @@ local oud = sir:FindFirstChild("RitAfsluiting"); if oud then oud:Destroy() end
 local afs = Instance.new("Folder"); afs.Name = "RitAfsluiting"; afs.Parent = sir
 for _, a in {-62, -106} do
 	local t = math.rad(a); local r = 7.25
-	local p = MIDDEN + Vector3.new(r * math.cos(t) * S, 0.3 * S + 6, -r * math.sin(t) * S)
-	local dir = Vector3.new(math.cos(t), 0, -math.sin(t))
+	local p = MIDDEN + Vector3.new(-r * math.sin(t) * S, 0.3 * S + 6, r * math.cos(t) * S)
+	local dir = Vector3.new(-math.sin(t), 0, math.cos(t))
 	local b = Instance.new("Part"); b.Name = a == -62 and "instap" or "uitstap"
 	b.Size = Vector3.new(8.5, 12, 1); b.CFrame = CFrame.lookAt(p, p + dir)
 	b.Anchored = true; b.CanCollide = false; b.CanQuery = false; b.CanTouch = false; b.Transparency = 1; b.CastShadow = false
@@ -62,7 +63,7 @@ local POORTEN = {
 	poort_uit_r = {-0.83, -8.6, -1.95, -8.6, -0.83, -9.72},
 }
 local om = sir:WaitForChild("Omgeving")
-local function W(x, y) return MIDDEN + Vector3.new(x * S, 0, -y * S) end
+local function W(x, y) return MIDDEN + Vector3.new(-y * S, 0, x * S) end
 for naam, v in POORTEN do
 	local p = om:FindFirstChild("SI_" .. naam .. "_0_om")
 	if p then
@@ -91,7 +92,7 @@ local fg = Instance.new("Folder"); fg.Name = "Geluid"; fg.Parent = sir
 local function bron(naam, x, y, z)
 	local p = Instance.new("Part"); p.Name = naam; p.Size = Vector3.new(0.5, 0.5, 0.5); p.Transparency = 1
 	p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
-	p.Position = MIDDEN + Vector3.new(x * S, (z or 0.5) * S, -y * S); p.Parent = fg
+	p.Position = MIDDEN + Vector3.new(-y * S, (z or 0.5) * S, x * S); p.Parent = fg
 	return p
 end
 local function snd(ouder, naam, id, vol, minA, maxA, lus)

@@ -38,8 +38,14 @@ f = ImageFont.truetype(FONT, 150)
 tekst = "Sirocco"
 bb = d.textbbox((0, 0), tekst, font=f)
 tx, ty = a_px(1.45, 0.0)
-d.text((tx - (bb[2] - bb[0]) / 2 + 3, ty - (bb[3] - bb[1]) / 2 - bb[1] + 3), tekst, font=f, fill=(20, 34, 70))      # schaduw
-d.text((tx - (bb[2] - bb[0]) / 2, ty - (bb[3] - bb[1]) / 2 - bb[1]), tekst, font=f, fill=(42, 78, 150))
+# tekst in spiegelbeeld (18 nov): de export spiegelt de hele Sirocco naar het echte park (11_export SPIEGEL), daarmee draait
+# ook het bord om; zo staat er na de export weer gewoon "Sirocco"
+tl = Image.new("RGBA", (N, 320), (0, 0, 0, 0)); dt = ImageDraw.Draw(tl)
+dt.text((tx - (bb[2] - bb[0]) / 2 + 3, ty - (bb[3] - bb[1]) / 2 - bb[1] + 3), tekst, font=f, fill=(20, 34, 70, 255))      # schaduw
+dt.text((tx - (bb[2] - bb[0]) / 2, ty - (bb[3] - bb[1]) / 2 - bb[1]), tekst, font=f, fill=(42, 78, 150, 255))
+links = int(tx - (bb[2] - bb[0]) / 2 - 10); rechts = int(tx + (bb[2] - bb[0]) / 2 + 13)
+stuk = tl.crop((links, 0, rechts, 320)).transpose(Image.FLIP_LEFT_RIGHT)
+im.paste(stuk, (links, 0), stuk)
 # B: medaillon (goud, cremekleurig vlak, schip met bol zeil)
 d.ellipse([8, 328, 248, 568], fill=(196, 150, 60), outline=(120, 86, 30), width=6)
 d.ellipse([34, 354, 222, 542], fill=(232, 220, 186), outline=(150, 112, 40), width=4)

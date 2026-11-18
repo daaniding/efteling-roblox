@@ -91,7 +91,9 @@ oeverrijen = ',\n'.join('\t{%.3f, %.3f, %.3f, %.3f}' % tuple(s) for s in oever)
 luau = f'''-- sirocco_routemuren (gemaakt door roblox/maak_routemuren.py): onzichtbare route-muren voor spelers (groep Routemuur; bezoekers
 -- lopen erdoor). {len(seg)} stukken in modelmeters (x0, y0, x1, y1); 14 studs hoog vanaf het dek.
 local S = 3
-local MIDDEN = Vector3.new(456.5 * S, 0.2, -191.2 * S)
+local MIDDEN = Vector3.new(451.8 * S, 0.2, -186.5 * S)
+-- oud (gespiegeld) modelstelsel -> echt park (18 nov): (x, y) -> MIDDEN + (-3y, 0, 3x)
+local function W(x, y) return MIDDEN + Vector3.new(-y * S, 0, x * S) end
 local Y0, H, DIK = MIDDEN.Y + 0.25 * S, 14, 0.6
 local SEG = {{
 {rijen}
@@ -103,8 +105,8 @@ local sir = workspace:WaitForChild("Sirocco")
 local oud = sir:FindFirstChild("Routemuren"); if oud then oud:Destroy() end
 local map = Instance.new("Folder"); map.Name = "Routemuren"; map.Parent = sir
 for i, s in SEG do
-	local a = MIDDEN + Vector3.new(s[1] * S, 0, -s[2] * S)
-	local b = MIDDEN + Vector3.new(s[3] * S, 0, -s[4] * S)
+	local a = W(s[1], s[2])
+	local b = W(s[3], s[4])
 	local L = (b - a).Magnitude
 	local p = Instance.new("Part"); p.Name = "routemuur"
 	p.Size = Vector3.new(DIK, H, L + DIK)
@@ -117,8 +119,8 @@ local DAK = {{
 {dakrijen}
 }}
 for _, s in DAK do
-	local a = MIDDEN + Vector3.new(s[1] * S, 0, -s[2] * S)
-	local b = MIDDEN + Vector3.new(s[3] * S, 0, -s[4] * S)
+	local a = W(s[1], s[2])
+	local b = W(s[3], s[4])
 	local p = Instance.new("Part"); p.Name = "plafond"
 	p.Size = Vector3.new(2.7 * S, 0.4, (b - a).Magnitude + 1.2)
 	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, Y0 + 2.3 * S - MIDDEN.Y, 0)
@@ -130,8 +132,8 @@ local OEVER = {{
 {oeverrijen}
 }}
 for _, s in OEVER do
-	local a = MIDDEN + Vector3.new(s[1] * S, 0, -s[2] * S)
-	local b = MIDDEN + Vector3.new(s[3] * S, 0, -s[4] * S)
+	local a = W(s[1], s[2])
+	local b = W(s[3], s[4])
 	local p = Instance.new("Part"); p.Name = "oever"
 	p.Size = Vector3.new(DIK, H, (b - a).Magnitude + DIK)
 	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, H / 2, 0)
@@ -140,7 +142,7 @@ for _, s in OEVER do
 end
 -- eenrichting bij de uitgang: schot dwars over de deuropening (y -8,6), standaard open; SiroccoRitClient zet het dicht voor wie
 -- op de brug staat (een opengeslagen deur staat tegen de muur en houdt niemand tegen)
-local a, b = MIDDEN + Vector3.new(-3.2 * S, 0, 8.6 * S), MIDDEN + Vector3.new(-0.8 * S, 0, 8.6 * S)
+local a, b = W(-3.2, -8.6), W(-0.8, -8.6)
 local e = Instance.new("Part"); e.Name = "eenrichting_uit"; e.Size = Vector3.new(DIK, H, (b - a).Magnitude)
 e.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, Y0 + H / 2 - MIDDEN.Y, 0)
 e.Anchored = true; e.CanCollide = false; e.CanQuery = false; e.CanTouch = false; e.Transparency = 1; e.CastShadow = false

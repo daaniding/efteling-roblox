@@ -1,0 +1,1 @@
+Gespiegelde uitsnede (tools/uitsnede.py-fout t/m 18 nov): hierop is de Sirocco-bouwdata gemeten (oud modelstelsel). Echte ligging: ../luchtfoto. Omrekening: oud (x, y) -> echt (-y, -x) rond het modelmidden; modelmidden echt = park (451,8; 186,5).

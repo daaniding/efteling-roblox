@@ -1,14 +1,14 @@
 -- plaats_sirocco: Sirocco in Studio neerzetten (bron models/AR_Sirocco; ids in exports/asset_ids.txt). Plakken in de Studio-commandbalk.
--- Plek: dakmidden park (456,5; 191,2) m (luchtfoto) -> Roblox X = 3x, Z = -3y. Hoogte zoals de Pagode: gras NAP 9,8 (Y 1,4),
+-- Plek: dakmidden park (451,8; 186,5) m (echte luchtfoto, 18 nov; was (456,5; 191,2) op de gespiegelde uitsnede) -> Roblox X = 3x, Z = -3y; modellen zijn al gespiegeld (11_export), terrein/lampen via oud (x, y) -> (-3y, 3x). Hoogte zoals de Pagode: gras NAP 9,8 (Y 1,4),
 -- water 0,4 m lager (Y 0,2) = z 0 van het model; dek van de rit op Y 1,1.
 -- Doet: terrein (vlak gras rond de vijver, vijver leeg in de vorm uit de luchtfoto), gebouw + rit + omgeving (FBX, ScaleTo 3, anker),
 -- materialen per rol (SurfaceAppearance of kleur), lichtpunten in de lantaarns, waterplaat (vijvervorm) + onzichtbare bodem.
 -- De lampen- en vijverlijst worden ingevuld door build/12_plak.py (uit exports/export_info.json en exports/omgeving_info.json).
 local S = 3
-local CX, CY = 456.5, 191.2
+local CX, CY = 451.8, 186.5        -- echt dakmidden (18 nov: uitsnede.py spiegelde; zie 11_export SPIEGEL)
 local Y_WATER = 0.2
 local MIDDEN = Vector3.new(CX * S, Y_WATER, -CY * S)
-local ID = {gebouw = 131869393173401, rit = 112959171658722, omgeving = 126360511346530, bord_kleur = 138476476235233,
+local ID = {gebouw = 85415189887953, rit = 90703871759170, omgeving = 131977708132078, bord_kleur = 126287596115870,
 	riet_kleur = 122992305053489, riet_normaal = 107154390027579, platform_kleur = 137087869566165, romp_kleur = 137095365073521,
 	romp_hout_kleur = 92929270438539, schubben_kleur = 92127248105221, sierpaneel_kleur = 111038031156474, mand_kleur = 112674595994674,
 	net_kleur = 123171354911724, beschot_kleur = 124186550110005, stam_kleur = 86277939897558, stam_normaal = 85501756974124,
@@ -127,7 +127,7 @@ for ix = 1, nx do
 	for iy = 1, NY do mat[ix][iy], occ[ix][iy] = {}, {} end
 	for iz = 1, nz do
 		local cz = z0 + (iz - 0.5) * 4
-		local x, y = (cx - MIDDEN.X) / S, -(cz - MIDDEN.Z) / S
+		local x, y = (cz - MIDDEN.Z) / S, -(cx - MIDDEN.X) / S     -- oud modelstelsel (spiegeling)
 		local water = inVijver(x, y)
 		local rij = KLASSEN[math.clamp(math.floor(y) + 36, 1, 70)]
 		local k = string.sub(rij, math.clamp(math.floor(x) + 36, 1, 70), math.clamp(math.floor(x) + 36, 1, 70))
@@ -152,7 +152,7 @@ local wm, wo = {}, {}
 for ix = 1, nx do
 	wm[ix], wo[ix] = {{}}, {{}}
 	for iz = 1, nz do
-		local x, y = (x0 + (ix - 0.5) * 4 - MIDDEN.X) / S, -(z0 + (iz - 0.5) * 4 - MIDDEN.Z) / S
+		local x, y = (z0 + (iz - 0.5) * 4 - MIDDEN.Z) / S, -(x0 + (ix - 0.5) * 4 - MIDDEN.X) / S
 		local w = inVijver(x, y)
 		wm[ix][1][iz] = w and Enum.Material.Water or Enum.Material.Air; wo[ix][1][iz] = w and 0.1 or 0
 	end
@@ -211,7 +211,7 @@ local lichten = Instance.new("Folder"); lichten.Name = "Lichten"; lichten.Parent
 for _, l in ipairs(LAMPEN) do
 	local p = Instance.new("Part"); p.Name = "lantaarnlicht"; p.Anchored = true; p.CanCollide = false; p.CanQuery = false; p.CanTouch = false
 	p.Transparency = 1; p.Size = Vector3.new(0.3, 0.3, 0.3)
-	p.Position = Vector3.new(MIDDEN.X + l[1] * S, MIDDEN.Y + l[3] * S, MIDDEN.Z - l[2] * S); p.Parent = lichten
+	p.Position = MIDDEN + Vector3.new(-l[2] * S, l[3] * S, l[1] * S); p.Parent = lichten     -- spiegeling
 	local pl = Instance.new("PointLight"); pl.Color = Color3.fromRGB(255, 180, 110); pl.Brightness = 0.8; pl.Range = 14; pl.Shadows = true; pl.Parent = p
 end
 

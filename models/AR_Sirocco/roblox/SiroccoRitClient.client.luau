@@ -187,12 +187,12 @@ plr:GetAttributeChangedSignal("SiroccoUit"):Connect(function()
 	local info = TweenInfo.new(aan and 0.5 or 0.9, Enum.EasingStyle.Sine)
 	TweenService:Create(zwart, info, {BackgroundTransparency = aan and 0 or 1}):Play()
 	TweenService:Create(zwartTekst, info, {TextTransparency = aan and 0 or 1}):Play()
-	if not aan then                                   -- na de medewerker: camera de brug af (zuid = +Z, SiroccoRit.uitPlek); het
+	if not aan then                                   -- na de medewerker: camera de brug af (SiroccoRit.uitPlek); het
 		local hrp = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") :: BasePart?   -- lichaam volgt in 1e persoon de camera
 		if hrp then
 			local cam = workspace.CurrentCamera
 			local oog = hrp.Position + Vector3.new(0, 1.5, 0)
-			cam.CFrame = CFrame.lookAt(oog, oog + Vector3.new(0, -0.15, 1))
+			cam.CFrame = CFrame.lookAt(oog, oog + Vector3.new(1, -0.15, 0))   -- de brug af (oud -y, na spiegeling +X)
 		end
 	end
 end)
@@ -419,7 +419,7 @@ RunService.PreSimulation:Connect(function(dt: number)
 	local hrpE = ch and ch:FindFirstChild("HumanoidRootPart") :: BasePart?
 	local opBrug = false
 	if hrpE then
-		local mx, my = (hrpE.Position.X - MIDDEN.X) / 3, -(hrpE.Position.Z - MIDDEN.Z) / 3
+		local mx, my = (hrpE.Position.Z - MIDDEN.Z) / 3, -(hrpE.Position.X - MIDDEN.X) / 3   -- oud modelstelsel (spiegeling)
 		opBrug = my < -8.75 and math.abs(mx + 2) < 1.6
 	end
 	if schotUit then schotUit.CanCollide = opBrug end

@@ -432,3 +432,8 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Daan wil muziek zacht: wachtrij ~0.05, in de attractie ~0.04-0.12; effecten 0.15-0.3.
 - Geluidsvolumes niet op gevoel: meet de bronluidheid (Sound in SoundService, Volume 1, PlaybackLoudness-piek over 3 s) en
   stem Volume daarop af. PSE-walla en voetstappen zijn 10-50x zachter dan APM-muziek.
+- Luchtfoto-uitsneden ALTIJD controleren tegen OSM via geo.wgs_to_park (zonder beeld ertussen) en tegen een tweede bron: een
+  spiegeling in het hulpmiddel bleef twee dagen onopgemerkt omdat de OSM-lijnen in dezelfde overlay ook "klopten". Eén bekend
+  gebouw op zijn OSM-plek zetten is niet genoeg (in het midden valt een spiegeling weg); kijk naar iets aan de rand.
+- np.meshgrid geeft standaard (kolom, rij): voor beeldarrays altijd indexing='ij'.
+- screen_capture van een bovenaanzicht in Edit kan 180 graden gedraaid zijn: richting altijd met coördinaten van onderdelen checken.
