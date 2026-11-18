@@ -13,8 +13,48 @@ MASTER = os.path.join(D, "AR_FataMorgana_master.blend")
 OWNER = "phase:02_toren"
 KLEUR = {"stuc": (0.86, 0.78, 0.66), "lijst": (0.93, 0.89, 0.81), "raam": (0.09, 0.09, 0.11), "deur": (0.3, 0.2, 0.13),
          "koepel": (0.16, 0.66, 0.7), "goud": (0.85, 0.66, 0.28)}
-UVS = {"stuc": 6.0, "lijst": 6.0, "raam": 1.0, "deur": 1.0, "koepel": 2.0, "goud": 0.5}
+UVS = {"stuc": 9.0, "lijst": 9.0, "raam": 1.0, "deur": 1.0, "koepel": 2.0, "goud": 0.5}
+OVERLAY = ("vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet")
+for r_ in OVERLAY: KLEUR[r_] = (0.8, 0.67, 0.47); UVS[r_] = 1.0
 G = {r: bmesh.new() for r in KLEUR}
+import random as _random
+_laag = [0]
+
+
+def overlay(rol, vl, u, v, w, h, fu=False, fv=False):
+    """half doorzichtige verweringskaart op een gevel (eigen UV 0..1), elke kaart iets verder naar voren tegen z-fighting"""
+    _laag[0] = (_laag[0] + 1) % 12; n = 0.012 + 0.0025 * _laag[0]
+    bm = G[rol]; uvl = bm.loops.layers.uv.verify()
+    pts = [vl.p(u - w / 2, v, n), vl.p(u + w / 2, v, n), vl.p(u + w / 2, v + h, n), vl.p(u - w / 2, v + h, n)]
+    uv = [(0, 0), (1, 0), (1, 1), (0, 1)]
+    if fu: uv = [(1 - a, b) for a, b in uv]
+    if fv: uv = [(a, 1 - b) for a, b in uv]
+    pts, uv = pts[::-1], uv[::-1]                      # U x V wijst de muur in: omdraaien zodat de voorkant naar buiten kijkt
+    f = bm.faces.new([bm.verts.new(p) for p in pts])
+    for lp, t in zip(f.loops, uv): lp[uvl].uv = t
+
+
+def verwering(vl, u0, u1, z0, z1, seed, gaten=()):
+    """willekeurige vlekken, vuilstrepen onder de bovenrand en een vochtige voet (Daan 18 nov: geen copy-paste-patroon);
+    gaten = [(u0, u1, z0, z1)]: openingen (galerij) waar geen kaart over mag"""
+    r = _random.Random(seed); L = u1 - u0; H = z1 - z0
+    def vrij(u, v, w, h): return not any(u + w / 2 > a and u - w / 2 < b and v + h > c and v < d for a, b, c, d in gaten)
+    _ov = overlay
+    def overlay_(rol, vl_, u, v, w, h, fu=False, fv=False):
+        if vrij(u, v, w, h): _ov(rol, vl_, u, v, w, h, fu, fv)
+    for _ in range(max(1, int(L * H / 9 * r.uniform(0.7, 1.3)))):
+        w = r.uniform(1.4, min(4.8, L)); h = w * r.uniform(0.7, 1.7); h = min(h, H)
+        u = r.uniform(u0 + w / 2, max(u0 + w / 2, u1 - w / 2)); v = r.uniform(z0, max(z0, z1 - h))
+        overlay_("vlek%d" % r.randint(1, 4), vl, u, v, w, h, r.random() < 0.5, r.random() < 0.3)
+    u = u0
+    while u < u1 - 0.5:                                   # vuilstrepen onder de kroonlijst
+        w = r.uniform(2.0, 4.0); h = r.uniform(1.2, min(3.2, H * 0.6)); uc = min(u + w / 2, u1 - w / 2)
+        if r.random() < 0.6: overlay_("streep", vl, uc, z1 - h, w, h, r.random() < 0.5, True)
+        u += w * r.uniform(1.0, 2.2)
+    u = u0
+    while u < u1 - 0.3:                                   # vochtige voet
+        w = min(r.uniform(2.5, 4.0), L); uc = min(u + w / 2, u1 - w / 2)
+        overlay_("voet", vl, uc, z0, w, r.uniform(0.9, 1.6), r.random() < 0.5); u += w * 0.8
 
 
 def quad(rol, pts):
@@ -57,7 +97,7 @@ def spitsboog(xc, w, v0, vs, n=8, r_f=0.75):
     return [(x0, v0)] + links + rechts[1:] + [(xc + w / 2, v0)]
 
 
-def vul(rol, vl, omtrek, n=0.02):
+def vul(rol, vl, omtrek, n=0.05):
     """vlak gevuld met een waaier vanuit het midden (raam/deur), n voor de muur"""
     c = (sum(u for u, _ in omtrek) / len(omtrek), sum(v for _, v in omtrek) / len(omtrek))
     for a, b in zip(omtrek, omtrek[1:] + omtrek[:1]):
@@ -163,16 +203,18 @@ def bouw():
         strip("lijst", v, [(-h, 0.25), (h, 0.25)], 0.5, 0.1)            # plint
         strip("lijst", v, [(-h, 3.35), (h, 3.35)], 0.22, 0.14)          # band boven het portaal
         strip("lijst", v, [(-h, 9.55), (h, 9.55)], 0.3, 0.18)           # kroonlijst
+    for k, (v, b) in enumerate(zip(vl, br)): verwering(v, -b / 2 + 0.7, b / 2 - 0.7, 0.0, 9.3, 11 + k)
     voor, rechts, achter, links = vl
     nis(voor, -1.45, 2.0, 3.75, 7.4); nis(voor, 1.45, 2.0, 3.75, 7.4)
     strip("lijst", voor, [(0, 3.5), (0, 9.4)], 0.18, 0.1)                # middenlisene tussen de nissen
     deur = spitsboog(0, 1.5, 0.0, 1.85, 8)
-    vul("deur", voor, deur, 0.02); strip("lijst", voor, deur, 0.22, 0.15)
+    vul("deur", voor, deur, 0.05); strip("lijst", voor, deur, 0.22, 0.15)
     for v in (rechts, links):
         nis(v, 0.0, 2.4, 3.75, 7.4)
     # bovenstuk (4,6 m) op het onderblok
     W2 = 4.6
     vl2, br2 = blok(W2, W2, H, 14.4, 0.5, 0.56, 0.68, 14.85, rand="lob")
+    for k, v in enumerate(vl2): verwering(v, -W2 / 2 + 0.5, W2 / 2 - 0.5, H, 13.8, 21 + k)
     for v in vl2:
         h = W2 / 2 - 0.5
         strip("lijst", v, [(-h, H + 0.95), (h, H + 0.95)], 0.2, 0.12)
@@ -193,10 +235,12 @@ def uv_en_objecten():
     col = bpy.data.collections.get("LOW") or bpy.data.collections.new("LOW")
     if col.name not in bpy.context.scene.collection.children: bpy.context.scene.collection.children.link(col)
     for rol, bm in G.items():
-        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
-        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-        uvl = bm.loops.layers.uv.new("UVMap"); s = UVS[rol]
-        for f in bm.faces:
+        if not bm.faces: continue
+        if rol not in OVERLAY and rol not in ("raam", "deur"):
+            bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+            bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        uvl = bm.loops.layers.uv.verify(); s = UVS[rol]
+        for f in ([] if rol in OVERLAY else bm.faces):
             n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))
             for lp in f.loops:
                 co = lp.vert.co

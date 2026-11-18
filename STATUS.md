@@ -11,7 +11,15 @@ Stap 1 — de grote toren met turquoise koepel (park -40;-295, top NAP 27,3): bu
 Moorse rand en hoekpinakels, nissen, portaal; bovenstuk 4,6 m met lobbenrand; koepel + gouden spits), stuc 2048 px = 6 m
 (01t_texturen: Poly Haven red_plaster_weathered + grote okervlekken zoals Fata2013.jpg; Daan: "textures moeten mooier").
 In Studio: workspace.FataMorgana.Toren + terrein 36x30 m (bestrating Y 0,91, water ervoor). roblox/plaats_toren.luau.
-Volgende stukken (Daans keuze): noordgevel met kantelen en koepels, minaret, plein met fonteinen, wachtrij.
+Stap 2 — noordgevel (build/03_noordgevel.py): west- en oostvleugel volgens AHN-voorlijn, hoofdvolume met plat donker dak
+(x -73..-6, y -297..-339) zodat alles aan elkaar zit (Daan: "het zit niet aan elkaar"), witte/grijze/gouden koepel,
+westtorentje, galerij met groen afdak (echt uitgespaard), erkers met roosterwerk, kade met pijlers en bolbekroningen langs het
+water, sierlantaarnpalen, cipressen, muurlampjes. Textuur (Daan: "copy paste van hetzelfde ridleltje"): stuc-tegel zonder grote
+vlekken + losse verweringsoverlays (vlek1..4, streep, voet; willekeurig per muur, 02_toren.verwering), openingen vrij.
+Alles herladen met roblox/plaats_modellen.luau; terrein met plaats_noordgevel.luau.
+Les: Roblox toont alleen voorkanten — losse vlakken (overlays, dak, galerijwand) met de normaal naar buiten bouwen en niet door
+recalc_face_normals laten omdraaien.
+Volgende stukken (Daans keuze): minaret, plein met fonteinen, wachtrij, achterkant/zijkant.
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
