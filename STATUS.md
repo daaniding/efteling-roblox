@@ -25,7 +25,12 @@ Galerij (Daan: "ziet er niet uit"): ronde zuilen met kapiteel, uitgesneden rondb
 pannendak met dikte op schoren. Looppad van 3 m voor de toren (kade maakt een sprong), zodat west- en oostkant verbonden zijn.
 Les: bmesh-vlakken zonder recalc_face_normals hebben normaal (0,0,0) -> bm.normal_update() vóór de doosprojectie, anders
 uitgerekte strepen in de textuur.
-Volgende stukken (Daans keuze): minaret, plein met fonteinen, wachtrij, achterkant/zijkant.
+Stap 3 — minaret (build/04_minaret.py, tegels build/04t_tegels.py): park (19,5; -329), 25,8 m (AHN 25,6). Verhoudingen uit
+Fmplein1986.jpg: onderblok zandkleur met hoekblokken tot 8,4 m (spitsboogdeur met rode omlijsting in zellige-paneel, tegelvensters,
+rode zigzagfries), wit balkon met vier bollen, witte schacht 3,2 m met donkere hoeklijnen tot 18,1 m, consolezone + tegelbalkon
+(borstwering tot 20 m), lantaarntje 2,2 m met boogopeningen, geribde turquoise koepel, gouden spits met halve maan. Deur naar het
+plein (oost). Plein eronder: roblox/plaats_minaret_terrein.luau. Herladen: plaats_modellen.luau (DELEN Toren/Noordgevel/Minaret).
+Volgende stukken (Daans keuze): plein met fonteinen en het ingangsgebouw met blauwe koepel, wachtrij, achterkant/zijkant.
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
