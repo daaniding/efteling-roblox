@@ -67,7 +67,16 @@ i.p.v. een buis. Elke gevel dekt zijn eigen beginhoek en stopt vóór de volgend
 LET OP (Daan 18 nov: "dat is toch niet het ingangsgebouw"): het gebouw met de blauwe koepel is de Bazaar (souvenirwinkel,
 "BAZAAR" op FataVoorplein1993). De echte ingang is de voet van de minaret: grote geschulpte kielboog in een tegelpaneel
 (Fmplein1986.jpg, Fatamorganaingang1987.jpg); in 04_minaret nu nog een klein spitsboogdeurtje van 1,25 m.
-Mogelijke vervolgstap: de ingangsboog in de minaretvoet; binnenkant (pas als Daan erom vraagt).
+Stap 11 — ingang en wachtrij (bron: Eftepedia + POV-video "[4K POV] Fata Morgana -On Ride- Efteling", youtube mV6qzpGgLjc):
+de rij begint op de zuidoosthoek van een overdekte veranda links van de minaret (bord "Fata Morgana"), loopt langs de
+kantelenmuur en gaat via een zijdeur in de zuidkant van de minaret naar de instaphal; de grote poort aan de pleinkant is de
+hoofdingang op rustige dagen. Gebouwd: grote poort in de minaretvoet (04_minaret.poort: vooruitstekend tegelpaneel 0,3 m,
+geschulpte spitsboog 1,8 x 3,3 m met witte neggen en donkere doorgang, witte buitenboog met kielpunt, tegelfries, zandstenen
+pijlers + kroonlijst; asset 122476350036812), zijdeur zuidkant minaret, veranda (build/12_veranda.py, asset 98846122997959:
+x 17,3..20,7, y -331,1..-339,65, rode palen, fries met rode randen, aflopend dak 2,45-3,15 m met houten onderkant, tegelvloer,
+zwarte hekken met bollen, tussenhek), raam in de kantelenmuur boven het verandadak gezet (06_kantelen, asset 97214135684394).
+Nieuwe rollen in plaats_modellen: poort, poortrand. Grond: strook x 16,5..26, y -341..-322 voor poort en veranda.
+Mogelijke vervolgstap: binnenkant (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/

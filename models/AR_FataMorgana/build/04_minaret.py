@@ -14,10 +14,12 @@ G3 = {"__file__": F3, "__name__": "lib"}
 exec(compile(open(F3).read().rsplit("\nmain()", 1)[0], F3, "exec"), G3)
 T = G3["T"]; L, prisma, lathe, quad, strip, spitsboog, vul, raam, Vlak = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "spitsboog", "vul", "raam", "Vlak"))
 OWNER = "phase:04_minaret"
-VAST = ("zellige", "zigzag", "balkon")
+VAST = ("zellige", "zigzag", "balkon", "fries")
+EIGEN = ("raam", "deur", "poort", "poortrand")                 # vaste windingsrichting, geen recalc
 T["KLEUR"].update({"zandsteen": (0.84, 0.72, 0.56), "wit": (0.95, 0.94, 0.9), "rood": (0.66, 0.18, 0.14), "zellige": (0.2, 0.5, 0.6),
-                   "zigzag": (0.66, 0.18, 0.14), "balkon": (0.85, 0.88, 0.95), "donker": (0.12, 0.16, 0.22)})
-T["UVS"].update({"zandsteen": 9.0, "wit": 9.0, "rood": 1.0, "zellige": 1.0, "zigzag": 1.0, "balkon": 1.0, "donker": 1.0})
+                   "zigzag": (0.66, 0.18, 0.14), "balkon": (0.85, 0.88, 0.95), "donker": (0.12, 0.16, 0.22),
+                   "fries": (0.2, 0.3, 0.6), "poort": (0.05, 0.05, 0.07), "poortrand": (0.95, 0.94, 0.9)})
+T["UVS"].update({"zandsteen": 9.0, "wit": 9.0, "rood": 1.0, "zellige": 1.0, "zigzag": 1.0, "balkon": 1.0, "donker": 1.0, "fries": 1.0, "poort": 1.0, "poortrand": 1.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + VAST
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -71,6 +73,89 @@ def balkon(hw, z, h_rand, rol_rand, bollen):
             lathe("wit", [(r * 0.2, zz) for r, zz in ((0.0, -0.2), (0.7, -0.15), (1.0, 0.0), (0.7, 0.15), (0.0, 0.22))], z + 0.62 + h_rand, 12, (p.x, p.y))
 
 
+def vlak_n(rol, pts, wil, uvs=None):
+    """vlak met vaste windingsrichting: normaal wijst naar 'wil' (Vector); optioneel eigen UV"""
+    pts = [p for i, p in enumerate(pts) if (p - pts[i - 1]).length > 1e-6]
+    if len(pts) < 3: return
+    nrm = (pts[1] - pts[0]).cross(pts[2] - pts[0])
+    if len(pts) > 3 and nrm.length < 1e-9: nrm = (pts[2] - pts[0]).cross(pts[3] - pts[0])
+    if nrm.dot(wil) < 0: pts = pts[::-1]; uvs = uvs[::-1] if uvs else None
+    bm = T["G"][rol]; f = bm.faces.new([bm.verts.new(p) for p in pts])
+    if uvs:
+        uvl = bm.loops.layers.uv.verify()
+        for lp, t in zip(f.loops, uvs): lp[uvl].uv = t
+
+
+def schulpboog(w, vs, r_f=0.85, lobben=9, diep=0.11, n=72):
+    """geschulpte (veelpassige) spitsboog: (u, v) van de linkerneg via de top naar de rechterneg; de lobben bollen naar
+    buiten, de punten ertussen wijzen naar binnen (Fmplein1986, POV-video 2025)"""
+    basis = spitsboog(0, w, 0.0, vs, n // 2, r_f)[1:-1]
+    # booglengte-parameter
+    ls = [0.0]
+    for a, b in zip(basis, basis[1:]): ls.append(ls[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
+    S = ls[-1]; out = []
+    for k in range(n + 1):
+        s_ = S * k / n
+        j = max(0, min(len(basis) - 2, next((i for i in range(len(ls) - 1) if ls[i + 1] >= s_), len(ls) - 2)))
+        t = (s_ - ls[j]) / max(1e-9, ls[j + 1] - ls[j])
+        a, b = basis[j], basis[j + 1]; u = a[0] + (b[0] - a[0]) * t; v = a[1] + (b[1] - a[1]) * t
+        tu, tv = b[0] - a[0], b[1] - a[1]; L_ = math.hypot(tu, tv) or 1.0
+        nu, nv = -tv / L_, tu / L_                                   # links van de looprichting = buiten (boog loopt links -> rechts)
+        if nv < 0 and abs(u) < 0.05: nu, nv = -nu, -nv
+        x = (s_ / S) * lobben; f = abs(math.sin(math.pi * (x - int(x)))) ** 0.6
+        out.append((u + nu * diep * f, v + nv * diep * f))
+    return out
+
+
+def poort(vl, P=0.3, w=1.8, vs=1.9, pu=1.15, ph=4.9):
+    """grote ingangspoort in de minaretvoet: vooruitstekend tegelpaneel (P m) met een geschulpte spitsboog-opening, diepe
+    neggen, donkere doorgang, witte geschulpte rand, witte buitenboog met kielpunt, tegelfries erboven, zandstenen
+    pijlers en kroonlijst"""
+    vp = Vlak(vl.p(0, 0, P), vl.U, vl.N)
+    boog = schulpboog(w, vs)
+    om = [(-w / 2, 0.0)] + [(-w / 2, vs * k / 6) for k in range(1, 6)] + boog + [(w / 2, vs * k / 6) for k in range(5, 0, -1)] + [(w / 2, 0.0)]
+    c = (0.0, 1.5)
+    def raak(p):
+        du, dv = p[0] - c[0], p[1] - c[1]; ts = []
+        if du < -1e-9: ts.append(((-pu - c[0]) / du, "l"))
+        if du > 1e-9: ts.append(((pu - c[0]) / du, "r"))
+        if dv < -1e-9: ts.append(((0.0 - c[1]) / dv, "o"))
+        if dv > 1e-9: ts.append(((ph - c[1]) / dv, "b"))
+        t, kant = min(ts)
+        return (c[0] + du * t, c[1] + dv * t), kant
+    hoek = {("l", "b"): (-pu, ph), ("b", "l"): (-pu, ph), ("b", "r"): (pu, ph), ("r", "b"): (pu, ph),
+            ("l", "o"): (-pu, 0.0), ("o", "l"): (-pu, 0.0), ("r", "o"): (pu, 0.0), ("o", "r"): (pu, 0.0)}
+    hits = [raak(p) for p in om]
+    for i in range(len(om) - 1):
+        (h0, k0), (h1, k1) = hits[i], hits[i + 1]
+        rand = [om[i], om[i + 1], h1] + ([hoek[(k1, k0)]] if k0 != k1 and (k1, k0) in hoek else []) + [h0]
+        vlak_n("zellige", [vp.p(u, v, 0) for u, v in rand], vl.N, [(u / 1.2, v / 1.2) for u, v in rand])
+    # neggen (wit) en donkere achterkant
+    for (ua, va), (ub, vb) in zip(om, om[1:]):
+        mu, mv = (ua + ub) / 2, (va + vb) / 2
+        wil = vl.U * (c[0] - mu) + Vector((0, 0, c[1] - mv))
+        vlak_n("poortrand", [vp.p(ua, va, 0), vp.p(ub, vb, 0), vl.p(ub, vb, 0.12), vl.p(ua, va, 0.12)], wil)
+    vlak_n("poort", [vl.p(-w / 2 - 0.05, 0, 0.12), vl.p(w / 2 + 0.05, 0, 0.12), vl.p(w / 2 + 0.05, vs + 1.6, 0.12), vl.p(-w / 2 - 0.05, vs + 1.6, 0.12)], vl.N)
+    # witte geschulpte rand op het paneel en witte buitenboog met kielpunt
+    strip("wit", vp, boog, 0.16, 0.05)
+    strip("wit", vp, [(-w / 2, 0.0), (-w / 2, vs)], 0.16, 0.05); strip("wit", vp, [(w / 2, 0.0), (w / 2, vs)], 0.16, 0.05)
+    buiten = spitsboog(0, w + 0.55, 0.0, vs, 12, 0.85)[1:-1]
+    top = max(v for _, v in buiten); buiten = [p for p in buiten if p[1] < top - 0.12]
+    hlft = len(buiten) // 2
+    buiten = buiten[:hlft] + [(0.0, top + 0.3)] + buiten[hlft:]
+    strip("wit", vp, [(-(w + 0.55) / 2, 0.0)] + buiten + [((w + 0.55) / 2, 0.0)], 0.12, 0.05)
+    # tegelfries boven de boog met lijsten
+    vlak_n("fries", [vp.p(-pu + 0.08, 3.85, 0.02), vp.p(pu - 0.08, 3.85, 0.02), vp.p(pu - 0.08, 4.65, 0.02), vp.p(-pu + 0.08, 4.65, 0.02)], vl.N,
+           [((-pu + 0.08) / 1.8, 0.0), ((pu - 0.08) / 1.8, 0.0), ((pu - 0.08) / 1.8, 1.0), ((-pu + 0.08) / 1.8, 1.0)])
+    strip("lijst", vp, [(-pu, 3.78), (pu, 3.78)], 0.12, 0.08); strip("lijst", vp, [(-pu, 4.72), (pu, 4.72)], 0.12, 0.08)
+    # zandstenen pijlers en kroonlijst (vooruitstekend portaal)
+    for a, b in ((-pu - 0.25, -pu), (pu, pu + 0.25)):
+        prisma("lijst", [Vector((q.x, q.y, 0)) for q in (vl.p(a, 0, -0.02), vl.p(b, 0, -0.02), vl.p(b, 0, P + 0.06), vl.p(a, 0, P + 0.06))], 0.0, ph + 0.05)
+    prisma("lijst", [Vector((q.x, q.y, 0)) for q in (vl.p(-pu - 0.32, 0, -0.02), vl.p(pu + 0.32, 0, -0.02), vl.p(pu + 0.32, 0, P + 0.14), vl.p(-pu - 0.32, 0, P + 0.14))], ph, ph + 0.22)
+    # bovenkant en onderkant van het portaal (tussen muur en paneel)
+    vlak_n("zellige", [vl.p(-pu, ph, 0), vl.p(pu, ph, 0), vl.p(pu, ph, P), vl.p(-pu, ph, P)], Vector((0, 0, -1)), [(0, 0), (1, 0), (1, 0.25), (0, 0.25)])
+
+
 def bouw():
     # onderblok: zandsteen met hoekblokken (lijst), plint
     hw = 2.3
@@ -83,13 +168,13 @@ def bouw():
     blok("lijst", hw + 0.08, 0.0, 0.35)
     for i, vl in enumerate(vlakken(hw)):
         if i == 0:                                         # voorkant (oost): tegelpaneel met deur, vensters erboven
-            paneel("zellige", vl, -1.25, 1.25, 0.35, 4.6, 0.04, 1.2, 1.2)
-            strip("lijst", vl, [(-1.32, 0.35), (-1.32, 4.67), (1.32, 4.67), (1.32, 0.35)], 0.14, 0.08)
-            deur = spitsboog(0, 1.25, 0.0, 2.15, 10, 0.62)
-            vul("deur", vl, deur, 0.09); strip("rood", vl, deur, 0.22, 0.12)
+            poort(vl)                                      # grote poort (Eftepedia: hoofdingang op rustige dagen)
             raam(vl, -0.55, 0.5, 5.6, 6.9); raam(vl, 0.55, 0.5, 5.6, 6.9)
             paneel("zellige", vl, -1.05, 1.05, 5.3, 7.35, 0.04, 1.2, 1.2)
         else:
+            if i == 3:                                     # zuidkant: zijdeur vanuit de overdekte wachtrij (POV-video)
+                zd = spitsboog(0.3, 1.05, 0.0, 1.75, 10, 0.7)
+                vul("deur", vl, zd, 0.09); strip("wit", vl, zd, 0.2, 0.1)
             raam(vl, 0.0, 0.6, 5.6, 7.0)
             paneel("zellige", vl, -0.75, 0.75, 5.3, 7.4, 0.04, 1.2, 1.2)
     band("zigzag", hw, 7.75, 8.4, 0.05)
@@ -151,7 +236,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur"): bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        if not vast and rol not in EIGEN: bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]
         for f in ([] if vast else bm.faces):
