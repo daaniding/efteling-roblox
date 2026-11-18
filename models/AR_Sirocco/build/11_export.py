@@ -1,12 +1,12 @@
 """11_export: Sirocco -> FBX'en voor Roblox (1 unit = 1 m; in Studio ScaleTo(3)), zelfde methode als AR_Pagode/build/11_export.py.
   exports/AR_Sirocco_gebouw.fbx : dak, constructie, vlonder, tonnen niet; decor, hek  (staat stil)
-  exports/AR_Sirocco_rit.fbx    : draaischijf, subschijven, tonnen, 12 boten       (draait later)
+  exports/AR_Sirocco_rit.fbx    : draaischijf, subschijven, tonnen, 12 boten; per draaiend lichaam (rtm, rtsa..c, rtba..l)
   exports/AR_Sirocco_omgeving.fbx : wachtrij, zeilkap, hutje, brug, vijverrand, haven (07_omgeving)
 Oorsprong = dakmidden op waterpeil (park 456,5; 191,2); per materiaal samengevoegd, stukken <= 9500 driehoeken, onderdeelnaam
 SI_<rol>_<n>_<deel>, UV's per vlak los (geen gedeelde hoekpunten), ankerblokje op z = -2.
 Uit ook exports/export_info.json (driehoeken per deel, lampen).
 Gebruik: blender --background --python build/11_export.py -- --master AR_Sirocco_master.blend --uit exports"""
-import bpy, bmesh, sys, os, json
+import bpy, bmesh, sys, os, json, math
 from collections import defaultdict
 from mathutils import Matrix
 
@@ -14,6 +14,7 @@ a = sys.argv[sys.argv.index("--") + 1:]
 master = os.path.abspath(a[a.index("--master") + 1]); uit = os.path.abspath(a[a.index("--uit") + 1])
 os.makedirs(uit, exist_ok=True)
 LIMIT = 9500
+VOOR = math.radians(-124.0)                # = 03_forms (subschijven op VOOR + 90 + 120 k)
 bpy.ops.wm.open_mainfile(filepath=master)
 dg = bpy.context.evaluated_depsgraph_get()
 RIT_ROLLEN = {"platform", "subschijf", "ton", "voet", "romp", "romp_hout", "romp_blauw", "rood", "binnen", "golf", "schubben", "sierpaneel", "goud", "zeil", "mast", "kist",
@@ -36,7 +37,21 @@ def verzamel(deel):
         if not me.polygons: bpy.data.meshes.remove(me); continue
         me.transform(o.matrix_world)
         if not me.uv_layers: me.uv_layers.new(name="UVMap")
-        groepen["SI_" + o["rol"]].append((me, [p.index for p in me.polygons]))
+        if deel != "rit":
+            groepen["SI_" + o["rol"]].append((me, [p.index for p in me.polygons])); continue
+        # rit: per draaiend lichaam apart (Daan 18 nov: de rit gaat draaien): m = hoofdschijf (schijf, tonnen, 3 losse boten draaien
+        # mee als eigen boot), sa..sc = subschijven, ba..bl = boot00..11; onderdeelnaam SI_<rol>_<n>_rt<groep>
+        if o.name.startswith("SI_boot"):
+            groepen["SI_" + o["rol"] + "|b" + "abcdefghijkl"[int(o.name[7:9])]].append((me, [p.index for p in me.polygons]))
+        elif o["rol"] == "subschijf":
+            per = defaultdict(list)
+            for p in me.polygons:
+                c = p.center; h = math.atan2(c.y, c.x)
+                s = min(range(3), key=lambda k: abs((h - (VOOR + math.radians(90 + 120 * k)) + math.pi) % (2 * math.pi) - math.pi))
+                per[s].append(p.index)
+            for k, polys in per.items(): groepen["SI_subschijf|s" + "abc"[k]].append((me, polys))
+        else:
+            groepen["SI_" + o["rol"] + "|m"].append((me, [p.index for p in me.polygons]))
     return groepen
 
 
@@ -55,9 +70,10 @@ def schrijf(groepen, naam, achter):
                 except ValueError: continue
                 for lp, li in zip(f.loops, p.loop_indices): lp[uvl].uv = uv[li].uv
         bmesh.ops.triangulate(bm, faces=bm.faces)
-        nm = f"{mn}_{idx}_{achter}"
+        mat, _, grp = mn.partition("|")
+        nm = f"{mat}_{idx}_{achter}{grp}"
         me2 = bpy.data.meshes.new(nm); bm.to_mesh(me2); bm.free()
-        me2.materials.append(bpy.data.materials.get(mn) or bpy.data.materials.new(mn))
+        me2.materials.append(bpy.data.materials.get(mat) or bpy.data.materials.new(mat))
         ob = bpy.data.objects.new(nm, me2); exp.objects.link(ob); made.append((nm, len(me2.polygons)))
 
     for mn, lijst in groepen.items():

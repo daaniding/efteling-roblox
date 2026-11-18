@@ -1505,5 +1505,18 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   door terreinwater in de vijverkolommen (modderbodem; water rekent 2 studs lager dan vaste grond: volle laag [-4,0] + laag [0,4]
   met bezetting 0,1 -> wateroppervlak Y 0,3-0,4). Water parkbreed: kleur (34, 54, 42), transparantie 0,18, reflectie 0,35,
   golven 0,04 / snelheid 4 (was (22, 32, 22) / 0,04 / 0,18 / 0,03 / 3). Spawn tijdelijk op het plein bij de ingang (alleen in de place).
-- VOLGENDE: looptest in Play (plein -> wachtrij -> dek, dek -> brug -> plein), bezoekers (Park.registreer Sirocco, VOLGORDE na de
+- Rit v1 (18 nov, Daan: "1 zitplaats", "boot draait vanzelf", "moet echt sneller", "uitstappen vetter, Engels of vertaald",
+  "instapknop mooier", "bezet = niet instappen"): rit-FBX per draaiend lichaam (11_export: SI_<rol>_<n>_rt<groep>, m = hoofdschijf,
+  sa..sc subschijven, ba..bl boten; asset 112959171658722). roblox/sirocco_rit.luau (via maak_rit.py -> sirocco_rit_plak.luau):
+  draaipunten als attributen op Rit, 1 onzichtbare Seat per boot op de achterbank met eigen ProximityPrompt (Style Custom, "Board"),
+  2 schotten in de gaashek-openingen (dicht tijdens de rit), LocalizationService.SiroccoTeksten (nl).
+  SiroccoRit.server: klok (instappen 15 s, wacht tot iemand zit; rit 60 s; uitstappen 14 s), Sit via prompt alleen als de boot vrij
+  is en je nog niet zit, uitstappen: stoel los, zelf naar de brug, na 9 s brengt de medewerker je weg (beeld zwart).
+  SiroccoRitClient: BulkMoveTo uit de serverklok (hoofdschijf 5 omw., subschijf -11, boot 6-8 + dobberen), hele omwentelingen
+  zodat alles weer in de instapstand eindigt; rijder hangt met SeatWeld aan de verankerde stoel en gaat vanzelf mee (werkt),
+  camera draait mee; springen uit tot het uitstappen; titel S I R O C C O / "Welcome aboard, sailor", "Hold on tight!",
+  "Welcome back in port"; eigen instapknop (donkerblauwe pil, gouden rand en toets, vasthoudbalk, touch werkt).
+  Getest in Play: rit draait, rijder zit vast en draait mee, camera volgt per frame, uitstappen zet je op het dek.
+- VOLGENDE: Daans oordeel over snelheid/knop/uitstappen; bezoekers in de boten (Park.registreer Sirocco); geluid (bel, water);
+  looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
