@@ -14,12 +14,16 @@ In Studio: workspace.FataMorgana.Toren + terrein 36x30 m (bestrating Y 0,91, wat
 Stap 2 — noordgevel (build/03_noordgevel.py): west- en oostvleugel volgens AHN-voorlijn, hoofdvolume met plat donker dak
 (x -73..-6, y -297..-339) zodat alles aan elkaar zit (Daan: "het zit niet aan elkaar"), witte/grijze/gouden koepel,
 westtorentje, galerij met groen afdak (echt uitgespaard), erkers met roosterwerk, kade met pijlers en bolbekroningen langs het
-water, sierlantaarnpalen, cipressen (kort stammetje + kern + onregelmatige kluiten, Pagode-naaldtextuur; Daan: gladde spoel
+water, (sierlantaarnpalen weer weg: Daan "haal de lantaarnpalen weg"), cipressen (kort stammetje + kern + onregelmatige kluiten, Pagode-naaldtextuur; Daan: gladde spoel
 "ziet er niet uit"), muurlampjes. Textuur (Daan: "copy paste van hetzelfde ridleltje"): stuc-tegel zonder grote
 vlekken + losse verweringsoverlays (vlek1..4, streep, voet; willekeurig per muur, 02_toren.verwering), openingen vrij.
 Alles herladen met roblox/plaats_modellen.luau; terrein met plaats_noordgevel.luau.
 Les: Roblox toont alleen voorkanten — losse vlakken (overlays, dak, galerijwand) met de normaal naar buiten bouwen en niet door
 recalc_face_normals laten omdraaien.
+Galerij (Daan: "ziet er niet uit"): ronde zuilen met kapiteel, uitgesneden rondbogen, ruimte met tegelvloer/plafond/deur/ramen,
+pannendak met dikte op schoren. Looppad van 3 m voor de toren (kade maakt een sprong), zodat west- en oostkant verbonden zijn.
+Les: bmesh-vlakken zonder recalc_face_normals hebben normaal (0,0,0) -> bm.normal_update() vóór de doosprojectie, anders
+uitgerekte strepen in de textuur.
 Volgende stukken (Daans keuze): minaret, plein met fonteinen, wachtrij, achterkant/zijkant.
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

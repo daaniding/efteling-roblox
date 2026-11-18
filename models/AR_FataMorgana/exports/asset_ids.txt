@@ -2,7 +2,7 @@ AR_FataMorgana_toren 78216314839709
 FM_lijst_kleur 84200753761674
 FM_stuc_kleur 87378813833395
 FM_stuc_normaal 93453765359013
-AR_FataMorgana_noordgevel 122927178695906
+AR_FataMorgana_noordgevel 133405979108801
 FM_vlek1_kleur 139447230717275
 FM_vlek2_kleur 130335827998969
 FM_vlek3_kleur 89523083759406

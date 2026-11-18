@@ -13,10 +13,10 @@ D = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 src = open(os.path.join(D, "build", "02_toren.py")).read().rsplit("\nmain()", 1)[0]
 T = {"__file__": os.path.join(D, "build", "02_toren.py")}; exec(compile(src, "02_toren.py", "exec"), T)
 OWNER = "phase:03_noordgevel"
-T["KLEUR"].update({"koepel_wit": (0.94, 0.93, 0.9), "koepel_grijs": (0.8, 0.8, 0.82), "pannen": (0.16, 0.42, 0.32),
+T["KLEUR"].update({"stucvlak": (0.86, 0.78, 0.66), "tegel": (0.62, 0.4, 0.3), "koepel_wit": (0.94, 0.93, 0.9), "koepel_grijs": (0.8, 0.8, 0.82), "pannen": (0.16, 0.42, 0.32),
                    "kade": (0.95, 0.93, 0.88), "dak": (0.22, 0.22, 0.23), "lampmetaal": (0.32, 0.16, 0.12), "lampglas": (1.0, 0.92, 0.75),
                    "cipres": (0.12, 0.22, 0.12), "hout": (0.32, 0.2, 0.12)})
-T["UVS"].update({"koepel_wit": 2.0, "koepel_grijs": 2.0, "pannen": 1.0, "kade": 9.0, "dak": 4.0, "lampmetaal": 1.0, "lampglas": 1.0,
+T["UVS"].update({"stucvlak": 9.0, "tegel": 1.0, "koepel_wit": 2.0, "koepel_grijs": 2.0, "pannen": 1.0, "kade": 9.0, "dak": 4.0, "lampmetaal": 1.0, "lampglas": 1.0,
                  "cipres": 0.8, "hout": 1.0})
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 quad, doos, strip, spitsboog, vul, raam, nis, lathe, bol, Vlak = (T[k] for k in ("quad", "doos", "strip", "spitsboog", "vul", "raam", "nis", "lathe", "bol", "Vlak"))
@@ -129,22 +129,51 @@ def erker(vl, u, z, w=1.6, h=1.5, d=0.8):
 
 
 def galerij(vl, u0, u1, h=3.4, diep=1.6, n=5):
-    """inspringende bogengalerij in de onderste verdieping met groen pannen afdak (Fata2013, links van de toren)"""
-    w = (u1 - u0) / n
-    # donkere achterwand + vloer (de galerij loopt de muur in)
-    q = [vl.p(u0, 0, -diep + 0.02), vl.p(u1, 0, -diep + 0.02), vl.p(u1, h, -diep + 0.02), vl.p(u0, h, -diep + 0.02)]
-    quad("raam", q[::-1])
-    for k in range(n + 1):
-        uc = u0 + k * w
-        prisma("lijst", [Vector((p.x, p.y, 0)) for p in [vl.p(uc - 0.17, 0, 0.02), vl.p(uc + 0.17, 0, 0.02), vl.p(uc + 0.17, 0, -0.3), vl.p(uc - 0.17, 0, -0.3)]], 0.0, h - 0.9)
+    """bogengalerij in de onderste verdieping (Fata2013, links van de toren): ronde zuilen met voet en kapiteel, een echte
+    bogenwand (rondbogen eruit gesneden, archivolt), erachter een ruimte met tegelvloer, plafond en achterwand met deur en
+    ramen, daarboven een groen pannendak met dikte op houten schoren (Daan 18 nov: de platte versie "ziet er niet uit")"""
+    w = (u1 - u0) / n; vs = 2.25; dik = 0.35; ow = w - 0.34; r = ow / 2
+    # bogenwand: per vak stroken van de boogrand tot de bovenkant
     for k in range(n):
-        om = spitsboog(u0 + (k + 0.5) * w, w - 0.34, h - 0.9, h - 0.9, 8, 0.62)[1:-1]
-        strip("lijst", vl, om, 0.18, 0.12)
-    # afdak: groene pannen, schuin naar buiten
-    a0, a1 = vl.p(u0 - 0.3, h + 0.6, 0), vl.p(u1 + 0.3, h + 0.6, 0)
-    b0, b1 = vl.p(u0 - 0.3, h + 0.05, 1.3), vl.p(u1 + 0.3, h + 0.05, 1.3)
-    quad("pannen", [a0, a1, b1, b0]); quad("pannen", [b0, b1, b1 - Vector((0, 0, 0.12)), b0 - Vector((0, 0, 0.12))])
-    quad("pannen", [b0 - Vector((0, 0, 0.12)), b1 - Vector((0, 0, 0.12)), a1 - Vector((0, 0, 0.12)), a0 - Vector((0, 0, 0.12))])
+        uc = u0 + (k + 0.5) * w; ul, ur = u0 + k * w, u0 + (k + 1) * w
+        us = [ul + (ur - ul) * j / 24 for j in range(25)]
+        def onder(u):
+            d = abs(u - uc)
+            return vs + math.sqrt(max(0.0, r * r - d * d)) if d < r else vs
+        for ua, ub in zip(us, us[1:]):
+            ba, bb = onder(ua), onder(ub)
+            quad("stucvlak", [vl.p(ua, ba, 0), vl.p(ub, bb, 0), vl.p(ub, h, 0), vl.p(ua, h, 0)][::-1])
+            quad("stucvlak", [vl.p(ua, ba, -dik), vl.p(ua, h, -dik), vl.p(ub, h, -dik), vl.p(ub, bb, -dik)][::-1])
+            quad("stucvlak", [vl.p(ua, ba, 0), vl.p(ua, ba, -dik), vl.p(ub, bb, -dik), vl.p(ub, bb, 0)][::-1])
+        boog = [(uc + r * math.cos(math.pi * j / 16), vs + r * math.sin(math.pi * j / 16)) for j in range(17)]
+        strip("lijst", vl, boog, 0.14, 0.07)
+    strip("lijst", vl, [(u0 - 0.1, h - 0.05), (u1 + 0.1, h - 0.05)], 0.22, 0.1)
+    # zuilen
+    for k in range(n + 1):
+        p = vl.p(u0 + k * w, 0, -dik / 2)
+        lathe("lijst", [(0.21, 0.0), (0.21, 0.12), (0.16, 0.2), (0.12, 0.28), (0.11, vs - 0.42), (0.14, vs - 0.34), (0.2, vs - 0.18),
+                        (0.22, vs - 0.06), (0.22, vs), (0.0, vs)], 0.0, 12, (p.x, p.y))
+    # ruimte erachter: tegelvloer, plafond, achterwand (licht stuc) met deur en ramen
+    quad("tegel", [vl.p(u0, 0.02, -dik), vl.p(u1, 0.02, -dik), vl.p(u1, 0.02, -diep), vl.p(u0, 0.02, -diep)][::-1])
+    quad("stucvlak", [vl.p(u0, h - 0.02, -dik), vl.p(u0, h - 0.02, -diep), vl.p(u1, h - 0.02, -diep), vl.p(u1, h - 0.02, -dik)][::-1])
+    va = Vlak(vl.p(0, 0, -diep + 0.01), vl.U, vl.N)
+    deur = spitsboog((u0 + u1) / 2, 1.1, 0.0, 1.8, 8)
+    vul("deur", va, deur, 0.05); strip("lijst", va, deur, 0.16, 0.1)
+    for uu in (u0 + (u1 - u0) * 0.2, u0 + (u1 - u0) * 0.8): raam(va, uu, 0.55, 1.0, 2.0)
+    # pannendak: schuin van de muur naar buiten, met dikte, op houten schoren
+    t = 0.14; uit = 1.15
+    a0, a1 = vl.p(u0 - 0.35, h + 0.95, 0.0), vl.p(u1 + 0.35, h + 0.95, 0.0)
+    b0, b1 = vl.p(u0 - 0.35, h + 0.42, uit), vl.p(u1 + 0.35, h + 0.42, uit)
+    dz = Vector((0, 0, t))
+    quad("pannen", [a0 + dz, a1 + dz, b1 + dz, b0 + dz][::-1][::-1]); quad("pannen", [b0, b1, a1, a0])
+    quad("pannen", [b0, b0 + dz, b1 + dz, b1][::-1]); quad("pannen", [a0, b0, b0 + dz, a0 + dz]); quad("pannen", [b1, a1, a1 + dz, b1 + dz])
+    for k in range(0, n + 1):
+        uu = u0 + k * w
+        for (pa, pb) in ((vl.p(uu, h + 0.05, 0.0), vl.p(uu, h + 0.45, uit - 0.2)),):
+            dd = (pb - pa); nn = dd.cross(vl.U).normalized() * 0.05; ss = vl.U * 0.05
+            prisma("hout", [Vector((q.x, q.y, 0)) for q in (pa - ss, pa + ss, pa + ss, pa - ss)], 0, 0) if False else None
+            for e in ((ss, nn), (nn, -ss), (-ss, -nn), (-nn, ss)):
+                quad("hout", [pa + e[0], pb + e[0], pb + e[1], pa + e[1]])
 
 
 def romp():
@@ -161,7 +190,7 @@ def romp():
 
 def kade():
     """witte kademuur met pijlers en bolle bekroningen langs het water (Fata2013.jpg); waterlijn = terrein (plaats_noordgevel)"""
-    lijn = [(-74.0, -292.8), (-38.0, -292.8), (-38.0, -286.7), (-4.0, -286.7)]
+    lijn = [(-74.0, -292.8), (-46.5, -292.8), (-46.5, -288.8), (-38.0, -288.8), (-38.0, -286.7), (-4.0, -286.7)]   # looppad voor de toren (Daan: "het pad moet wel geconnect")
     for (ax, ay), (bx, by) in zip(lijn, lijn[1:]):
         a, b = L(ax, ay), L(bx, by); u = (b - a).normalized(); n = Vector((-u.y, u.x, 0)); lengte = (b - a).length
         prisma("kade", [a - n * 0.18, b - n * 0.18, b + n * 0.18, a + n * 0.18], -0.4, 1.0)
@@ -253,13 +282,13 @@ def rooster(vl, u, v0, w, h, n=0.06):
 
 def bouw():
     romp(); kade()
-    for x in (-35.4, -29.6): lantaarnpaal(x, -290.6)
+    # lantaarnpalen bij de galerij weggehaald (Daan 18 nov: "haal de lantaarnpalen weg")
     for k, (x, y, h) in enumerate(((-47.0, -298.6, 5.8), (-57.5, -297.9, 6.4), (-63.0, -297.2, 5.2))): cipres(x, y, h, k)
     # westvleugel (AHN-voorlijn), oostvleugel
     west = muur([(-72.5, -296.5), (-66.0, -297.5), (-60.0, -298.5), (-51.0, -299.5), (-43.5, -299.5)])
     L0 = (L(-30.0, -292.0) - L(-36.5, -292.5)).length
     oost = muur([(-36.5, -292.5), (-30.0, -292.0), (-27.0, -294.0), (-21.0, -294.5), (-12.0, -295.5), (-8.0, -295.5)],
-                uitsparing={0: (0.9, L0 - 0.2, 3.4, 1.6)})
+                uitsparing={0: (0.9, L0 - 0.2, 3.4, 1.9)})
     # westvleugel: ramen, deurtje, erker
     vl, l = west[1]; raam(vl, l * 0.5, 0.6, 4.3, 5.6)
     vl, l = west[2]; raam(vl, 2.5, 0.6, 4.3, 5.6); deur = spitsboog(6.2, 1.2, 0.0, 1.7, 8); vul("deur", vl, deur, 0.05); strip("lijst", vl, deur, 0.2, 0.14)
@@ -274,7 +303,7 @@ def bouw():
     # witte koepel achter de westmuur (tot 11,3 m)
     c = L(-48.5, -301.0); trommel("stuc", c, H, H + 0.9, 1.9, 8, ramen=False); koepel("koepel_wit", c, H + 0.9, 1.95, 2.35, 0.1)
     # oostvleugel: galerij links van de toren, erker, ramen
-    vl, l = oost[0]; galerij(vl, 0.9, l - 0.2, 3.4, 1.6, 5)
+    vl, l = oost[0]; galerij(vl, 0.9, l - 0.2, 3.4, 1.9, 5)
     raam(vl, l * 0.38, 0.55, 5.2, 6.5); raam(vl, l * 0.62, 0.55, 5.2, 6.5)
     vl, l = oost[2]; raam(vl, l * 0.3, 0.55, 5.2, 6.4); raam(vl, l * 0.7, 0.55, 5.2, 6.4)
     vl, l = oost[1]; erker(vl, l * 0.5, 4.8, 1.3, 1.4, 0.7); rooster(vl, l * 0.5, 5.05, 1.1, 0.85, 0.73)
@@ -293,7 +322,8 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         ov = rol in T["OVERLAY"]
-        if not ov and rol not in ("raam", "deur", "dak"): bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        if not ov and rol not in ("raam", "deur", "dak", "stucvlak", "tegel"): bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.normal_update()                                   # vlakken zonder recalc hebben anders normaal (0,0,0) -> verkeerde UV-as
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]
         for f in ([] if ov else bm.faces):
             n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))

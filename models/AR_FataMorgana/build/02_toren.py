@@ -239,6 +239,7 @@ def uv_en_objecten():
         if rol not in OVERLAY and rol not in ("raam", "deur"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
             bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.normal_update()                                   # vlakken zonder recalc hebben anders normaal (0,0,0) -> verkeerde UV-as
         uvl = bm.loops.layers.uv.verify(); s = UVS[rol]
         for f in ([] if rol in OVERLAY else bm.faces):
             n = f.normal; ax = max(range(3), key=lambda i: abs(n[i]))

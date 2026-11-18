@@ -27,7 +27,7 @@ for ix = 1, nx do
 	local px = (x0 + (ix - 0.5) * 4) / S
 	for iz = 1, nz do
 		local py = -(z0 + (iz - 0.5) * 4) / S
-		local water = (px > -38 and py > -286.5) or (px <= -38 and py > -292.6)
+		local water = (px > -38 and py > -286.5) or (px <= -38 and px > -46.5 and py > -288.6) or (px <= -46.5 and py > -292.6)   -- looppad voor de toren
 		for iy = 1, 9 do
 			local m, o = Enum.Material.Ground, 1
 			if water then
