@@ -14,8 +14,8 @@ exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6)
 G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:12_veranda"
-T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "donker": (0.12, 0.13, 0.15), "vloertegel": (0.65, 0.42, 0.33)})
-T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "donker": 1.0, "vloertegel": 2.0})
+T["KLEUR"].update({"fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "donker": (0.12, 0.13, 0.15), "vloertegel": (0.65, 0.42, 0.33), "goud": (0.87, 0.67, 0.32), "koepel_blauw": (0.45, 0.68, 0.84)})
+T["UVS"].update({"fries": 1.0, "rood": 1.0, "wit": 9.0, "donker": 1.0, "vloertegel": 2.0, "goud": 1.0, "koepel_blauw": 1.0})
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("fries",)
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -75,6 +75,39 @@ def bouw():
         y = h0 - (h0 - h1) * i / k
         prisma("donker", [L(XV + 0.035, y - 0.01), L(XV + 0.065, y - 0.01), L(XV + 0.065, y + 0.01), L(XV + 0.035, y + 0.01)], 0.12, 0.98)
     # geen tussenhek: de rij komt uit de wachtrijhal (zuid) en loopt rechtdoor naar de zijdeur in de minaret (noord)
+    # opening op de zuidoosthoek (ingang op rustige dagen, POV-video 2025) afgesloten met paaltjes en een touw (video 2020;
+    # Daan: "afsluiten met touw"), zodat de rij via de ingang aan de oostkant door de wachtrijhal loopt
+    palen = [YZ + 0.1, (YZ + h1) / 2, h1]
+    for y in palen[:2]:
+        p = L(XV + 0.05, y)
+        lathe("donker", [(0.11, 0.0), (0.11, 0.04), (0.035, 0.07), (0.03, 0.92), (0.05, 0.95), (0.0, 0.97)], 0.0, 10, (p.x, p.y))
+        lathe("goud", [(r * 0.06, z) for r, z in ((0.0, -0.06), (0.7, -0.04), (1.0, 0.0), (0.7, 0.04), (0.0, 0.06))], 1.02, 10, (p.x, p.y))
+    for ya, yb in zip(palen, palen[1:]):                 # doorhangend touw (12 stukjes)
+        pts = []
+        for k in range(13):
+            t = k / 12; y = ya + (yb - ya) * t
+            pts.append(L(XV + 0.05, y) + Vector((0, 0, 0.9 - 0.14 * 4 * t * (1 - t))))
+        for a, b in zip(pts, pts[1:]):
+            d = (b - a); m = (a + b) / 2; hl = d.length / 2 + 0.01
+            t_ = d.normalized(); z_ = Vector((0, 0, 1)); x_ = t_.cross(z_).normalized() * 0.018; zz = x_.cross(t_).normalized() * 0.018
+            bm = T["G"]["hout"]
+            ring_a = [bm.verts.new(m - t_ * hl + x_ * sx + zz * sz) for sx, sz in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+            ring_b = [bm.verts.new(m + t_ * hl + x_ * sx + zz * sz) for sx, sz in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+            for k in range(4):
+                j = (k + 1) % 4
+                f = bm.faces.new([ring_a[k], ring_a[j], ring_b[j], ring_b[k]])
+                if f.calc_center_median().__sub__(m).dot(f.normal) < 0: f.normal_flip()
+            fa = bm.faces.new(ring_a[::-1]); fb = bm.faces.new(ring_b)
+            if fa.normal.dot(-t_) < 0: fa.normal_flip()
+            if fb.normal.dot(t_) < 0: fb.normal_flip()
+    # bord met de wachttijd voor de opening, op het plein (POV-video 2025: schildvormig bord met krul erboven)
+    q = L(21.0, -339.15)
+    prisma("donker", [q + Vector((a, b, 0)) * 0.04 for a, b in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.95)
+    prisma("wit", [q + Vector((-0.03, -0.38, 0)), q + Vector((0.03, -0.38, 0)), q + Vector((0.03, 0.38, 0)), q + Vector((-0.03, 0.38, 0))], 0.95, 1.85)
+    prisma("koepel_blauw", [q + Vector((-0.04, -0.42, 0)), q + Vector((0.04, -0.42, 0)), q + Vector((0.04, 0.42, 0)), q + Vector((-0.04, 0.42, 0))], 0.9, 0.95)
+    prisma("goud", [q + Vector((-0.05, -0.45, 0)), q + Vector((0.05, -0.45, 0)), q + Vector((0.05, 0.45, 0)), q + Vector((-0.05, 0.45, 0))], 1.85, 2.0)
+    for dy in (-0.45, 0.45):
+        lathe("goud", [(r * 0.07, z) for r, z in ((0.0, -0.07), (0.7, -0.05), (1.0, 0.0), (0.7, 0.05), (0.0, 0.07))], 1.93, 8, (q.x, q.y + dy))
 
 
 def objecten():

@@ -103,6 +103,9 @@ geplaatste zuidvleugel stonden 1 stud west, 1 stud zuid en 1,29 stud omhoog (per
 i.p.v. -120; 0,91; 885) -> allemaal terug op VOET gezet en alle onderdelen Locked. Veranda: hoekpaal weg (de eerste paal van de hal
 is de hoekpaal), vloer met dezelfde dambordtegels als de hal (asset veranda 129865839477936).
 Les: na het plaatsen de WorldPivot van alle delen controleren (moet -120; 0,91; 885 zijn).
+Verandahoek (Daan: "afsluiten met touw"): de opening op de zuidoosthoek (ingang op rustige dagen) is dicht met twee paaltjes
+met gouden knop en een doorhangend touw; schildvormig bord met blauwe rand en gouden krul ervoor op het plein. De rij loopt nu
+altijd via de ingang aan de oostkant door de wachtrijhal. Asset veranda 72481974604568.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

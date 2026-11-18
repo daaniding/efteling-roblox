@@ -20,6 +20,6 @@ AR_FataMorgana_zuidvleugel 79597442500625
 FM_fries_kleur 96873829333423
 AR_FataMorgana_westkant 118665351344067
 AR_FataMorgana_achterkant 119797591567252
-AR_FataMorgana_veranda 129865839477936
+AR_FataMorgana_veranda 72481974604568
 FM_vloertegel_kleur 112689883777106
 FM_schildering_kleur 119976189330229
