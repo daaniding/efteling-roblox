@@ -16,9 +16,9 @@ G3 = G6["G3"]; T = G6["T"]
 L, prisma, lathe, quad, strip, raam, Vlak, spitsboog, vul = (G3[k] for k in ("L", "prisma", "lathe", "quad", "strip", "raam", "Vlak", "spitsboog", "vul"))
 OWNER = "phase:16_instaphal"
 T["OVERLAY"] = tuple(T["OVERLAY"]) + ("balustrade",)
-T["KLEUR"].update({"balustrade": (0.6, 0.48, 0.38), "balmuur": (0.9, 0.86, 0.78), "onderwand": (0.35, 0.27, 0.2), "donkervloer": (0.3, 0.22, 0.17), "lichtlijst": (1.0, 0.8, 0.5), "soffit": (0.2, 0.15, 0.12), "boogvul": (0.2, 0.15, 0.12), "witlijn": (0.95, 0.95, 0.92), "lat": (0.62, 0.48, 0.34), "water": (0.12, 0.22, 0.26), "dekhout": (0.55, 0.38, 0.24), "plafond": (0.2, 0.16, 0.14), "rozet": (0.43, 0.27, 0.17), "gordijn": (0.84, 0.77, 0.63), "groenhek": (0.25, 0.58, 0.5), "groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "gangpleister": (0.92, 0.85, 0.72), "groenneg": (0.25, 0.58, 0.5), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
+T["KLEUR"].update({"balustrade": (0.6, 0.48, 0.38), "balmuur": (0.9, 0.86, 0.78), "onderwand": (0.35, 0.27, 0.2), "donkervloer": (0.3, 0.22, 0.17), "lichtlijst": (1.0, 0.8, 0.5), "soffit": (0.2, 0.15, 0.12), "boogvul": (0.2, 0.15, 0.12), "boogcreme": (0.9, 0.86, 0.78), "kegel": (0.92, 0.88, 0.8), "witlijn": (0.95, 0.95, 0.92), "lat": (0.62, 0.48, 0.34), "water": (0.12, 0.22, 0.26), "dekhout": (0.55, 0.38, 0.24), "plafond": (0.2, 0.16, 0.14), "rozet": (0.43, 0.27, 0.17), "gordijn": (0.84, 0.77, 0.63), "groenhek": (0.25, 0.58, 0.5), "groen": (0.25, 0.58, 0.5), "poort": (0.05, 0.05, 0.07), "gangmuur": (0.92, 0.85, 0.72), "gangpleister": (0.92, 0.85, 0.72), "groenneg": (0.25, 0.58, 0.5), "fries": (0.2, 0.3, 0.6), "rood": (0.73, 0.26, 0.16), "wit": (0.95, 0.94, 0.9), "vloertegel": (0.65, 0.42, 0.33),
                    "matglas": (0.93, 0.95, 0.96), "schildering": (0.8, 0.75, 0.6), "koepel_blauw": (0.45, 0.68, 0.84), "hekgroen": (0.25, 0.36, 0.32), "donker": (0.12, 0.13, 0.15), "hout": (0.32, 0.2, 0.12), "bord": (0.95, 0.91, 0.8), "bollamp": (1.0, 0.78, 0.5)})
-T["UVS"].update({"balustrade": 1.0, "balmuur": 4.0, "onderwand": 4.0, "donkervloer": 2.0, "lichtlijst": 1.0, "soffit": 4.0, "boogvul": 1.0, "witlijn": 1.0, "lat": 1.0, "water": 4.0, "dekhout": 1.5, "plafond": 4.0, "rozet": 1.0, "gordijn": 2.0, "groenhek": 1.0, "groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "gangpleister": 4.0, "groenneg": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
+T["UVS"].update({"balustrade": 1.0, "balmuur": 4.0, "onderwand": 4.0, "donkervloer": 2.0, "lichtlijst": 1.0, "soffit": 4.0, "boogvul": 1.0, "boogcreme": 1.0, "kegel": 2.0, "witlijn": 1.0, "lat": 1.0, "water": 4.0, "dekhout": 4.0, "plafond": 4.0, "rozet": 1.0, "gordijn": 2.0, "groenhek": 1.0, "groen": 1.0, "poort": 1.0, "gangmuur": 4.0, "gangpleister": 4.0, "groenneg": 1.0, "fries": 1.0, "rood": 1.0, "wit": 9.0, "vloertegel": 2.0, "matglas": 1.0, "schildering": 1.0, "koepel_blauw": 1.0, "hekgroen": 1.0, "donker": 1.0, "bord": 1.0, "bollamp": 1.0})
 
 for r in T["KLEUR"]: T["G"][r] = bmesh.new()
 
@@ -36,9 +36,8 @@ XWI, XEI, YSI, YNI = XW + GB, XE - GB, YS + GB, YN - GB
 C0 = (6.3, -335.8); RT = 7.5                       # draaischijf (plattegrond: midden 1935,995 px)
 ZB, ZW, ZD = -3.7, -3.2, -2.9                      # bodem, water, dek (3 m onder de gaanderij)
 HZ = 4.86
-BY0, BY1 = -336.9, -334.7                          # brug westgaanderij -> controlehok
+BY0, BY1 = -336.9, -334.7                          # brug westgaanderij -> controlehok (alleen personeel, hekje dicht)
 R8 = 1.8                                           # straal achthoekig controlehok
-TY0, TY1 = -336.6, -335.0; TX0 = C0[0] + 1.75; NT = 18; TR = 0.26   # trap oostwaarts omlaag op de schijf
 
 
 def box(rol, x0, y0, x1, y1, z0, z1):
@@ -140,8 +139,12 @@ def bouw():
     box("gangmuur", XE, -330.0, 17.25, -329.8, 0.0, 3.05); box("gangmuur", XE, -328.2, 17.25, -328.0, 0.0, 3.05)   # neggen van de doorgang
     box("gangmuur", XE, -330.0, 17.25, -328.0, 3.0, 3.2)
     # randen (hal links van de looprichting): noord (oost->west), west (noord->zuid, met de brug), zuid (west->oost), oost (zuid->noord)
-    EX0, EX1 = C0[0] - 0.8, C0[0] + 0.8                                  # uittrap (links van het controlehok, vanaf de brug gezien)
-    rand(XEI, YNI, XWI, YNI, gaten=[(XEI - EX1 - 0.1, XEI - EX0 + 0.1)])
+    # trap schijf <-> noordgaanderij: west helft omlaag (in), oost helft omhoog (uit). Daan: "zo breed dat het aansluit met de fence":
+    # de trap beslaat precies de hele balustradevakken rond het controlehok, zodat de trapleuningen op de palen van de rand aansluiten
+    lgN = XEI - XWI; stN = lgN / max(1, round(lgN / 1.6))
+    k0 = math.floor((XEI - (C0[0] + 1.5)) / stN); k1 = math.ceil((XEI - (C0[0] - 1.5)) / stN)
+    EX0, EX1 = XEI - k1 * stN, XEI - k0 * stN; XM = (EX0 + EX1) / 2
+    rand(XEI, YNI, XWI, YNI, gaten=[(XEI - EX1 + 0.02, XEI - EX0 - 0.02)])
     rand(XWI, YNI, XWI, YSI, gaten=[(YNI - BY1 - 0.05, YNI - BY0 + 0.05)])
     rand(XWI, YSI, XEI, YSI)
     rand(XEI, YSI, XEI, YNI)
@@ -160,7 +163,11 @@ def bouw():
             vlak_uv("balustrade", pts, w_, [(0, 0), (lg / 1.6, 0), (lg / 1.6, 1), (0, 1)])
         box("groen", x0 - 0.04, y0 - 0.04, x1 + 0.04, y1 + 0.04, 1.0, 1.07)
     afsluiting(XEI - 0.05, -327.75, XE, -327.6, Vector((0, -1, 0)))         # oostgaanderij noord van de doorgang
-    afsluiting(XW, -333.4, XWI + 0.05, -333.25, Vector((0, -1, 0)))         # westgaanderij noord van de brug
+    # Daan (18 nov): trap van het controlehok weg, de trap naar de noordgaanderij in tweeën: IN = boog -> oost zuid -> zuid -> west ->
+    # noordgaanderij west -> westhelft trap omlaag; UIT = oosthelft trap omhoog -> noordgaanderij oost -> uitgangsdeur.
+    # Scheiding dwars over de noordgaanderij in het verlengde van de trapscheiding; brug naar het hok dicht (personeel).
+    afsluiting(XM - 0.04, YNI - 0.05, XM + 0.04, YN, Vector((1, 0, 0)))
+    afsluiting(XWI - 0.12, BY0, XWI - 0.04, BY1, Vector((1, 0, 0)))
     # brug van de westgaanderij naar het controlehok, met balustrades
     bx1 = C0[0] - R8 + 0.3
     box("donkervloer", XWI - 0.1, BY0, bx1, BY1, -0.3, 0.12)
@@ -184,34 +191,50 @@ def bouw():
         a_, b_ = hk[k], hk[(k + 1) % 8]; t = (b_ - a_); lg = t.length; t /= lg; n_ = Vector((t.y, -t.x, 0))
         if n_.dot(a_ - c) < 0: n_ = -n_
         mid = (a_ + b_) / 2
-        open_kant = abs(mid.x - c.x) > 1.2 and abs(mid.y - c.y) < 0.9          # west (brug) en oost (trap) open
+        open_kant = mid.x - c.x < -1.2 and abs(mid.y - c.y) < 0.9           # alleen west (brug) open
         if not open_kant:
             prisma("balmuur", [a_, b_, b_ - n_ * 0.16, a_ - n_ * 0.16], 0.14, 1.0)
             vlak_uv("balustrade", [a_ + n_ * 0.005 + Vector((0, 0, 0.14)), b_ + n_ * 0.005 + Vector((0, 0, 0.14)), b_ + n_ * 0.005 + Vector((0, 0, 1.0)), a_ + n_ * 0.005 + Vector((0, 0, 1.0))],
                    n_, [(0, 0), (lg / 1.6, 0), (lg / 1.6, 1), (0, 1)])
             prisma("groen", [a_ + n_ * 0.05, b_ + n_ * 0.05, b_ - n_ * 0.22, a_ - n_ * 0.22], 1.0, 1.07)
         vl = Vlak(a_, t, n_)
-        bg = spitsboog(lg / 2, lg - 0.14, 2.3, 2.3, 8, 0.6)[1:-1]
+        bg = spitsboog(lg / 2, lg - 0.2, 2.15, 2.15, 8, 0.6)[1:-1]
         tp = max(v for _, v in bg); hl = len(bg) // 2
-        bg = [p for p in bg[:hl] if p[1] < tp - 0.06] + [(lg / 2, tp + 0.12)] + [p for p in bg[hl:] if p[1] < tp - 0.06]
-        strip("groen", vl, bg, 0.08, 0.08)
-        prisma("groen", [a_ + Vector((sx, sy, 0)) * 0.07 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.12, 2.85)
-        lathe("bollamp", [(r * 0.07, z) for r, z in ((0.0, 0.0), (1.0, 0.03), (1.0, 0.16), (0.6, 0.2), (0.0, 0.22))], 2.85, 8, (a_.x, a_.y))
-    lathe("groen", [(R8 + 0.2, 0.0), (R8 + 0.25, 0.12), (R8 + 0.05, 0.25), (0.0, 0.28)], 2.85, 8, (c.x, c.y))      # dakje
-    lathe("groen", [(0.0, 0.0), (0.6, 0.0), (1.3, -0.9), (0.3, -1.5), (0.3, -2.3), (0.7, -2.55), (0.7, -2.6), (0.0, -2.6)], -0.3, 16, (c.x, c.y))   # kegel + zuil tot het dek
-    # trap van het controlehok oostwaarts omlaag op de schijf (panelenbalustrade aan beide kanten)
-    for i in range(NT):
-        x0 = TX0 + TR * i; ztop = 0.12 - (0.12 - ZD) * (i + 1) / NT
-        box("donkervloer", x0, TY0, x0 + TR, TY1, ztop - 0.25, ztop)
-    for y, kant in ((TY0, -1), (TY1, 1)):
-        A, B = L(TX0, y) + Vector((0, 0, 0.12)), L(TX0 + TR * NT, y) + Vector((0, 0, ZD))
-        schuinbox("balmuur", A + Vector((0, kant * 0.08, 0)), B + Vector((0, kant * 0.08, 0)), -0.3, 1.0, 0.16)
-        schuinbox("groen", A + Vector((0, kant * 0.08, 0)), B + Vector((0, kant * 0.08, 0)), 1.0, 1.07, 0.24)
-        ya = y + kant * 0.165
-        vlak_uv("balustrade", [A + Vector((0, kant * 0.165, -0.25)), B + Vector((0, kant * 0.165, -0.25)), B + Vector((0, kant * 0.165, 0.95)), A + Vector((0, kant * 0.165, 0.95))],
-               Vector((0, kant, 0)), [(0, 0), (2.9, 0), (2.9, 1), (0, 1)])
-    # uittrap (Eftepedia: "Via een trap aan de linkerzijde van het controlehok en een gaanderij kunnen we de hal verlaten"):
-    # van de schijf noordwaarts omhoog naar de noordgaanderij, panelenbalustrades aan beide kanten
+        bg = [p for p in bg[:hl] if p[1] < tp - 0.06] + [(lg / 2, tp + 0.14)] + [p for p in bg[hl:] if p[1] < tp - 0.06]
+        strip("groen", vl, bg, 0.06, 0.06)
+        rij = [(0.0, 2.15)] + sorted(bg) + [(lg, 2.15)]                      # crème zwikken boven de boog tot de kroonlijst (video)
+        for (ua, va), (ub, vb) in zip(rij, rij[1:]):
+            if ub - ua < 1e-4: continue
+            for nn, w_ in ((0.025, n_), (-0.025, -n_)):
+                vlak_uv("boogcreme", [vl.p(ua, va, nn), vl.p(ub, vb, nn), vl.p(ub, 3.0, nn), vl.p(ua, 3.0, nn)], w_, [(0, 0), (1, 0), (1, 1), (0, 1)])
+        q = a_                                                               # slank paaltje met voet en kapiteel
+        prisma("groen", [q + Vector((sx, sy, 0)) * 0.05 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.12, 3.0)
+        prisma("groen", [q + Vector((sx, sy, 0)) * 0.08 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 2.02, 2.15)
+        prisma("groen", [q + Vector((sx, sy, 0)) * 0.07 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 1.0, 1.1)
+        lathe("bollamp", [(r * 0.06, z) for r, z in ((0.0, 0.0), (1.0, 0.03), (1.0, 0.15), (0.6, 0.19), (0.0, 0.21))], 2.15, 8, (q.x, q.y))
+        lathe("goud", [(0.05, 0.0), (0.03, 0.08), (0.03, 0.16), (0.0, 0.32)], 3.32, 6, (q.x, q.y))   # pinakel op de kroonlijst
+    # kroonlijst: crème band met groene randen, daarop een vlak dakje (de lattenkap hangt erboven)
+    hk2 = [c + (p_ - c) * ((R8 + 0.12) / R8) for p_ in hk]
+    prisma("balmuur", hk2, 3.0, 3.28)
+    prisma("groen", [c + (p_ - c) * ((R8 + 0.16) / R8) for p_ in hk], 2.96, 3.02)
+    prisma("groen", [c + (p_ - c) * ((R8 + 0.18) / R8) for p_ in hk], 3.28, 3.34)
+    # onder de vloer: crème band met panelen (balustradetextuur) rondom
+    for k in range(8):
+        a_, b_ = hk[k], hk[(k + 1) % 8]; t = (b_ - a_); lg = t.length; t /= lg; n_ = Vector((t.y, -t.x, 0))
+        if n_.dot(a_ - c) < 0: n_ = -n_
+        vlak_uv("balustrade", [a_ + n_ * 0.01 + Vector((0, 0, -0.75)), b_ + n_ * 0.01 + Vector((0, 0, -0.75)), b_ + n_ * 0.01 + Vector((0, 0, -0.3)), a_ + n_ * 0.01 + Vector((0, 0, -0.3))],
+               n_, [(0, 0.2), (lg / 1.6, 0.2), (lg / 1.6, 0.8), (0, 0.8)])
+    prisma("balmuur", hk, -0.75, -0.3)
+    prisma("balmuur", [c + (p_ - c) * ((R8 + 0.03) / R8) for p_ in hk], -0.3, 0.1)       # crème vloerrand (video), vloer zelf blijft erboven
+    prisma("groen", [c + (p_ - c) * ((R8 + 0.05) / R8) for p_ in hk], -0.8, -0.75)
+    # crème trompet op een zuil tot het dek, met geribde rand en acht schuine stutten (video 2025, 47/58 s)
+    lathe("kegel", [(0.0, 0.0), (1.5, 0.0), (1.2, -0.25), (0.75, -0.7), (0.45, -1.2), (0.32, -1.7), (0.3, -2.1), (0.45, -2.25), (0.0, -2.25)], -0.8, 24, (c.x, c.y))
+    lathe("groen", [(0.5, 0.0), (0.6, 0.0), (0.6, -0.15), (0.5, -0.15)], ZD + 0.15, 24, (c.x, c.y))
+    for k in range(8):
+        a = math.pi / 8 + k * math.pi / 4; u_ = Vector((math.cos(a), math.sin(a), 0))
+        A_ = c + u_ * 0.35 + Vector((0, 0, ZD + 0.6)); B_ = c + u_ * (R8 - 0.2) + Vector((0, 0, -0.75))
+        schuinbox("groen", A_, B_, -0.05, 0.05, 0.08)
+    # trap schijf <-> noordgaanderij (3 balustradevakken breed), scheiding in het midden
     ny = 18; ry = (YNI - (-331.2)) / ny
     for i in range(ny):
         y0 = -331.2 + ry * i; ztop = ZD + (0.12 - ZD) * (i + 1) / ny
@@ -222,11 +245,19 @@ def bouw():
         schuinbox("groen", A + Vector((kant * 0.08, 0, 0)), B + Vector((kant * 0.08, 0, 0)), 1.0, 1.07, 0.24)
         vlak_uv("balustrade", [A + Vector((kant * 0.165, 0, -0.25)), B + Vector((kant * 0.165, 0, -0.25)), B + Vector((kant * 0.165, 0, 0.95)), A + Vector((kant * 0.165, 0, 0.95))],
                Vector((kant, 0, 0)), [(0, 0), (3.1, 0), (3.1, 1), (0, 1)])
+        vlak_uv("balustrade", [A + Vector((-kant * 0.005, 0, -0.15)), B + Vector((-kant * 0.005, 0, -0.15)), B + Vector((-kant * 0.005, 0, 0.95)), A + Vector((-kant * 0.005, 0, 0.95))],
+               Vector((-kant, 0, 0)), [(0, 0), (3.1, 0), (3.1, 1), (0, 1)])    # binnenkant van de trapleuning
+    A, B = L(XM, -331.2) + Vector((0, 0, ZD)), L(XM, YNI) + Vector((0, 0, 0.12))
+    schuinbox("balmuur", A, B, -0.2, 1.0, 0.08)
+    schuinbox("groen", A, B, 1.0, 1.06, 0.14)
+    for kant in (1, -1):
+        vlak_uv("balustrade", [A + Vector((kant * 0.045, 0, -0.15)), B + Vector((kant * 0.045, 0, -0.15)), B + Vector((kant * 0.045, 0, 0.95)), A + Vector((kant * 0.045, 0, 0.95))],
+                Vector((kant, 0, 0)), [(0, 0), (3.1, 0), (3.1, 1), (0, 1)])
     # draaischijf: houten dek (ringen planken), donkere rand, witte streepjes
     lathe("dekhout", [(0.0, 0.0), (RT, 0.0), (RT, -0.5), (0.0, -0.5)], ZD, 72, (c.x, c.y))
     lathe("donker", [(RT, 0.0), (RT + 0.1, 0.0), (RT + 0.1, -0.5), (RT, -0.5), (RT, 0.0)], ZD + 0.02, 72, (c.x, c.y))
-    for rr in [1.2 + 0.62 * k for k in range(10)]:
-        lathe("donker", [(rr - 0.015, 0.0), (rr + 0.015, 0.0)], ZD + 0.006, 72, (c.x, c.y))
+    for rr in (4.2, 4.26):                                               # donkere ring halverwege (video)
+        lathe("donker", [(rr - 0.02, 0.0), (rr + 0.02, 0.0)], ZD + 0.006, 72, (c.x, c.y))
     for k in range(36):
         if k % 2: continue
         a0 = math.radians(k * 10.0); a1 = math.radians(k * 10.0 + 6.0)
@@ -262,7 +293,7 @@ def objecten():
     for rol, bm in T["G"].items():
         if not bm.faces: continue
         vast = rol in T["OVERLAY"]
-        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "poort", "gangpleister", "groenneg", "plafond", "boogvul"):
+        if not vast and rol not in ("raam", "deur", "dak", "stucvlak", "poort", "gangpleister", "groenneg", "plafond", "boogvul", "boogcreme"):
             bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5); bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
         bm.normal_update()
         uvl = bm.loops.layers.uv.verify(); s = T["UVS"][rol]

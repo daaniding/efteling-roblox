@@ -184,6 +184,15 @@ Stap 2 klaar: gaanderij naar de video (2025, 40 s): donkere boogvulling boven de
 boogvormen leest, paaltjes met kapiteel en voet, smallere bovenleuning, groene onderrand dun met donker hout eronder; nieuwe
 balustradetextuur (bruine rechthoeken met ruitjes afgewisseld met crème vierkanten met bruine ruit, FM_balustrade 99934946723999);
 groen lichter mintgroen (118,172,158), gloed crème-amber (255,200,140). Asset instaphal 134610392151684.
+Stap 3 klaar: controlehok als paviljoen (video 2025, 40/47/58 s): slanke paaltjes met kapiteel, kielbogen met crème zwikken
+(rol boogcreme), crème kroonlijst met gouden pinakels, crème band met panelen onder de vloer, crème trompet op een zuil met acht
+groene stutten (rol kegel); draaischijf met visgraatparket (FM_parket 120995854106325, rol dekhout, 1 textuur = 4 m), één donkere ring.
+Routes omgegooid (Daan: "haal die trap in het midden weg ... die andere trap in 2 opsplitsen", "zo breed dat het aansluit met de
+fence"): trap van het controlehok weg; hok + brug alleen personeel (hekje dicht bij de westgaanderij). De trap schijf <-> noordgaanderij
+is 3 balustradevakken breed (x 4,07..9,03, ~5 m) met een scheiding in het midden (x 6,55) die dwars over de noordgaanderij doorloopt:
+IN = boog -> oost zuid -> zuid -> west -> noordgaanderij west -> westhelft trap omlaag; UIT = oosthelft trap omhoog -> noordgaanderij
+oost -> uitgangsdeur. Getest in Play: beide routes ok; brug, noordgaanderij dwars, oostgaanderij noord van de boog en de trapscheiding
+houden tegen. Asset instaphal 74484438706432.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

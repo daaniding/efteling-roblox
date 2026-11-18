@@ -70,4 +70,23 @@ def balustrade(W=768, H=432):
     Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6)).save(os.path.join(T, "FM_balustrade_kleur.png"))
 
 
-tegelhal(); deurblad(); balustrade(); print("[14t_halletje] klaar")
+def parket(N=1024, sw=128, pw=64):
+    """draaischijf (video 2025, 47 s): gelakte planken in visgraat (chevron), 1 textuur = 2 m, naadloos.
+    Stroken van 0,25 m; per strook planken onder 45 graden, afwisselend links/rechts; eigen rng zodat de andere texturen gelijk blijven"""
+    r2 = np.random.default_rng(141)
+    y, x = np.mgrid[0:N, 0:N].astype(np.float32)
+    k = (x // sw).astype(int); xl = x % sw
+    a = np.where(k % 2 == 0, y + xl, y - xl + sw)
+    pid = (a // pw).astype(int); fr = (a % pw) / pw
+    toon = r2.uniform(0.82, 1.12, (N // sw + 1, 64))
+    t = toon[k, pid % 64]
+    basis = np.array((150, 92, 52), np.float32)
+    langs = np.where(k % 2 == 0, y - xl, y + xl)
+    nerf = 0.95 + 0.05 * np.sin(fr * pw * 0.8 + pid * 1.7 + 1.5 * np.sin(langs * 0.04 + pid))
+    im = basis[None, None, :] * (t * nerf)[..., None] + r2.normal(0, 4, (N, N, 1))
+    naad = (fr < 0.035) | (xl < 2) | (xl > sw - 2)
+    im[naad] = (84, 52, 32)
+    Image.fromarray(np.clip(im, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.7)).save(os.path.join(T, "FM_parket_kleur.png"))
+
+
+tegelhal(); deurblad(); balustrade(); parket(); print("[14t_halletje] klaar")
