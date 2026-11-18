@@ -193,8 +193,8 @@ is 3 balustradevakken breed (x 4,07..9,03, ~5 m) met een scheiding in het midden
 IN = boog -> oost zuid -> zuid -> west -> noordgaanderij west -> westhelft trap omlaag; UIT = oosthelft trap omhoog -> noordgaanderij
 oost -> uitgangsdeur. Getest in Play: beide routes ok; brug, noordgaanderij dwars, oostgaanderij noord van de boog en de trapscheiding
 houden tegen. Asset instaphal 74484438706432.
-Daarna (Daan: "haal die connectie met de rij en dat midden ook weg"): brug en controlehok (met trompet en stutten) weg, westgaanderij
-weer dicht; lattenkap hangt nog boven het midden, middenlamp van Instaphallicht naar z 1,0. Asset instaphal 85900016049288.
+Daarna (Daan: "niet het midden weghalen maar de connectie tussen het midden en de rij"): alleen de brug weg; het controlehok staat
+vrij in het midden op zijn trompet, rondom dicht (personeel). Westgaanderij doorlopend dicht. Asset instaphal 139542993746719.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
