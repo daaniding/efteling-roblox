@@ -95,6 +95,9 @@ een gang langs de achterwand. Route: ingang uit het plein aan de westkant (x 22.
 laatste baan komt achter uit, gang langs de achterwand terug naar het westen, westvak (x 17,2..22) noordwaarts de veranda in, naar
 de zijdeur. Schuine luifel met de fries (video), zwart voorhek met rode plaquettes, spitsboogdoorgang westkant achterwand.
 Asset zuidvleugel 126456717543755.
+Stap 12d (Daan: "je moet er aan het begin in, niet aan het einde en dan teruglopen"): ingang nu aan de OOSTkant (opening in het
+voorhek bij de oostelijkste baan, paaltjes met bollen), zigzag westwaarts, westelijkste baan komt achter uit in het westvak en
+loopt zo de veranda in naar de zijdeur; geen terugloopgang meer. Asset zuidvleugel 79597442500625.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

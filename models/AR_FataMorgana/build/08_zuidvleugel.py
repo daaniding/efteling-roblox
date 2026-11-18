@@ -84,21 +84,20 @@ def bouw():
         for i in range(k + 1):
             q = a + d * (i / k)
             prisma(rol, [q + Vector((sx, sy, 0)) * 0.025 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, h)
-    # Daan 18 nov ("de fences staan nog steeds verkeerd"; zijn foto): de banen lopen van voor naar achter (noord-zuid), ~1,2 m
-    # breed, vast aan het voorhek, en stoppen ~1,2 m voor de achterwand: daar loopt een gang langs de achterwand.
-    # Route: ingang uit het plein aan de westkant (opening x 22..23,2), zigzag oostwaarts door de banen, laatste baan komt achter
-    # uit, gang langs de achterwand terug naar het westen, dan noordwaarts door het westvak (x 17,2..22) de veranda in.
-    YF, YR = YV - 0.25, -345.6                           # voorhek, achterhek (scheiding banen / gang langs de achterwand)
-    BW = 1.2; X0B = 22.0; K = 29                         # baanbreedte, eerste hek, aantal banen (oneven: laatste baan loopt naar achteren)
+    # Daan 18 nov ("de fences staan nog steeds verkeerd"; zijn foto): banen van voor naar achter (noord-zuid), 1,2 m breed, vast aan
+    # het voorhek, keren afwisselend voor en achter (achter ~1,2 m vrij tot de achterwand). Daan: "je moet er aan het begin in, niet
+    # aan het einde en dan teruglopen": ingang aan de OOSTkant (opening in het voorhek bij de oostelijkste baan), zigzag westwaarts,
+    # de westelijkste baan komt achter uit in het westvak (x 17,2..22) en loopt noordwaarts de veranda in naar de zijdeur.
+    YF, YR, YW = YV - 0.25, -345.6, YA + 0.24          # voorhek, einde van de hekken die achter open zijn, achterwand (pilasters)
+    BW = 1.2; X0B = 22.0; K = 29                         # baanbreedte, westelijkste hek, aantal banen
     for k in range(K + 1):
         x = X0B + BW * k
-        if k == 0 or k == K: hek(x, YF, x, YR)                       # buitenste hekken: dicht
-        elif k % 2 == 1: hek(x, YF, x, YR + BW)                      # baan k loopt naar achteren: keren achter
-        else: hek(x, YF - BW, x, YR)                                 # keren aan de voorkant
-    hek(X0B, YR, X0B + BW * (K - 1), YR)                             # achterhek, open bij de laatste baan
-    hek(X0B + BW * K, YR, X1 - 0.3, YR)                              # dicht oostelijk van de banen
+        if k == K: hek(x, YF, x, YW)                                 # oostgrens: dicht
+        elif k % 2 == 0: hek(x, YF, x, YR)                           # achter open (ook hek 0: uitloop naar het westvak)
+        else: hek(x, YF - BW, x, YW)                                 # voor open
+    XI = X0B + BW * (K - 1)                                          # ingang: opening in het voorhek tussen XI en XI + BW
     # voorhek tussen de palen: zwart smeedwerk met rode plaquettes met ster (video), opening voor de ingang bij x 20,8..22
-    for xa, xb in ((20.7, X0B), (X0B + BW, X1 - 0.3)):
+    for xa, xb in ((20.7, XI), (XI + BW, X1 - 0.3)):
         for z in (0.1, 1.0):
             prisma("donker", [L(xa, YF - 0.025), L(xb, YF - 0.025), L(xb, YF + 0.025), L(xa, YF + 0.025)], z - 0.03, z + 0.03)
         x = xa
@@ -110,7 +109,7 @@ def bouw():
             for rol, hw, n0, n1 in (("rood", 0.21, 0.03, 0.06), ("wit", 0.13, 0.06, 0.075), ("goud", 0.06, 0.075, 0.09)):
                 prisma(rol, [L(x - hw, YF + n0), L(x + hw, YF + n0), L(x + hw, YF + n1), L(x - hw, YF + n1)], 0.55 - hw, 0.55 + hw)
             x += 2.6
-    for xx in (X0B, X0B + BW):                           # ingangspaaltjes met crème bollen
+    for xx in (XI, XI + BW):                             # ingangspaaltjes met crème bollen
         p = L(xx, YF)
         prisma("donker", [p + Vector((sx, sy, 0)) * 0.05 for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))], 0.0, 1.1)
         lathe("wit", [(r * 0.09, z) for r, z in ((0.0, -0.09), (0.7, -0.06), (1.0, 0.0), (0.7, 0.06), (0.0, 0.09))], 1.2, 10, (p.x, p.y))
