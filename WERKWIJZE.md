@@ -427,3 +427,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   het einde van de fase, zodat deuren dan nog helemaal open staan.
 - Eenrichting bij een klapdeur: een botsende deur in open stand staat tegen de muur en houdt niemand tegen; zet een apart
   onzichtbaar schot dwars over de opening en laat de client het alleen dichtzetten voor wie aan de verkeerde kant staat.
+- Geluidsbronnen (Part) en Sounds nooit dezelfde naam geven als je FindFirstChild(naam, true) gebruikt: dan vind je de Part
+  en faalt elk frame (Sirocco "kreet"). Na elke geluidswijziging de console checken.
+- Daan wil muziek zacht: wachtrij ~0.05, in de attractie ~0.04-0.12; effecten 0.15-0.3.

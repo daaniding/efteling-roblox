@@ -82,6 +82,12 @@ for l in lijnen:
         if math.hypot(b[0] - a[0], b[1] - a[1]) > 0.02: seg.append((a[0], a[1], b[0], b[1]))
 rijen = ',\n'.join('\t{%.3f, %.3f, %.3f, %.3f}' % s for s in seg)
 dakrijen = ',\n'.join('\t{%.3f, %.3f, %.3f, %.3f}' % s for s in dak)
+# oevermuren (Daan 18 nov: "barieres bij het water, niemand mag het water in"): langs de hele vijverrand (omgeving_info "vijver"),
+# open waar de wachtrij (binnen 1,05 m van de middellijn = de relinglijn) en de uitgangsbrug over het water gaan;
+# exports/oevermuren.json (berekend met dezelfde regels, zie STATUS)
+import json as _json
+oever = _json.load(open(os.path.join(os.path.dirname(R), 'exports', 'oevermuren.json')))
+oeverrijen = ',\n'.join('\t{%.3f, %.3f, %.3f, %.3f}' % tuple(s) for s in oever)
 luau = f'''-- sirocco_routemuren (gemaakt door roblox/maak_routemuren.py): onzichtbare route-muren voor spelers (groep Routemuur; bezoekers
 -- lopen erdoor). {len(seg)} stukken in modelmeters (x0, y0, x1, y1); 14 studs hoog vanaf het dek.
 local S = 3
@@ -116,6 +122,19 @@ for _, s in DAK do
 	local p = Instance.new("Part"); p.Name = "plafond"
 	p.Size = Vector3.new(2.7 * S, 0.4, (b - a).Magnitude + 1.2)
 	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, Y0 + 2.3 * S - MIDDEN.Y, 0)
+	p.Anchored = true; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.Transparency = 1; p.CastShadow = false
+	p.CollisionGroup = "Routemuur"; p.Parent = map
+end
+-- oevermuren: niemand het water in (vanaf waterpeil 14 studs hoog)
+local OEVER = {{
+{oeverrijen}
+}}
+for _, s in OEVER do
+	local a = MIDDEN + Vector3.new(s[1] * S, 0, -s[2] * S)
+	local b = MIDDEN + Vector3.new(s[3] * S, 0, -s[4] * S)
+	local p = Instance.new("Part"); p.Name = "oever"
+	p.Size = Vector3.new(DIK, H, (b - a).Magnitude + DIK)
+	p.CFrame = CFrame.lookAt((a + b) / 2, b) + Vector3.new(0, H / 2, 0)
 	p.Anchored = true; p.CanCollide = true; p.CanQuery = false; p.CanTouch = false; p.Transparency = 1; p.CastShadow = false
 	p.CollisionGroup = "Routemuur"; p.Parent = map
 end

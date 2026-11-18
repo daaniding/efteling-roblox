@@ -11,7 +11,7 @@ local STAP = {
 }
 local ROL = {klinker = "steen", natuursteen = "steen", breuksteen = "steen", graniet = "steen", voeg = "steen", steen = "steen",
 	beton_groen = "steen", beton_groen_licht = "steen", beton_licht = "steen", asfalt = "steen", grind = "steen",
-	vlonder = "hout", dek = "hout", rooster = "metaal", staal = "metaal"}
+	vlonder = "hout", dek = "hout", rooster = "metaal", staal = "metaal", platform = "hout", subschijf = "hout", bestrating = "steen"}
 local plr = Players.LocalPlayer
 local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Exclude
 
@@ -19,7 +19,7 @@ local function soort(hit: RaycastResult?): string?
 	if not hit then return nil end
 	local inst = hit.Instance
 	if inst:IsA("Terrain") then return hit.Material == Enum.Material.Grass and "gras" or "steen" end
-	local rol = string.match(inst.Name, "^PG_(.-)_%d+")
+	local rol = string.match(inst.Name, "^PG_(.-)_%d+") or string.match(inst.Name, "^SI_(.-)_%d+")   -- ook de Sirocco (Daan 18 nov)
 	return rol and ROL[rol] or "steen"
 end
 

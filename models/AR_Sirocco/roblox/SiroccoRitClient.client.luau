@@ -58,6 +58,7 @@ local delen: {BasePart} = {}
 local rust: {CFrame} = {}
 local groepVan: {string} = {}
 local prompts: {ProximityPrompt} = {}
+local stoelen: {BasePart} = {}
 for _, p in rit:GetChildren() do
 	if p:IsA("BasePart") then
 		local g = p.Name:match("_rt(%a+)$")
@@ -67,6 +68,7 @@ for _, p in rit:GetChildren() do
 		end
 		local pr = p:FindFirstChildOfClass("ProximityPrompt")
 		if pr then table.insert(prompts, pr) end
+		if p:IsA("Seat") then table.insert(stoelen, p) end
 	end
 end
 
@@ -98,6 +100,12 @@ local vorigTc, vorigIn, vorigUit = -1, false, false
 local sRitMuziek = snd("muziekRit")
 if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "muziekRij" then d.TimePosition = 0; d:Play() end end end
 if sRitMuziek then sRitMuziek:Play() end
+-- mensen: gepraat in de rij (altijd), joelen tijdens de rit (volume volgt de snelheid), af en toe een losse kreet uit een boot
+local sGegil, sKreet = snd("gegil"), snd("kreet")
+local kreetBron = geluid and geluid:FindFirstChild("kreetbron") :: BasePart?
+if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "gepraat" then d:Play() end end end
+if sGegil then sGegil.Volume = 0; sGegil:Play() end
+local volgendeKreet = 0
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -437,7 +445,15 @@ RunService.PreSimulation:Connect(function(dt: number)
 	if sWas then sWas.Volume += (0.22 * tSnel - sWas.Volume) * 0.05 end
 	if sBrom then sBrom.Volume += (0.15 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
 	if sWind then sWind.Volume += ((inBoot and 0.18 * tSnel or 0) - sWind.Volume) * 0.05 end
-	if sRitMuziek then sRitMuziek.Volume += ((0.07 + 0.18 * tSnel) - sRitMuziek.Volume) * 0.03 end
+	if sRitMuziek then sRitMuziek.Volume += ((0.04 + 0.08 * tSnel) - sRitMuziek.Volume) * 0.03 end
+	if sGegil then sGegil.Volume += (0.18 * tSnel - sGegil.Volume) * 0.04 end
+	if sKreet and kreetBron and tSnel > 0.6 and os.clock() > volgendeKreet then
+		local st = stoelen[math.random(#stoelen)]
+		kreetBron.Position = st.Position + Vector3.new(0, 2, 0)
+		sKreet.PlaybackSpeed = 0.9 + math.random() * 0.3
+		sKreet:Play()
+		volgendeKreet = os.clock() + 4 + math.random() * 6
+	end
 	if sBel and vorigTc >= 0 and vorigTc < T_IN - 1.5 and tc >= T_IN - 1.5 and tc < T_IN then sBel:Play() end    -- vertrekbel
 	vorigTc = tc
 	local nuIn, nuUit = openIn > 0.02, openUit > 0.02

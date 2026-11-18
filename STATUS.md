@@ -1569,6 +1569,15 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   SiroccoBezoekers en de kiezer neer. Play: alles geladen, speakers binnen 0,08 s gelijk.
 - Volume (18 nov, Daan: "het staat sowieso te hard"): alles ongeveer gehalveerd: wachtrijmuziek 0.1, attractiemuziek 0.07 ->
   0.25 tijdens de rit, kolkend water max 0.22, brom 0.15, wind 0.18, vijverwater 0.15, bel 0.3, hekjes 0.25.
-- VOLGENDE: Daan kiest de muziek (K/L) en luistert het geluid;
+- Afronding (18 nov, Daan: "deze zijn beide echt goed", "barieres bij het water", "voetstappen en gepraat in de wachtrij, geschreeuw
+  in de attractie", "muziek nog zachter"): muziek gekozen = Desert Sands (wachtrij) + Land Of Adventure (attractie), volume nu
+  0.05 (wachtrij) en 0.04 -> 0.12 (rit). Oevermuren: 45 onzichtbare muren langs de hele vijverrand (exports/oevermuren.json,
+  open waar wachtrij en brug over het water gaan; review/oevermuren.png); getest: zuid, west, strandje en noord stoppen op de
+  oever. Gepraat: PSE walla 9112787259 / 9112766358 op 3 plekken langs de rij (0.12). Gegil: PSE "Kids Walla, Shouting"
+  9112811007 bij de schijf (volgt de rit, max 0.18) + losse blije kreet 9114775800 om de 4-10 s vanuit een willekeurige boot.
+  Voetstappen: elke bezoeker een loopgeluid per ondergrond (hout/steen/gras); Voetstappen.client (speler) kent nu ook de
+  Sirocco-onderdelen (vlonder = hout). Play: 4 kreten per 35 s, tot 14 bezoekers tegelijk met voetstappen, console schoon.
+- SIROCCO AF (18 nov, Daan: "deze attractie is ook weer af").
+- Later eventueel:
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

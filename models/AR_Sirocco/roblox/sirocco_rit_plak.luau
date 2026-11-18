@@ -4,7 +4,7 @@
 --   ProximityPrompt "Board [E]" (Style Custom: eigen knop in SiroccoRitClient); geen aanraak-zitten (CanTouch uit), instappen alleen via de prompt (server)
 -- - Sirocco.RitAfsluiting: 2 onzichtbare schotten in de openingen van het gaashek (-62 instap, -106 uitstap), dicht tijdens de rit
 -- - Scharnier/Hoek op de klapdeuren SI_poort_*_0_om (Omgeving)
--- - Sirocco.Geluid: wachtrijmuziek (speakers langs de rij), muziek in de attractie (dak), water (3x op de vijver), kolkend water + brom (schijf), wind, bel (hutje), hekjes
+-- - Sirocco.Geluid: gepraat in de rij (3x), gegil en kreten tijdens de rit, wachtrijmuziek (speakers langs de rij), muziek in de attractie (dak), water (3x op de vijver), kolkend water + brom (schijf), wind, bel (hutje), hekjes
 -- - LocalizationService.SiroccoTeksten: nl-vertaling van de Engelse teksten
 -- - ReplicatedStorage.SiroccoDraai (RemoteEvent, maakt SiroccoRit zelf aan als hij ontbreekt)
 -- - scripts: ServerScriptService.SiroccoRit en StarterPlayerScripts.SiroccoRitClient (bron: roblox/*.luau, ingevuld door maak_rit.py)
@@ -116,10 +116,19 @@ snd(bron("poortUit", -2.0, -8.6, 0.8), "hekUit", GELUID.hek, 0.25, 6, 60, false)
 local MUZIEK = {rij = 1836725599, rit = 1840889607}   -- APM "Desert Sands" (wachtrij), APM "Land Of Adventure" (attractie)
 local RIJ_SPEAKERS = {{5.8, -15.8}, {11.0, -11.9}, {15.6, -6.5}, {15.9, 3.0}, {15.75, 8.0}, {11.35, 11.69}, {8.88, 5.12}, {10.23, -0.6}, {8.22, -6.12}, {3.51, -9.63}}   -- langs 07_omgeving.WACHTRIJ, om de ~5 m
 for i, p in RIJ_SPEAKERS do
-	local m = snd(bron("speaker" .. i, p[1], p[2], 0.45), "muziekRij", MUZIEK.rij, 0.1, 10, 55, true)
+	local m = snd(bron("speaker" .. i, p[1], p[2], 0.45), "muziekRij", MUZIEK.rij, 0.05, 10, 55, true)
 	m:SetAttribute("Speaker", true)
 end
-snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.07, 20, 120, true)          -- vanuit het dak boven de schijf
+snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.04, 20, 120, true)          -- vanuit het dak boven de schijf
+
+-- mensen (Daan 18 nov: "gepraat in de wachtrij, geschreeuw een beetje in de attractie"): PSE-walla zonder verstaanbare woorden
+local MENSEN = {gepraat1 = 9112787259, gepraat2 = 9112766358, gegil = 9112811007, kreet = 9114775800}
+for i, p in {{12.0, -11.0, 1}, {12.0, 11.2, 2}, {9.6, -3.5, 1}} do       -- begin van de rij, haarspeld, boog bij de schijf
+	local s2 = snd(bron("gepraat" .. i, p[1], p[2], 0.6), "gepraat", p[3] == 1 and MENSEN.gepraat1 or MENSEN.gepraat2, 0.12, 8, 50, true)
+	s2.TimePosition = i * 9
+end
+snd(midden, "gegil", MENSEN.gegil, 0, 15, 110, true)                                   -- joelende kinderen, volume volgt de rit
+snd(bron("kreetbron", 0, 0, 1.0), "kreet", MENSEN.kreet, 0.25, 12, 90, false)              -- losse kreet, de client verplaatst de bron
 
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
@@ -393,6 +402,7 @@ local delen: {BasePart} = {}
 local rust: {CFrame} = {}
 local groepVan: {string} = {}
 local prompts: {ProximityPrompt} = {}
+local stoelen: {BasePart} = {}
 for _, p in rit:GetChildren() do
 	if p:IsA("BasePart") then
 		local g = p.Name:match("_rt(%a+)$")
@@ -402,6 +412,7 @@ for _, p in rit:GetChildren() do
 		end
 		local pr = p:FindFirstChildOfClass("ProximityPrompt")
 		if pr then table.insert(prompts, pr) end
+		if p:IsA("Seat") then table.insert(stoelen, p) end
 	end
 end
 
@@ -433,6 +444,12 @@ local vorigTc, vorigIn, vorigUit = -1, false, false
 local sRitMuziek = snd("muziekRit")
 if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "muziekRij" then d.TimePosition = 0; d:Play() end end end
 if sRitMuziek then sRitMuziek:Play() end
+-- mensen: gepraat in de rij (altijd), joelen tijdens de rit (volume volgt de snelheid), af en toe een losse kreet uit een boot
+local sGegil, sKreet = snd("gegil"), snd("kreet")
+local kreetBron = geluid and geluid:FindFirstChild("kreetbron") :: BasePart?
+if geluid then for _, d in geluid:GetDescendants() do if d:IsA("Sound") and d.Name == "gepraat" then d:Play() end end end
+if sGegil then sGegil.Volume = 0; sGegil:Play() end
+local volgendeKreet = 0
 
 local function e(x: number): number return (1 - math.cos(math.pi * math.clamp(x, 0, 1))) / 2 end
 local function opgebouwd(x: number): number return RAMP * (x - math.sin(math.pi * x) / math.pi) / 2 end   -- integraal van e
@@ -772,7 +789,15 @@ RunService.PreSimulation:Connect(function(dt: number)
 	if sWas then sWas.Volume += (0.22 * tSnel - sWas.Volume) * 0.05 end
 	if sBrom then sBrom.Volume += (0.15 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
 	if sWind then sWind.Volume += ((inBoot and 0.18 * tSnel or 0) - sWind.Volume) * 0.05 end
-	if sRitMuziek then sRitMuziek.Volume += ((0.07 + 0.18 * tSnel) - sRitMuziek.Volume) * 0.03 end
+	if sRitMuziek then sRitMuziek.Volume += ((0.04 + 0.08 * tSnel) - sRitMuziek.Volume) * 0.03 end
+	if sGegil then sGegil.Volume += (0.18 * tSnel - sGegil.Volume) * 0.04 end
+	if sKreet and kreetBron and tSnel > 0.6 and os.clock() > volgendeKreet then
+		local st = stoelen[math.random(#stoelen)]
+		kreetBron.Position = st.Position + Vector3.new(0, 2, 0)
+		sKreet.PlaybackSpeed = 0.9 + math.random() * 0.3
+		sKreet:Play()
+		volgendeKreet = os.clock() + 4 + math.random() * 6
+	end
 	if sBel and vorigTc >= 0 and vorigTc < T_IN - 1.5 and tc >= T_IN - 1.5 and tc < T_IN then sBel:Play() end    -- vertrekbel
 	vorigTc = tc
 	local nuIn, nuUit = openIn > 0.02, openUit > 0.02
@@ -1060,6 +1085,34 @@ local function inRij(b: B, vooraan: boolean)
 	if vooraan then table.insert(rij, 1, b) else table.insert(rij, b) end
 end
 
+-- voetstappen (Daan 18 nov: "ik mis andere voetstappen"): elke bezoeker een loopgeluid dat bij de ondergrond past (zelfde
+-- opnames als Voetstappen.client.luau van de spelers), speelt alleen als hij loopt
+local STAP = {hout = "rbxassetid://6506537704", steen = "rbxassetid://91557584218550", gras = "rbxassetid://106672010112184"}
+local function stappen(m: Model, hum: Humanoid, hrp: BasePart)
+	if hrp:FindFirstChild("Stappen") then return end
+	local so = Instance.new("Sound"); so.Name = "Stappen"; so.Looped = true; so.Volume = 0.22
+	so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = 4; so.RollOffMaxDistance = 28
+	so.SoundId = STAP.hout; so.Parent = hrp
+	local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Exclude; ray.FilterDescendantsInstances = {m}
+	task.spawn(function()
+		while m.Parent and hrp.Parent do
+			local loopt = hrp.AssemblyLinearVelocity.Magnitude > 2 and not hum.SeatPart
+			if loopt then
+				local hit = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
+				local soort = "steen"
+				if hit then
+					if hit.Instance:IsA("Terrain") then soort = hit.Material == Enum.Material.Grass and "gras" or "steen"
+					elseif hit.Instance.Name:match("vlonder") or hit.Instance.Name:match("platform") or hit.Instance.Name:match("subschijf") then soort = "hout" end
+				end
+				if so.SoundId ~= STAP[soort] then so.SoundId = STAP[soort] end
+				so.PlaybackSpeed = math.clamp(hrp.AssemblyLinearVelocity.Magnitude / 7, 0.8, 1.2)
+			end
+			if loopt ~= so.IsPlaying then if loopt then so:Play() else so:Stop() end end
+			task.wait(0.3)
+		end
+	end)
+end
+
 local function nieuw(m: Model, s: number)
 	local hum = m:FindFirstChildOfClass("Humanoid")
 	local hrp = m:FindFirstChild("HumanoidRootPart") :: BasePart?
@@ -1067,6 +1120,7 @@ local function nieuw(m: Model, s: number)
 	m.Parent = map
 	local b: B = {m = m, hum = hum, hrp = hrp, fase = "rij", s = s, stoel = nil, zitAnim = nil, buiten = false}
 	alle[m] = b
+	stappen(m, hum, hrp)
 	inRij(b, false)
 end
 

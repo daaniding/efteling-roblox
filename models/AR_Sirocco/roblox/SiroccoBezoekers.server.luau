@@ -263,6 +263,34 @@ local function inRij(b: B, vooraan: boolean)
 	if vooraan then table.insert(rij, 1, b) else table.insert(rij, b) end
 end
 
+-- voetstappen (Daan 18 nov: "ik mis andere voetstappen"): elke bezoeker een loopgeluid dat bij de ondergrond past (zelfde
+-- opnames als Voetstappen.client.luau van de spelers), speelt alleen als hij loopt
+local STAP = {hout = "rbxassetid://6506537704", steen = "rbxassetid://91557584218550", gras = "rbxassetid://106672010112184"}
+local function stappen(m: Model, hum: Humanoid, hrp: BasePart)
+	if hrp:FindFirstChild("Stappen") then return end
+	local so = Instance.new("Sound"); so.Name = "Stappen"; so.Looped = true; so.Volume = 0.22
+	so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = 4; so.RollOffMaxDistance = 28
+	so.SoundId = STAP.hout; so.Parent = hrp
+	local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Exclude; ray.FilterDescendantsInstances = {m}
+	task.spawn(function()
+		while m.Parent and hrp.Parent do
+			local loopt = hrp.AssemblyLinearVelocity.Magnitude > 2 and not hum.SeatPart
+			if loopt then
+				local hit = workspace:Raycast(hrp.Position, Vector3.new(0, -6, 0), ray)
+				local soort = "steen"
+				if hit then
+					if hit.Instance:IsA("Terrain") then soort = hit.Material == Enum.Material.Grass and "gras" or "steen"
+					elseif hit.Instance.Name:match("vlonder") or hit.Instance.Name:match("platform") or hit.Instance.Name:match("subschijf") then soort = "hout" end
+				end
+				if so.SoundId ~= STAP[soort] then so.SoundId = STAP[soort] end
+				so.PlaybackSpeed = math.clamp(hrp.AssemblyLinearVelocity.Magnitude / 7, 0.8, 1.2)
+			end
+			if loopt ~= so.IsPlaying then if loopt then so:Play() else so:Stop() end end
+			task.wait(0.3)
+		end
+	end)
+end
+
 local function nieuw(m: Model, s: number)
 	local hum = m:FindFirstChildOfClass("Humanoid")
 	local hrp = m:FindFirstChild("HumanoidRootPart") :: BasePart?
@@ -270,6 +298,7 @@ local function nieuw(m: Model, s: number)
 	m.Parent = map
 	local b: B = {m = m, hum = hum, hrp = hrp, fase = "rij", s = s, stoel = nil, zitAnim = nil, buiten = false}
 	alle[m] = b
+	stappen(m, hum, hrp)
 	inRij(b, false)
 end
 
