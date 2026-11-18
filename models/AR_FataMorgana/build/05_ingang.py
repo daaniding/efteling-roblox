@@ -35,26 +35,52 @@ def ogee(t):
     return x ** 1.6 * (1.15 - 0.15 * x)
 
 
-def dakrand(vl, lengte, hoog_mid=0.0):
-    """golvende Moorse dakrand op een gevel: kleine bulten om de ~2,2 m, optioneel een grote kielboog in het midden;
-    witte borstwering (dikte 0,25) met een dikke rode rand erop"""
-    n = max(2, round(lengte / 2.2)); w = lengte / n
-    def vtop(u):
-        k = min(n - 1, max(0, int(u / w))); c = (k + 0.5) * w
-        v = H + 0.3 + 0.38 * ogee((u - c) / (w / 2))
-        if hoog_mid:
-            d = (u - lengte / 2) / (lengte * 0.28)
-            if abs(d) < 1: v = max(v, H + 0.3 + hoog_mid * ogee(d))
+def bult(d, half, hoog, overgang):
+    """afgeronde verhoging: vlak tot half, dan een zachte S-bocht (cosinus) naar 0 over 'overgang'"""
+    if d <= half: return hoog
+    if d >= half + overgang: return 0.0
+    return hoog * (1 + math.cos(math.pi * (d - half) / overgang)) / 2
+
+
+def profiel(u, lengte, soort):
+    """bovenlijn van de borstwering (FataVoorplein1993.jpg, Fatamorganaingang1987.jpg; Daan: kielboog-gevel ronder):
+    voorgevel: hoge schouders met in het midden een brede ronde dip waarboven de koepel uitkomt; overal zachte S-bochten
+    en bulten met een vlakke top, geen punten"""
+    B = H + 0.3; m = lengte / 2; d = abs(u - m)
+    v = B
+    if soort == "voor":
+        v = B + bult(d, 4.2, 1.0, 0.7) - 0.7 * bult(d, 1.5, 1.0, 0.8)
+        for c in (m - 5.75, m + 5.75): v = max(v, B + bult(abs(u - c), 0.35, 0.42, 0.3))
         return v
-    us = [lengte * j / 80 for j in range(81)]
-    dik = 0.25
+    if soort == "midden": v = B + bult(d, 0.9, 0.75, 0.55)
+    n = max(2, round(lengte / 2.2)); w = lengte / n
+    for k in range(n):
+        c = (k + 0.5) * w
+        if soort == "midden" and abs(c - m) < 2.0: continue
+        v = max(v, B + bult(abs(u - c), 0.35, 0.42, 0.3))
+    return v
+
+
+def dakrand(vl, lengte, soort="gewoon"):
+    """golvende Moorse borstwering (wit, dikte 0,25) met een dikke rode band van 0,28 m over de hele bovenlijn (iets breder
+    dan de muur). Elke gevel dekt zijn eigen beginhoek en stopt voor de volgende hoek: geen overlappende bovenvlakken."""
+    dik, rb, uit = 0.25, 0.28, 0.05
+    N = 160; us = [lengte * j / N for j in range(N + 1)]
     for ua, ub in zip(us, us[1:]):
-        ta, tb = vtop(ua), vtop(ub)
+        ta, tb = profiel(ua, lengte, soort) - rb, profiel(ub, lengte, soort) - rb
         quad("witvlak", [vl.p(ua, H, 0), vl.p(ub, H, 0), vl.p(ub, tb, 0), vl.p(ua, ta, 0)][::-1])
         quad("witvlak", [vl.p(ua, H, -dik), vl.p(ua, ta, -dik), vl.p(ub, tb, -dik), vl.p(ub, H, -dik)][::-1])
-    # rode rand: buis langs de bovenkant (iets naar voren)
-    pad = [vl.p(u, vtop(u) + 0.02, -dik / 2) for u in us]
-    G3_buis(pad, 0.12)
+    u0, u1 = -uit, lengte - dik - uit
+    rs = [u0 + (u1 - u0) * j / N for j in range(N + 1)]
+    n0, n1 = uit, -dik - uit
+    def ring(u):
+        t = profiel(min(max(u, 0.0), lengte), lengte, soort)
+        return [vl.p(u, t - rb, n0), vl.p(u, t + 0.02, n0), vl.p(u, t + 0.02, n1), vl.p(u, t - rb, n1)]
+    rr = [ring(u) for u in rs]
+    for A, Bq in zip(rr, rr[1:]):
+        for k in range(4):
+            quad("rood", [A[k], A[(k + 1) % 4], Bq[(k + 1) % 4], Bq[k]])
+    quad("rood", rr[0]); quad("rood", rr[-1][::-1])
 
 
 def G3_buis(pts, r, seg=8, rol="rood"):
@@ -92,7 +118,7 @@ def bouw():
     noord, ln = vlak_vanaf((X0, Y1), (X1, Y1))
     west, lw = vlak_vanaf((X0, Y0), (X0, Y1))
     zuid, lz = vlak_vanaf((X1, Y0), (X0, Y0))
-    dakrand(oost, lo, 1.25); dakrand(noord, ln, 0.6); dakrand(west, lw); dakrand(zuid, lz, 0.6)
+    dakrand(oost, lo, "voor"); dakrand(noord, ln, "midden"); dakrand(west, lw); dakrand(zuid, lz, "midden")
     # oostgevel: voorportaal (rode zuilen, bogenwand met kielbogen en rode randen), ingang, winkelraam, raampje
     uc = lo / 2; diep = 1.5; hz = 2.2; HP = 3.3            # HP: bovenkant portaal (boven de hoogste boog)
     zuilen_u = [uc - 3.3, uc - 1.25, uc + 1.25, uc + 3.3]
@@ -188,6 +214,9 @@ def render(uit):
     p = L(36.0, -318.0) + Vector((0, 0, 1.7)); q = L(21.0, -307.5) + Vector((0, 0, 2.6))
     cam.location = p; cam.rotation_euler = (q - p).to_track_quat("-Z", "Y").to_euler()
     sc.render.filepath = os.path.join(uit, "ingang.png"); bpy.ops.render.render(write_still=True)
+    p = L(40.0, -307.5) + Vector((0, 0, 2.5)); q = L(21.0, -307.5) + Vector((0, 0, 3.4))       # recht van voren (het plein)
+    cam.location = p; cam.rotation_euler = (q - p).to_track_quat("-Z", "Y").to_euler()
+    sc.render.filepath = os.path.join(uit, "ingang_voor.png"); bpy.ops.render.render(write_still=True)
 
 
 def main():

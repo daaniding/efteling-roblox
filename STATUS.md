@@ -59,7 +59,12 @@ met uitbouw tot y -341,4 (x -49,7..-37,5, erker met rooster), dienstdeur met lam
 (x -45,2..-37,3, y -341..-344,6); laag blok 4,6 m (x -26,6..-15,8, y -338,8..-346,5) tegen het blok bij de minaret; gevels op de
 kale kanten van de hal boven dat blok (oostkop x -15,4 en zuidkant y -321,5) en westkop van dat blok (x -16,1). Bomen in het AHN
 (rond (-30; -341) en y < -348) niet gebouwd. Grond: strook x -54..-12, y -353..-335.
-Buitenkant rondom dicht. Mogelijke vervolgstappen: kielboog-gevel ingangsgebouw ronder; interieur (pas als Daan erom vraagt).
+Buitenkant rondom dicht.
+Stap 10 — kielboog-gevel ingangsgebouw ronder (build/05_ingang.py, asset 115016590222449): borstwering naar FataVoorplein1993 en
+Fatamorganaingang1987: voorgevel met hoge schouders en een brede ronde dip in het midden (koepel komt erboven uit), overal
+zachte S-bochten (cosinus) en bulten met een vlakke top in plaats van punten; dikke rode band (0,28 m, iets breder dan de muur)
+i.p.v. een buis. Elke gevel dekt zijn eigen beginhoek en stopt vóór de volgende: geen overlappende bovenvlakken op de hoeken.
+Mogelijke vervolgstap: binnenkant (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
