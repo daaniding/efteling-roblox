@@ -39,7 +39,10 @@ def bouw():
     wand([(17.9, -313.6), (17.9, -326.9)], 3.3, 0.5, ramen=[(0, 6.6, 1.2, 2.2)])
     # blok van 5,4 m (AHN) bij de minaret: x -16..17,4, y -322..-350; één massief blok (dak 5,3), dunne gevels (tot 5,4 m) en
     # een donker dakvlak op 5,42 dat niet over de gevelranden ligt (geen dubbele daken = geen z-fighting)
-    prisma("stuc", [L(-16.0, -350.0), L(17.4, -350.0), L(17.4, -322.0), L(-16.0, -322.0)], 0.0, 5.3)
+    # binnenkant (Daan 18 nov: "naar de binnenkant werken"): het blok is hol (ruimte voor gang en instaphal, 15_binnen); alleen een
+    # dakplaat 4,9..5,3 m en een afsluitmuur aan de westkop van de wachtrijhal (x 17..17,45, y -350..-340,2)
+    prisma("stuc", [L(-16.0, -350.0), L(17.4, -350.0), L(17.4, -322.0), L(-16.0, -322.0)], 4.9, 5.3)
+    prisma("stuc", [L(17.0, -350.0), L(17.45, -350.0), L(17.45, -340.2), L(17.0, -340.2)], 0.0, 4.95)
     wand([(-16.0, -322.0), (17.5, -322.0)], 5.4, 0.4, ramen=[(0, 17.5, 2.6, 3.9), (0, 24.5, 2.6, 3.9)])
     wand([(17.5, -322.0), (17.5, -326.9)], 5.4, 0.4)
     wand([(17.5, -331.1), (17.5, -340.2)], 5.4, 0.4, ramen=[(0, 2.6, 3.55, 4.5)])   # raam boven het verandadak (12_veranda)

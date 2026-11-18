@@ -132,7 +132,15 @@ eerst 1,1 m), dikke witte omlijsting, witte neggen, houten deurblad "Open" (FM_d
 halletje met roodbruine tegelwanden (FM_tegelhal 73063474660484, 14t_halletje.py), wit plafond, tegelvloer (sluit aan op de
 verandavloer), koperen lamp + PointLight (FataMorgana.Halletjelicht). Botsing: gevelvlakken/tegels/neggen botsen niet,
 onzichtbare botsblokken (rol botsing, transparant) naast en boven de deur. Getest in Play: een character loopt erdoor.
-Asset minaret 108386648836200. Volgende binnenstap: de groene kielboog en de gang naar de instaphal.
+Asset minaret 108386648836200.
+BINNENKANT stap 2 — groene kielboog + gang (POV-video 2025, 30 s; video 2020): westmuur van het halletje met een groen omlijste
+kielboog (1,6 m, rollen groen/groenneg; aan beide kanten groene lijst), gang naar het westen (build/15_binnen.py, deel "binnen",
+asset 107127998668600): x 10,6..17,7, 2,4 m breed, 3 m hoog, crème wanden met plint en lijst, tegelvloer, 4 koperen wandlampjes +
+PointLights (FataMorgana.Ganglicht), aan het eind een groene kielboog met donkere doorgang (dicht, volgende stap). Het
+kantelenblok (06) is hol: alleen een dakplaat 4,9-5,3 m en een afsluitmuur bij de westkop van de wachtrijhal (x 17..17,45).
+Westplint van de minaret weg (lag binnen, als drempel in de boog). Getest in Play: veranda -> zijdeur -> halletje -> gang tot het
+eind. Assets: minaret 73472127840695, kantelen 139989623236326.
+Volgende binnenstap: de gaanderij en de instaphal met de draaischijf (in het holle kantelenblok).
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
