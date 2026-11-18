@@ -416,3 +416,6 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Draaiende rit met stoelen: Seat verankerd en op de client met BulkMoveTo bewegen werkt; de SeatWeld neemt de speler vanzelf
   mee (geen eigen meeneem-code nodig). Na een teleport in eerste persoon de camera zelf richten: het lichaam draait naar de camera.
 - Testonderdelen (GetPartsInPart-zone) altijd in pcall/finally opruimen: een losse Part bleef in workspace staan en leek een fout.
+- UI voor Daan: geen generieke "app"-stijl (verlopen, gloed, neon-pillen = "teveel AI"); neem de stijl van de attractie zelf
+  over (bord, materialen, letters van het ingangsbord). UIStroke op een knop zonder tekst: ApplyStrokeMode = Border, anders geen rand.
+- screen_capture toont geen BillboardGuis; om een billboard-knop te beoordelen een 2D-kopie in een ScreenGui zetten.

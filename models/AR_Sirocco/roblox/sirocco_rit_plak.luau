@@ -284,8 +284,8 @@ zet(game:GetService("StarterPlayer"):WaitForChild("StarterPlayerScripts"), "Loca
 -- Beleving (Daan 18 nov): titel bij het instappen, "Hold on tight!" bij vertrek, na de rit direct zwart (server); eigen
 -- instapknop (ProximityPrompt Style Custom); klapdeuren bij instap (open tijdens het instappen) en uitstap (open tijdens het
 -- uitstappen), scharnier + hoek als attribuut op de deur (sirocco_rit.luau). Teksten Engels, nl in SiroccoTeksten.
--- Zelf draaien (Daan 18 nov: "kan ik mijn karretje zelf laten draaien"): tijdens de rit A/D (pijltjes, L1/R1, op mobiel twee
--- knoppen) geeft je boot extra draai met vaart en uitlopen. Je eigen boot reageert direct; de stand gaat via RemoteEvent
+-- Zelf draaien (Daan 18 nov: "kan ik mijn karretje zelf laten draaien"): tijdens de rit A/D (pijltjes, L1/R1, op telefoon twee
+-- eigen knoppen onderin het midden) geeft je boot extra draai met vaart en uitlopen. Je eigen boot reageert direct; de stand gaat via RemoteEvent
 -- SiroccoDraai naar de server, die hem als attribuut X_<boot> = (hoek, snelheid, servertijd) op Rit zet voor de anderen.
 -- Bij het uitlopen draait elke boot terug naar een hele omwenteling, zodat hij weer in de instapstand eindigt.
 local RunService = game:GetService("RunService")
@@ -383,6 +383,9 @@ end
 local plr = Players.LocalPlayer
 local GOUD = Color3.fromRGB(232, 190, 96)
 local NACHT = Color3.fromRGB(18, 30, 62)
+-- knoppen in de stijl van het ingangsbord (07t_bord: perkament, goudbruine houten rand, blauwe schreefletters); Daan 18 nov:
+-- de blauw-gouden gloedknoppen waren "teveel AI"
+local PERK, HOUT, INKT = Color3.fromRGB(230, 216, 180), Color3.fromRGB(120, 86, 46), Color3.fromRGB(36, 64, 128)
 
 -- ===== beeld: titel, meldingen, zwart bij de medewerker =====
 local gui = Instance.new("ScreenGui"); gui.Name = "SiroccoBeeld"; gui.IgnoreGuiInset = true; gui.ResetOnSpawn = false; gui.DisplayOrder = 50
@@ -423,8 +426,8 @@ end
 local mvolg = 0
 local function meld(tekst: string, duur: number)
 	mvolg += 1; local mijn = mvolg
-	melding.Text = tekst; melding.Position = UDim2.new(0.5, 0, 0.85, 0)
-	TweenService:Create(melding, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.82, 0), TextTransparency = 0, TextStrokeTransparency = 0.6}):Play()
+	melding.Text = tekst; melding.Position = UDim2.new(0.5, 0, 0.79, 0)        -- boven de draaiknoppen (telefoon)
+	TweenService:Create(melding, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.76, 0), TextTransparency = 0, TextStrokeTransparency = 0.6}):Play()
 	task.delay(duur, function()
 		if mijn ~= mvolg then return end
 		TweenService:Create(melding, TweenInfo.new(0.7, Enum.EasingStyle.Sine), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
@@ -446,7 +449,7 @@ plr:GetAttributeChangedSignal("SiroccoUit"):Connect(function()
 	end
 end)
 
--- ===== instapknop (ProximityPrompt Style Custom): donkerblauwe pil, gouden rand, gouden toets, vasthoudbalk =====
+-- ===== instapknop (ProximityPrompt Style Custom): perkamenten bordje, houten rand, toets, vasthoudbalk =====
 local knoppen: {[ProximityPrompt]: BillboardGui} = {}
 local function toetsTekst(pr: ProximityPrompt, invoer: Enum.ProximityPromptInputType): string
 	if invoer == Enum.ProximityPromptInputType.Touch then return "TAP" end
@@ -458,33 +461,31 @@ PPS.PromptShown:Connect(function(pr: ProximityPrompt, invoer: Enum.ProximityProm
 	local bb = Instance.new("BillboardGui"); bb.Name = "SiroccoKnop"; bb.Adornee = pr.Parent :: BasePart
 	bb.Size = UDim2.fromOffset(230, 70); bb.StudsOffset = Vector3.new(0, 4.2, 0); bb.AlwaysOnTop = true; bb.Active = true
 	bb.ResetOnSpawn = false
-	local schaal = Instance.new("UIScale"); schaal.Scale = 0.5; schaal.Parent = bb
-	local pil = Instance.new("TextButton"); pil.Size = UDim2.fromScale(1, 1); pil.BackgroundColor3 = NACHT; pil.BackgroundTransparency = 1
+	local schaal = Instance.new("UIScale"); schaal.Scale = 0.85; schaal.Parent = bb
+	local pil = Instance.new("TextButton"); pil.Size = UDim2.fromScale(1, 1); pil.BackgroundColor3 = PERK; pil.BackgroundTransparency = 1
 	pil.AutoButtonColor = false; pil.Text = ""; pil.Parent = bb
-	Instance.new("UICorner", pil).CornerRadius = UDim.new(1, 0)
-	local rand = Instance.new("UIStroke"); rand.Color = GOUD; rand.Thickness = 2.5; rand.Transparency = 1; rand.Parent = pil
-	local grad = Instance.new("UIGradient"); grad.Rotation = 90
-	grad.Color = ColorSequence.new(Color3.fromRGB(40, 62, 120), Color3.fromRGB(14, 22, 48)); grad.Parent = pil
+	Instance.new("UICorner", pil).CornerRadius = UDim.new(0, 6)
+	local rand = Instance.new("UIStroke"); rand.Color = HOUT; rand.Thickness = 4; rand.Transparency = 1; rand.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; rand.Parent = pil
 	local toets = Instance.new("TextLabel"); toets.AnchorPoint = Vector2.new(0, 0.5); toets.Position = UDim2.new(0, 10, 0.5, 0)
-	toets.Size = UDim2.fromOffset(50, 50); toets.BackgroundColor3 = GOUD; toets.BackgroundTransparency = 1; toets.Font = Enum.Font.GothamBlack
-	toets.TextSize = 22; toets.TextColor3 = NACHT; toets.TextTransparency = 1; toets.AutoLocalize = false
+	toets.Size = UDim2.fromOffset(50, 50); toets.BackgroundColor3 = HOUT; toets.BackgroundTransparency = 1; toets.Font = Enum.Font.Garamond
+	toets.TextSize = 26; toets.TextColor3 = PERK; toets.TextTransparency = 1; toets.AutoLocalize = false
 	toets.Text = toetsTekst(pr, invoer); toets.Parent = pil
-	Instance.new("UICorner", toets).CornerRadius = UDim.new(1, 0)
-	local ring = Instance.new("UIStroke"); ring.Color = Color3.fromRGB(255, 236, 180); ring.Thickness = 2; ring.Transparency = 1; ring.Parent = toets
+	Instance.new("UICorner", toets).CornerRadius = UDim.new(0, 5)
+	local ring = Instance.new("UIStroke"); ring.Color = HOUT; ring.Thickness = 0; ring.Transparency = 1; ring.Parent = toets
 	local actie = Instance.new("TextLabel"); actie.Position = UDim2.new(0, 72, 0, 10); actie.Size = UDim2.new(1, -86, 0, 30)
-	actie.BackgroundTransparency = 1; actie.Font = Enum.Font.Fantasy; actie.TextSize = 28; actie.TextColor3 = Color3.fromRGB(255, 246, 225)
+	actie.BackgroundTransparency = 1; actie.Font = Enum.Font.Garamond; actie.TextSize = 32; actie.TextColor3 = INKT
 	actie.TextXAlignment = Enum.TextXAlignment.Left; actie.TextTransparency = 1; actie.Text = pr.ActionText; actie.Parent = pil
 	local obj = Instance.new("TextLabel"); obj.Position = UDim2.new(0, 73, 0, 40); obj.Size = UDim2.new(1, -86, 0, 18)
-	obj.BackgroundTransparency = 1; obj.Font = Enum.Font.GothamBold; obj.TextSize = 13; obj.TextColor3 = GOUD; obj.AutoLocalize = false
-	obj.TextXAlignment = Enum.TextXAlignment.Left; obj.TextTransparency = 1; obj.Text = "S I R O C C O"; obj.Parent = pil
+	obj.BackgroundTransparency = 1; obj.Font = Enum.Font.Garamond; obj.TextSize = 16; obj.TextColor3 = HOUT; obj.AutoLocalize = false
+	obj.TextXAlignment = Enum.TextXAlignment.Left; obj.TextTransparency = 1; obj.Text = "Sirocco"; obj.Parent = pil
 	local balk = Instance.new("Frame"); balk.AnchorPoint = Vector2.new(0, 1); balk.Position = UDim2.new(0, 72, 1, -8)
-	balk.Size = UDim2.new(0, 0, 0, 3); balk.BackgroundColor3 = GOUD; balk.BorderSizePixel = 0; balk.Parent = pil
+	balk.Size = UDim2.new(0, 0, 0, 3); balk.BackgroundColor3 = INKT; balk.BorderSizePixel = 0; balk.Parent = pil
 	Instance.new("UICorner", balk).CornerRadius = UDim.new(1, 0)
 	bb.Parent = plr:WaitForChild("PlayerGui")
 	knoppen[pr] = bb
-	local IN = TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+	local IN = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 	TweenService:Create(schaal, IN, {Scale = 1}):Play()
-	TweenService:Create(pil, IN, {BackgroundTransparency = 0.08}):Play()
+	TweenService:Create(pil, IN, {BackgroundTransparency = 0}):Play()
 	TweenService:Create(rand, IN, {Transparency = 0}):Play()
 	TweenService:Create(toets, IN, {BackgroundTransparency = 0, TextTransparency = 0}):Play()
 	TweenService:Create(ring, IN, {Transparency = 0.3}):Play()
@@ -556,18 +557,44 @@ local function knop(naam: string, state: Enum.UserInputState): Enum.ContextActio
 	if naam == "SiroccoLinks" then links = aan else rechts = aan end
 	return Enum.ContextActionResult.Sink
 end
+-- telefoon/tablet: eigen draaiknoppen onderin het midden (links zit de joystick, rechts de springknop), zelfde stijl als de
+-- instapknop (perkament, houten rand, blauwe pijl); indrukken = iets kleiner
+local knopGui = Instance.new("ScreenGui"); knopGui.Name = "SiroccoDraaiKnoppen"; knopGui.ResetOnSpawn = false; knopGui.Enabled = false
+knopGui.DisplayOrder = 40; knopGui.Parent = plr:WaitForChild("PlayerGui")
+local function draaiKnop(teken: string, x: number, zet: (boolean) -> ())
+	local b = Instance.new("TextButton"); b.AnchorPoint = Vector2.new(0.5, 1); b.Position = UDim2.new(0.5, x, 1, -28)
+	b.Size = UDim2.fromOffset(88, 88); b.BackgroundColor3 = PERK; b.BackgroundTransparency = 0; b.AutoButtonColor = false
+	b.Text = ""; b.Parent = knopGui
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 8)
+	local r = Instance.new("UIStroke"); r.Color = HOUT; r.Thickness = 4; r.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; r.Parent = b
+	local pijl = Instance.new("TextLabel"); pijl.Size = UDim2.fromScale(1, 1); pijl.BackgroundTransparency = 1; pijl.Text = teken
+	pijl.Font = Enum.Font.Garamond; pijl.TextSize = 84; pijl.TextColor3 = INKT; pijl.AutoLocalize = false; pijl.Parent = b
+	local sc = Instance.new("UIScale"); sc.Parent = b
+	local function druk(aan: boolean)
+		zet(aan)
+		TweenService:Create(sc, TweenInfo.new(0.08), {Scale = aan and 0.94 or 1}):Play()
+		TweenService:Create(pijl, TweenInfo.new(0.12), {TextColor3 = aan and HOUT or INKT}):Play()
+	end
+	b.InputBegan:Connect(function(io)
+		if io.UserInputType == Enum.UserInputType.Touch or io.UserInputType == Enum.UserInputType.MouseButton1 then druk(true) end
+	end)
+	b.InputEnded:Connect(function(io)
+		if io.UserInputType == Enum.UserInputType.Touch or io.UserInputType == Enum.UserInputType.MouseButton1 then druk(false) end
+	end)
+end
+draaiKnop("<", -56, function(a) links = a end)
+draaiKnop(">", 56, function(a) rechts = a end)
 local function binden(aan: boolean)
 	if aan == gebonden then return end
 	gebonden = aan
 	if aan then
-		CAS:BindActionAtPriority("SiroccoLinks", knop, true, 3000, Enum.KeyCode.A, Enum.KeyCode.Left, Enum.KeyCode.ButtonL1)
-		CAS:BindActionAtPriority("SiroccoRechts", knop, true, 3000, Enum.KeyCode.D, Enum.KeyCode.Right, Enum.KeyCode.ButtonR1)
-		CAS:SetTitle("SiroccoLinks", "<"); CAS:SetTitle("SiroccoRechts", ">")
-		CAS:SetPosition("SiroccoLinks", UDim2.new(1, -230, 1, -130)); CAS:SetPosition("SiroccoRechts", UDim2.new(1, -120, 1, -130))
+		CAS:BindActionAtPriority("SiroccoLinks", knop, false, 3000, Enum.KeyCode.A, Enum.KeyCode.Left, Enum.KeyCode.ButtonL1)
+		CAS:BindActionAtPriority("SiroccoRechts", knop, false, 3000, Enum.KeyCode.D, Enum.KeyCode.Right, Enum.KeyCode.ButtonR1)
 	else
 		CAS:UnbindAction("SiroccoLinks"); CAS:UnbindAction("SiroccoRechts")
 		links, rechts = false, false
 	end
+	knopGui.Enabled = aan and UIS.TouchEnabled
 end
 local function extraVan(n: string, nu: number, dt: number): number
 	if n == eigenBoot then return eigenX end

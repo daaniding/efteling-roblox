@@ -1530,6 +1530,10 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   scherm, stand via RemoteEvent ReplicatedStorage.SiroccoDraai naar de server (controleert dat je in die boot zit) -> attribuut
   X_<boot> op Rit voor de andere spelers; bij het uitlopen draait elke boot terug naar een hele omwenteling (instapstand).
   Uitleg in beeld "Spin your boat: A / D" (nl vertaald). Getest in Play met echte toetsaanslagen.
+- Knoppen (18 nov, Daan: blauw-gouden gloedknoppen "teveel AI"): instapbordje en draaiknoppen in de stijl van het ingangsbord
+  (perkament, bruine houten rand, blauwe Garamond-letters, geen verloop/gloed). Telefoon: eigen draaiknoppen < > onderin het
+  midden (niet onder de joystick of springknop), uitleg "Spin your boat with the arrows", melding hoger zodat hij de knoppen niet
+  raakt. Op een echte telefoon nog niet getest; billboards zijn niet te zien in screen_capture (wel in het spel).
 - VOLGENDE: Daans oordeel over snelheid/knop/uitstappen; bezoekers in de boten (Park.registreer Sirocco); geluid (bel, water);
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.
