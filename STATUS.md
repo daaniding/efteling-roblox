@@ -35,7 +35,11 @@ Stap 4 — ingangsgebouw (build/05_ingang.py): x 17,5..24,5, y -301..-314 (lucht
 dikke rood-oranje rand en grote kielboog boven het portaal, voorportaal met 4 rode zuilen en bogen (oost, naar het plein), donkere
 ingang, winkelraam met roedes, raampjes met rode omlijsting, hemelsblauwe koepel (5 m) met gouden spits. Alleen grond onder de
 plattegrond. Les: gevelvlakken in 05 eerst met de klok mee -> losse vlakken naar binnen; altijd tegen de klok in (buiten = links).
-Volgende stukken (alleen het gebouw): kantelenmuur tussen ingang en minaret, oost- en achterkant, koepels op het dak.
+Stap 5 — kantelenmuren (build/06_kantelen.py): lage muur 3,3 m van de ZW-hoek van de ingang (17,4; -314) naar de minaret, en een
+5,4 m hoog blok links (zuid) van de minaret (x -6,5..17,1, y -322..-336, AHN), rechthoekige kantelen zoals Fmplein1986, boogvensters,
+verweringsvlekken; grond alleen onder de muren.
+Volgende stukken (alleen het gebouw): gebouwtje met koepel tussen ingang en hoofdgebouw (x 0..10, y -310..-322, AHN 4,6-8,2 m),
+oost- en achterkant van het hoofdgebouw, koepels op het dak.
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/

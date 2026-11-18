@@ -3,7 +3,7 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 93537759416227, Noordgevel = 108509340106987, Minaret = 103454423403658, Ingang = 137939058457250}
+local DELEN = {Toren = 93537759416227, Noordgevel = 108509340106987, Minaret = 103454423403658, Ingang = 137939058457250, Kantelen = 140341736600778}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
