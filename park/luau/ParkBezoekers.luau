@@ -17,7 +17,7 @@ local PathfindingService = game:GetService("PathfindingService")
 local M = {}
 M.DICHTHEID = 1.0                 -- één knop voor het hele park (bijv. 0.6 als het op zwakke apparaten te zwaar wordt)
 M.SNELHEID = 6.5                  -- bezoekers en spelers lopen precies even snel (studs/s)
-M.VOLGORDE = {"Pagode"}           -- rondgang; bijv. {"Pagode", "MonsieurCannibale", ...}
+M.VOLGORDE = {"Pagode", "Sirocco"} -- rondgang (Daan: de Sirocco na de Pagode); nieuwe attractie op haar plek invoegen
 local ANIM = {loop = "rbxassetid://913402848", stil = "rbxassetid://507766388"}   -- standaard R15 lopen / stilstaan
 
 type Info = {ingang: Vector3, ontvang: (Model) -> ()}

@@ -419,3 +419,9 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - UI voor Daan: geen generieke "app"-stijl (verlopen, gloed, neon-pillen = "teveel AI"); neem de stijl van de attractie zelf
   over (bord, materialen, letters van het ingangsbord). UIStroke op een knop zonder tekst: ApplyStrokeMode = Border, anders geen rand.
 - screen_capture toont geen BillboardGuis; om een billboard-knop te beoordelen een 2D-kopie in een ScreenGui zetten.
+- NPC's op een vol rijplatform (boten, gondels): Roblox-pathfinding (cellen van 4 studs) vindt smalle gangetjes niet; een eigen
+  A* op een fijn raster met de rustposities als obstakels werkt wel. In- en uitpunten eerst offline toetsen (elke plek bereikbaar).
+  Altijd een vastloopcontrole (paar seconden geen voortgang = verder zetten), anders blijft er altijd wel iemand hangen.
+- Park.maak haalt het Animate-script weg: zitten (Seat) moet je zelf een zitanimatie geven (R15 2506281703, priority Action).
+- Rit-klok laten wachten op NPC's via attributen (bezig met instappen / uitstappen) en een wachtvenster een paar seconden voor
+  het einde van de fase, zodat deuren dan nog helemaal open staan.

@@ -8,12 +8,13 @@
 -- "doe gewoon gelijk zwart beeld"). Teksten Engels, vertaling in LocalizationService.SiroccoTeksten (sirocco_rit.luau).
 -- Zelf draaien: client stuurt (hoek, snelheid) van zijn eigen boot via RemoteEvent ReplicatedStorage.SiroccoDraai; de server
 -- controleert dat je echt in die boot zit en dat de rit draait, en zet X_<boot> = (hoek, snelheid, servertijd) op Rit.
+-- Wacht ook op de NPC-bezoekers: vertrek pas als iedereen die kan instappen zit, deuren pas dicht als iedereen eruit is.
 -- Zolang niemand zit houdt de server de klok vast op WACHT (instappen blijft open); daarna nog T_IN - WACHT s.
 -- Fasen moeten gelijk zijn aan SiroccoRitClient.
 local Players = game:GetService("Players")
 
 local S = 3
-local T_IN, T_RIT, T_UIT = 15, 60, 8           -- = SiroccoRitClient
+local T_IN, T_RIT, T_UIT = 15, 60, 16          -- = SiroccoRitClient; uitstappen 16 s: de uitgangsdeur blijft open tot iedereen eruit is
 local WACHT = 5
 local CYCLUS = T_IN + T_RIT + T_UIT
 local R_SCHIJF = 7.25                          -- gaashek rond de draaischijf (m)
@@ -154,6 +155,10 @@ local function iemandAanBoord(): boolean
 	return false
 end
 
+-- wachten op de bezoekers (SiroccoBezoekers: attributen NpcInstap en NpcUit). Wachtvensters liggen 3 s voor het einde van de
+-- fase, zodat de deuren dan nog helemaal open staan (SiroccoRitClient: 1,5 s open/dicht); hooguit MAX_HOUD s per venster.
+local IN_HOUD, UIT_HOUD, MAX_HOUD = T_IN - 3, CYCLUS - 3, 40
+local houdSinds: number? = nil
 local vorige = ""
 while true do
 	task.wait(0.2)
@@ -161,6 +166,15 @@ while true do
 	if tc >= WACHT and tc < WACHT + 1 and not iemandAanBoord() then
 		rit:SetAttribute("RitStart", nu - WACHT)                 -- klok vasthouden: instappen blijft open tot er iemand zit
 		tc = WACHT
+	end
+	local venster: number? = nil
+	if tc >= IN_HOUD and tc < IN_HOUD + 1 and rit:GetAttribute("NpcInstap") == true then venster = IN_HOUD end
+	if tc >= UIT_HOUD and tc < UIT_HOUD + 1 and ((rit:GetAttribute("NpcUit") :: number?) or 0) > 0 then venster = UIT_HOUD end
+	if venster then
+		houdSinds = houdSinds or nu
+		if nu - (houdSinds :: number) < MAX_HOUD then rit:SetAttribute("RitStart", nu - venster); tc = venster end
+	else
+		houdSinds = nil
 	end
 	local f = fase(tc)
 	rit:SetAttribute("Wacht", tc >= WACHT and tc < WACHT + 1)

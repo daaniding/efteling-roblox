@@ -1534,6 +1534,17 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   (perkament, bruine houten rand, blauwe Garamond-letters, geen verloop/gloed). Telefoon: eigen draaiknoppen < > onderin het
   midden (niet onder de joystick of springknop), uitleg "Spin your boat with the arrows", melding hoger zodat hij de knoppen niet
   raakt. Op een echte telefoon nog niet getest; billboards zijn niet te zien in screen_capture (wel in het spel).
-- VOLGENDE: Daans oordeel over snelheid/knop/uitstappen; bezoekers in de boten (Park.registreer Sirocco); geluid (bel, water);
+- NPC-bezoekers (18 nov, Daan: "mensen toevoegen, ze moeten instappen en allemaal een eigen karretje kiezen", "meer mensen dan
+  karretjes?", "pas beginnen als elke npc een plekje heeft", "uitgangsdeuren pas dicht als elke npc weg is", "zit animatie"):
+  ServerScriptService.SiroccoBezoekers (bron roblox/SiroccoBezoekers.server.luau), 16 bezoekers via ParkBezoekers
+  (VOLGORDE nu {"Pagode", "Sirocco"}). Rij langs 07_omgeving.WACHTRIJ tot voor de instappoort (0,85 m hart op hart); bij het
+  instappen kiest wie vooraan staat een eigen vrije boot (gereserveerd), loopt erheen en gaat zitten met de R15-zitanimatie
+  (Park.maak haalt het Animate-script weg). Meer mensen dan boten: ze blijven vooraan in de rij en gaan de volgende ronde mee.
+  Op de schijf een eigen A*-routeplanner (raster 0,25 m, boten/tonnen/rand als obstakel; Roblox-pathfinding met 4-studcellen
+  vond de gangetjes niet); in/uit-punten r 6,4 bij -64 en -111 graden (offline getoetst: elke boot bereikbaar). Vastloopcontrole:
+  1,5 s geen voortgang = op het looppunt zetten. SiroccoRit wacht op NPC's (attributen NpcInstap/NpcUit, wachtvensters 3 s voor
+  het einde van instappen/uitstappen, max 40 s); uitstappen nu 16 s. Play: 12/12 boten vol voor vertrek, 4 wachten; alle 12
+  uitstappers in ~12 s van het dek, geen sprongen; daarna naar de Pagode.
+- VOLGENDE: Daans oordeel; geluid (bel, water);
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.
   Pagode), bomen/beplanting in de plantvakken, ruitpatroon in het plein; rit pas als Daan erom vraagt.

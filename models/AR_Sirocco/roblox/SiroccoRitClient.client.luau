@@ -20,7 +20,7 @@ local CAS = game:GetService("ContextActionService")
 local UIS = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 8, 5      -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
+local T_IN, T_RIT, T_UIT, RAMP = 15, 60, 16, 5     -- = SiroccoRit; RAMP = optrekken / uitlopen (s)
 local CYCLUS = T_IN + T_RIT + T_UIT
 local OMW_M, OMW_S = 5, -11                         -- hele omwentelingen per rit: hoofdschijf, subschijf (t.o.v. de hoofdschijf)
 local I_TOT = T_RIT - RAMP
