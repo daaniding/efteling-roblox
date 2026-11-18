@@ -60,11 +60,14 @@ met uitbouw tot y -341,4 (x -49,7..-37,5, erker met rooster), dienstdeur met lam
 kale kanten van de hal boven dat blok (oostkop x -15,4 en zuidkant y -321,5) en westkop van dat blok (x -16,1). Bomen in het AHN
 (rond (-30; -341) en y < -348) niet gebouwd. Grond: strook x -54..-12, y -353..-335.
 Buitenkant rondom dicht.
-Stap 10 — kielboog-gevel ingangsgebouw ronder (build/05_ingang.py, asset 115016590222449): borstwering naar FataVoorplein1993 en
+Stap 10 — golvende gevel van de Bazaar (winkel met blauwe koepel; in de code "ingang"/05_ingang.py, asset 115016590222449) ronder: borstwering naar FataVoorplein1993 en
 Fatamorganaingang1987: voorgevel met hoge schouders en een brede ronde dip in het midden (koepel komt erboven uit), overal
 zachte S-bochten (cosinus) en bulten met een vlakke top in plaats van punten; dikke rode band (0,28 m, iets breder dan de muur)
 i.p.v. een buis. Elke gevel dekt zijn eigen beginhoek en stopt vóór de volgende: geen overlappende bovenvlakken op de hoeken.
-Mogelijke vervolgstap: binnenkant (pas als Daan erom vraagt).
+LET OP (Daan 18 nov: "dat is toch niet het ingangsgebouw"): het gebouw met de blauwe koepel is de Bazaar (souvenirwinkel,
+"BAZAAR" op FataVoorplein1993). De echte ingang is de voet van de minaret: grote geschulpte kielboog in een tegelpaneel
+(Fmplein1986.jpg, Fatamorganaingang1987.jpg); in 04_minaret nu nog een klein spitsboogdeurtje van 1,25 m.
+Mogelijke vervolgstap: de ingangsboog in de minaretvoet; binnenkant (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
