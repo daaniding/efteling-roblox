@@ -144,19 +144,27 @@ Gangmuren (Daan: "die witte muren moeten iets meer beige oud-achtig"): eigen rol
 botst) + losse vochtvlekken (verwering); gangkant van de groene boog (gangwand) hetzelfde. Asset binnen 72636392296267.
 Wachtrijhal ook (Daan: "doe dat ook in de wachtrij"): achterwand en pilasters rol gangmuur + vochtvlekken (niet over ramen,
 schilderingen en de doorgang, verwering met gaten). Asset zuidvleugel 75793335061309.
-BINNENKANT stap 3 — instaphal (Daan: "doe binnen overal die kleur en maak het verder"; build/16_instaphal.py, deel "instaphal",
-asset 86544521314371; Eftepedia "Wachtrij en instaphal" + video's): in het holle kantelenblok, binnen x -15..10,4, y -348,9..-322,6
-(west/zuid 0,5 m naar binnen zodat afgerond terrein van buiten achter de muur blijft). Gaanderij (2,6 m) langs noord- en oostmuur op
-vloerniveau (sluit aan op de gang; gangeind 15_binnen nu echt open in de groene kielboog), balustrade crème met lijst, groene zuilen
-en kielbogen, balk met amber lampjes; bakwand donker met band crème panelen en bruine rozetten. Verdiepte bak: bodem -2,6, water
--2,1 (rol water, glas, transparant 0,15), draaischijf r 8,5 m dek -1,8 (WoodPlanks, radiale naden, gouden naaf) in het midden
-(-3,6; -337,05). Bordes + trap (12 treden, groene leuningen) vanaf de noordgaanderij naar de schijf, controlehokje ernaast. Grote
-ronde houten lattenkap (64 latten) boven de schijf, donker plafond, uitgang naar de rit achter een beige gordijn in de zuidmuur.
-Licht: FataMorgana.Instaphallicht (14 PointLights). Terrein in de bak + onder de gaanderij weggehaald (cellen met middelpunt
-binnen x -16,2..9,6, y -350..-323,2). Halletje-plafond ook oud beige. Nog geen beweging (schijf/boten staan stil).
-Getest in Play: gang -> gaanderij -> bordes -> trap -> draaischijf. Assets: minaret 104784345799444, binnen 120737100048532.
-Nieuwe rollen: gangpleister, water, dekhout, plafond, rozet, gordijn, groenhek.
-Mogelijke vervolgstappen: sloepen (rood, 14) aan de schijf (statisch), details (bordjes, lamp boven de schijf), de rit zelf.
+BINNENKANT stap 3 — instaphal (build/16_instaphal.py, deel "instaphal"). Daan: "het moet echt accuraat, kijk filmpjes", "je
+scipt te veel", "heb je geen blueprints?" -> gebouwd naar de PLATTEGROND van Eftepedia (ref/eftepedia/Plattegrondfata.jpg,
+sectie 15; ~23 px/m, blok x -16..17,4 = px 1470..2240) + frames uit de POV-video 2025 (30-76 s), "Verlengde wachtrij 2020"
+(396-424 s) en Fata_draaischijf.jpg:
+- rechthoekige hal binnen x -3,5..16,6, y -348,4..-323,6 (muren 0,6 m binnen het afgeronde terrein op de celgrenzen), rondom een
+  gaanderij (2,6 m) op 0,12 m: balustrade met paneeltextuur (FM_balustrade 87936849308238: taupe getrapt paneel met crème
+  rozet), groene lijsten, palen met lantaarntjes, groene kielbogen, kroonlijst, lichtlijst langs de achterwanden; onder de
+  gaanderij donker hout en groene steunpalen in het water;
+- draaischijf r 7,5 m rond (6,3; -335,8), dek 3 m onder de gaanderij (-2,9), water (-3,2) rondom en onder de gaanderijen;
+- achthoekig controlehok IN HET MIDDEN op een groene kegel+zuil, brug vanaf de westgaanderij, trap van het hok oostwaarts omlaag
+  op de schijf (panelenbalustrades), paddenstoelvormige lattenkap in twee lagen erboven;
+- boten in (zuidwest, donkere doorvaart) en uit (noordwest, achter een beige gordijn);
+- de gang (15_binnen) is weg: de groene boog van het halletje komt direct op de oostgaanderij uit (zoals de video 2020); links
+  (zuid) van de doorgang afgesloten met een balustrade (Daan: "nu zou je rechts en links kunnen") -> route: noord, west, brug, trap.
+Terrein in de hal weggehaald (cellen met middelpunt binnen x -16,2..17, y -350..-322,8). Licht: FataMorgana.Instaphallicht.
+Getest in Play: halletje -> oostgaanderij -> noord -> west -> brug -> controlehok -> trap -> draaischijf; zuid is dicht.
+Asset instaphal 101357473181413. Nog geen beweging (schijf/boten).
+Nog te doen (Daan: "en waar is de uitgang"): Eftepedia: "Via een trap aan de linkerzijde van het controlehok en een gaanderij
+kunnen we de hal verlaten. We passeren via een onoverdekte gang een gewoonlijk afgesloten hek en komen via de winkel De Bazaar
+weer op het voorplein uit." -> tweede trap bij het controlehok, uitgangsgaanderij, deur, open gang (binnenplaatsje x 12,5..17,4,
+y -316..-322), hek, De Bazaar (05_ingang) met een doorgang naar het plein.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")

@@ -27,4 +27,5 @@ FM_bord_kleur 99448957611155
 FM_tegelhal_kleur 73063474660484
 FM_deurblad_kleur 79743845630448
 AR_FataMorgana_binnen 120737100048532
-AR_FataMorgana_instaphal 86544521314371
+AR_FataMorgana_instaphal 101357473181413
+FM_balustrade_kleur 87936849308238

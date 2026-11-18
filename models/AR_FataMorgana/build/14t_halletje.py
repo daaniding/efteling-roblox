@@ -2,6 +2,8 @@
   FM_tegelhal_kleur : wandtegels van het halletje: terracotta/roodbruin met een ruitjesrooster van crème kruisjes en donkere
                       stipjes (zoals op de video), naadloos, 1 textuur = 1 m
   FM_deurblad_kleur : houten deurblad (honingkleurig, verticale nerf) met "Open" in crème letters
+  FM_balustrade_kleur: balustrade van de gaanderij in de instaphal (video's 2020/2025): crème vlak met een taupe getrapt paneel en
+                      een ronde crème rozet met bruin patroon; 1 textuur = 1 paneel (u) x balustradehoogte (v)
 Gebruik: python3 build/14t_halletje.py"""
 import os, math
 import numpy as np
@@ -45,4 +47,21 @@ def deurblad(W=512, H=1024):
     im.save(os.path.join(T, "FM_deurblad_kleur.png"))
 
 
-tegelhal(); deurblad(); print("[14t_halletje] klaar")
+def balustrade(W=768, H=432):
+    im = Image.new("RGB", (W, H), (232, 222, 200)); d = ImageDraw.Draw(im)
+    m = 34; st = 22                                                    # rand, trapje
+    pts = [(m + st, m), (W - m - st, m), (W - m - st, m + st), (W - m, m + st), (W - m, H - m - st), (W - m - st, H - m - st),
+           (W - m - st, H - m), (m + st, H - m), (m + st, H - m - st), (m, H - m - st), (m, m + st), (m + st, m + st)]
+    d.polygon(pts, fill=(150, 120, 96), outline=(120, 92, 70))
+    cx, cy, r = W / 2, H / 2, H * 0.3
+    d.ellipse([cx - r, cy - r, cx + r, cy + r], fill=(226, 214, 190), outline=(120, 92, 70), width=4)
+    for k in range(12):                                                # rozetpatroon
+        a = 2 * math.pi * k / 12
+        d.line([(cx, cy), (cx + math.cos(a) * r * 0.85, cy + math.sin(a) * r * 0.85)], fill=(140, 104, 76), width=5)
+    for rr in (0.25, 0.55, 0.8):
+        d.ellipse([cx - r * rr, cy - r * rr, cx + r * rr, cy + r * rr], outline=(140, 104, 76), width=4)
+    a = np.asarray(im).astype(np.float32) + rng.normal(0, 4, (H, W, 1))
+    Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(0.6)).save(os.path.join(T, "FM_balustrade_kleur.png"))
+
+
+tegelhal(); deurblad(); balustrade(); print("[14t_halletje] klaar")

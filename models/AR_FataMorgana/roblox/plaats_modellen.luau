@@ -3,13 +3,13 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 104784345799444, Ingang = 115016590222449, Kantelen = 139989623236326, Koepelgebouw = 83588828374633, Zuidvleugel = 75793335061309, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 105227491479681, Binnen = 120737100048532, Instaphal = 86544521314371}
+local DELEN = {Toren = 93537759416227, Noordgevel = 130556259967074, Minaret = 104784345799444, Ingang = 115016590222449, Kantelen = 139989623236326, Koepelgebouw = 83588828374633, Zuidvleugel = 75793335061309, Westkant = 118665351344067, Achterkant = 119797591567252, Veranda = 105227491479681, Instaphal = 101357473181413}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
 	zellige = 112364982933611, zigzag = 94009043451472, balkon = 115587625989953, fries = 96873829333423,
 	vloertegel = 112689883777106, schildering = 119976189330229, bord = 99448957611155,
-	tegelhal = 73063474660484, deurblad = 79743845630448}   -- naald: Pagode (dennennaalden)
+	tegelhal = 73063474660484, deurblad = 79743845630448, balustrade = 87936849308238}   -- naald: Pagode (dennennaalden)
 -- rol -> {textuur, normaal, kleur, materiaal, botsen, reflectie, alfa}
 local R = {
 	stuc = {"stuc_kleur", "stuc_normaal", Color3.new(1, 1, 1), Enum.Material.Plaster, true},
@@ -70,6 +70,13 @@ local R = {
 	rozet = {nil, nil, Color3.fromRGB(110, 70, 44), Enum.Material.SmoothPlastic, false},
 	gordijn = {nil, nil, Color3.fromRGB(214, 196, 160), Enum.Material.Fabric, true},
 	groenhek = {nil, nil, Color3.fromRGB(64, 148, 128), Enum.Material.Metal, true},
+	balustrade = {"balustrade", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false},
+	balmuur = {"stuc_kleur", "stuc_normaal", Color3.fromRGB(236, 224, 202), Enum.Material.Plaster, true},
+	onderwand = {nil, nil, Color3.fromRGB(92, 70, 52), Enum.Material.Wood, true},
+	donkervloer = {nil, nil, Color3.fromRGB(78, 58, 44), Enum.Material.Slate, true},
+	lichtlijst = {nil, nil, Color3.fromRGB(255, 196, 120), Enum.Material.Neon, false},
+	witlijn = {nil, nil, Color3.fromRGB(240, 240, 232), Enum.Material.SmoothPlastic, false},
+	lat = {nil, nil, Color3.fromRGB(158, 122, 86), Enum.Material.Wood, false},
 }
 for _, r in {"vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet"} do
 	R[r] = {r, nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false, nil, true}
