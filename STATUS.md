@@ -195,6 +195,9 @@ oost -> uitgangsdeur. Getest in Play: beide routes ok; brug, noordgaanderij dwar
 houden tegen. Asset instaphal 74484438706432.
 Daarna (Daan: "niet het midden weghalen maar de connectie tussen het midden en de rij"): alleen de brug weg; het controlehok staat
 vrij in het midden op zijn trompet, rondom dicht (personeel). Westgaanderij doorlopend dicht. Asset instaphal 139542993746719.
+Stap 4 klaar: build/17_boten.py (deel "boten", asset 82019102059341, FataMorgana.Boten): drie stilliggende sloepen van 6,0 x 1,9 m
+(rode romp, witte sierband, gouden boord, opgekrulde steven met dekjes, witte binnenkant, vijf witte banken, rode vloer): aan de
+draaischijf (oost), in het zuidkanaal en in het noordkanaal richting uitgang. Nog geen beweging.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
