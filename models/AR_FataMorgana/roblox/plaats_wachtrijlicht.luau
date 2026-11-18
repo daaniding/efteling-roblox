@@ -14,7 +14,7 @@ for _, y in ipairs({-342.0, -345.6}) do
 		p.CanCollide = false; p.CanQuery = false; p.CanTouch = false; p.CastShadow = false
 		p.Position = Vector3.new(x * S, Y0 + 2.6 * S, -y * S)
 		local l = Instance.new("PointLight")
-		l.Color = Color3.fromRGB(255, 186, 112); l.Brightness = 0.45; l.Range = 11; l.Shadows = false; l.Parent = p
+		l.Color = Color3.fromRGB(255, 170, 90); l.Brightness = 1.1; l.Range = 14; l.Shadows = true; l.Parent = p
 		p.Parent = map; n += 1
 		x += 3.4
 	end
