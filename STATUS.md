@@ -1590,6 +1590,9 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   90703871759170, omgeving 131977708132078, bord 126287596115870. Studio: oud terrein weg, alles opnieuw geplaatst (terrein,
   modellen, setup, 267 routemuren, scriptpatches, spawn). ref/luchtfoto = echt, ref/luchtfoto_gespiegeld = de oude meetbasis.
   Play: 12/12 boten vol voor vertrek, uitstappers in 10 s van het dek, speler na zwart beeld op de brug (Y 3.95), console schoon.
+- Nafout spiegeling (18 nov, Daan: "de boten komen op de wachtrij"): 11_export verdeelt de subschijfvlakken over sa/sb/sc op hun
+  hoek; na SPIEGEL moet die hoek in het oude stelsel (atan2(-x, -y)), anders zaten stukken van verschillende schijven in een groep
+  en draaiden boten om een verkeerd punt (tot 11,9 m van het midden). Nieuwe rit 124803742394004; Play: max straal 6,70 m.
 - SIROCCO AF (18 nov, Daan: "deze attractie is ook weer af").
 - Later eventueel:
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.

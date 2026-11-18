@@ -437,3 +437,5 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
   gebouw op zijn OSM-plek zetten is niet genoeg (in het midden valt een spiegeling weg); kijk naar iets aan de rand.
 - np.meshgrid geeft standaard (kolom, rij): voor beeldarrays altijd indexing='ij'.
 - screen_capture van een bovenaanzicht in Edit kan 180 graden gedraaid zijn: richting altijd met coördinaten van onderdelen checken.
+- Na een globale transformatie (spiegelen/draaien) alles nalopen wat op hoek of positie selecteert (groepen, splitsingen), en de
+  rit meteen in Play meten (max straal van bewegende delen), niet alleen kijken of hij laadt.

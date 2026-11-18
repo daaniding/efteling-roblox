@@ -179,9 +179,9 @@
    "SI_voet_0_rtbl": 188,
    "SI_zeil_0_rtbl": 292,
    "SI_platform_0_rtm": 380,
-   "SI_subschijf_0_rtsc": 252,
-   "SI_subschijf_0_rtsa": 252,
    "SI_subschijf_0_rtsb": 252,
+   "SI_subschijf_0_rtsa": 252,
+   "SI_subschijf_0_rtsc": 252,
    "SI_ton_0_rtm": 228
   },
   "AR_Sirocco_omgeving": {

@@ -51,7 +51,7 @@ def verzamel(deel):
         elif o["rol"] == "subschijf":
             per = defaultdict(list)
             for p in me.polygons:
-                c = p.center; h = math.atan2(c.y, c.x)
+                c = p.center; h = math.atan2(-c.x, -c.y)        # hoek in het oude stelsel (na SPIEGEL is (x, y) = (-y_oud, -x_oud))
                 s = min(range(3), key=lambda k: abs((h - (VOOR + math.radians(90 + 120 * k)) + math.pi) % (2 * math.pi) - math.pi))
                 per[s].append(p.index)
             for k, polys in per.items(): groepen["SI_subschijf|s" + "abc"[k]].append((me, polys))
