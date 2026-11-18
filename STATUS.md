@@ -106,6 +106,8 @@ Les: na het plaatsen de WorldPivot van alle delen controleren (moet -120; 0,91; 
 Verandahoek (Daan: "afsluiten met touw"): de opening op de zuidoosthoek (ingang op rustige dagen) is dicht met twee paaltjes
 met gouden knop en een doorhangend touw; schildvormig bord met blauwe rand en gouden krul ervoor op het plein. De rij loopt nu
 altijd via de ingang aan de oostkant door de wachtrijhal. Asset veranda 72481974604568.
+Ondergrond (Daan: "er is nog niet genoeg ondergrond"): terrein (Ground + Pavement, Y 1,0) aangevuld over x 16..62, y -353..-318:
+het plein voor de wachtrijhal en rond de oostkop van de hal.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
