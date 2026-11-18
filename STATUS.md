@@ -54,7 +54,12 @@ hogere hoek ZW, steunblok 8,8 m (x -74,8..-73, y -334,2..-338,6), laag aanbouwtj
 deur, lampen en ramen; dienstdeur in de zuidgevel. Witte ronde vorm op de luchtfoto bij (-78; -333) staat niet in het AHN
 (0 m): parasol/tent, niet gebouwd. Grond: strook rond de westkant (x -80..-49, y -342,5..-296,5), daar was nog geen terrein.
 Les: grondstroken van 1 cel zakken aan de randen weg (Y 0,3 / -0,7): minstens 2-3 m rond de gevel vullen, dan Y 1,0.
-Volgende stuk (alleen het gebouw): achterkant (zuidgevel hal x -51,8..-15,7, y -339).
+Stap 9 — achterkant (build/10_achterkant.py, asset 119797591567252): zuidgevel van de hal (y -339,3, 8 m, getrapte kantelen)
+met uitbouw tot y -341,4 (x -49,7..-37,5, erker met rooster), dienstdeur met lampen, schoorsteen (10,2 m); laag aanbouwtje 2,9 m
+(x -45,2..-37,3, y -341..-344,6); laag blok 4,6 m (x -26,6..-15,8, y -338,8..-346,5) tegen het blok bij de minaret; gevels op de
+kale kanten van de hal boven dat blok (oostkop x -15,4 en zuidkant y -321,5) en westkop van dat blok (x -16,1). Bomen in het AHN
+(rond (-30; -341) en y < -348) niet gebouwd. Grond: strook x -54..-12, y -353..-335.
+Buitenkant rondom dicht. Mogelijke vervolgstappen: kielboog-gevel ingangsgebouw ronder; interieur (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/
