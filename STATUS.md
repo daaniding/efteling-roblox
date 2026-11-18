@@ -11,7 +11,8 @@ Stap 1 — de grote toren met turquoise koepel (park -40;-295, top NAP 27,3): bu
 Moorse rand en hoekpinakels, nissen, portaal; bovenstuk 4,6 m met lobbenrand; koepel + gouden spits), stuc 2048 px = 6 m
 (01t_texturen: Poly Haven red_plaster_weathered + grote okervlekken zoals Fata2013.jpg; Daan: "textures moeten mooier").
 In Studio: workspace.FataMorgana.Toren + terrein 36x30 m (bestrating Y 0,91, water ervoor). roblox/plaats_toren.luau.
-Stap 2 — noordgevel (build/03_noordgevel.py): west- en oostvleugel volgens AHN-voorlijn, hoofdvolume met plat donker dak
+Stap 2 — noordgevel (build/03_noordgevel.py): westvleugel recht op y -297 (AHN-drempel >15,5 m pakte kantelen/dak en gaf een
+schuine voorlijn; Daan: "hoort dit schuin te gaan" — nee), oostvleugel volgens AHN-voorlijn, hoofdvolume met plat donker dak
 (x -73..-6, y -297..-339) zodat alles aan elkaar zit (Daan: "het zit niet aan elkaar"), witte/grijze/gouden koepel,
 westtorentje, galerij met groen afdak (echt uitgespaard), erkers met roosterwerk, kade met pijlers en bolbekroningen langs het
 water, (sierlantaarnpalen weer weg: Daan "haal de lantaarnpalen weg"), cipressen (kort stammetje + kern + onregelmatige kluiten, Pagode-naaldtextuur; Daan: gladde spoel

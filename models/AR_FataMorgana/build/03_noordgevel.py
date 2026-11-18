@@ -180,7 +180,7 @@ def romp():
     """het hoofdvolume achter de gevels met plat dak (AHN: dak NAP 16,7 over x -73..-6, y -293..-339): toren, west- en
     oostvleugel horen bij één gebouw (Daan 18 nov: "het zit niet aan elkaar")"""
     # 2 m achter de gevellijn (gevelmuren zijn 6 m diep), zodat de galerij open blijft
-    omtrek = [(-72.5, -298.5), (-66.0, -299.5), (-60.0, -300.5), (-51.0, -301.5), (-43.5, -301.5), (-43.5, -297.0), (-36.5, -297.0),
+    omtrek = [(-72.5, -299.0), (-43.5, -299.0), (-43.5, -297.0), (-36.5, -297.0),
               (-36.5, -294.5), (-30.0, -294.0), (-27.0, -296.0), (-21.0, -296.5), (-12.0, -297.5), (-8.0, -297.5), (-6.5, -318.0),
               (-25.0, -318.0), (-25.0, -339.0), (-73.0, -339.0)]
     pts = [L(x, y) for x, y in omtrek][::-1]                   # tegen de klok in
@@ -283,9 +283,10 @@ def rooster(vl, u, v0, w, h, n=0.06):
 def bouw():
     romp(); kade()
     # lantaarnpalen bij de galerij weggehaald (Daan 18 nov: "haal de lantaarnpalen weg")
-    for k, (x, y, h) in enumerate(((-47.0, -298.6, 5.8), (-57.5, -297.9, 6.4), (-63.0, -297.2, 5.2))): cipres(x, y, h, k)
+    for k, (x, y, h) in enumerate(((-47.0, -296.2, 5.8), (-57.5, -296.1, 6.4), (-63.0, -296.2, 5.2))): cipres(x, y, h, k)
     # westvleugel (AHN-voorlijn), oostvleugel
-    west = muur([(-72.5, -296.5), (-66.0, -297.5), (-60.0, -298.5), (-51.0, -299.5), (-43.5, -299.5)])
+    # recht (Daan 18 nov: "hoort dit schuin te gaan" — nee: de AHN-drempel pakte kantelen/dak, luchtfoto en Fata2013 tonen een rechte muur)
+    west = muur([(-72.5, -297.0), (-66.0, -297.0), (-60.0, -297.0), (-51.0, -297.0), (-43.5, -297.0)])
     L0 = (L(-30.0, -292.0) - L(-36.5, -292.5)).length
     oost = muur([(-36.5, -292.5), (-30.0, -292.0), (-27.0, -294.0), (-21.0, -294.5), (-12.0, -295.5), (-8.0, -295.5)],
                 uitsparing={0: (0.9, L0 - 0.2, 3.4, 1.9)})
