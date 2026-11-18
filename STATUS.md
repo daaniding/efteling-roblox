@@ -48,7 +48,13 @@ Stap 7 — zuidvleugel (build/08_zuidvleugel.py): x 17,2..58, y -339,8..-350 (AH
 rode palen, blauw-witte fries (FM_fries, 04t_tegels), rode randen, gouden bollen, achterwand met boognissen (FataVoorplein1993.jpg).
 Hoofdgebouw-dak doorgetrokken (hal 8,2 m tot x -2,3 en x -15,7), blok bij de minaret tot y -350 (één massief blok + dunne gevels).
 Les: geen dubbele daken: kern 30 cm onder de dakrand, dakvlak 8 cm boven de muurbovenkanten (anders z-fighting op het dak).
-Volgende stukken (alleen het gebouw): westkant (x -90..-73, wit koepeltje bij (-78; -334)), achterkant (zuid, bos/dienstweg).
+Stap 8 — westkant (build/09_westkant.py, asset 118665351344067): westgevel van de hal (x -73,3, 8 m, getrapte kantelen,
+ramen, erker met rooster), hoger westblok 10,1 m (x -73,4..-51,8, y -324,9..-339,4) met wit koepeltorentje NW (top ~12,4 m) en
+hogere hoek ZW, steunblok 8,8 m (x -74,8..-73, y -334,2..-338,6), laag aanbouwtje 3,2 m (x -77,6..-73, y -309,6..-321,2) met
+deur, lampen en ramen; dienstdeur in de zuidgevel. Witte ronde vorm op de luchtfoto bij (-78; -333) staat niet in het AHN
+(0 m): parasol/tent, niet gebouwd. Grond: strook rond de westkant (x -80..-49, y -342,5..-296,5), daar was nog geen terrein.
+Les: grondstroken van 1 cel zakken aan de randen weg (Y 0,3 / -0,7): minstens 2-3 m rond de gevel vullen, dan Y 1,0.
+Volgende stuk (alleen het gebouw): achterkant (zuidgevel hal x -51,8..-15,7, y -339).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
 Watervariant 2022 gebouwd in models/AR_Archipel (plan.py = plattegrond uit PDOK 2022/2023, 03_vormen hutten/wrak/paalvisser/

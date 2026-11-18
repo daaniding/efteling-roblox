@@ -18,3 +18,4 @@ AR_FataMorgana_kantelen 96319370402611
 AR_FataMorgana_koepelgebouw 83588828374633
 AR_FataMorgana_zuidvleugel 73113709225547
 FM_fries_kleur 96873829333423
+AR_FataMorgana_westkant 118665351344067
