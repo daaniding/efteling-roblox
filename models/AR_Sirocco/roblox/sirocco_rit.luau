@@ -121,14 +121,15 @@ for i, p in RIJ_SPEAKERS do
 end
 snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.04, 20, 120, true)          -- vanuit het dak boven de schijf
 
--- mensen (Daan 18 nov: "gepraat in de wachtrij, geschreeuw een beetje in de attractie"): PSE-walla zonder verstaanbare woorden
+-- mensen (Daan 18 nov: "gepraat in de wachtrij, geschreeuw een beetje in de attractie"): PSE-walla zonder verstaanbare woorden.
+-- Volumes naar gemeten bronluidheid (PlaybackLoudness bij volume 1: muziek ~300, kreet 57, gegil 20, gepraat 11): Daan "ik hoor ze niet"
 local MENSEN = {gepraat1 = 9112787259, gepraat2 = 9112766358, gegil = 9112811007, kreet = 9114775800}
 for i, p in {{12.0, -11.0, 1}, {12.0, 11.2, 2}, {9.6, -3.5, 1}} do       -- begin van de rij, haarspeld, boog bij de schijf
-	local s2 = snd(bron("gepraat" .. i, p[1], p[2], 0.6), "gepraat", p[3] == 1 and MENSEN.gepraat1 or MENSEN.gepraat2, 0.12, 8, 50, true)
+	local s2 = snd(bron("gepraat" .. i, p[1], p[2], 0.6), "gepraat", p[3] == 1 and MENSEN.gepraat1 or MENSEN.gepraat2, 1.4, 8, 50, true)
 	s2.TimePosition = i * 9
 end
 snd(midden, "gegil", MENSEN.gegil, 0, 15, 110, true)                                   -- joelende kinderen, volume volgt de rit
-snd(bron("kreetbron", 0, 0, 1.0), "kreet", MENSEN.kreet, 0.25, 12, 90, false)              -- losse kreet, de client verplaatst de bron
+snd(bron("kreetbron", 0, 0, 1.0), "kreet", MENSEN.kreet, 0.35, 12, 90, false)              -- losse kreet, de client verplaatst de bron
 
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")

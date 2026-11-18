@@ -121,14 +121,15 @@ for i, p in RIJ_SPEAKERS do
 end
 snd(bron("dakmuziek", 0, 0, 5.5), "muziekRit", MUZIEK.rit, 0.04, 20, 120, true)          -- vanuit het dak boven de schijf
 
--- mensen (Daan 18 nov: "gepraat in de wachtrij, geschreeuw een beetje in de attractie"): PSE-walla zonder verstaanbare woorden
+-- mensen (Daan 18 nov: "gepraat in de wachtrij, geschreeuw een beetje in de attractie"): PSE-walla zonder verstaanbare woorden.
+-- Volumes naar gemeten bronluidheid (PlaybackLoudness bij volume 1: muziek ~300, kreet 57, gegil 20, gepraat 11): Daan "ik hoor ze niet"
 local MENSEN = {gepraat1 = 9112787259, gepraat2 = 9112766358, gegil = 9112811007, kreet = 9114775800}
 for i, p in {{12.0, -11.0, 1}, {12.0, 11.2, 2}, {9.6, -3.5, 1}} do       -- begin van de rij, haarspeld, boog bij de schijf
-	local s2 = snd(bron("gepraat" .. i, p[1], p[2], 0.6), "gepraat", p[3] == 1 and MENSEN.gepraat1 or MENSEN.gepraat2, 0.12, 8, 50, true)
+	local s2 = snd(bron("gepraat" .. i, p[1], p[2], 0.6), "gepraat", p[3] == 1 and MENSEN.gepraat1 or MENSEN.gepraat2, 1.4, 8, 50, true)
 	s2.TimePosition = i * 9
 end
 snd(midden, "gegil", MENSEN.gegil, 0, 15, 110, true)                                   -- joelende kinderen, volume volgt de rit
-snd(bron("kreetbron", 0, 0, 1.0), "kreet", MENSEN.kreet, 0.25, 12, 90, false)              -- losse kreet, de client verplaatst de bron
+snd(bron("kreetbron", 0, 0, 1.0), "kreet", MENSEN.kreet, 0.35, 12, 90, false)              -- losse kreet, de client verplaatst de bron
 
 -- vertaling (Engels -> nl), Roblox vertaalt de teksten automatisch naar de taal van de speler (zoals PagodeTeksten)
 local LS = game:GetService("LocalizationService")
@@ -790,7 +791,7 @@ RunService.PreSimulation:Connect(function(dt: number)
 	if sBrom then sBrom.Volume += (0.15 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
 	if sWind then sWind.Volume += ((inBoot and 0.18 * tSnel or 0) - sWind.Volume) * 0.05 end
 	if sRitMuziek then sRitMuziek.Volume += ((0.04 + 0.08 * tSnel) - sRitMuziek.Volume) * 0.03 end
-	if sGegil then sGegil.Volume += (0.18 * tSnel - sGegil.Volume) * 0.04 end
+	if sGegil then sGegil.Volume += (1.0 * tSnel - sGegil.Volume) * 0.04 end     -- bron is zacht (luidheid 20)
 	if sKreet and kreetBron and tSnel > 0.6 and os.clock() > volgendeKreet then
 		local st = stoelen[math.random(#stoelen)]
 		kreetBron.Position = st.Position + Vector3.new(0, 2, 0)
@@ -1088,9 +1089,11 @@ end
 -- voetstappen (Daan 18 nov: "ik mis andere voetstappen"): elke bezoeker een loopgeluid dat bij de ondergrond past (zelfde
 -- opnames als Voetstappen.client.luau van de spelers), speelt alleen als hij loopt
 local STAP = {hout = "rbxassetid://6506537704", steen = "rbxassetid://91557584218550", gras = "rbxassetid://106672010112184"}
+-- volume per opname (gemeten bronluidheid bij volume 1: hout 6, steen 37): Daan 18 nov "ik hoor het geloop niet"
+local STAPVOL = {hout = 2.0, steen = 0.35, gras = 0.8}
 local function stappen(m: Model, hum: Humanoid, hrp: BasePart)
 	if hrp:FindFirstChild("Stappen") then return end
-	local so = Instance.new("Sound"); so.Name = "Stappen"; so.Looped = true; so.Volume = 0.22
+	local so = Instance.new("Sound"); so.Name = "Stappen"; so.Looped = true; so.Volume = STAPVOL.hout
 	so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = 4; so.RollOffMaxDistance = 28
 	so.SoundId = STAP.hout; so.Parent = hrp
 	local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Exclude; ray.FilterDescendantsInstances = {m}
@@ -1104,7 +1107,7 @@ local function stappen(m: Model, hum: Humanoid, hrp: BasePart)
 					if hit.Instance:IsA("Terrain") then soort = hit.Material == Enum.Material.Grass and "gras" or "steen"
 					elseif hit.Instance.Name:match("vlonder") or hit.Instance.Name:match("platform") or hit.Instance.Name:match("subschijf") then soort = "hout" end
 				end
-				if so.SoundId ~= STAP[soort] then so.SoundId = STAP[soort] end
+				if so.SoundId ~= STAP[soort] then so.SoundId = STAP[soort]; so.Volume = STAPVOL[soort] end
 				so.PlaybackSpeed = math.clamp(hrp.AssemblyLinearVelocity.Magnitude / 7, 0.8, 1.2)
 			end
 			if loopt ~= so.IsPlaying then if loopt then so:Play() else so:Stop() end end

@@ -1577,6 +1577,10 @@ aangevuld met OSM-paden die > 3 m van een BGT-pad liggen (2,2 m / 3,5 m breed). 
   9112811007 bij de schijf (volgt de rit, max 0.18) + losse blije kreet 9114775800 om de 4-10 s vanuit een willekeurige boot.
   Voetstappen: elke bezoeker een loopgeluid per ondergrond (hout/steen/gras); Voetstappen.client (speler) kent nu ook de
   Sirocco-onderdelen (vlonder = hout). Play: 4 kreten per 35 s, tot 14 bezoekers tegelijk met voetstappen, console schoon.
+- Mensen hoorbaar (18 nov, Daan: "ik hoor het gegil, gepraat en geloop nog niet"): de PSE-opnames zijn veel zachter dan de muziek
+  (PlaybackLoudness bij volume 1: muziek ~300, kreet 57, steen-stap 37, water 25, gegil 20, gepraat 11, hout-stap 6; Volume
+  verandert PlaybackLoudness niet). Volumes daarop afgestemd: gepraat 1.4, gegil tot 1.0 tijdens de rit, kreet 0.35,
+  voetstappen per ondergrond hout 2.0 / steen 0.35 / gras 0.8.
 - SIROCCO AF (18 nov, Daan: "deze attractie is ook weer af").
 - Later eventueel:
   looptest plein -> wachtrij -> dek -> brug; beplanting; ruitpatroon plein.

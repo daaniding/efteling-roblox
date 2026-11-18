@@ -266,9 +266,11 @@ end
 -- voetstappen (Daan 18 nov: "ik mis andere voetstappen"): elke bezoeker een loopgeluid dat bij de ondergrond past (zelfde
 -- opnames als Voetstappen.client.luau van de spelers), speelt alleen als hij loopt
 local STAP = {hout = "rbxassetid://6506537704", steen = "rbxassetid://91557584218550", gras = "rbxassetid://106672010112184"}
+-- volume per opname (gemeten bronluidheid bij volume 1: hout 6, steen 37): Daan 18 nov "ik hoor het geloop niet"
+local STAPVOL = {hout = 2.0, steen = 0.35, gras = 0.8}
 local function stappen(m: Model, hum: Humanoid, hrp: BasePart)
 	if hrp:FindFirstChild("Stappen") then return end
-	local so = Instance.new("Sound"); so.Name = "Stappen"; so.Looped = true; so.Volume = 0.22
+	local so = Instance.new("Sound"); so.Name = "Stappen"; so.Looped = true; so.Volume = STAPVOL.hout
 	so.RollOffMode = Enum.RollOffMode.InverseTapered; so.RollOffMinDistance = 4; so.RollOffMaxDistance = 28
 	so.SoundId = STAP.hout; so.Parent = hrp
 	local ray = RaycastParams.new(); ray.FilterType = Enum.RaycastFilterType.Exclude; ray.FilterDescendantsInstances = {m}
@@ -282,7 +284,7 @@ local function stappen(m: Model, hum: Humanoid, hrp: BasePart)
 					if hit.Instance:IsA("Terrain") then soort = hit.Material == Enum.Material.Grass and "gras" or "steen"
 					elseif hit.Instance.Name:match("vlonder") or hit.Instance.Name:match("platform") or hit.Instance.Name:match("subschijf") then soort = "hout" end
 				end
-				if so.SoundId ~= STAP[soort] then so.SoundId = STAP[soort] end
+				if so.SoundId ~= STAP[soort] then so.SoundId = STAP[soort]; so.Volume = STAPVOL[soort] end
 				so.PlaybackSpeed = math.clamp(hrp.AssemblyLinearVelocity.Magnitude / 7, 0.8, 1.2)
 			end
 			if loopt ~= so.IsPlaying then if loopt then so:Play() else so:Stop() end end

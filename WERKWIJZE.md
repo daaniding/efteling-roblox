@@ -430,3 +430,5 @@ Opgebouwd tijdens Villa Volta (12 nov 2026). Dit zijn Daans wensen en wat techni
 - Geluidsbronnen (Part) en Sounds nooit dezelfde naam geven als je FindFirstChild(naam, true) gebruikt: dan vind je de Part
   en faalt elk frame (Sirocco "kreet"). Na elke geluidswijziging de console checken.
 - Daan wil muziek zacht: wachtrij ~0.05, in de attractie ~0.04-0.12; effecten 0.15-0.3.
+- Geluidsvolumes niet op gevoel: meet de bronluidheid (Sound in SoundService, Volume 1, PlaybackLoudness-piek over 3 s) en
+  stem Volume daarop af. PSE-walla en voetstappen zijn 10-50x zachter dan APM-muziek.

@@ -446,7 +446,7 @@ RunService.PreSimulation:Connect(function(dt: number)
 	if sBrom then sBrom.Volume += (0.15 * tSnel - sBrom.Volume) * 0.05; sBrom.PlaybackSpeed = 0.6 + 0.35 * tSnel end
 	if sWind then sWind.Volume += ((inBoot and 0.18 * tSnel or 0) - sWind.Volume) * 0.05 end
 	if sRitMuziek then sRitMuziek.Volume += ((0.04 + 0.08 * tSnel) - sRitMuziek.Volume) * 0.03 end
-	if sGegil then sGegil.Volume += (0.18 * tSnel - sGegil.Volume) * 0.04 end
+	if sGegil then sGegil.Volume += (1.0 * tSnel - sGegil.Volume) * 0.04 end     -- bron is zacht (luidheid 20)
 	if sKreet and kreetBron and tSnel > 0.6 and os.clock() > volgendeKreet then
 		local st = stoelen[math.random(#stoelen)]
 		kreetBron.Position = st.Position + Vector3.new(0, 2, 0)
