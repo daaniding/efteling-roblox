@@ -14,7 +14,7 @@ local function strip(a, b)
 		p.Transparency = 1; p.CastShadow = false; p.Name = "Gloed"
 		p.Size = Vector3.new((P1 - P0).Magnitude, 0.2, 0.2); p.CFrame = CFrame.lookAt((P0 + P1) / 2, P1) * CFrame.Angles(0, math.pi / 2, 0)
 		local l = Instance.new("SurfaceLight"); l.Face = Enum.NormalId.Bottom; l.Angle = 120; l.Range = 10; l.Brightness = 2.5
-		l.Color = Color3.fromRGB(255, 168, 90); l.Shadows = false; l.Parent = p
+		l.Color = Color3.fromRGB(255, 200, 140); l.Shadows = false; l.Parent = p
 		p.Parent = m
 	end
 end

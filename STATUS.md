@@ -180,6 +180,10 @@ achterwanden, 2 gaanderij slank (paaltjes, kielboogjes, fijne balustrade), 3 con
 binnen (hal, halletje, gang, Bazaar) donker en warm; FataMorgana.Instaphalgloed (roblox/plaats_instaphalgloed.luau, 18 SurfaceLights
 amber langs de achterwanden); 16_instaphal: donker plafond over de gaanderijen (z 3,3) en donkere band boven z 3,1 (rol soffit),
 asset instaphal 85529083561579.
+Stap 2 klaar: gaanderij naar de video (2025, 40 s): donkere boogvulling boven de kielbogen (rol boogvul) zodat de gloed als
+boogvormen leest, paaltjes met kapiteel en voet, smallere bovenleuning, groene onderrand dun met donker hout eronder; nieuwe
+balustradetextuur (bruine rechthoeken met ruitjes afgewisseld met crème vierkanten met bruine ruit, FM_balustrade 99934946723999);
+groen lichter mintgroen (118,172,158), gloed crème-amber (255,200,140). Asset instaphal 134610392151684.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
 ## Archipel (18 nov 2026) — GEPARKEERD (Daan: "laten we gewoon, niet mooi en niet echt een attractie")
