@@ -240,6 +240,15 @@ ze eruit zien"):
   westdoorvaart; glad gemaakt, elke 1 m een punt -> roblox/FataMorganaVaart.server.luau (uit roblox/vaart_sjabloon.luau).
   Script in ServerScriptService: 8 sloepen (attribuut Aantal), 1 m/s (attribuut Snelheid), verankerd met PivotTo, 10 Seats
   per sloep (je vaart mee als je gaat zitten). Getest in Play: varen 3 studs/s, volgen de schijfrand. review/19_vaarpad.png.
+- Kamers hoger + doorstekende vloer weg (19 nov, Daan: "misschien moeten de kamers hoger en zal er het een en ander weggehaald
+  moeten worden zoals de vloer die er nu door komt"): build/18h_hoogte.py (straal omhoog per 0,25 m-cel -> ref/route_hoogte.npz):
+  onder de dichte gebouwblokken (noordgevel, achterkant, westkant, kantelen, toren) loopt de kamer door tot onder het dak (z 7,25,
+  ~11 m vanaf de bodem); onder het koepelgebouw/de gang (waar je loopt) blijft het plafond laag. build/18k_knip.py haalt de
+  bodemvlakken (z 0) van die blokken boven de kamers weg (LET OP: na een herbouw van zo'n deel 18k opnieuw draaien). 18_route:
+  plafond per hoogte + treden ertussen (rol plafondtrede), muren tot het plafond. Muren/plafond botsen niet meer (botsvorm stak
+  boven het maaiveld uit). roblox/plaats_routehoog.luau: terrein Y -4..6 weg boven de hoge kamers. Assets route 97005242100037,
+  noordgevel 122094060756482, achterkant 128553630837563, westkant 103647074074422, kantelen 126094980006764, toren 118720796178898.
+  review/18h_hoogte.png, 18_hoog_a..d.png. Studio-screenshots gaven een time-out; gecontroleerd met Blender-renders.
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
