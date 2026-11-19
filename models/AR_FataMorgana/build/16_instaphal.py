@@ -28,7 +28,7 @@ O = (-40.0, -295.0)
 #  - rechthoekige hal met rondom een gaanderij (grijs op de plattegrond) op het niveau van het halletje (0,12 m)
 #  - grote draaischijf (cirkel), water eromheen aan de noord-, oost- en zuidkant (onder de gaanderijen door)
 #  - achthoekig controlehok IN HET MIDDEN van de schijf op een zuil, brug vanaf de westgaanderij, trap van het hok omlaag op de schijf
-#  - boten komen binnen in het zuidwesten (van sectie 14) en vertrekken in het noordwesten (naar sectie 1, achter een gordijn)
+#  - boten komen binnen in het zuidwesten (van sectie 14) en vertrekken in het westen bij y -326,5 (naar sectie 1, achter een gordijn)
 #  - binnenkomst van de wachtrij in de noordoosthoek: de groene boog van het halletje komt direct uit op de gaanderij
 XW, XE, YS, YN = -3.5, 16.6, -348.4, -323.6       # binnenkant van de hal (0,6 m binnen het afgeronde terrein op de celgrenzen)
 GB = 2.6                                           # breedte gaanderij
@@ -38,6 +38,7 @@ ZB, ZW, ZD = -3.7, -3.2, -2.9                      # bodem, water, dek (3 m onde
 HZ = 4.86
 BY0, BY1 = -336.9, -334.7                          # brug westgaanderij -> controlehok (alleen personeel, hekje dicht)
 R8 = 1.8                                           # straal achthoekig controlehok
+GY0, GY1 = -328.9, -324.1                          # doorvaart naar sectie 1 in de westmuur (gordijn), midden -326,5 = vaarpad
 
 
 def box(rol, x0, y0, x1, y1, z0, z1):
@@ -157,18 +158,19 @@ def bouw():
     box("donkervloer", UX0, YN - 0.05, UX1, -321.75, -0.3, 0.12)                       # doorgang door de gevel naar buiten
     box("gangmuur", UX0 - 0.2, YN + 0.25, UX0, -322.0, 0.0, UZ + 0.2); box("gangmuur", UX1, YN + 0.25, UX1 + 0.2, -322.0, 0.0, UZ + 0.2)
     box("gangmuur", UX0 - 0.2, YN + 0.25, UX1 + 0.2, -322.0, UZ, UZ + 0.2)
-    box("onderwand", XW + 3.0, YN, XE + 0.25, YN + 0.25, ZB, 0.0); box("onderwand", XW - 0.25, YN, XW + 0.2, YN + 0.25, ZB, 0.0)
-    box("onderwand", XW + 0.2, YN, XW + 3.0, YN + 0.25, -0.4, 0.0)                     # boven de uitgang (noordwest)
+    box("onderwand", XW - 0.25, YN, XE + 0.25, YN + 0.25, ZB, 0.0)                     # noord onder: dicht
     box("gangmuur", XW - 0.25, YS, XW, YN, 0.0, HZ + 0.05)                             # west boven
-    box("onderwand", XW - 0.25, YS, XW, -346.3, ZB, 0.0); box("onderwand", XW - 0.25, -343.0, XW, YN, ZB, 0.0)
+    # west onder: inkomst zuidwest (van sectie 14) en vertrek naar sectie 1 (19 nov: plattegrond, route gaat door de WESTmuur op
+    # y ~ -326,5; achter het gordijn, 20_s1a_gordijn; video POV 2025 120-123 s)
+    box("onderwand", XW - 0.25, YS, XW, -346.3, ZB, 0.0); box("onderwand", XW - 0.25, -343.0, XW, GY0, ZB, 0.0)
+    box("onderwand", XW - 0.25, GY1, XW, YN, ZB, 0.0)
     box("onderwand", XW - 0.25, -346.3, XW, -343.0, -0.4, 0.0)                         # boven de inkomst (zuidwest)
+    box("onderwand", XW - 0.25, GY0, XW, GY1, -0.4, 0.0)                               # boven het gordijn
     box("gangmuur", XE, YS, XE + 0.2, -329.8, 0.0, HZ + 0.05); box("gangmuur", XE, -328.2, XE + 0.2, YN, 0.0, HZ + 0.05)
     box("gangmuur", XE, -329.8, XE + 0.2, -328.2, 3.05, HZ + 0.05)                     # boven de doorgang naar het halletje
     box("onderwand", XE, YS, XE + 0.2, YN, ZB, 0.0)
     # (doorvaarten noordwest en zuidwest lopen nu door in de vaarroute, 18_route; geen donkere vulblokken meer)
-    for k in range(14):                                                                # gordijn bij de uitgang (Eftepedia: beige gordijntje)
-        x = XW + 0.3 + 0.18 * k
-        box("gordijn", x, YN - 0.12 - (0.06 if k % 2 else 0.0), x + 0.18, YN - 0.02, ZW + 0.1, -0.42)
+    # (gordijn naar sectie 1: los deel s1_gordijn, 20_s1a_gordijn, gaat open en dicht)
     quad("plafond", [L(XW, YN) + Vector((0, 0, HZ)), L(XE, YN) + Vector((0, 0, HZ)), L(XE, YS) + Vector((0, 0, HZ)), L(XW, YS) + Vector((0, 0, HZ))])
     box("donker", XW, YS, XE, YN, ZB - 0.2, ZB)
     # (water = Terrain-water in Studio, Daan: "maak het ook echt water")

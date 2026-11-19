@@ -249,6 +249,23 @@ ze eruit zien"):
   boven het maaiveld uit). roblox/plaats_routehoog.luau: terrein Y -4..6 weg boven de hoge kamers. Assets route 97005242100037,
   noordgevel 122094060756482, achterkant 128553630837563, westkant 103647074074422, kantelen 126094980006764, toren 118720796178898.
   review/18h_hoogte.png, 18_hoog_a..d.png. Studio-screenshots gaven een time-out; gecontroleerd met Blender-renders.
+  Ook het koepelgebouw-blok boven de jungle is dicht (de gang waar je loopt ligt bij x > 12,5): mee in BLOK, route en koepelgebouw
+  opnieuw (route 86332490662588, koepelgebouw 106339599197225). Plint-/sokkelvlakjes onder z 1 worden overgeslagen.
+- WERKWIJZE SCÈNES (19 nov, Daan: "per ding beginnen... het moet echt goed overeenkomen en de sfeer ook dus videos erbij pakken per
+  fase... animaties... maak niet elke sectie in 1 keer maar doe elke sectie ook weer stuk voor stuk"): per sectie (14, Eftepedia)
+  en per stuk; referentie = POV 2025 youtube mV6qzpGgLjc (ref/video/, niet in git; frames per 3 s in ref/video/frames_mV6, scherpe
+  frames per stuk in ref/video/s<N>/). Per stuk een eigen bouwscript build/2N_s<sectie><stuk>_*.py met een eigen deel (deelnaam
+  zonder cijfers/underscores), eigen animatiescript in roblox/.
+  Sectie 1 Jungle = video 120-201 s: 1a gordijn in de halmuur (120-123), 1b rotsboog (126), 1c jungle met fata morgana-paleis
+  (129-140), 1d donkere jungle met scherpe bocht en slangen (141-174), 1e tovenaar in blauw verlichte rotsnis (174-189),
+  1f grote rode poort die opengaat (192-201) -> sectie 2 armenwijk.
+- Sectie 1a gordijn (19 nov): de plattegrond laat de route door de WESTmuur van de hal gaan (y ~ -326,5), niet de noordmuur:
+  16_instaphal noordmuur onder dicht, doorvaart west y -328,9..-324,1 tot -0,4 (instaphal 123463686820231; dekhout/dekrand/witlijn
+  in Studio weer naar Draaischijf verhuisd). build/20_s1a_gordijn.py (deel junglegordijn, 116116601337967): breed grijsbeige
+  plooigordijn in twee helften aan een lichte rail met beugels, zoom net boven het water; bord "Niet schommelen // Nicht schaukeln /
+  No rocking // Interdit de se balancer" op de groene band onder de gaanderijrand (textures/S1_bord_schommelen.png, 132430278150557).
+  roblox/FataMorganaS1Gordijn.server.luau: gaat open (2,4 s, helften bundelen naar buiten) als een sloep binnen 27 studs komt, dicht
+  boven 33. Getest in Play: opent en sluit per sloep. review/20_s1a_*.png.
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 

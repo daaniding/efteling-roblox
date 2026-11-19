@@ -3,13 +3,13 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 118720796178898, Noordgevel = 122094060756482, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 126094980006764, Koepelgebouw = 122930798099695, Zuidvleugel = 75793335061309, Westkant = 103647074074422, Achterkant = 128553630837563, Veranda = 105227491479681, Instaphal = 120033530878287, Boten = 88656466555036, Route = 97005242100037}
+local DELEN = {Toren = 118720796178898, Noordgevel = 122094060756482, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 126094980006764, Koepelgebouw = 106339599197225, Zuidvleugel = 75793335061309, Westkant = 103647074074422, Achterkant = 128553630837563, Veranda = 105227491479681, Instaphal = 123463686820231, Boten = 88656466555036, Route = 86332490662588, Junglegordijn = 116116601337967}
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
 	zellige = 112364982933611, zigzag = 94009043451472, balkon = 115587625989953, fries = 96873829333423,
 	vloertegel = 112689883777106, schildering = 119976189330229, bord = 99448957611155,
-	tegelhal = 73063474660484, deurblad = 79743845630448, balustrade = 99934946723999, parket = 120995854106325, bootplaket = 71844881657698, draaischijf = 126431821387104}   -- naald: Pagode (dennennaalden)
+	tegelhal = 73063474660484, deurblad = 79743845630448, balustrade = 99934946723999, parket = 120995854106325, bootplaket = 71844881657698, draaischijf = 126431821387104, s1_bord = 132430278150557}   -- naald: Pagode (dennennaalden)
 -- rol -> {textuur, normaal, kleur, materiaal, botsen, reflectie, alfa}
 local R = {
 	stuc = {"stuc_kleur", "stuc_normaal", Color3.new(1, 1, 1), Enum.Material.Plaster, true},
@@ -96,6 +96,11 @@ local R = {
 	routewand = {nil, nil, Color3.fromRGB(78, 70, 62), Enum.Material.Plaster, false},
 	routeplafond = {nil, nil, Color3.fromRGB(16, 16, 18), Enum.Material.SmoothPlastic, false},
 	plafondtrede = {nil, nil, Color3.fromRGB(16, 16, 18), Enum.Material.SmoothPlastic, false},   -- treden tussen plafondhoogtes; muren/plafond niet botsen (de botsvorm zou boven het maaiveld uitsteken)
+	-- sectie 1a: gordijn naar de jungle (20_s1a_gordijn; FataMorganaS1Gordijn schuift de helften open)
+	gordijn_l = {nil, nil, Color3.fromRGB(170, 156, 138), Enum.Material.Fabric, false},
+	gordijn_r = {nil, nil, Color3.fromRGB(170, 156, 138), Enum.Material.Fabric, false},
+	gordijnrail = {nil, nil, Color3.fromRGB(184, 170, 150), Enum.Material.Metal, false},
+	s1_bord = {"s1_bord", nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false},
 }
 for _, r in {"vlek1", "vlek2", "vlek3", "vlek4", "streep", "voet"} do
 	R[r] = {r, nil, Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, false, nil, true}

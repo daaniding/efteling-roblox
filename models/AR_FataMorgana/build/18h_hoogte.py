@@ -4,7 +4,7 @@ Per rastercel (0,25 m, raster van 18p/route_plan.npz, kamers + vaargoot) een str
   - eerste raakvlak = de onderkant van een dicht gebouwblok (bodemvlak rond z 0, normaal omlaag, deel in BLOK): dat bodemvlak mag weg
     (18k_knip) en de kamer gaat door tot onder het dak van dat blok: plafond = volgende raakvlak - 0,25 m (max ZMAX)
   - eerste raakvlak hoger dan z 1 in een gebouwblok (holle ruimte onder een dak): plafond = dat vlak - 0,25 m
-  - eerste raakvlak iets anders (vloer van de gang/het koepelgebouw, waar je loopt): plafond blijft laag, net onder dat vlak
+  - eerste raakvlak iets anders (vloer van de instaphal e.d.): plafond blijft laag, net onder dat vlak
 Uit: ref/route_hoogte.npz (plafond z per cel, NaN buiten de route; knip = cellen waar het bodemvlak weg mag) + review/18h_hoogte.png.
 Gebruik: blender --background AR_FataMorgana_master.blend --python build/18h_hoogte.py"""
 import bpy, numpy as np, os, collections
@@ -12,7 +12,7 @@ from mathutils import Vector
 D = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 F6 = os.path.join(D, "build", "06_kantelen.py"); G6 = {"__file__": F6, "__name__": "lib"}
 exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6); L = G6["G3"]["L"]
-BLOK = {"noordgevel", "achterkant", "westkant", "kantelen", "zuidvleugel", "toren"}
+BLOK = {"noordgevel", "achterkant", "westkant", "kantelen", "zuidvleugel", "toren", "koepelgebouw"}   # koepelgebouw: het lage blok boven de jungle is dicht; de gang waar je loopt (halletje, binnenplaatsje) ligt bij x > 12,5, buiten de route
 ZMAX, ZLAAG = 9.0, -0.05
 for o in bpy.data.objects:
     if o.type == "MESH" and o.get("deel") in ("route", "boten"): o.hide_viewport = True
@@ -25,6 +25,9 @@ for r, c in zip(*np.nonzero(uni)):
     x, y = X0 + (c + .5) * S, Y1 - (r + .5) * S
     o = L(x, y)
     hit, loc, n, i, ob, m = sc.ray_cast(dg, o + Vector((0, 0, -2.0)), Vector((0, 0, 1)))
+    for _ in range(4):                                                      # sokkel-/plintvlakjes van een blok onder z 1 overslaan
+        if not (hit and ob.get("deel") in BLOK and -0.35 < loc.z < 1.0 and n.z > 0.5): break
+        hit, loc, n, i, ob, m = sc.ray_cast(dg, loc + Vector((0, 0, 0.02)), Vector((0, 0, 1)))
     if not hit: plaf[r, c] = ZLAAG; wat["leeg"] += 1; continue
     if ob.get("deel") in BLOK and abs(loc.z) < 0.35 and n.z < -0.5:
         h2, l2, n2, *_ = sc.ray_cast(dg, loc + Vector((0, 0, 0.02)), Vector((0, 0, 1)))

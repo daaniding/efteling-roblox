@@ -72,3 +72,8 @@ AR_FataMorgana_westkant 103647074074422 (19 nov: hoge kamers / bodem weg)
 AR_FataMorgana_kantelen 126094980006764 (19 nov: hoge kamers / bodem weg)
 AR_FataMorgana_toren 118720796178898 (19 nov: hoge kamers / bodem weg)
 AR_FataMorgana_route 97005242100037 (19 nov: hoge kamers, randen schoon)
+AR_FataMorgana_route 86332490662588 (19 nov: hoge jungle onder koepelgebouw)
+AR_FataMorgana_koepelgebouw 106339599197225 (19 nov: hoge jungle onder koepelgebouw)
+AR_FataMorgana_instaphal 123463686820231 (19 nov: sectie 1a gordijn in de westmuur)
+S1_bord_schommelen 132430278150557
+AR_FataMorgana_junglegordijn 116116601337967 (sectie 1a)

@@ -8,7 +8,7 @@ import bpy, bmesh, os, numpy as np
 D = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 F6 = os.path.join(D, "build", "06_kantelen.py"); G6 = {"__file__": F6, "__name__": "lib"}
 exec(compile(open(F6).read().rsplit("\nmain()", 1)[0], F6, "exec"), G6); T = G6["T"]; L = G6["G3"]["L"]
-BLOK = {"noordgevel", "achterkant", "westkant", "kantelen", "zuidvleugel", "toren"}
+BLOK = {"noordgevel", "achterkant", "westkant", "kantelen", "zuidvleugel", "toren", "koepelgebouw"}   # koepelgebouw: het lage blok boven de jungle is dicht; de gang waar je loopt (halletje, binnenplaatsje) ligt bij x > 12,5, buiten de route
 bpy.ops.wm.open_mainfile(filepath=T["MASTER"])
 H = np.load(os.path.join(D, "ref", "route_hoogte.npz")); K = H["knip"]; X0, Y1, S = float(H["X0"]), float(H["Y1"]), float(H["S"])
 # modelmeters (park) uit wereld: L(x, y) is lineair; inverse via twee punten
