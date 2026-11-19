@@ -233,6 +233,13 @@ ze eruit zien"):
   scènevlak tegen een stuk route ligt dat >9 m verder op de route zit (bv. tussen sectie 4/5 en 10/11, 3A/12) komt een
   scheidingsmuur. Muren, toneelranden, bodem en plafond als enkelzijdige vlakken (onder de Roblox-driehoekgrens); plafond loopt
   over de muren door. Asset route 80339656288456.
+- Boten varen (19 nov, Daan: "zorg nu ook echt even dat de boten varen dan kan ik de route checken en het gevoel"): 17_boten
+  bouwt nu één sjabloonsloep (asset 88656466555036, workspace.FataMorgana.Boten); build/19_vaarpad.py maakt een gesloten lus
+  van 271 m: route-middellijn (stippels 0..15 omgedraaid: de route begint bij de westdoorvaart van de hal, (-4; -326,5)),
+  zuidwestdoorvaart de hal in, tegen de klok in om de draaischijf (r 8,65, instap oost), noordkanaal terug naar de
+  westdoorvaart; glad gemaakt, elke 1 m een punt -> roblox/FataMorganaVaart.server.luau (uit roblox/vaart_sjabloon.luau).
+  Script in ServerScriptService: 8 sloepen (attribuut Aantal), 1 m/s (attribuut Snelheid), verankerd met PivotTo, 10 Seats
+  per sloep (je vaart mee als je gaat zitten). Getest in Play: varen 3 studs/s, volgen de schijfrand. review/19_vaarpad.png.
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 

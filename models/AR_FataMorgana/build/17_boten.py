@@ -1,8 +1,8 @@
-"""17_boten: stilliggende sloepen in de instaphal (Daan: stap 4, "maak de boot mooier"; nog GEEN beweging).
+"""17_boten: de sloep van Fata Morgana (Daan: stap 4, "maak de boot mooier"; 19 nov: één sjabloonboot, varen via roblox/FataMorganaVaart).
 Naar de video's (2025 POV 34/47 s): glanzend rode romp met ronde kim, crème boord langs de bovenkant met donkere sierplaatjes in een
 gouden kader (vlechtwerkster, FM_bootplaket), dunne gouden lijn eronder, opgekrulde voor- en achtersteven met een rood knopje met
 witte ring, dekjes voor en achter, witte banken met hoge ronde rugleuning en zijschotten met sierplaatjes, rode vloer.
-Eftepedia: veertien rode sloepen; hier drie stil: aan de draaischijf (oost), in het zuidkanaal en in het noordkanaal.
+Eftepedia: veertien rode sloepen; hier één sjabloon, in Studio gekloond.
 Maten: 6,0 x 1,9 m, diepgang 0,35 m. Modelstelsel = 02/03. Deel "boten". Gebruik: blender --background --python build/17_boten.py"""
 import bpy, bmesh, sys, os, math
 from mathutils import Vector
@@ -134,10 +134,9 @@ def main():
     bpy.ops.wm.open_mainfile(filepath=T["MASTER"])
     for o in [o for o in bpy.data.objects if o.get("owner") == OWNER]: bpy.data.objects.remove(o)
     for r in ("boot_kop", "boot_kopring"): T["G"][r] = bmesh.new(); T["KLEUR"][r] = (0.7, 0.1, 0.1); T["UVS"][r] = 1.0
-    C0 = (6.3, -335.8)
-    boot(C0[0] + 8.65 * math.cos(math.radians(-30)), C0[1] + 8.65 * math.sin(math.radians(-30)), 60)    # aan de schijf (oost)
-    boot(C0[0] + 8.6 * math.cos(math.radians(-100)), C0[1] + 8.6 * math.sin(math.radians(-100)), -10)   # zuidkanaal
-    boot(0.5, -326.0, 180)                                                                                # noord, naar de uitgang
+    # één sjabloonboot (Daan 19 nov: boten laten varen): in Studio gekloond en over het vaarpad bewogen (FataMorganaVaart)
+    # midden (0,5; -326), koers 180 = vaart naar -x (Roblox -X); het vaarscript gebruikt dit als draaipunt
+    boot(0.5, -326.0, 180)
     objecten()
     bpy.ops.wm.save_as_mainfile(filepath=T["MASTER"])
     print("[17_boten] klaar:", sum(len(o.data.polygons) for o in bpy.data.objects if o.get("owner") == OWNER), "vlakken")
