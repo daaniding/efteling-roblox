@@ -77,3 +77,5 @@ AR_FataMorgana_koepelgebouw 106339599197225 (19 nov: hoge jungle onder koepelgeb
 AR_FataMorgana_instaphal 123463686820231 (19 nov: sectie 1a gordijn in de westmuur)
 S1_bord_schommelen 132430278150557
 AR_FataMorgana_junglegordijn 116116601337967 (sectie 1a)
+AR_FataMorgana_junglegordijn 84196465650299 (bordtekst niet meer gespiegeld)
+AR_FataMorgana_junglegordijn 78226160726058 (bord zuidelijker)

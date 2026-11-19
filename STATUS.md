@@ -266,6 +266,11 @@ ze eruit zien"):
   No rocking // Interdit de se balancer" op de groene band onder de gaanderijrand (textures/S1_bord_schommelen.png, 132430278150557).
   roblox/FataMorganaS1Gordijn.server.luau: gaat open (2,4 s, helften bundelen naar buiten) als een sloep binnen 27 studs komt, dicht
   boven 33. Getest in Play: opent en sluit per sloep. review/20_s1a_*.png.
+  Daan: "maak de gordijnen de kleur die ze in het echt hebben en zorg dat het bordje goed zichtbaar is": roblox/plaats_s1a.luau (NA
+  plaats_modellen): gordijn (205, 193, 180) Fabric (video 122,5 s: mediaan (94, 57, 45) onder warm licht = lichtgrijs/beige doek),
+  warme SpotLight onder de westgaanderij op het gordijn, bordje als SurfaceGui-tekst (lichtgeel op donkergroen, weinig lichtinvloed),
+  bord zuidelijker (y -326,2..-330,6, anders half achter de hoek met de noordgaanderij). Junglegordijn 78226160726058.
+  Studio-beelden: review/20_s1a_studio_{hal,boot,open}.jpg. Daan: "die fotos zij prima".
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 

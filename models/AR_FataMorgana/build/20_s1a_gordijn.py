@@ -64,10 +64,10 @@ def bouw():
     for y in (GY0 + 0.1, YM, GY1 - 0.1):               # beugels
         doos("gordijnrail", XG - 0.04, y - 0.04, XG + 0.12, y + 0.04, -0.47, -0.41)
     # bord: op de groene band van de gaanderijrand (onderwand -0,45..0, 0,04 naar de hal), kant hal, gecentreerd boven de doorvaart
-    bm = G["s1_bord"]; uvl = bm.loops.layers.uv.verify(); x = XWI + 0.05; ya, yb = YM + 1.9, YM - 1.9
+    bm = G["s1_bord"]; uvl = bm.loops.layers.uv.verify(); x = XWI + 0.05; ya, yb = YM - 0.3, YM - 4.1   # zuidelijk van de hoek met de noordgaanderij (YNI -326,2), anders half verstopt
     q = [bm.verts.new(P(x, ya, -0.41)), bm.verts.new(P(x, yb, -0.41)), bm.verts.new(P(x, yb, -0.04)), bm.verts.new(P(x, ya, -0.04))]
     f = bm.faces.new(q)
-    for lp, uv in zip(f.loops, [(0, 0), (1, 0), (1, 1), (0, 1)]): lp[uvl].uv = uv
+    for lp, uv in zip(f.loops, [(1, 0), (0, 0), (0, 1), (1, 1)]): lp[uvl].uv = uv   # leesbaar vanuit de hal
 
 
 def objecten():
