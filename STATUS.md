@@ -271,6 +271,14 @@ ze eruit zien"):
   warme SpotLight onder de westgaanderij op het gordijn, bordje als SurfaceGui-tekst (lichtgeel op donkergroen, weinig lichtinvloed),
   bord zuidelijker (y -326,2..-330,6, anders half achter de hoek met de noordgaanderij). Junglegordijn 78226160726058.
   Studio-beelden: review/20_s1a_studio_{hal,boot,open}.jpg. Daan: "die fotos zij prima".
+- Sectie 1b rotsgrot (19 nov, Daan: "Ja, 1b"): video 124,5-131 s: direct achter het gordijn een lage, korte grot van donkergrijze,
+  gelaagde rots; door de onregelmatige boog zie je de jungle. build/21_s1b_rotsboog.py (deel junglerots, 78718607249001): tunnel
+  x -3,72..-5,7 rond het vaarpad (y -326,5), boog ~3,6 m breed en top z -0,75 (~2,5 m boven het water), oostrand tot de muuropening
+  (kant hal) en een rotswand rond de boog aan de junglekant (max 0,5 m uitgebold: de haarspeldbocht ligt er vlak achter).
+  Verplaatsing = fbm-ruis + scherpe ruggen + horizontale breukbanden; DUBBELZIJDIG (Roblox tekent één kant, Blender-renders tonen
+  beide en logen dus). Studio: Rock (80, 79, 80). Vrije ruimte sloep bewaakt (|dy| >= 1,3 m tot z -1,8; top >= -0,95).
+  Beelden: review/21_s1b_*.png, review/21_s1b_studio_{boot,grot}.jpg. Nog kaal erachter (jungle = 1c); noordrand van de rotswand
+  steekt los de kamer in, wordt bij 1c met planten bedekt.
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
