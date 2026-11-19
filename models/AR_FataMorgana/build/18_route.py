@@ -128,7 +128,11 @@ def bouw():
                         xx = X0 + (i + 1) * S; ya, yb = Y1 - j0 * S, Y1 - j * S
                         pa, pb = L(xx, ya), L(xx, yb); naar = Vector((-1 if hb > ho else 1, 0, 0))
                     nw = L(naar.x, naar.y) - L(0, 0); nw.z = 0
-                    vlak("plafondtrede", [pa + Vector((0, 0, zl)), pb + Vector((0, 0, zl)), pb + Vector((0, 0, zh)), pa + Vector((0, 0, zh))], nw)
+                    sch = -nw.normalized() * 0.03                               # 3 cm naar de lage kant: niet in het vlak van een gevel (1d: zuidgevel koepelgebouw)
+                    q4 = [pa + sch + Vector((0, 0, zl)), pb + sch + Vector((0, 0, zl)), pb + sch + Vector((0, 0, zh)), pa + sch + Vector((0, 0, zh))]
+                    vlak("plafondtrede", q4, nw); vlak("plafondtrede", [v.copy() for v in q4], -nw)   # dubbelzijdig: anders zie je vanaf de lage kant een gevel erdoor (1d)
+                    # dekseltje op hoogte zh over de 3 cm tussen de verschoven trede en de rand van het hoge plafond (anders een kier)
+                    vlak("plafondtrede", [pa + sch * 1.4 + Vector((0, 0, zh)), pb + sch * 1.4 + Vector((0, 0, zh)), pb - sch * 0.4 + Vector((0, 0, zh)), pa - sch * 0.4 + Vector((0, 0, zh))], Vector((0, 0, -1)))
                 else: j += 1
     for seg in P["toneelrand"]: wand("toneel", seg, ZB, ZT, 0.0, False)          # zijkant toneel naar het water
     hf = np.nan_to_num(h, nan=ZP0)
@@ -138,7 +142,7 @@ def bouw():
             x, y = ax + (bx - ax) * t - nx * 0.15, ay + (by - ay) * t - ny * 0.15
             r, c = int((Y1 - y) / S), int((x - X0) / S)
             if 0 <= r < hf.shape[0] and 0 <= c < hf.shape[1]: top = max(top, hf[r, c])
-        wand("routewand", seg, ZB - 0.05, top + 0.01, 0.05, True)
+        wand("routewand", seg, ZB - 0.05, top + 0.01, 0.02, True)   # 2 cm (niet 5): anders in het vlak van gebouwmuren op ronde maten (1d: x 12,5)
 
 
 def objecten():

@@ -46,9 +46,9 @@ er = hoog.copy()
 for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
     sh = np.zeros_like(hoog); sh[max(dr, 0):hoog.shape[0] + min(dr, 0), max(dc, 0):hoog.shape[1] + min(dc, 0)] = hoog[max(-dr, 0):hoog.shape[0] + min(-dr, 0), max(-dc, 0):hoog.shape[1] + min(-dc, 0)]
     er &= sh
-# alleen vlakken die helemaal binnen het gebouw liggen: elk hoekpunt >= 0,5 m van de dakrand (ref/route_dak.npy, zelfde raster)
+# alleen vlakken die helemaal onder een dak liggen (ref/route_dak.npy, zelfde raster)
 dak = np.load(os.path.join(D, "ref", "route_dak.npy")); binnen = dak.copy()
-for _ in range(2):
+for _ in range(0):                                                       # geen marge meer: de voorkanttest (1 m) beschermt de gevels
     b2 = binnen.copy()
     for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
         sh = np.zeros_like(binnen); sh[max(dr, 0):binnen.shape[0] + min(dr, 0), max(dc, 0):binnen.shape[1] + min(dc, 0)] = binnen[max(-dr, 0):binnen.shape[0] + min(-dr, 0), max(-dc, 0):binnen.shape[1] + min(-dc, 0)]
@@ -59,18 +59,25 @@ def diep_binnen(w):
     return 0 <= r < binnen.shape[0] and 0 <= c < binnen.shape[1] and binnen[r, c]
 from mathutils import Vector
 for o in bpy.data.objects:
-    if o.type == "MESH" and o.get("deel") in ("route", "boten", "junglegroen", "junglerots", "junglegordijn"): o.hide_viewport = True
+    if o.type == "MESH" and o.get("deel") in ("route", "boten", "junglegroen", "junglerots", "junglegordijn", "junglenacht"): o.hide_viewport = True
 sc = bpy.context.scene; dg = bpy.context.evaluated_depsgraph_get()
 tot2 = {}
 for ob in bpy.data.objects:
-    # koepelgebouw niet: door de open bogen van het hoektorentje kijk je naar binnen
-    if ob.type != "MESH" or ob.get("deel") not in BLOK or ob.get("deel") == "koepelgebouw": continue
+    if ob.type != "MESH" or ob.get("deel") not in BLOK: continue
     mw = ob.matrix_world; bm = bmesh.new(); bm.from_mesh(ob.data); weg = []
     # grote vlakken die deels in een hoge kamer staan eerst opknippen (1 m-raster in parkmeters), dan per stuk beslissen
     mi = mw.inverted()
     def kandidaat(f):
-        c = mw @ f.calc_center_median(); x, y = park(c); r, k = int((Y1 - y) / S), int((x - X0) / S)
-        return 0 <= r < er.shape[0] and 0 <= k < er.shape[1] and er[r, k] and 0.05 < c.z < PL[r, k] - 0.05 and f.calc_area() > 1.0
+        """raakt (een hoekpunt of het midden van) dit grote vlak een hoge kamer onder het plafond? dan opknippen"""
+        if f.calc_area() <= 1.0: return False
+        ws = [mw @ v.co for v in f.verts]; c = mw @ f.calc_center_median(); zmin = min(w.z for w in ws)
+        if max(c.z, zmin + 0.05) <= 0.05: return False
+        for w in ws + [c]:
+            x, y = park(w); r, k = int((Y1 - y) / S), int((x - X0) / S)
+            for rr in (r - 1, r, r + 1):
+                for kk in (k - 1, k, k + 1):
+                    if 0 <= rr < er.shape[0] and 0 <= kk < er.shape[1] and er[rr, kk] and zmin < PL[rr, kk] - 0.05: return True
+        return False
     for as_ in (0, 1):
         groot = [f for f in bm.faces if kandidaat(f)]
         if not groot: continue
@@ -93,19 +100,23 @@ for ob in bpy.data.objects:
         c = mw @ f.calc_center_median()
         x, y = park(c); col_ = int((x - X0) / S); row = int((Y1 - y) / S)
         if not (0 <= row < er.shape[0] and 0 <= col_ < er.shape[1]) or not er[row, col_]: continue
-        if 0.05 < c.z < PL[row, col_] - 0.05 and all(diep_binnen(mw @ v.co) for v in f.verts):
-            # nooit iets dat van buiten te zien is: vóór het vlak (langs de normaal) en erachter moet er een dak boven zitten
+        if ob.get("deel") == "koepelgebouw" and math.hypot(x + 4.0, y + 310.6) < 3.5 and c.z > 8.0: continue   # hoektorentje: open stage met bogen boven z 8,7 (dichte voet eronder)
+        zlaag = min((mw @ v.co).z for v in f.verts)
+        if 0.05 < c.z and zlaag < PL[row, col_] - 0.05 and all(diep_binnen(mw @ v.co) for v in f.verts):
+            # nooit iets dat van buiten te zien is: vóór het vlak (langs de normaal, 1 m) moet er een dak boven zitten
             nw = (mw.to_3x3() @ f.normal).normalized(); open_lucht = False
-            for kant in (1, -1):
+            for kant in (1,):                                                    # alleen de voorkant: een vlak zie je alleen van de kant waar het naar wijst
                 for v in f.verts:                                            # elk hoekpunt: een vlak kan boven een lager dak uitsteken
                     w = mw @ v.co; q = w + (c - w) * 0.15 + nw * 1.0 * kant + Vector((0, 0, 0.02))   # 1 m: over dikke muren en smalle spleten tussen blokken heen
                     hit, *_ = sc.ray_cast(dg, q, Vector((0, 0, 1)))
-                    if not hit: open_lucht = True; break
+                    q2 = w + (c - w) * 0.15 + nw * 0.3 * kant; x2, y2 = park(q2); r2, c2 = int((Y1 - y2) / S), int((x2 - X0) / S)
+                    kamer = 0 <= r2 < er.shape[0] and 0 <= c2 < er.shape[1] and er[r2, c2] and q2.z < PL[r2, c2]
+                    if not hit and not kamer: open_lucht = True; break         # wijst het vlak de kamer in (0,3 m), dan zie je het alleen van binnen
             if not open_lucht: weg.append(f)
     if weg:
         bmesh.ops.delete(bm, geom=weg, context="FACES"); bm.to_mesh(ob.data); ob.data.update(); tot2[ob.name] = len(weg)
     bm.free()
 for o in bpy.data.objects:
-    if o.type == "MESH" and o.get("deel") in ("route", "boten", "junglegroen", "junglerots", "junglegordijn"): o.hide_viewport = False
+    if o.type == "MESH" and o.get("deel") in ("route", "boten", "junglegroen", "junglerots", "junglegordijn", "junglenacht"): o.hide_viewport = False
 bpy.ops.wm.save_as_mainfile(filepath=T["MASTER"])
 print("[18k_knip] weg:", tot, "| binnen hoge kamers:", tot2)

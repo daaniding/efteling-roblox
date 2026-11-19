@@ -294,6 +294,26 @@ ze eruit zien"):
     pass 1 nu over alle hoge cellen. Buitencontrole: renders van 4 kanten voor/na, verschil <= 21 pixels.
     Delen: noordgevel 113813074916566, achterkant 78257815241950, westkant 137245369576518, kantelen 82588817721392,
     toren 84889536135485, koepelgebouw 75703250735311. Routemuren donker (30, 27, 25).
+- Sectie 1d donkere jungle met slangen (19 nov, Daan: "Ja, 1d"): video 141-174 s (opgehelderd bekeken). Na de haarspeldbocht een
+  smalle gang (y -322,5..-320, open strook tussen hal en koepelgebouw: plafond laag) en een brede poel schuin naar het noordoosten
+  (onder het koepelgebouw, plafond z 4,25) tot de bocht bij (10; -313,8). build/23_s1d_jungle.py (deel junglenacht, helpers uit
+  22): oevers, knoestboom met drie hangende slangen (losse onderdelen Slang_a/b/c, huid S1_slang.png), blauw aangelichte
+  rotspartijen, drie stenen vuurschalen, oranje bamboe, varenpalmen, ~150 struiken, blad tegen de wanden, overhangend blad,
+  rode bloemtrossen (S1_bloemrood.png), lianen in bogen over het water en hangend. roblox/plaats_s1d.luau: model, licht (rood op
+  het blad, blauw op de rotsen, groenblauw, roze op de lianen, rood op de boom), Fire + licht in de schalen.
+  roblox/FataMorganaS1Slangen.server.luau: slangen zwaaien traag aan hun tak, vlammen flakkeren (getest in Play).
+  Onderweg (veel gedoe met dingen die in de kamer staken):
+  - 18_route: plafondtreden dubbelzijdig, 3 cm naar de lage kant (niet in het vlak van een gevel) met een dekseltje over de kier;
+    routemuren 2 cm voor de kamerrand (niet 5: lag in het vlak van de koepelgebouwmuur op x 12,5). Plafond mat zwart (Fabric, 8,8,9):
+    het gladde plafond glansde in de spots.
+  - 18k_knip pass 2: grote vlakken worden opgeknipt als een hoekpunt een hoge kamer raakt; weg als de onderkant onder het plafond zit
+    en de voorkant (1 m) onder een dak ligt OF de kamer in wijst (0,3 m); geen randmarge meer; koepelgebouw weer mee (alleen het
+    torentje boven z 8 niet). Buitencontrole 4 kanten: max 81 pixels verschil (randjes).
+  - terrein: roblox/plaats_routeonder.luau haalt Y -4..0 weg boven alle routecellen (onder de open strook hing bestrating de route
+    in); plaats_routehoog nu Y -4..8.
+  Assets: junglenacht 124230487417588, route 92807235297587, koepelgebouw 71346500842552, achterkant 75413093437862, westkant
+  113707068029447, kantelen 122963827182511, noordgevel 123092455544461, toren 110489236755029. Beelden: review/23_s1d_studio_*.jpg.
+  Nog: een paar dunne lichte lijntjes (vermoedelijk lianen op de kant gezien); scherm in Edit lichter dan in Play.
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 

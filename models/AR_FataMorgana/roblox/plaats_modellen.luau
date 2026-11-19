@@ -3,7 +3,7 @@
 -- Oorsprong van alle delen: park (-40; -295) op het maaiveld Y 0,91. Verwering = losse overlays (vlek1..4, streep, voet) met alfa.
 local S = 3
 local VOET = Vector3.new(-40 * S, 0.91, 295 * S)
-local DELEN = {Toren = 84889536135485, Noordgevel = 113813074916566, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 82588817721392, Koepelgebouw = 75703250735311, Zuidvleugel = 75793335061309, Westkant = 137245369576518, Achterkant = 78257815241950, Veranda = 105227491479681, Instaphal = 123463686820231, Boten = 88656466555036, Route = 86332490662588, Junglegordijn = 78226160726058, Junglerots = 78718607249001}
+local DELEN = {Toren = 110489236755029, Noordgevel = 123092455544461, Minaret = 104784345799444, Ingang = 128192677817318, Kantelen = 122963827182511, Koepelgebouw = 71346500842552, Zuidvleugel = 75793335061309, Westkant = 113707068029447, Achterkant = 75413093437862, Veranda = 105227491479681, Instaphal = 123463686820231, Boten = 88656466555036, Route = 92807235297587, Junglegordijn = 78226160726058, Junglerots = 78718607249001}   -- 1c/1d: plaats_s1c.luau en plaats_s1d.luau (eigen texturen/licht)
 local ID = {stuc_kleur = 87378813833395, stuc_normaal = 93453765359013, lijst_kleur = 84200753761674,
 	vlek1 = 139447230717275, vlek2 = 130335827998969, vlek3 = 89523083759406, vlek4 = 71188191265340,
 	streep = 137986762588861, voet = 96092065348033, naald = 72168876031761,
@@ -94,8 +94,8 @@ local R = {
 	routebodem = {nil, nil, Color3.fromRGB(22, 24, 26), Enum.Material.Slate, true},
 	toneel = {nil, nil, Color3.fromRGB(82, 70, 58), Enum.Material.Concrete, true},
 	routewand = {nil, nil, Color3.fromRGB(30, 27, 25), Enum.Material.Plaster, false},   -- donker (darkride), 19 nov
-	routeplafond = {nil, nil, Color3.fromRGB(16, 16, 18), Enum.Material.SmoothPlastic, false},
-	plafondtrede = {nil, nil, Color3.fromRGB(16, 16, 18), Enum.Material.SmoothPlastic, false},   -- treden tussen plafondhoogtes; muren/plafond niet botsen (de botsvorm zou boven het maaiveld uitsteken)
+	routeplafond = {nil, nil, Color3.fromRGB(8, 8, 9), Enum.Material.Fabric, false},   -- mat zwart (glans van spots, 1d)
+	plafondtrede = {nil, nil, Color3.fromRGB(8, 8, 9), Enum.Material.Fabric, false},   -- treden tussen plafondhoogtes; muren/plafond niet botsen (de botsvorm zou boven het maaiveld uitsteken)
 	-- sectie 1a: gordijn naar de jungle (20_s1a_gordijn; FataMorganaS1Gordijn schuift de helften open)
 	gordijn_l = {nil, nil, Color3.fromRGB(170, 156, 138), Enum.Material.Fabric, false},
 	gordijn_r = {nil, nil, Color3.fromRGB(170, 156, 138), Enum.Material.Fabric, false},
