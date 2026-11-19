@@ -81,3 +81,23 @@ AR_FataMorgana_junglegordijn 84196465650299 (bordtekst niet meer gespiegeld)
 AR_FataMorgana_junglegordijn 78226160726058 (bord zuidelijker)
 AR_FataMorgana_junglerots 138732510781701 (sectie 1b)
 AR_FataMorgana_junglerots 78718607249001 (dubbelzijdig)
+AR_FataMorgana_junglegroen 109202168766227 (sectie 1c)
+S1_achterdoek 128378863936010
+S1_paleis 98008676791415
+S1_palmblad 109569546046403
+S1_bamboeblad 83792121693498
+S1_breedblad 137518965679118
+S1_liaan 85371245112909
+S1_heliconia 73349063077042
+AR_FataMorgana_noordgevel 114247392859095 (19 nov: binnenmuren in hoge kamers weg)
+AR_FataMorgana_achterkant 129715933072035 (19 nov: binnenmuren in hoge kamers weg)
+AR_FataMorgana_westkant 137968515794205 (19 nov: binnenmuren in hoge kamers weg)
+AR_FataMorgana_kantelen 101271820073047 (19 nov: binnenmuren in hoge kamers weg)
+AR_FataMorgana_toren 85087350894950 (19 nov: binnenmuren in hoge kamers weg)
+AR_FataMorgana_junglegroen 127687374489355 (dichter)
+AR_FataMorgana_noordgevel 113813074916566 (19 nov: binnenmuren in hoge kamers weg, v2)
+AR_FataMorgana_achterkant 78257815241950 (19 nov: binnenmuren in hoge kamers weg, v2)
+AR_FataMorgana_westkant 137245369576518 (19 nov: binnenmuren in hoge kamers weg, v2)
+AR_FataMorgana_kantelen 82588817721392 (19 nov: binnenmuren in hoge kamers weg, v2)
+AR_FataMorgana_toren 84889536135485 (19 nov: binnenmuren in hoge kamers weg, v2)
+AR_FataMorgana_koepelgebouw 75703250735311 (19 nov: binnenmuren in hoge kamers weg, v2)

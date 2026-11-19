@@ -21,12 +21,12 @@ def ring(a0, a1, n):
 route = np.load(os.path.join(D, "ref", "route_plan.npz"))["middellijn"]
 # 18p begint de stippels bij (-2; -322) en loopt eerst de verkeerde kant op: stippels 0..15 zijn de bocht vanaf de westdoorvaart
 # van de hal (-4; -326,5) naar het noorden; die omdraaien, dan loopt alles in vaarvolgorde
-route = np.vstack([route[15::-1], route[16:]])
+route = np.vstack([[[-4.6, -326.5], [-5.4, -326.45]], route[13::-1], route[16:]])   # recht door de grot tot x -5,7
 lus = np.vstack([
     route,
     [[-2.0, -344.5], [0.5, -344.6]],          # zuidwestdoorvaart de hal in
     ring(-112, 98, 60),                        # tegen de klok in om de schijf (instap oost)
-    [[1.0, -326.8]],                           # noordkanaal naar de westdoorvaart (daar begint de route)
+    [[1.0, -326.6], [-2.0, -326.5], [-3.0, -326.5]],   # noordkanaal naar de westdoorvaart, recht door het gordijn en de grot (1a/1b)
 ])
 
 
@@ -36,8 +36,8 @@ def herbemonster(p, stap):
 
 
 p = herbemonster(lus, 0.25)
-k = 17                                          # ~4 m venster
-for _ in range(3):
+k = 9                                           # ~2 m venster, 2x (19 nov: met 4 m sneed de haarspeldbocht na de grot (1b) zo af dat de sloep in de grot al draaide)
+for _ in range(2):
     p = np.mean([np.roll(p, i, axis=0) for i in range(-(k // 2), k // 2 + 1)], axis=0)
 p = herbemonster(p, 1.0)
 lengte = len(p)

@@ -279,6 +279,21 @@ ze eruit zien"):
   beide en logen dus). Studio: Rock (80, 79, 80). Vrije ruimte sloep bewaakt (|dy| >= 1,3 m tot z -1,8; top >= -0,95).
   Beelden: review/21_s1b_*.png, review/21_s1b_studio_{boot,grot}.jpg. Nog kaal erachter (jungle = 1c); noordrand van de rotswand
   steekt los de kamer in, wordt bij 1c met planten bedekt.
+- Sectie 1c jungle met fata morgana (19 nov, Daan: "Ja, 1c"): video 129-140 s. build/22t_s1c_texturen.py (eigen tekenwerk):
+  achterdoek (paarse lucht, oranje gloed, duinen, nevel), paleis (alfa: minaret, roze koepel, verlichte raampjes), bladkaarten
+  palmblad/bamboeblad/breedblad/liaan/heliconia. build/22_s1c_jungle.py (deel junglegroen): oevers uit het water (laag waar het pad
+  is), grote schuine palmstam voor het doek, palmen, oranje bamboe, ~170 struiken, blad tegen alle wanden, 75 lianen, bladerdak,
+  heliconia's; alles onder hoofdhoogte >= 1,35 m van het vaarpad. roblox/plaats_s1c.luau: model + alfa-texturen, Achterdoek en
+  Paleis als zelflichtende SurfaceGui-panelen, 7 gekleurde lampen (oranje bamboe/stam, groen boven, rood laag, paarse gloed).
+  roblox/FataMorganaS1Paleis.server.luau: paleis verschijnt (1,6 s) als een sloep uit de grot komt en verdwijnt in de bocht, golft
+  zacht. Getest in Play: zichtbaar ~4 s per sloep. review/22_s1c_studio_boot.jpg.
+  Daarbij gerepareerd:
+  - vaarpad (19_vaarpad): minder afvlakken (2 m), recht door gordijn en grot; de sloep draaide eerst al in de grot.
+  - 18k_knip pass 2: binnenmuren/overlays van gebouwblokken IN hoge kamers weg (eerst opgeknipt per 1 m in x/y/z; alleen stukken
+    die >= 0,5 m binnen het dak liggen en waar 1 m voor en achter een dak boven zit; koepelgebouw niet vanwege de open torenbogen);
+    pass 1 nu over alle hoge cellen. Buitencontrole: renders van 4 kanten voor/na, verschil <= 21 pixels.
+    Delen: noordgevel 113813074916566, achterkant 78257815241950, westkant 137245369576518, kantelen 82588817721392,
+    toren 84889536135485, koepelgebouw 75703250735311. Routemuren donker (30, 27, 25).
 - Nog niets aan scènes/aankleding; sloepen varen nog niet.
 Mogelijke vervolgstap: binnenkant van het gebouw (pas als Daan erom vraagt).
 
